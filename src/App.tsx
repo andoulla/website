@@ -1,5 +1,15 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+import { Resume } from './views/resume';
+
 function App() {
-  return <h1>hello mariandi</h1>;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Resume />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

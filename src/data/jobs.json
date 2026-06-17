@@ -1,0 +1,40 @@
+[
+  {
+    "id": "job-1",
+    "companyName": "Nimbus Analytics",
+    "location": "London, UK",
+    "startDate": "2022-04-01",
+    "endDate": null,
+    "responsibilities": [
+      "Lead frontend architecture for the customer-facing dashboard",
+      "Mentor two junior engineers through pairing and code review",
+      "Drive adoption of automated accessibility testing"
+    ],
+    "skills": ["React", "TypeScript", "GraphQL", "Accessibility"]
+  },
+  {
+    "id": "job-2",
+    "companyName": "Brightleaf Software",
+    "location": "Manchester, UK",
+    "startDate": "2019-01-15",
+    "endDate": "2022-03-18",
+    "responsibilities": [
+      "Built and maintained REST APIs serving 50k+ daily users",
+      "Migrated legacy jQuery UI to a React component library",
+      "Owned the CI/CD pipeline for the platform team"
+    ],
+    "skills": ["React", "Node.js", "PostgreSQL", "Docker"]
+  },
+  {
+    "id": "job-3",
+    "companyName": "Harborview Digital",
+    "location": "Remote",
+    "startDate": "2016-09-01",
+    "endDate": "2018-12-21",
+    "responsibilities": [
+      "Implemented responsive marketing pages for client campaigns",
+      "Collaborated with designers to build a shared style guide"
+    ],
+    "skills": ["JavaScript", "CSS", "HTML", "jQuery"]
+  }
+]
