@@ -23,16 +23,16 @@ function makeExperience(
 test('renders company details, responsibilities, and skills', () => {
   render(<WorkExperienceCard experience={makeExperience()} />);
 
-  expect(screen.getByText('Nimbus Analytics')).toBeInTheDocument();
-  expect(screen.getByText(/London, UK/)).toBeInTheDocument();
-  expect(screen.getByText('Lead frontend architecture')).toBeInTheDocument();
-  expect(screen.getByText('React')).toBeInTheDocument();
-  expect(screen.getByText('TypeScript')).toBeInTheDocument();
+  expect(screen.getByText('Nimbus Analytics')).toBeVisible();
+  expect(screen.getByText('London, UK · Apr 2022 – Present')).toBeVisible();
+  expect(screen.getByText('Lead frontend architecture')).toBeVisible();
+  expect(screen.getByText('React')).toBeVisible();
+  expect(screen.getByText('TypeScript')).toBeVisible();
 });
 
-test('renders "Present" for a current role', () => {
-  render(<WorkExperienceCard experience={makeExperience({ endDate: null })} />);
-  expect(screen.getByText(/Present/)).toBeInTheDocument();
+test('renders the end month for a past role instead of "Present"', () => {
+  render(<WorkExperienceCard experience={makeExperience({ endDate: '2023-09-30' })} />);
+  expect(screen.getByText('London, UK · Apr 2022 – Sep 2023')).toBeVisible();
 });
 
 test('renders references when present', () => {
@@ -52,8 +52,8 @@ test('renders references when present', () => {
     />
   );
 
-  expect(screen.getByText('References')).toBeInTheDocument();
-  expect(screen.getByText('Priya Shah, Engineering Manager')).toBeInTheDocument();
+  expect(screen.getByText('References')).toBeVisible();
+  expect(screen.getByText('Priya Shah, Engineering Manager')).toBeVisible();
 });
 
 test('omits the References section when there are none', () => {
