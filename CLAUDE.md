@@ -9,7 +9,7 @@ A minimal React + TypeScript web app run in strict mode across the whole toolcha
 - **MUI** (`@mui/material`) + **Emotion** for styling
 - **react-router-dom** v7
 - **Jest 30** + **ts-jest** + **React Testing Library**, jsdom environment, setup file [src/setupTests.ts](src/setupTests.ts)
-- **ESLint** + **Prettier**, enforced on commit via **Husky** + **lint-staged** ([.husky/pre-commit](.husky/pre-commit))
+- **ESLint** + **Prettier**, enforced on commit via plain Git hooks ([.githooks/pre-commit](.githooks/pre-commit)), which also runs the full test suite
 - Package manager: **yarn** (canonical — README and scripts assume yarn; ignore `package-lock.json` if present)
 
 ## Verifying changes
