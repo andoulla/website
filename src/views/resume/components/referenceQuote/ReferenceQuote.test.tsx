@@ -12,8 +12,10 @@ const reference: Reference = {
   quote: 'Great work.',
 };
 
-test('renders the quote and attribution', () => {
-  render(<ReferenceQuote reference={reference} />);
-  expect(screen.getByText('“Great work.”')).toBeVisible();
-  expect(screen.getByText('Priya Shah, Engineering Manager')).toBeVisible();
+describe('ReferenceQuote', () => {
+  test('renders the quote and attribution', () => {
+    render(<ReferenceQuote reference={reference} />);
+    expect(screen.getByText('“Great work.”')).toBeVisible();
+    expect(screen.getByText('Priya Shah, Engineering Manager')).toBeVisible();
+  });
 });

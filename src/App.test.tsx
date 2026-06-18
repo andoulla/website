@@ -2,7 +2,9 @@ import { render, screen } from '@testing-library/react';
 
 import App from './App';
 
-test('renders the resume on the home route', () => {
-  render(<App />);
-  expect(screen.getByRole('heading', { name: 'Mariandi Stylianou' })).toBeVisible();
+describe('App', () => {
+  test('renders the resume on the home route', () => {
+    render(<App />);
+    expect(screen.getByRole('heading', { name: 'Mariandi Stylianou' })).toBeVisible();
+  });
 });
