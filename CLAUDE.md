@@ -10,6 +10,7 @@ A minimal React + TypeScript web app run in strict mode across the whole toolcha
 - **react-router-dom** v7
 - **Jest 30** + **ts-jest** + **React Testing Library**, jsdom environment, setup file [src/setupTests.ts](src/setupTests.ts)
 - **ESLint** + **Prettier**, enforced on commit via plain Git hooks ([.githooks/pre-commit](.githooks/pre-commit)), which also runs the full test suite
+- **commitlint** (`@commitlint/config-conventional`) enforces [Conventional Commits](https://www.conventionalcommits.org/) messages via [.githooks/commit-msg](.githooks/commit-msg) — e.g. `fix: handle empty references list`, `feat: add resume print view`
 - Package manager: **yarn** (canonical — README and scripts assume yarn; ignore `package-lock.json` if present)
 
 ## Verifying changes
