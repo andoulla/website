@@ -1,8 +1,3 @@
-import BusinessIcon from '@mui/icons-material/Business';
-import CodeIcon from '@mui/icons-material/Code';
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import TerminalIcon from '@mui/icons-material/Terminal';
-import WorkIcon from '@mui/icons-material/Work';
 import Timeline from '@mui/lab/Timeline';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
@@ -18,12 +13,7 @@ import { ResumeDataContext } from '../../context/resumeData';
 
 import { WorkExperienceCard } from './components/workExperienceCard';
 import { WorkExperienceTimelineSkeleton } from './components/workExperienceTimelineSkeleton';
-
-const ROLE_ICONS = [BusinessIcon, CodeIcon, RocketLaunchIcon, TerminalIcon, WorkIcon];
-
-function pickRandomRoleIcon() {
-  return ROLE_ICONS[Math.floor(Math.random() * ROLE_ICONS.length)];
-}
+import { pickRandomRoleIcon } from './roleIcons';
 
 function ExperienceList() {
   // First use() reads the context value (the promise); the guard turns a missing
