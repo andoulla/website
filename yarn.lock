@@ -955,6 +955,18 @@
   resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-9.1.1.tgz#3458d10b3b3d2b1925a3db44a2950ef418d336f0"
   integrity sha512-AupmMICbdJHqAh6FfOMaaiiIr7dfEgZJn5DFfiPuGNrbs+ZZy9cD1APwO0TSVBz5j08MJEEY6n7iC76/2wjMEA==
 
+"@mui/lab@^9.0.0-beta.5":
+  version "9.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/@mui/lab/-/lab-9.0.0-beta.5.tgz#d53443fce0a83c6ba7caac8b06926c4fd4a23936"
+  integrity sha512-1R+XQWJ/yfh9XNWeOT5SzRcy1+myFy6m8ugONA7aPLccExYWVbOZ6mP6Pvib4G281090o/ai3R9H6azkE3REWw==
+  dependencies:
+    "@babel/runtime" "^7.29.2"
+    "@mui/system" "^9.1.1"
+    "@mui/types" "^9.1.1"
+    "@mui/utils" "^9.1.1"
+    clsx "^2.1.1"
+    prop-types "^15.8.1"
+
 "@mui/material@^9.1.1":
   version "9.1.1"
   resolved "https://registry.yarnpkg.com/@mui/material/-/material-9.1.1.tgz#c999d4499fc3d9700353e34aba010e2e52fa6a02"
