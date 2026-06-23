@@ -1,0 +1,1 @@
+export { skillColor } from './skillColor';
