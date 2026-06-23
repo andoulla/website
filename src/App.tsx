@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import { ResumeDataProvider } from './context/resumeData';
 import { Resume } from './views/resume';
 // TODO: Add error page
 
@@ -7,11 +8,13 @@ import { Resume } from './views/resume';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Resume />} />
-      </Routes>
-    </BrowserRouter>
+    <ResumeDataProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Resume />} />
+        </Routes>
+      </BrowserRouter>
+    </ResumeDataProvider>
   );
 }
 
