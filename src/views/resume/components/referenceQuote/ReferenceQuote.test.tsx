@@ -18,4 +18,9 @@ describe('ReferenceQuote', () => {
     expect(screen.getByText('“Great work.”')).toBeVisible();
     expect(screen.getByText('Priya Shah, Engineering Manager')).toBeVisible();
   });
+
+  test('shows an avatar with the author initials', () => {
+    render(<ReferenceQuote reference={reference} />);
+    expect(screen.getByText('PS')).toBeVisible();
+  });
 });
