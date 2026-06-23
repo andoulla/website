@@ -32,9 +32,12 @@ export function WorkExperienceTimelineSkeleton() {
     <Timeline
       role="status"
       aria-label="Loading work experience"
-      // Match the loaded timeline: full-width cards, no opposite-content column.
+      // Match the loaded timeline: full-width cards, no opposite-content column,
+      // and the same top spacing below the heading.
       sx={{
-        m: 0,
+        mt: 3,
+        mb: 0,
+        mx: 0,
         p: 0,
         [`& .${timelineItemClasses.root}:before`]: { flex: 0, p: 0 },
       }}

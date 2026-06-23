@@ -31,9 +31,11 @@ function ExperienceList() {
   return (
     <Timeline
       sx={{
-        // Remove the Timeline's own margin/padding and the empty opposite-content
-        // column so the cards span the full width under the heading.
-        m: 0,
+        // Full-width cards (no horizontal margin/padding, no opposite-content column),
+        // with extra top spacing between the "Work Experience" heading and the timeline.
+        mt: 3,
+        mb: 0,
+        mx: 0,
         p: 0,
         [`& .${timelineItemClasses.root}:before`]: { flex: 0, p: 0 },
       }}
