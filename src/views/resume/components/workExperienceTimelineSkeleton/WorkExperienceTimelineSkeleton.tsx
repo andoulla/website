@@ -3,6 +3,7 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
+import { timelineOppositeContentClasses } from '@mui/lab/TimelineOppositeContent';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -39,7 +40,8 @@ export function WorkExperienceTimelineSkeleton() {
         mb: 0,
         mx: 0,
         p: 0,
-        [`& .${timelineItemClasses.root}:before`]: { flex: 0, p: 0 },
+        [`& .${timelineItemClasses.root}:not(:has(.${timelineOppositeContentClasses.root}))::before`]:
+          { flex: 0, p: 0 },
       }}
     >
       {Array.from({ length: SKELETON_ITEM_COUNT }, (_, index) => (

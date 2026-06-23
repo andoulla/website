@@ -3,6 +3,7 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
+import { timelineOppositeContentClasses } from '@mui/lab/TimelineOppositeContent';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -37,7 +38,11 @@ function ExperienceList() {
         mb: 0,
         mx: 0,
         p: 0,
-        [`& .${timelineItemClasses.root}:before`]: { flex: 0, p: 0 },
+        // MUI lab v9 adds a flex:1 `::before` spacer to every item that has no opposite
+        // content, which pushes the cards to half width. Mirror that exact selector so we
+        // win on specificity, and collapse the spacer to make the cards full width.
+        [`& .${timelineItemClasses.root}:not(:has(.${timelineOppositeContentClasses.root}))::before`]:
+          { flex: 0, p: 0 },
       }}
     >
       {experiences.map((experience, index) => {
