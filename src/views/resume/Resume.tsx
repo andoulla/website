@@ -25,15 +25,22 @@ function ExperienceList() {
   const experiences = use(experiencesPromise);
 
   return (
-    // Drop the empty opposite-content column so the cards align left.
-    <Timeline sx={{ [`& .${timelineItemClasses.root}:before`]: { flex: 0, p: 0 } }}>
+    <Timeline
+      sx={{
+        // Remove the Timeline's own margin/padding and the empty opposite-content
+        // column so the cards span the full width under the heading.
+        m: 0,
+        p: 0,
+        [`& .${timelineItemClasses.root}:before`]: { flex: 0, p: 0 },
+      }}
+    >
       {experiences.map((experience, index) => (
         <TimelineItem key={experience.id}>
           <TimelineSeparator>
             <TimelineDot color="primary" />
             {index < experiences.length - 1 && <TimelineConnector />}
           </TimelineSeparator>
-          <TimelineContent>
+          <TimelineContent sx={{ pr: 0 }}>
             <WorkExperienceCard experience={experience} />
           </TimelineContent>
         </TimelineItem>

@@ -32,9 +32,12 @@ export function WorkExperienceTimelineSkeleton() {
     <Timeline
       role="status"
       aria-label="Loading work experience"
-      // Drop the empty opposite-content column so the cards align left (matches the
-      // loaded timeline layout).
-      sx={{ [`& .${timelineItemClasses.root}:before`]: { flex: 0, p: 0 } }}
+      // Match the loaded timeline: full-width cards, no opposite-content column.
+      sx={{
+        m: 0,
+        p: 0,
+        [`& .${timelineItemClasses.root}:before`]: { flex: 0, p: 0 },
+      }}
     >
       {Array.from({ length: SKELETON_ITEM_COUNT }, (_, index) => (
         <TimelineItem key={index}>
@@ -42,7 +45,7 @@ export function WorkExperienceTimelineSkeleton() {
             <TimelineDot color="primary" />
             {index < SKELETON_ITEM_COUNT - 1 && <TimelineConnector />}
           </TimelineSeparator>
-          <TimelineContent>
+          <TimelineContent sx={{ pr: 0 }}>
             <WorkExperienceCardSkeleton />
           </TimelineContent>
         </TimelineItem>
