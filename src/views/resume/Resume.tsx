@@ -14,7 +14,7 @@ const experiences = joinJobsWithReferences(jobs, references);
 export function Resume() {
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
-      <Typography variant="h1" component="h1" sx={{ mb: 3 }}>
+      <Typography variant="h3" component="h1" sx={{ mb: 3 }}>
         Mariandi Stylianou
       </Typography>
       <Section title="Work Experience">

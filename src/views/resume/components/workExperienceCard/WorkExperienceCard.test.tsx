@@ -31,6 +31,14 @@ describe('WorkExperienceCard', () => {
     expect(screen.getByText('TypeScript')).toBeVisible();
   });
 
+  test('places the company and its sections correctly in the heading hierarchy', () => {
+    render(<WorkExperienceCard experience={makeExperience()} />);
+
+    expect(screen.getByRole('heading', { level: 3, name: 'Nimbus Analytics' })).toBeVisible();
+    expect(screen.getByRole('heading', { level: 4, name: 'Responsibilities' })).toBeVisible();
+    expect(screen.getByRole('heading', { level: 4, name: 'Key Skills' })).toBeVisible();
+  });
+
   test('renders the end month for a past role instead of "Present"', () => {
     render(<WorkExperienceCard experience={makeExperience({ endDate: '2023-09-30' })} />);
     expect(screen.getByText('London, UK · Apr 2022 – Sep 2023')).toBeVisible();

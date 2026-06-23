@@ -46,20 +46,26 @@ export function WorkExperienceCard({ experience }: WorkExperienceCardProps) {
     <Card>
       <CardHeader
         title={experience.companyName}
+        // Render the company name as a real h3 heading (visually sized h6) so it sits
+        // correctly under the h2 "Work Experience" section in the heading hierarchy.
+        slotProps={{
+          title: { variant: 'h6', component: 'h3' },
+          subheader: { variant: 'body2' },
+        }}
         subheader={`${experience.location} · ${duration}`}
       />
       <CardContent>
-        <Section title="Responsibilities" titleLevel={3}>
+        <Section title="Responsibilities" titleLevel={4}>
           <BulletList items={experience.responsibilities} />
         </Section>
         <Divider sx={{ my: 2 }} />
-        <Section title="Key Skills" titleLevel={3}>
+        <Section title="Key Skills" titleLevel={4}>
           <TagList items={experience.skills} />
         </Section>
         {experience.references.length > 0 && (
           <>
             <Divider sx={{ my: 2 }} />
-            <Section title="References" titleLevel={3}>
+            <Section title="References" titleLevel={4}>
               <Stack spacing={1.5}>
                 {experience.references.map((reference) => (
                   <ReferenceQuote key={reference.id} reference={reference} />

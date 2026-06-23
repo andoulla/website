@@ -21,4 +21,13 @@ describe('Section', () => {
     );
     expect(screen.getByRole('heading', { level: 3, name: 'Key Skills' })).toBeVisible();
   });
+
+  test('renders the title as an h4 at the deepest level', () => {
+    render(
+      <Section title="References" titleLevel={4}>
+        <p>Content</p>
+      </Section>
+    );
+    expect(screen.getByRole('heading', { level: 4, name: 'References' })).toBeVisible();
+  });
 });
