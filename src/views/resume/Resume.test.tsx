@@ -5,6 +5,7 @@ import type { WorkExperienceWithReferences } from '../../utils/joinJobsWithRefer
 
 import { Resume } from './Resume';
 
+// TODO: replace with test class
 const testExperiences: WorkExperienceWithReferences[] = [
   'Nimbus Analytics',
   'Brightleaf Software',
