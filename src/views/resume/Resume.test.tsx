@@ -38,6 +38,7 @@ describe('Resume', () => {
   });
 
   test('renders the name heading and every job once the data resolves', async () => {
+// TODO: add snapshot, 
     await act(async () => {
       renderResume(() => Promise.resolve(testExperiences));
       // Flush the resolved data promise + Suspense reveal within the act scope.
