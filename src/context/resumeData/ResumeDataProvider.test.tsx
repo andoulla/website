@@ -1,9 +1,9 @@
 import { act, render } from '@testing-library/react';
-import { Suspense, use } from 'react';
+import { Suspense } from 'react';
 
 import type { WorkExperienceWithReferences } from '../../utils/joinJobsWithReferences';
 
-import { ResumeDataContext, ResumeDataProvider } from './ResumeDataProvider';
+import { ResumeDataProvider, useResumeData } from './ResumeDataProvider';
 // TODO Move this to a class pattern that will allow for generating data
 const testExperiences: WorkExperienceWithReferences[] = [
   {
@@ -18,9 +18,8 @@ const testExperiences: WorkExperienceWithReferences[] = [
   },
 ];
 
-function Consumer() {
-  const experiencesPromise = use(ResumeDataContext)!;
-  const experiences = use(experiencesPromise);
+function ExperiencesConsumer() {
+  const experiences = useResumeData();
   return <p>{experiences[0].companyName}</p>;
 }
 
@@ -31,7 +30,7 @@ describe('ResumeDataProvider', () => {
       screen = render(
         <ResumeDataProvider loader={() => Promise.resolve(testExperiences)}>
           <Suspense fallback={<p>Loading</p>}>
-            <Consumer />
+            <ExperiencesConsumer />
           </Suspense>
         </ResumeDataProvider>
       );

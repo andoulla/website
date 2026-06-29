@@ -7,10 +7,10 @@ import { timelineOppositeContentClasses } from '@mui/lab/TimelineOppositeContent
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { Suspense, use, useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
 
 import { Section } from '../../components/section';
-import { ResumeDataContext } from '../../context/resumeData';
+import { useResumeData } from '../../context/resumeData';
 
 import { ContactDetails } from './components/contactDetails';
 import { WorkExperienceCard } from './components/workExperienceCard';
@@ -18,14 +18,7 @@ import { WorkExperienceTimelineSkeleton } from './components/workExperienceTimel
 import { pickRandomRoleIcon } from './roleIcons';
 
 function ExperienceList() {
-  // First use() reads the context value (the promise); the guard turns a missing
-  // provider into a clear error; the second use() unwraps the promise, suspending
-  // this component until the data resolves so <Suspense> can show the fallback.
-  const experiencesPromise = use(ResumeDataContext);
-  if (experiencesPromise === null) {
-    throw new Error('ResumeDataContext was used without a ResumeDataProvider');
-  }
-  const experiences = use(experiencesPromise);
+  const experiences = useResumeData();
 
   // Pick a random icon per role once so it stays stable across re-renders.
   const roleIcons = useMemo(() => experiences.map(() => pickRandomRoleIcon()), [experiences]);

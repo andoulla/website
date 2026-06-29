@@ -1,22 +1,17 @@
-import { createContext, useState } from 'react';
-import type { ReactNode } from 'react';
+import { createContext, use, useState } from 'react';
 
 import { loadExperiences } from '../../utils/loadExperiences';
-import type { WorkExperienceWithReferences } from '../../utils/joinJobsWithReferences';
 
-type ExperiencesPromise = Promise<WorkExperienceWithReferences[]>;
-// TODO: separate types and check for circular dependencies.
-/**
- * Holds the in-flight promise of the resume data. Consumers read it with `use()`:
- * `use(ResumeDataContext)` returns the promise, then `use(promise)` unwraps it and
- * suspends until it resolves.
- */
-export const ResumeDataContext = createContext<ExperiencesPromise | null>(null);
+import type { ExperiencesPromise, ResumeDataProviderProps } from './ResumeDataProvider.type';
 
-export interface ResumeDataProviderProps {
-  children: ReactNode;
-  /** Overridable so tests can inject a fast, deterministic promise. */
-  loader?: () => ExperiencesPromise;
+const ResumeDataContext = createContext<ExperiencesPromise | null>(null);
+
+export function useResumeData() {
+  const promise = use(ResumeDataContext);
+  if (promise === null) {
+    throw new Error('useResumeData must be used within a ResumeDataProvider');
+  }
+  return use(promise);
 }
 
 export function ResumeDataProvider({
