@@ -8,8 +8,8 @@ import { contact } from '../../../../data/contact';
 
 export function ContactDetails() {
   return (
-    <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
-      <Link href={`mailto:${contact.email}`} underline="hover" color="inherit">
+    <Stack direction="row" spacing={2} justifyContent="center">
+      <Link href={`mailto:${contact.email}`} underline="hover" color="primary">
         <Email aria-hidden="true" fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
         {contact.email}
       </Link>
@@ -18,7 +18,7 @@ export function ContactDetails() {
         target="_blank"
         rel="noopener noreferrer"
         underline="hover"
-        color="inherit"
+        color="primary"
       >
         <LinkedIn aria-hidden="true" fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
         LinkedIn
@@ -28,7 +28,7 @@ export function ContactDetails() {
         target="_blank"
         rel="noopener noreferrer"
         underline="hover"
-        color="inherit"
+        color="primary"
       >
         <GitHub aria-hidden="true" fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
         GitHub

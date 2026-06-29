@@ -43,7 +43,7 @@ export function WorkExperienceCard({ experience }: WorkExperienceCardProps) {
   const duration = formatDuration(experience.startDate, experience.endDate);
 
   return (
-    <Card>
+    <Card elevation={0}>
       <CardHeader
         title={experience.companyName}
         // Render the company name as a real h3 heading (visually sized h6) so it sits

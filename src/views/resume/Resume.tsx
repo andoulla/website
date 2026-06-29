@@ -5,6 +5,7 @@ import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import { timelineOppositeContentClasses } from '@mui/lab/TimelineOppositeContent';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
+import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { Suspense, useMemo } from 'react';
@@ -62,10 +63,12 @@ function ExperienceList() {
 export function Resume() {
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
-      <Typography variant="h3" component="h1" sx={{ mb: 3 }}>
-        Mariandi Stylianou
-      </Typography>
-      <ContactDetails />
+      <Box sx={{ mb: 5, textAlign: 'center' }}>
+        <Typography variant="h3" component="h1" sx={{ mb: 0 }}>
+          Mariandi Stylianou
+        </Typography>
+        <ContactDetails />
+      </Box>
       <Section title="Work Experience">
         <Suspense fallback={<WorkExperienceTimelineSkeleton />}>
           <ExperienceList />

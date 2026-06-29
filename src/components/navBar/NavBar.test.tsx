@@ -53,14 +53,54 @@ describe('NavBar', () => {
     expect(screen.getByRole('button', { name: 'Switch to purple theme' })).toBeVisible();
   });
 
-  test('has no axe violations with green theme', async () => {
+  test('renders Light and Dark buttons with Light selected by default', () => {
+    const screen = renderNavBar();
+
+    expect(screen.getByRole('button', { name: 'Light' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Dark' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Light' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Dark' })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('clicking Dark selects dark mode', () => {
+    const screen = renderNavBar();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
+
+    expect(screen.getByRole('button', { name: 'Dark' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Light' })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('clicking Light after Dark returns to light mode', () => {
+    const screen = renderNavBar();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Light' }));
+
+    expect(screen.getByRole('button', { name: 'Light' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  test('has no axe violations with green light theme', async () => {
     const screen = renderNavBar();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('has no axe violations with purple theme', async () => {
+  test('has no axe violations with purple light theme', async () => {
     const screen = renderNavBar();
     fireEvent.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('has no axe violations with green dark theme', async () => {
+    const screen = renderNavBar();
+    fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('has no axe violations with purple dark theme', async () => {
+    const screen = renderNavBar();
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

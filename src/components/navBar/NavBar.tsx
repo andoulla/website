@@ -1,8 +1,9 @@
 import PaletteIcon from '@mui/icons-material/Palette';
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Toolbar from '@mui/material/Toolbar';
 import { NavLink } from 'react-router-dom';
 
@@ -14,8 +15,24 @@ const navLinkStyle = ({ isActive }: { isActive: boolean }): React.CSSProperties 
   fontWeight: isActive ? 700 : 400,
 });
 
+const toggleButtonGroupSx = {
+  '& .MuiToggleButton-root': {
+    color: 'inherit',
+    borderColor: 'rgba(255,255,255,0.3)',
+    px: 1.5,
+    py: 0.25,
+    '&.Mui-selected': {
+      color: 'inherit',
+      backgroundColor: 'rgba(255,255,255,0.15)',
+    },
+    '&.Mui-selected:hover': {
+      backgroundColor: 'rgba(255,255,255,0.25)',
+    },
+  },
+} as const;
+
 export function NavBar() {
-  const { themeName, toggleTheme } = useThemeContext();
+  const { themeName, toggleTheme, isDarkMode, toggleDarkMode } = useThemeContext();
   const nextTheme = themeName === 'green' ? 'purple' : 'green';
 
   return (
@@ -33,7 +50,7 @@ export function NavBar() {
             Skills
           </NavLink>
         </Stack>
-        <Box sx={{ ml: 'auto' }}>
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ ml: 'auto' }}>
           <IconButton
             aria-label={`Switch to ${nextTheme} theme`}
             color="inherit"
@@ -42,7 +59,20 @@ export function NavBar() {
           >
             <PaletteIcon />
           </IconButton>
-        </Box>
+          <ToggleButtonGroup
+            aria-label="Color mode"
+            exclusive
+            onChange={(_, value: 'light' | 'dark' | null) => {
+              if (value !== null) toggleDarkMode();
+            }}
+            size="small"
+            sx={toggleButtonGroupSx}
+            value={isDarkMode ? 'dark' : 'light'}
+          >
+            <ToggleButton value="light">Light</ToggleButton>
+            <ToggleButton value="dark">Dark</ToggleButton>
+          </ToggleButtonGroup>
+        </Stack>
       </Toolbar>
     </AppBar>
   );
