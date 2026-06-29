@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import { Section } from './Section';
 
 describe('Section', () => {
   test('renders the title as an h2 by default', () => {
-    render(
+    const screen = render(
       <Section title="Responsibilities">
         <p>Content</p>
       </Section>
@@ -14,7 +14,7 @@ describe('Section', () => {
   });
 
   test('renders the title at the requested heading level', () => {
-    render(
+    const screen = render(
       <Section title="Key Skills" titleLevel={3}>
         <p>Content</p>
       </Section>
@@ -23,7 +23,7 @@ describe('Section', () => {
   });
 
   test('renders the title as an h4 at the deepest level', () => {
-    render(
+    const screen = render(
       <Section title="References" titleLevel={4}>
         <p>Content</p>
       </Section>

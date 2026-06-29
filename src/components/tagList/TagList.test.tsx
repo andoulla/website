@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import { TagList } from './TagList';
 
 describe('TagList', () => {
   test('renders a tag for each item', () => {
-    render(<TagList items={['React', 'TypeScript']} />);
+    const screen = render(<TagList items={['React', 'TypeScript']} />);
     const items = screen.getAllByRole('listitem');
     expect(items).toHaveLength(2);
     expect(items[0]).toHaveTextContent('React');
@@ -12,7 +12,7 @@ describe('TagList', () => {
   });
 
   test('renders no tags for an empty list', () => {
-    render(<TagList items={[]} />);
+    const screen = render(<TagList items={[]} />);
     expect(screen.queryAllByRole('listitem')).toHaveLength(0);
   });
 });

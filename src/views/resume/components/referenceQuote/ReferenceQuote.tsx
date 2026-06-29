@@ -16,7 +16,7 @@ export function ReferenceQuote({ reference }: ReferenceQuoteProps) {
     <Card variant="outlined">
       <CardContent>
         <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-          “{reference.quote}”
+          {`"${reference.quote}"`}
         </Typography>
         <Stack direction="row" spacing={1} sx={{ mt: 1, alignItems: 'center' }}>
           <Avatar sx={{ width: 28, height: 28, fontSize: '0.75rem' }}>

@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 
 import App from './App';
 import type { WorkExperienceWithReferences } from './utils/joinJobsWithReferences';
@@ -22,12 +22,20 @@ jest.mock('./utils/loadExperiences', () => ({
 }));
 
 describe('App', () => {
-  test('renders the resume on the home route', async () => {
+  test('renders the nav bar and the resume on the home route', async () => {
+    let screen!: ReturnType<typeof render>;
     await act(async () => {
-      render(<App />);
-      // Flush the resolved data promise + Suspense reveal within the act scope.
+      screen = render(<App />);
       await Promise.resolve();
     });
+
+    const homeLink = screen.getByRole('link', { name: 'Home' });
+    expect(homeLink).toBeVisible();
+    expect(homeLink).toHaveAttribute('href', '/');
+
+    const skillsLink = screen.getByRole('link', { name: 'Skills' });
+    expect(skillsLink).toBeVisible();
+    expect(skillsLink).toHaveAttribute('href', '/skills');
 
     expect(screen.getByRole('heading', { name: 'Mariandi Stylianou' })).toBeVisible();
     expect(screen.getByText('Nimbus Analytics')).toBeVisible();

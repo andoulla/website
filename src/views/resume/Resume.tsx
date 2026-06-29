@@ -12,6 +12,7 @@ import { Suspense, use, useMemo } from 'react';
 import { Section } from '../../components/section';
 import { ResumeDataContext } from '../../context/resumeData';
 
+import { ContactDetails } from './components/contactDetails';
 import { WorkExperienceCard } from './components/workExperienceCard';
 import { WorkExperienceTimelineSkeleton } from './components/workExperienceTimelineSkeleton';
 import { pickRandomRoleIcon } from './roleIcons';
@@ -71,6 +72,7 @@ export function Resume() {
       <Typography variant="h3" component="h1" sx={{ mb: 3 }}>
         Mariandi Stylianou
       </Typography>
+      <ContactDetails />
       <Section title="Work Experience">
         <Suspense fallback={<WorkExperienceTimelineSkeleton />}>
           <ExperienceList />

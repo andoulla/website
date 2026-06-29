@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import { BulletList } from './BulletList';
 
 describe('BulletList', () => {
   test('renders a list item for each item', () => {
-    render(<BulletList items={['Built APIs', 'Mentored engineers']} />);
+    const screen = render(<BulletList items={['Built APIs', 'Mentored engineers']} />);
     const items = screen.getAllByRole('listitem');
     expect(items).toHaveLength(2);
     expect(items[0]).toHaveTextContent('Built APIs');
@@ -12,7 +12,7 @@ describe('BulletList', () => {
   });
 
   test('renders no items for an empty list', () => {
-    render(<BulletList items={[]} />);
+    const screen = render(<BulletList items={[]} />);
     expect(screen.queryAllByRole('listitem')).toHaveLength(0);
   });
 });

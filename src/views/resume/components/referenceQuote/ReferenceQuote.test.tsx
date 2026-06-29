@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import type { Reference } from '../../../../data/references';
 
@@ -13,14 +13,10 @@ const reference: Reference = {
 };
 
 describe('ReferenceQuote', () => {
-  test('renders the quote and attribution', () => {
-    render(<ReferenceQuote reference={reference} />);
-    expect(screen.getByText('“Great work.”')).toBeVisible();
+  test('renders the quote, attribution, and author initials', () => {
+    const screen = render(<ReferenceQuote reference={reference} />);
+    expect(screen.getByText('"Great work."')).toBeVisible();
     expect(screen.getByText('Priya Shah, Engineering Manager')).toBeVisible();
-  });
-
-  test('shows an avatar with the author initials', () => {
-    render(<ReferenceQuote reference={reference} />);
     expect(screen.getByText('PS')).toBeVisible();
   });
 });

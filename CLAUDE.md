@@ -29,9 +29,10 @@ Note: the pre-commit hook already runs `lint-staged` (`eslint --fix` + `prettier
 - Notable ESLint rules to respect: no `any` (`@typescript-eslint/no-explicit-any`), no floating/misused promises, `consistent-type-imports`, `strict-boolean-expressions`, and grouped/ordered imports (builtin → external → internal → parent → sibling → index, with blank lines between groups).
 - Prettier: single quotes, semicolons, trailing commas (ES5), 100 char width ([.prettierrc](.prettierrc)).
 - Tests follow **React Testing Library guiding principles**: query the DOM the way a user would (`getByRole`, `getByText`, `getByLabelText`, etc.) instead of `container.querySelector`/test IDs, and assert on rendered output/behavior rather than implementation details.
+- Use `const screen = render(<Component />)` — alias the render result as `screen` and use its bound query methods. Do not import the global `screen` from `@testing-library/react`. For async tests that need to flush a resolved promise, render first then flush separately: `const screen = render(...); await act(async () => { await Promise.resolve(); });`
 - Group a component's tests in a `describe` block named after the component, e.g. `describe('Tag', () => { ... })`.
 - When asserting an element is present, use `toBeVisible()` rather than `toBeInTheDocument()` — it's a stronger check. For absence, keep `queryBy...` + `.not.toBeInTheDocument()` (`toBeVisible()` requires a real element, so it can't assert on a `null` query result).
-- Don't use regexes for copy in locators (e.g. `screen.getByText(/Present/)`). Match the exact, full string instead — it's easier to read and doesn't silently pass on partial matches.
+- Don't use regexes for copy in locators (e.g. `getByText(/Present/)`). Match the exact, full string instead — it's easier to read and doesn't silently pass on partial matches.
 
 ## Directory layout
 

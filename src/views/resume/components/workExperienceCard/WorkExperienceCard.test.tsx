@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import type { WorkExperienceWithReferences } from '../../../../utils/joinJobsWithReferences';
 
@@ -22,7 +22,7 @@ function makeExperience(
 
 describe('WorkExperienceCard', () => {
   test('renders company details, responsibilities, and skills', () => {
-    render(<WorkExperienceCard experience={makeExperience()} />);
+    const screen = render(<WorkExperienceCard experience={makeExperience()} />);
 
     expect(screen.getByText('Nimbus Analytics')).toBeVisible();
     expect(screen.getByText('London, UK · Apr 2022 – Present')).toBeVisible();
@@ -32,7 +32,7 @@ describe('WorkExperienceCard', () => {
   });
 
   test('places the company and its sections correctly in the heading hierarchy', () => {
-    render(<WorkExperienceCard experience={makeExperience()} />);
+    const screen = render(<WorkExperienceCard experience={makeExperience()} />);
 
     expect(screen.getByRole('heading', { level: 3, name: 'Nimbus Analytics' })).toBeVisible();
     expect(screen.getByRole('heading', { level: 4, name: 'Responsibilities' })).toBeVisible();
@@ -40,12 +40,14 @@ describe('WorkExperienceCard', () => {
   });
 
   test('renders the end month for a past role instead of "Present"', () => {
-    render(<WorkExperienceCard experience={makeExperience({ endDate: '2023-09-30' })} />);
+    const screen = render(
+      <WorkExperienceCard experience={makeExperience({ endDate: '2023-09-30' })} />
+    );
     expect(screen.getByText('London, UK · Apr 2022 – Sep 2023')).toBeVisible();
   });
 
   test('renders references when present', () => {
-    render(
+    const screen = render(
       <WorkExperienceCard
         experience={makeExperience({
           references: [
@@ -66,7 +68,7 @@ describe('WorkExperienceCard', () => {
   });
 
   test('omits the References section when there are none', () => {
-    render(<WorkExperienceCard experience={makeExperience({ references: [] })} />);
+    const screen = render(<WorkExperienceCard experience={makeExperience({ references: [] })} />);
     expect(screen.queryByText('References')).not.toBeInTheDocument();
   });
 });
