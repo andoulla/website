@@ -38,6 +38,7 @@ export function skillColor(skill: string): SkillColor {
   }
 
   // Sum the character codes for a stable, deterministic index — the same skill always
+  // TODO: remove this just get a map of colours and skills, no need to use charcodesumm
   // resolves to the same fallback color.
   const charCodeSum = [...skill].reduce((sum, char) => sum + char.charCodeAt(0), 0);
 
