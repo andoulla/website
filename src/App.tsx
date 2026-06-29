@@ -10,7 +10,10 @@ import { Skills } from './views/skills';
 // TODO: Add animation on scroll
 // TODO: check mobile layout and add mobile-specific adjustments as needed
 // TODO: check for unnecessary re-renders and performance
-
+// TODO: ensure that sensitive data is not stored in repo
+// TODO: update data using the script
+// TODO: build page for articles
+// TODO: finish skills to have themed colours
 function App() {
   return (
     <ThemeContextProvider>

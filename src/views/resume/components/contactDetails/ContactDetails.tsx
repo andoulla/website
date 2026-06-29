@@ -8,7 +8,7 @@ import { contact } from '../../../../data/contact';
 
 export function ContactDetails() {
   return (
-    <Stack direction="row" spacing={2} justifyContent="center">
+    <Stack direction="row" spacing={2} sx={{ justifyContent: 'center', mt: 0.5 }}>
       <Link href={`mailto:${contact.email}`} underline="hover" color="primary">
         <Email aria-hidden="true" fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
         {contact.email}

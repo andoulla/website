@@ -64,7 +64,7 @@ export function Resume() {
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
       <Box sx={{ mb: 5, textAlign: 'center' }}>
-        <Typography variant="h3" component="h1" sx={{ mb: 0 }}>
+        <Typography variant="h3" component="h1" sx={{ mb: 0, pb: 0.5 }}>
           Mariandi Stylianou
         </Typography>
         <ContactDetails />
