@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import type { WorkExperienceWithReferences } from '../../../../utils/joinJobsWithReferences';
 
@@ -70,5 +71,29 @@ describe('WorkExperienceCard', () => {
   test('omits the References section when there are none', () => {
     const screen = render(<WorkExperienceCard experience={makeExperience({ references: [] })} />);
     expect(screen.queryByText('References')).not.toBeInTheDocument();
+  });
+
+  test('has no axe violations without references', async () => {
+    const screen = render(<WorkExperienceCard experience={makeExperience()} />);
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('has no axe violations with references', async () => {
+    const screen = render(
+      <WorkExperienceCard
+        experience={makeExperience({
+          references: [
+            {
+              id: 'ref-1',
+              jobId: 'job-1',
+              authorName: 'Priya Shah',
+              authorRole: 'Engineering Manager',
+              quote: 'Great work.',
+            },
+          ],
+        })}
+      />
+    );
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import type { Reference } from '../../../../data/references';
 
@@ -18,5 +19,10 @@ describe('ReferenceQuote', () => {
     expect(screen.getByText('"Great work."')).toBeVisible();
     expect(screen.getByText('Priya Shah, Engineering Manager')).toBeVisible();
     expect(screen.getByText('PS')).toBeVisible();
+  });
+
+  test('has no axe violations', async () => {
+    const screen = render(<ReferenceQuote reference={reference} />);
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

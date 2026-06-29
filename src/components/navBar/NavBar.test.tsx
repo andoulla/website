@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
 import { NavBar } from './NavBar';
@@ -16,5 +17,10 @@ describe('NavBar', () => {
     const skillsLink = screen.getByRole('link', { name: 'Skills' });
     expect(skillsLink).toBeVisible();
     expect(skillsLink).toHaveAttribute('href', '/skills');
+  });
+
+  test('has no axe violations', async () => {
+    const screen = render(<NavBar />, { wrapper: MemoryRouter });
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

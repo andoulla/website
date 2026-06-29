@@ -30,31 +30,31 @@ function WorkExperienceCardSkeleton() {
 
 export function WorkExperienceTimelineSkeleton() {
   return (
-    <Timeline
-      role="status"
-      aria-label="Loading work experience"
-      // Match the loaded timeline: full-width cards, no opposite-content column,
-      // and the same top spacing below the heading.
-      sx={{
-        mt: 3,
-        mb: 0,
-        mx: 0,
-        p: 0,
-        [`& .${timelineItemClasses.root}:not(:has(.${timelineOppositeContentClasses.root}))::before`]:
-          { flex: 0, p: 0 },
-      }}
-    >
-      {Array.from({ length: SKELETON_ITEM_COUNT }, (_, index) => (
-        <TimelineItem key={index}>
-          <TimelineSeparator>
-            <TimelineDot color="primary" />
-            {index < SKELETON_ITEM_COUNT - 1 && <TimelineConnector />}
-          </TimelineSeparator>
-          <TimelineContent sx={{ pr: 0 }}>
-            <WorkExperienceCardSkeleton />
-          </TimelineContent>
-        </TimelineItem>
-      ))}
-    </Timeline>
+    <div role="status" aria-label="Loading work experience">
+      <Timeline
+        // Match the loaded timeline: full-width cards, no opposite-content column,
+        // and the same top spacing below the heading.
+        sx={{
+          mt: 3,
+          mb: 0,
+          mx: 0,
+          p: 0,
+          [`& .${timelineItemClasses.root}:not(:has(.${timelineOppositeContentClasses.root}))::before`]:
+            { flex: 0, p: 0 },
+        }}
+      >
+        {Array.from({ length: SKELETON_ITEM_COUNT }, (_, index) => (
+          <TimelineItem key={index}>
+            <TimelineSeparator>
+              <TimelineDot color="primary" />
+              {index < SKELETON_ITEM_COUNT - 1 && <TimelineConnector />}
+            </TimelineSeparator>
+            <TimelineContent sx={{ pr: 0 }}>
+              <WorkExperienceCardSkeleton />
+            </TimelineContent>
+          </TimelineItem>
+        ))}
+      </Timeline>
+    </div>
   );
 }

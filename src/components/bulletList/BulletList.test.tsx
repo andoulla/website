@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { BulletList } from './BulletList';
 
@@ -14,5 +15,15 @@ describe('BulletList', () => {
   test('renders no items for an empty list', () => {
     const screen = render(<BulletList items={[]} />);
     expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+  });
+
+  test('has no axe violations with items', async () => {
+    const screen = render(<BulletList items={['Built APIs', 'Mentored engineers']} />);
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('has no axe violations with an empty list', async () => {
+    const screen = render(<BulletList items={[]} />);
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

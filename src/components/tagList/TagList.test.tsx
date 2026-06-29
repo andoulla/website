@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { TagList } from './TagList';
 
@@ -14,5 +15,15 @@ describe('TagList', () => {
   test('renders no tags for an empty list', () => {
     const screen = render(<TagList items={[]} />);
     expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+  });
+
+  test('has no axe violations with tags', async () => {
+    const screen = render(<TagList items={['React', 'TypeScript']} />);
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('has no axe violations with an empty list', async () => {
+    const screen = render(<TagList items={[]} />);
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

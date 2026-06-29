@@ -1,4 +1,5 @@
 import { act, render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import App from './App';
 import type { WorkExperienceWithReferences } from './utils/joinJobsWithReferences';
@@ -23,6 +24,7 @@ jest.mock('./utils/loadExperiences', () => ({
 
 describe('App', () => {
   test('renders the nav bar and the resume on the home route', async () => {
+    // TODO: remove the usage of !
     let screen!: ReturnType<typeof render>;
     await act(async () => {
       screen = render(<App />);
@@ -39,5 +41,14 @@ describe('App', () => {
 
     expect(screen.getByRole('heading', { name: 'Mariandi Stylianou' })).toBeVisible();
     expect(screen.getByText('Nimbus Analytics')).toBeVisible();
+  });
+
+  test('has no axe violations on the home route', async () => {
+    let screen!: ReturnType<typeof render>;
+    await act(async () => {
+      screen = render(<App />);
+      await Promise.resolve();
+    });
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

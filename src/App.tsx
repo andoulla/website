@@ -7,7 +7,6 @@ import { Skills } from './views/skills';
 
 // TODO: Add animation on scroll
 // TODO: check mobile layout and add mobile-specific adjustments as needed
-// TODO: check accessibility
 // TODO: check for unnecessary re-renders and performance
 
 function App() {

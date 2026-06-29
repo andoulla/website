@@ -1,4 +1,5 @@
 import { act, render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ResumeDataProvider } from '../../context/resumeData';
 import type { WorkExperienceWithReferences } from '../../utils/joinJobsWithReferences';
@@ -51,5 +52,17 @@ describe('Resume', () => {
     expect(screen.getByText('Nimbus Analytics')).toBeVisible();
     expect(screen.getByText('Brightleaf Software')).toBeVisible();
     expect(screen.getByText('Harborview Digital')).toBeVisible();
+  });
+
+  test('has no axe violations in the loading state', async () => {
+    const screen = await renderResume(
+      () => new Promise<WorkExperienceWithReferences[]>(() => undefined)
+    );
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('has no axe violations in the loaded state', async () => {
+    const screen = await renderResume(() => Promise.resolve(testExperiences));
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

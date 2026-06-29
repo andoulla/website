@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ContactDetails } from './ContactDetails';
 
@@ -19,5 +20,10 @@ describe('ContactDetails', () => {
     expect(githubLink).toBeVisible();
     expect(githubLink).toHaveAttribute('target', '_blank');
     expect(githubLink).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
+  test('has no axe violations', async () => {
+    const screen = render(<ContactDetails />);
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

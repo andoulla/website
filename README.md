@@ -10,7 +10,7 @@ This is a personal project I'm using to explore Claude's models and features, wi
 - `yarn dev` — start Vite development server
 - `yarn build` — create production build
 - `yarn preview` — preview production build locally
-- `yarn test` — run Jest tests
+- `yarn test` — run Jest tests (includes jest-axe accessibility checks)
 - `yarn lint` — run ESLint
 - `yarn lint:fix` — fix lintable issues
 - `yarn format` — format code with Prettier
