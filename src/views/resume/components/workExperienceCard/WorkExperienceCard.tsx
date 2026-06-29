@@ -1,8 +1,8 @@
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
-import Stack from '@mui/material/Stack';
 
 import { BulletList } from '../../../../components/bulletList';
 import { Section } from '../../../../components/section';
@@ -66,11 +66,17 @@ export function WorkExperienceCard({ experience }: WorkExperienceCardProps) {
           <>
             <Divider sx={{ my: 2 }} />
             <Section title="References" titleLevel={4}>
-              <Stack spacing={1.5}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
+                  gap: 1.5,
+                }}
+              >
                 {experience.references.map((reference) => (
                   <ReferenceQuote key={reference.id} reference={reference} />
                 ))}
-              </Stack>
+              </Box>
             </Section>
           </>
         )}
