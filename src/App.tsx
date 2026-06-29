@@ -1,6 +1,8 @@
+import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { NavBar } from './components/navBar';
+import { ThemeContextProvider } from './context/theme';
 import { ResumeDataProvider } from './context/resumeData';
 import { Resume } from './views/resume';
 import { Skills } from './views/skills';
@@ -11,15 +13,18 @@ import { Skills } from './views/skills';
 
 function App() {
   return (
-    <ResumeDataProvider>
-      <BrowserRouter>
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<Resume />} />
-          <Route path="/skills" element={<Skills />} />
-        </Routes>
-      </BrowserRouter>
-    </ResumeDataProvider>
+    <ThemeContextProvider>
+      <CssBaseline />
+      <ResumeDataProvider>
+        <BrowserRouter>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Resume />} />
+            <Route path="/skills" element={<Skills />} />
+          </Routes>
+        </BrowserRouter>
+      </ResumeDataProvider>
+    </ThemeContextProvider>
   );
 }
 
