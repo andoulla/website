@@ -2,7 +2,7 @@
 // One-off conversion utility — not part of the app build/lint/type-check surface.
 //
 // Converts the "Positions.csv" file from a LinkedIn data export
-// (Settings -> Data privacy -> Get a copy of your data) into the
+// (Settings -> Data privacy -> Download my data) into the
 // src/data/jobs.json shape used by loadExperiences.
 //
 // Usage:

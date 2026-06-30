@@ -2,7 +2,7 @@
 // One-off conversion utility — not part of the app build/lint/type-check surface.
 //
 // Converts the "Recommendations_Received.csv" file from a LinkedIn data export
-// (Settings -> Data privacy -> Get a copy of your data) into the
+// (Settings -> Data privacy -> Download my data) into the
 // src/data/recommendations.json shape used by loadExperiences.
 //
 // Recommenders' full names are read from the CSV but never written to the
