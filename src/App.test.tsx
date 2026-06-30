@@ -2,12 +2,12 @@ import { act, render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
 import App from './App';
-import type { WorkExperienceWithReferences } from './utils/joinJobsWithReferences';
+import type { WorkExperienceWithRecommendations } from './utils/joinJobsWithRecommendations';
 
 // Stub the deferred loader so the home route renders its data instantly in tests.
 // (ts-jest hoists jest.mock above the imports above.)
 jest.mock('./utils/loadExperiences', () => ({
-  loadExperiences: (): Promise<WorkExperienceWithReferences[]> =>
+  loadExperiences: (): Promise<WorkExperienceWithRecommendations[]> =>
     Promise.resolve([
       {
         id: 'job-1',
@@ -17,7 +17,9 @@ jest.mock('./utils/loadExperiences', () => ({
         endDate: null,
         responsibilities: [],
         skills: [],
-        references: [],
+        logo: '',
+        experienceUrl: 'https://www.linkedin.com/in/example/details/experience/',
+        recommendations: [],
       },
     ]),
 }));

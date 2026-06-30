@@ -7,11 +7,11 @@ import Divider from '@mui/material/Divider';
 import { BulletList } from '../../../../components/bulletList';
 import { Section } from '../../../../components/section';
 import { TagList } from '../../../../components/tagList';
-import { ReferenceQuote } from '../referenceQuote';
-import type { WorkExperienceWithReferences } from '../../../../utils/joinJobsWithReferences';
+import { RecommendationText } from '../recommendationText';
+import type { WorkExperienceWithRecommendations } from '../../../../utils/joinJobsWithRecommendations';
 
 export interface WorkExperienceCardProps {
-  experience: WorkExperienceWithReferences;
+  experience: WorkExperienceWithRecommendations;
 }
 
 const MONTH_NAMES = [
@@ -62,10 +62,10 @@ export function WorkExperienceCard({ experience }: WorkExperienceCardProps) {
         <Section title="Key Skills" titleLevel={4}>
           <TagList items={experience.skills} />
         </Section>
-        {experience.references.length > 0 && (
+        {experience.recommendations.length > 0 && (
           <>
             <Divider sx={{ my: 2 }} />
-            <Section title="References" titleLevel={4}>
+            <Section title="Recommendations" titleLevel={4}>
               <Box
                 sx={{
                   display: 'grid',
@@ -73,8 +73,8 @@ export function WorkExperienceCard({ experience }: WorkExperienceCardProps) {
                   gap: 1.5,
                 }}
               >
-                {experience.references.map((reference) => (
-                  <ReferenceQuote key={reference.id} reference={reference} />
+                {experience.recommendations.map((recommendation) => (
+                  <RecommendationText key={recommendation.id} recommendation={recommendation} />
                 ))}
               </Box>
             </Section>

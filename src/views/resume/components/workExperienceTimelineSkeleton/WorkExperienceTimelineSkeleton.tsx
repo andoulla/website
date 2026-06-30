@@ -12,6 +12,8 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 
 const SKELETON_ITEM_COUNT = 3;
+// TODO: rename this to something beter than experience, Job, Role, position or a combination of those. Maybe WorkExperience or WorkExperienceItem.
+// TODO: check and convert to arrow functions
 
 function WorkExperienceCardSkeleton() {
   return (

@@ -1,11 +1,11 @@
 import { act, render } from '@testing-library/react';
 import { Suspense } from 'react';
 
-import type { WorkExperienceWithReferences } from '../../utils/joinJobsWithReferences';
+import type { WorkExperienceWithRecommendations } from '../../utils/joinJobsWithRecommendations';
 
 import { ResumeDataProvider, useResumeData } from './ResumeDataProvider';
 // TODO Move this to a class pattern that will allow for generating data
-const testExperiences: WorkExperienceWithReferences[] = [
+const testExperiences: WorkExperienceWithRecommendations[] = [
   {
     id: 'job-1',
     companyName: 'Nimbus Analytics',
@@ -14,7 +14,9 @@ const testExperiences: WorkExperienceWithReferences[] = [
     endDate: null,
     responsibilities: [],
     skills: [],
-    references: [],
+    logo: '',
+    experienceUrl: 'https://www.linkedin.com/in/example/details/experience/',
+    recommendations: [],
   },
 ];
 

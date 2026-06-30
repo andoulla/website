@@ -1,15 +1,15 @@
 import { ARTIFICIAL_DELAY_MS } from '../../constants';
-import { joinJobsWithReferences } from '../joinJobsWithReferences';
-import type { WorkExperienceWithReferences } from '../joinJobsWithReferences';
+import { joinJobsWithRecommendations } from '../joinJobsWithRecommendations';
+import type { WorkExperienceWithRecommendations } from '../joinJobsWithRecommendations';
 
-export async function loadExperiences(): Promise<WorkExperienceWithReferences[]> {
+export async function loadExperiences(): Promise<WorkExperienceWithRecommendations[]> {
   // Dynamic import() code-splits the data so it isn't pulled in at module load; the
   // third Promise.all entry runs the artificial delay concurrently with the imports.
-  const [{ jobs }, { references }] = await Promise.all([
+  const [{ jobs }, { recommendations }] = await Promise.all([
     import('../../data/jobs'),
-    import('../../data/references'),
+    import('../../data/recommendations'),
     new Promise((resolve) => setTimeout(resolve, ARTIFICIAL_DELAY_MS)),
   ]);
 
-  return joinJobsWithReferences(jobs, references);
+  return joinJobsWithRecommendations(jobs, recommendations);
 }

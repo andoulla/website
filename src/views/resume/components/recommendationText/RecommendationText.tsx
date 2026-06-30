@@ -4,14 +4,13 @@ import CardContent from '@mui/material/CardContent';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { getInitials } from '../../../../utils/getInitials';
-import type { Reference } from '../../../../data/references';
+import type { Recommendation } from '../../../../data/recommendations';
 
-export interface ReferenceQuoteProps {
-  reference: Reference;
+export interface RecommendationTextProps {
+  recommendation: Recommendation;
 }
 
-export function ReferenceQuote({ reference }: ReferenceQuoteProps) {
+export function RecommendationText({ recommendation }: RecommendationTextProps) {
   const color = 'primary';
   return (
     <Card
@@ -24,7 +23,7 @@ export function ReferenceQuote({ reference }: ReferenceQuoteProps) {
     >
       <CardContent>
         <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-          {`"${reference.quote}"`}
+          {`"${recommendation.text}"`}
         </Typography>
         <Stack direction="row" spacing={1} sx={{ mt: 1, alignItems: 'center' }}>
           <Avatar
@@ -36,10 +35,11 @@ export function ReferenceQuote({ reference }: ReferenceQuoteProps) {
               color: theme.palette[color].contrastText,
             })}
           >
-            {getInitials(reference.authorName)}
+            {recommendation.authorInitials}
           </Avatar>
           <Typography variant="caption" color="text.secondary">
-            {reference.authorName}, {reference.authorRole}
+            {recommendation.authorInitials}, {recommendation.authorRole.jobTitle},{' '}
+            {recommendation.authorRole.company}
           </Typography>
         </Stack>
       </CardContent>

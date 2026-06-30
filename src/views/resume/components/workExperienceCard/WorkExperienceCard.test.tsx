@@ -1,13 +1,13 @@
 import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
-import type { WorkExperienceWithReferences } from '../../../../utils/joinJobsWithReferences';
+import type { WorkExperienceWithRecommendations } from '../../../../utils/joinJobsWithRecommendations';
 
 import { WorkExperienceCard } from './WorkExperienceCard';
 
 function makeExperience(
-  overrides: Partial<WorkExperienceWithReferences> = {}
-): WorkExperienceWithReferences {
+  overrides: Partial<WorkExperienceWithRecommendations> = {}
+): WorkExperienceWithRecommendations {
   return {
     id: 'job-1',
     companyName: 'Nimbus Analytics',
@@ -16,7 +16,9 @@ function makeExperience(
     endDate: null,
     responsibilities: ['Lead frontend architecture'],
     skills: ['React', 'TypeScript'],
-    references: [],
+    logo: '',
+    experienceUrl: 'https://www.linkedin.com/in/example/details/experience/',
+    recommendations: [],
     ...overrides,
   };
 }
@@ -47,48 +49,54 @@ describe('WorkExperienceCard', () => {
     expect(screen.getByText('London, UK · Apr 2022 – Sep 2023')).toBeVisible();
   });
 
-  test('renders references when present', () => {
+  test('renders recommendations when present', () => {
     const screen = render(
       <WorkExperienceCard
         experience={makeExperience({
-          references: [
+          recommendations: [
             {
-              id: 'ref-1',
+              id: 'rec-1',
               jobId: 'job-1',
-              authorName: 'Priya Shah',
-              authorRole: 'Engineering Manager',
-              quote: 'Great work.',
+              authorInitials: 'PS',
+              authorRole: { jobTitle: 'Engineering Manager', company: 'Nimbus Analytics' },
+              text: 'Great work.',
+              postedDate: '2023-06-12',
+              recommendationUrl: 'https://www.linkedin.com/in/example/details/recommendations/',
             },
           ],
         })}
       />
     );
 
-    expect(screen.getByText('References')).toBeVisible();
-    expect(screen.getByText('Priya Shah, Engineering Manager')).toBeVisible();
+    expect(screen.getByText('Recommendations')).toBeVisible();
+    expect(screen.getByText('PS, Engineering Manager, Nimbus Analytics')).toBeVisible();
   });
 
-  test('omits the References section when there are none', () => {
-    const screen = render(<WorkExperienceCard experience={makeExperience({ references: [] })} />);
-    expect(screen.queryByText('References')).not.toBeInTheDocument();
+  test('omits the Recommendations section when there are none', () => {
+    const screen = render(
+      <WorkExperienceCard experience={makeExperience({ recommendations: [] })} />
+    );
+    expect(screen.queryByText('Recommendations')).not.toBeInTheDocument();
   });
 
-  test('has no axe violations without references', async () => {
+  test('has no axe violations without recommendations', async () => {
     const screen = render(<WorkExperienceCard experience={makeExperience()} />);
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('has no axe violations with references', async () => {
+  test('has no axe violations with recommendations', async () => {
     const screen = render(
       <WorkExperienceCard
         experience={makeExperience({
-          references: [
+          recommendations: [
             {
-              id: 'ref-1',
+              id: 'rec-1',
               jobId: 'job-1',
-              authorName: 'Priya Shah',
-              authorRole: 'Engineering Manager',
-              quote: 'Great work.',
+              authorInitials: 'PS',
+              authorRole: { jobTitle: 'Engineering Manager', company: 'Nimbus Analytics' },
+              text: 'Great work.',
+              postedDate: '2023-06-12',
+              recommendationUrl: 'https://www.linkedin.com/in/example/details/recommendations/',
             },
           ],
         })}

@@ -10,7 +10,9 @@
       "Mentor two junior engineers through pairing and code review",
       "Drive adoption of automated accessibility testing"
     ],
-    "skills": ["React", "TypeScript", "GraphQL", "Accessibility"]
+    "skills": ["React", "TypeScript", "GraphQL", "Accessibility"],
+    "logo": "",
+    "experienceUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/experience/"
   },
   {
     "id": "job-2",
@@ -23,7 +25,9 @@
       "Migrated legacy jQuery UI to a React component library",
       "Owned the CI/CD pipeline for the platform team"
     ],
-    "skills": ["React", "Node.js", "PostgreSQL", "Docker"]
+    "skills": ["React", "Node.js", "PostgreSQL", "Docker"],
+    "logo": "",
+    "experienceUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/experience/"
   },
   {
     "id": "job-3",
@@ -35,6 +39,8 @@
       "Implemented responsive marketing pages for client campaigns",
       "Collaborated with designers to build a shared style guide"
     ],
-    "skills": ["JavaScript", "CSS", "HTML", "jQuery"]
+    "skills": ["JavaScript", "CSS", "HTML", "jQuery"],
+    "logo": "",
+    "experienceUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/experience/"
   }
 ]

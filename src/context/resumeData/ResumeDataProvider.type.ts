@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 
-import type { WorkExperienceWithReferences } from '../../utils/joinJobsWithReferences';
+import type { WorkExperienceWithRecommendations } from '../../utils/joinJobsWithRecommendations';
 
-export type ExperiencesPromise = Promise<WorkExperienceWithReferences[]>;
+export type ExperiencesPromise = Promise<WorkExperienceWithRecommendations[]>;
 
 export interface ResumeDataProviderProps {
   children: ReactNode;
