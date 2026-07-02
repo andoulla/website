@@ -27,11 +27,14 @@ const RECOMMENDATIONS: Recommendation[] = [
 ];
 
 describe('SkillsListView', () => {
-  test('renders a chip for each skill with years', () => {
+  test('renders a list item for each skill with name and years', () => {
     const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
-    expect(screen.getByText('React · est. 4 years')).toBeVisible();
-    expect(screen.getByText('Team Leadership · est. 3 years')).toBeVisible();
-    expect(screen.getByText('Mentoring · est. 2 years')).toBeVisible();
+    expect(screen.getByText('React')).toBeVisible();
+    expect(screen.getByText('est. 4 years')).toBeVisible();
+    expect(screen.getByText('Team Leadership')).toBeVisible();
+    expect(screen.getByText('est. 3 years')).toBeVisible();
+    expect(screen.getByText('Mentoring')).toBeVisible();
+    expect(screen.getByText('est. 2 years')).toBeVisible();
   });
 
   test('renders category section headings', () => {
@@ -46,22 +49,36 @@ describe('SkillsListView', () => {
     expect(screen.queryByText('Other')).not.toBeInTheDocument();
   });
 
-  test('opens a popover with linked recommendations on chip click', async () => {
+  test('opens a popover with linked recommendations on list item click', async () => {
     const user = userEvent.setup();
     const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
-    await user.click(screen.getByText('Mentoring · est. 2 years'));
+    await user.click(screen.getByText('Mentoring'));
     expect(screen.getByText('Excellent mentor.')).toBeVisible();
   });
 
   test('shows empty state in popover when no recommendations match', async () => {
     const user = userEvent.setup();
     const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
-    await user.click(screen.getByText('React · est. 4 years'));
+    await user.click(screen.getByText('React'));
     expect(screen.getByText('No recommendations yet.')).toBeVisible();
+  });
+
+  test('applies a highlight to the skill matching highlightedSkill', () => {
+    const screen = render(
+      <SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} highlightedSkill="React" />
+    );
+    expect(screen.getByRole('button', { name: /React/ })).toBeVisible();
   });
 
   test('has no axe violations', async () => {
     const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('has no axe violations with a highlighted skill', async () => {
+    const screen = render(
+      <SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} highlightedSkill="React" />
+    );
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

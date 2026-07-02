@@ -1,4 +1,5 @@
 import { Suspense, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -20,6 +21,9 @@ function SkillsContent() {
   const experiences = useResumeData();
   const skills = calculateSkillYears(experiences);
   const recommendations = experiences.flatMap((e) => e.recommendations);
+
+  const [searchParams] = useSearchParams();
+  const highlightedSkill = searchParams.get('skill') ?? undefined;
 
   const [viewMode, setViewMode] = useState<ViewMode>('list');
 
@@ -46,7 +50,11 @@ function SkillsContent() {
         </ToggleButtonGroup>
       </Stack>
       {viewMode === 'list' ? (
-        <SkillsListView skills={skills} recommendations={recommendations} />
+        <SkillsListView
+          skills={skills}
+          recommendations={recommendations}
+          highlightedSkill={highlightedSkill}
+        />
       ) : (
         <SkillsGraphView />
       )}

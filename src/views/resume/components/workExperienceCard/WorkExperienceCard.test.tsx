@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
+import { MemoryRouter } from 'react-router-dom';
 
 import type { WorkExperienceWithRecommendations } from '../../../../types';
 
@@ -26,7 +27,9 @@ function makeExperience(
 
 describe('WorkExperienceCard', () => {
   test('renders company details, responsibilities, and skills', () => {
-    const screen = render(<WorkExperienceCard experience={makeExperience()} />);
+    const screen = render(<WorkExperienceCard experience={makeExperience()} />, {
+      wrapper: MemoryRouter,
+    });
 
     expect(screen.getByText('Nimbus Analytics')).toBeVisible();
     expect(screen.getByText('London, UK · Apr 2022 – Present')).toBeVisible();
@@ -36,7 +39,9 @@ describe('WorkExperienceCard', () => {
   });
 
   test('places the company and its sections correctly in the heading hierarchy', () => {
-    const screen = render(<WorkExperienceCard experience={makeExperience()} />);
+    const screen = render(<WorkExperienceCard experience={makeExperience()} />, {
+      wrapper: MemoryRouter,
+    });
 
     expect(screen.getByRole('heading', { level: 3, name: 'Nimbus Analytics' })).toBeVisible();
     expect(screen.getByRole('heading', { level: 4, name: 'Tech Stack' })).toBeVisible();
@@ -48,7 +53,8 @@ describe('WorkExperienceCard', () => {
     const screen = render(
       <WorkExperienceCard
         experience={makeExperience({ techStack: ['Vite', 'Jest', 'Playwright'] })}
-      />
+      />,
+      { wrapper: MemoryRouter }
     );
 
     expect(screen.getByRole('heading', { level: 4, name: 'Tech Stack' })).toBeVisible();
@@ -57,7 +63,8 @@ describe('WorkExperienceCard', () => {
 
   test('renders the end month for a past role instead of "Present"', () => {
     const screen = render(
-      <WorkExperienceCard experience={makeExperience({ endDate: '2023-09-30' })} />
+      <WorkExperienceCard experience={makeExperience({ endDate: '2023-09-30' })} />,
+      { wrapper: MemoryRouter }
     );
     expect(screen.getByText('London, UK · Apr 2022 – Sep 2023')).toBeVisible();
   });
@@ -78,7 +85,8 @@ describe('WorkExperienceCard', () => {
             },
           ],
         })}
-      />
+      />,
+      { wrapper: MemoryRouter }
     );
 
     expect(screen.getByText('Recommendations')).toBeVisible();
@@ -87,13 +95,16 @@ describe('WorkExperienceCard', () => {
 
   test('omits the Recommendations section when there are none', () => {
     const screen = render(
-      <WorkExperienceCard experience={makeExperience({ recommendations: [] })} />
+      <WorkExperienceCard experience={makeExperience({ recommendations: [] })} />,
+      { wrapper: MemoryRouter }
     );
     expect(screen.queryByText('Recommendations')).not.toBeInTheDocument();
   });
 
   test('has no axe violations without recommendations', async () => {
-    const screen = render(<WorkExperienceCard experience={makeExperience()} />);
+    const screen = render(<WorkExperienceCard experience={makeExperience()} />, {
+      wrapper: MemoryRouter,
+    });
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
@@ -113,7 +124,8 @@ describe('WorkExperienceCard', () => {
             },
           ],
         })}
-      />
+      />,
+      { wrapper: MemoryRouter }
     );
     expect(await axe(screen.container)).toHaveNoViolations();
   });

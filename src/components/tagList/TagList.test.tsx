@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
 import { TagList } from './TagList';
@@ -25,5 +26,14 @@ describe('TagList', () => {
   test('has no axe violations with an empty list', async () => {
     const screen = render(<TagList items={[]} />);
     expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('calls onItemClick with the item name when a tag is clicked', async () => {
+    const user = userEvent.setup();
+    const onItemClick = jest.fn();
+    const screen = render(<TagList items={['React', 'TypeScript']} onItemClick={onItemClick} />);
+    await user.click(screen.getByText('React'));
+    expect(onItemClick).toHaveBeenCalledWith('React');
+    expect(onItemClick).toHaveBeenCalledTimes(1);
   });
 });

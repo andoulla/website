@@ -1,5 +1,6 @@
 import { act, render } from '@testing-library/react';
 import { axe } from 'jest-axe';
+import { MemoryRouter } from 'react-router-dom';
 
 import type { WorkExperienceWithRecommendations } from '../../types';
 import { ResumeDataProvider } from '../../context/resumeData';
@@ -24,9 +25,11 @@ const EXPERIENCES: WorkExperienceWithRecommendations[] = [
 
 function renderWithProvider() {
   return render(
-    <ResumeDataProvider loader={() => Promise.resolve(EXPERIENCES)}>
-      <Skills />
-    </ResumeDataProvider>
+    <MemoryRouter>
+      <ResumeDataProvider loader={() => Promise.resolve(EXPERIENCES)}>
+        <Skills />
+      </ResumeDataProvider>
+    </MemoryRouter>
   );
 }
 
@@ -36,13 +39,13 @@ describe('Skills', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Skills' })).toBeVisible();
   });
 
-  test('renders skill chips after data loads', async () => {
+  test('renders skill list items after data loads', async () => {
     let screen!: ReturnType<typeof render>;
     await act(async () => {
       screen = renderWithProvider();
       await Promise.resolve();
     });
-    expect(screen.getByText('React · est. 2.5 years')).toBeVisible();
+    expect(screen.getByText('Team Leadership')).toBeVisible();
   });
 
   test('renders the List/Graph toggle after data loads', async () => {

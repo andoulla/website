@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
 import Popover from '@mui/material/Popover';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 
 import { Section } from '../../../../components/section';
 import type { Recommendation } from '../../../../types';
@@ -17,6 +20,7 @@ import { computeShadeColour } from '../../../../utils/computeShadeColour';
 interface SkillsListViewProps {
   skills: SkillSummary[];
   recommendations: Recommendation[];
+  highlightedSkill?: string;
 }
 
 const CATEGORY_LABELS: Record<SkillCategory, string> = {
@@ -33,9 +37,17 @@ interface PopoverState {
   skill: SkillSummary;
 }
 
-export function SkillsListView({ skills, recommendations }: SkillsListViewProps) {
+const skillElementId = (name: string) => `skill-${encodeURIComponent(name)}`;
+
+export function SkillsListView({ skills, recommendations, highlightedSkill }: SkillsListViewProps) {
   const theme = useTheme();
   const [popover, setPopover] = useState<PopoverState | null>(null);
+
+  useEffect(() => {
+    if (highlightedSkill === undefined) return;
+    const el = document.getElementById(skillElementId(highlightedSkill));
+    el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [highlightedSkill]);
 
   const byCategory = CATEGORY_ORDER.reduce<Record<SkillCategory, SkillSummary[]>>(
     (acc, cat) => {
@@ -48,39 +60,63 @@ export function SkillsListView({ skills, recommendations }: SkillsListViewProps)
   const linkedRecs =
     popover !== null ? recommendations.filter((r) => r.skills.includes(popover.skill.skill)) : [];
 
-  function chipSx(skill: SkillSummary) {
+  function dotColour(skill: SkillSummary): string {
     const { colour } = skill;
-    if (colour === 'default') return {};
+    if (colour === 'default') return theme.palette.grey[400];
     const paletteEntry = theme.palette[colour as keyof typeof theme.palette];
     if (paletteEntry === null || typeof paletteEntry !== 'object' || !('main' in paletteEntry)) {
-      return {};
+      return theme.palette.grey[400];
     }
-    const { bg, textColour } = computeShadeColour(
+    const { bg } = computeShadeColour(
       (paletteEntry as { main: string }).main,
       skillShadeIndex(skill.skill),
       theme.palette.getContrastText
     );
-    return { bgcolor: bg, color: textColour };
+    return bg;
   }
 
   return (
     <>
-      <Stack spacing={4}>
+      <Stack spacing={2}>
         {CATEGORY_ORDER.filter((cat) => byCategory[cat].length > 0).map((cat) => (
           <Section key={cat} title={CATEGORY_LABELS[cat]}>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {byCategory[cat].map((s) => (
-                <Chip
-                  key={s.skill}
-                  label={`${s.skill} · est. ${s.years} years`}
-                  size="small"
-                  onClick={(e) => {
-                    setPopover({ anchor: e.currentTarget, skill: s });
-                  }}
-                  sx={{ cursor: 'pointer', ...chipSx(s) }}
-                />
-              ))}
-            </Box>
+            <List disablePadding dense>
+              {byCategory[cat].map((s) => {
+                const isHighlighted = s.skill === highlightedSkill;
+                return (
+                  <ListItem key={s.skill} disablePadding>
+                    <ListItemButton
+                      id={skillElementId(s.skill)}
+                      onClick={(e) => {
+                        setPopover({ anchor: e.currentTarget, skill: s });
+                      }}
+                      sx={{
+                        borderRadius: 1,
+                        transition: 'background-color 0.4s ease',
+                        ...(isHighlighted && {
+                          bgcolor: alpha(theme.palette.primary.main, 0.12),
+                        }),
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: '50%',
+                          bgcolor: dotColour(s),
+                          flexShrink: 0,
+                          mr: 1.5,
+                        }}
+                      />
+                      <ListItemText primary={s.skill} />
+                      <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                        {`est. ${s.years} years`}
+                      </Typography>
+                    </ListItemButton>
+                  </ListItem>
+                );
+              })}
+            </List>
           </Section>
         ))}
       </Stack>
@@ -106,7 +142,7 @@ export function SkillsListView({ skills, recommendations }: SkillsListViewProps)
             <Stack spacing={1.5} divider={<Divider />}>
               {linkedRecs.map((rec) => (
                 <Box key={rec.id}>
-                  <Typography variant="caption" color="text.secondary" display="block">
+                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                     {rec.authorInitials} · {rec.authorRole.jobTitle}, {rec.authorRole.company}
                   </Typography>
                   <Typography variant="body2" sx={{ mt: 0.5 }}>

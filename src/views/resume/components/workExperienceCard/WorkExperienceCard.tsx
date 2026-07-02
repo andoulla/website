@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -41,6 +42,7 @@ function formatDuration(startDate: string, endDate: string | null): string {
 }
 
 export function WorkExperienceCard({ experience }: WorkExperienceCardProps) {
+  const navigate = useNavigate();
   const duration = formatDuration(experience.startDate, experience.endDate);
 
   return (
@@ -75,7 +77,12 @@ export function WorkExperienceCard({ experience }: WorkExperienceCardProps) {
         </Section>
         <Divider sx={{ my: 2 }} />
         <Section title="Key Skills" titleLevel={4}>
-          <TagList items={experience.skills} />
+          <TagList
+            items={experience.skills}
+            onItemClick={(skill) => {
+              void navigate(`/skills?skill=${encodeURIComponent(skill)}`);
+            }}
+          />
         </Section>
         {experience.recommendations.length > 0 && (
           <>

@@ -9,9 +9,10 @@ export interface TagProps {
   children: ReactNode;
   colour?: ChipProps['color'];
   shadeIndex?: number;
+  onClick?: () => void;
 }
 
-export function Tag({ children, colour, shadeIndex }: TagProps) {
+export function Tag({ children, colour, shadeIndex, onClick }: TagProps) {
   const theme = useTheme();
 
   if (shadeIndex !== undefined && colour !== undefined && colour !== 'default') {
@@ -22,9 +23,16 @@ export function Tag({ children, colour, shadeIndex }: TagProps) {
         shadeIndex,
         theme.palette.getContrastText
       );
-      return <Chip size="small" label={children} sx={{ bgcolor: bg, color: textColour }} />;
+      return (
+        <Chip
+          size="small"
+          label={children}
+          sx={{ bgcolor: bg, color: textColour }}
+          onClick={onClick}
+        />
+      );
     }
   }
 
-  return <Chip label={children} color={colour} size="small" />;
+  return <Chip label={children} color={colour} size="small" onClick={onClick} />;
 }

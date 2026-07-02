@@ -5,14 +5,25 @@ import { Tag } from '../tag';
 
 export interface TagListProps {
   items: string[];
+  onItemClick?: (item: string) => void;
 }
 
-export function TagList({ items }: TagListProps) {
+export function TagList({ items, onItemClick }: TagListProps) {
   return (
     <Box component="ul" sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, p: 0, m: 0 }}>
       {items.map((item) => (
         <Box key={item} component="li" sx={{ listStyle: 'none' }}>
-          <Tag colour={skillColour(item)} shadeIndex={skillShadeIndex(item)}>
+          <Tag
+            colour={skillColour(item)}
+            shadeIndex={skillShadeIndex(item)}
+            onClick={
+              onItemClick !== undefined
+                ? () => {
+                    onItemClick(item);
+                  }
+                : undefined
+            }
+          >
             {item}
           </Tag>
         </Box>

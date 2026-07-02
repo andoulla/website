@@ -1,5 +1,6 @@
 import { act, render } from '@testing-library/react';
 import { axe } from 'jest-axe';
+import { MemoryRouter } from 'react-router-dom';
 
 import { ResumeDataProvider } from '../../context/resumeData';
 import type { WorkExperienceWithRecommendations } from '../../types';
@@ -29,9 +30,11 @@ async function renderResume(loader: () => Promise<WorkExperienceWithRecommendati
   let result!: ReturnType<typeof render>;
   await act(async () => {
     result = render(
-      <ResumeDataProvider loader={loader}>
-        <Resume />
-      </ResumeDataProvider>
+      <MemoryRouter>
+        <ResumeDataProvider loader={loader}>
+          <Resume />
+        </ResumeDataProvider>
+      </MemoryRouter>
     );
     await Promise.resolve();
   });
