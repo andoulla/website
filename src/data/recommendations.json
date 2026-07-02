@@ -1,7 +1,7 @@
 [
   {
     "id": "atom-learning-a.v.-3ff664",
-    "jobId": "",
+    "jobId": "atom-learning-2021-01",
     "authorInitials": "A.V.",
     "authorRole": {
       "jobTitle": "Senior Backend Software Engineer",
@@ -13,7 +13,7 @@
   },
   {
     "id": "atom-learning-l.s.-cec225",
-    "jobId": "",
+    "jobId": "atom-learning-2021-01",
     "authorInitials": "L.S.",
     "authorRole": {
       "jobTitle": "Data Engineer",
@@ -25,7 +25,7 @@
   },
   {
     "id": "atom-learning-c.t.-dead22",
-    "jobId": "",
+    "jobId": "atom-learning-2021-01",
     "authorInitials": "C.T.",
     "authorRole": {
       "jobTitle": "Staff Software Engineer",
@@ -37,7 +37,7 @@
   },
   {
     "id": "atom-learning-c.b.-da52d1",
-    "jobId": "",
+    "jobId": "atom-learning-2021-01",
     "authorInitials": "C.B.",
     "authorRole": {
       "jobTitle": "Senior Software Engineer",
@@ -49,7 +49,7 @@
   },
   {
     "id": "9fin-c.u.-befdbd",
-    "jobId": "",
+    "jobId": "moo-2017-01",
     "authorInitials": "C.U.",
     "authorRole": {
       "jobTitle": "Senior Software Engineer",
@@ -61,7 +61,7 @@
   },
   {
     "id": "notch-r.d.-c7d93c",
-    "jobId": "",
+    "jobId": "moo-2017-01",
     "authorInitials": "R.D.",
     "authorRole": {
       "jobTitle": "Front-end Developer (React)",
@@ -73,7 +73,7 @@
   },
   {
     "id": "hexagon-ab-g.r.-c50701",
-    "jobId": "",
+    "jobId": "moo-2017-01",
     "authorInitials": "G.R.",
     "authorRole": {
       "jobTitle": "Senior Software Engineer",
@@ -85,7 +85,7 @@
   },
   {
     "id": "fio-s-quest-d.m.-6222ce",
-    "jobId": "",
+    "jobId": "moo-2017-01",
     "authorInitials": "D.M.",
     "authorRole": {
       "jobTitle": "Founder",
@@ -97,7 +97,7 @@
   },
   {
     "id": "kkr-r.w.-0866e0",
-    "jobId": "",
+    "jobId": "capco-2012-12",
     "authorInitials": "R.W.",
     "authorRole": {
       "jobTitle": "Lead Engineer",
@@ -109,7 +109,7 @@
   },
   {
     "id": "sovos-s.s.-f05549",
-    "jobId": "",
+    "jobId": "capco-2012-12",
     "authorInitials": "S.S.",
     "authorRole": {
       "jobTitle": "Product Manager",
@@ -121,7 +121,7 @@
   },
   {
     "id": "news-uk-l.h.-53ebcc",
-    "jobId": "",
+    "jobId": "elsevier-2016-08",
     "authorInitials": "L.H.",
     "authorRole": {
       "jobTitle": "Head of Delivery - Data",

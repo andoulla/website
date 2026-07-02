@@ -9,16 +9,25 @@
 // output — only their initials are stored, since this file is committed to a
 // public repo.
 //
+// Job matching uses scripts/recommender-map.json, keyed by an 8-char SHA1 of
+// each recommender's normalised full name (privacy-preserving, stable across
+// re-imports). For any recommender not yet in the map the script prompts
+// interactively and saves the answer back to the map so future imports don't
+// ask again. Pick 0 to leave a jobId empty and fill it in manually later.
+//
 // Usage:
 //   yarn import:rec <path-to-Recommendations_Received.csv> [outputPath]
 //
 // Defaults outputPath to src/data/recommendations.json.
 
 import { createHash } from 'crypto';
-import { readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { createInterface } from 'readline';
 
 import { parseCsv } from './lib/csv.mjs';
 import { slugify, uniqueId } from './lib/slug.mjs';
+
+const MAP_PATH = 'scripts/recommender-map.json';
 
 // "MM/DD/YY, HH:MM AM/PM" (new, e.g. "05/18/26, 09:25 AM") or legacy "M/D/YYYY" -> "YYYY-MM-DD".
 function parseCreationDate(value) {
@@ -43,7 +52,44 @@ function toInitials(firstName, lastName) {
   return `${firstLetter(firstName).toUpperCase()}.${firstLetter(lastName).toUpperCase()}.`;
 }
 
-function main() {
+// 8-char SHA1 of the lowercased full name — stable identifier that never stores the real name.
+function nameKey(firstName, lastName) {
+  const normalized = `${firstName.trim()} ${lastName.trim()}`.toLowerCase();
+  return createHash('sha1').update(normalized).digest('hex').slice(0, 8);
+}
+
+function loadMap() {
+  if (!existsSync(MAP_PATH)) return {};
+  return JSON.parse(readFileSync(MAP_PATH, 'utf-8'));
+}
+
+function saveMap(map) {
+  writeFileSync(MAP_PATH, `${JSON.stringify(map, null, 2)}\n`);
+}
+
+async function promptForJob(rl, jobs, { fullName, initials, jobTitle, company, text, postedDate }) {
+  console.error(`\nUnknown recommender: ${fullName} / ${initials} (${jobTitle} at ${company}) — ${postedDate}`);
+  console.error(`  "${text.slice(0, 140)}..."`);
+  jobs.forEach((job, i) => {
+    console.error(`  ${i + 1}) ${job.companyName}  [${job.id}]`);
+  });
+  console.error(`  ${jobs.length + 1}) Leave empty — fill in manually`);
+
+  return new Promise((resolve) => {
+    rl.question(`  Pick a job [1-${jobs.length + 1}]: `, (answer) => {
+      const n = parseInt(answer.trim(), 10);
+      if (!Number.isFinite(n) || n < 1 || n > jobs.length + 1) {
+        resolve('');
+      } else if (n === jobs.length + 1) {
+        resolve('');
+      } else {
+        resolve(jobs[n - 1].id);
+      }
+    });
+  });
+}
+
+async function main() {
   const [inputPath, outputPath = 'src/data/recommendations.json'] = process.argv.slice(2);
   if (inputPath === undefined) {
     console.error('Usage: yarn import:rec <Recommendations_Received.csv> [outputPath]');
@@ -74,28 +120,42 @@ function main() {
   const { linkedIn } = JSON.parse(readFileSync('src/data/contact.json', 'utf-8'));
   const recommendationUrl = `${linkedIn}/details/recommendations/`;
 
-  // Match by company name against the committed jobs.json to find each recommendation's jobId.
   const jobs = JSON.parse(readFileSync('src/data/jobs.json', 'utf-8'));
-  const findJobId = (company) => {
-    const normalized = company.trim().toLowerCase();
-    const job = jobs.find((j) => j.companyName.trim().toLowerCase() === normalized);
-    return job?.id ?? '';
-  };
+  const map = loadMap();
+
+  const rl = createInterface({ input: process.stdin, output: process.stderr });
 
   const usedIds = new Set();
-  const unmatched = [];
+  const recommendations = [];
+  let mapDirty = false;
 
-  const recommendations = rows.map((row) => {
+  for (const row of rows) {
+    const firstName = row[idx.firstName];
+    const lastName = row[idx.lastName];
     const company = row[idx.company].trim();
-    const authorInitials = toInitials(row[idx.firstName], row[idx.lastName]);
+    const authorInitials = toInitials(firstName, lastName);
     const text = row[idx.text].trim();
-    const jobId = findJobId(company);
-    if (jobId === '') unmatched.push(company);
+
+    const key = nameKey(firstName, lastName);
+    let jobId = map[key];
+
+    if (jobId === undefined) {
+      jobId = await promptForJob(rl, jobs, {
+        fullName: `${firstName.trim()} ${lastName.trim()}`,
+        initials: authorInitials,
+        jobTitle: row[idx.jobTitle].trim(),
+        company,
+        text,
+        postedDate: parseCreationDate(row[idx.creationDate]),
+      });
+      map[key] = jobId;
+      mapDirty = true;
+    }
 
     // Content-derived id (company + initials + hash of text), not position-derived.
     const base = `${slugify(company)}-${authorInitials.toLowerCase()}-${createHash('sha1').update(text).digest('hex').slice(0, 6)}`;
 
-    return {
+    recommendations.push({
       id: uniqueId(base, usedIds),
       jobId,
       authorInitials,
@@ -106,20 +166,21 @@ function main() {
       text,
       postedDate: parseCreationDate(row[idx.creationDate]),
       recommendationUrl,
-    };
-  });
+    });
+  }
+
+  rl.close();
+
+  if (mapDirty) saveMap(map);
 
   writeFileSync(outputPath, `${JSON.stringify(recommendations, null, 2)}\n`);
   console.error(
-    `Wrote ${recommendations.length} recommendation(s) to ${outputPath}.\n` +
-      `Note: only initials are stored — recommenders' full names from the CSV were never ` +
+    `Wrote ${recommendations.length} recommendation(s) to ${outputPath}.` +
+      (mapDirty ? `\nUpdated ${MAP_PATH} with ${Object.keys(map).length} mapping(s).` : '') +
+      `\nNote: only initials are stored — recommenders' full names from the CSV were never ` +
       `written to this file. "recommendationUrl" points at your profile's ` +
       `recommendations section (LinkedIn doesn't expose a per-recommendation URL), so it's ` +
-      `the same link on every entry.` +
-      (unmatched.length > 0
-        ? `\nWARNING: couldn't match these companies to a job in src/data/jobs.json — ` +
-          `"jobId" left empty, fill in manually: ${unmatched.join(', ')}`
-        : ''),
+      `the same link on every entry.`,
   );
 }
 
