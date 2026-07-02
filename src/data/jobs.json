@@ -1,46 +1,118 @@
 [
   {
-    "id": "job-1",
-    "companyName": "Nimbus Analytics",
-    "location": "London, UK",
-    "startDate": "2022-04-01",
+    "id": "atom-learning-2021-01",
+    "companyName": "Atom Learning",
+    "location": "Remote",
+    "startDate": "2021-01-01",
     "endDate": null,
     "responsibilities": [
-      "Lead frontend architecture for the customer-facing dashboard",
-      "Mentor two junior engineers through pairing and code review",
-      "Drive adoption of automated accessibility testing"
+      "Leading multiple cross-functional teams across core product areas in a fast-paced EdTech environment, with ownership across delivery, technical direction and team performance.",
+      "Currently leading a team of 6 engineers across frontend and backend on high-impact school assessment flows, with a focus on stability and reliability in critical assessment-taking journeys.",
+      "Took ownership of in-flight projects and drove them to completion, including a create-assessment flow refactor and the simplification of the feature-flag infrastructure supporting the OMR features.",
+      "Coordinated the delivery of a new B2B payment system, including redefining requirements and aligning stakeholders across product, sales, finance and engineering.",
+      "Established domain-specific shared apps and migrated features and components out of a broader shared workspace to improve team ownership and reduce complexity.",
+      "Led the home domain team of  4-6 engineers across frontend, backend and data, owned all apps in the B2C domain.",
+      "Increased code quality KPI across all three applications from around 50% to over 80% through hands-on delivery and roadmap alignment",
+      "Reduced weekly manual testing from a full-team effort to a single person by redefining the testing strategy and coordinating a robust Playwright end-to-end suite, while keeping strong unit and integration coverage.",
+      "Coordinated migration of the existing E2E suite from Cypress to Playwright.",
+      "Led the Assessments team to deliver a scalable assessment management platform, decoupled the assessment app from the legacy system, and introduced testing to the school apps.",
+      "Helped build and launch a company-wide design system and introduced automated accessibility testing and semantic releases.",
+      "Founded and later co-led the Frontend Guild, driving coding standards, code quality improvements, deprecation of the old design system, documentation improvements, mentoring, and planning for visual regression testing with Playwright and Argos.",
+      "Progressed from Lead Developer to Senior Lead Developer."
     ],
-    "skills": ["React", "TypeScript", "GraphQL", "Accessibility"],
+    "skills": [],
+    "techStack": [
+      "React",
+      "TypeScript",
+      "React Query",
+      "RTL",
+      "Jest",
+      "Playwright",
+      "Cypress",
+      "CSS-in-JS",
+      "Stitches",
+      "Radix UI",
+      "Git/GitHub",
+      "Yarn",
+      "ESLint",
+      "Prettier",
+      "Sentry",
+      "Jira",
+      "Notion"
+    ],
     "logo": "",
-    "experienceUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/experience/"
+    "experienceUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/experience/",
+    "title": "Senior Lead Engineer"
   },
   {
-    "id": "job-2",
-    "companyName": "Brightleaf Software",
-    "location": "Manchester, UK",
-    "startDate": "2019-01-15",
-    "endDate": "2022-03-18",
+    "id": "moo-2017-01",
+    "companyName": "Moo",
+    "location": "London",
+    "startDate": "2017-01-01",
+    "endDate": "2020-10-01",
     "responsibilities": [
-      "Built and maintained REST APIs serving 50k+ daily users",
-      "Migrated legacy jQuery UI to a React component library",
-      "Owned the CI/CD pipeline for the platform team"
+      "Worked across editor, B2B and checkout teams, contributing to product delivery, frontend architecture, performance, design system adoption and team practices.",
+      "Led a performance audit of the bespoke editor, investigated bottlenecks, shaped the backlog and ran prioritisation meetings; this work delivered a 16% reduction in bundle size and a 6-point Lighthouse improvement.",
+      "Drove the migration from LESS to Sass and helped deliver a 6-month refactor to make the editor responsive ahead of schedule.",
+      "Improved team onboarding by replacing the previous process with a leaner approach centred on pairing and focused introductions.",
+      "Delivered features for the bespoke B2B platform and contributed to a new checkout experience for sample packs.",
+      "Drove adoption of the design system in the B2B editor to improve brand compliance.",
+      "Supported hiring for technical roles and mentored a junior engineer outside the immediate team."
     ],
-    "skills": ["React", "Node.js", "PostgreSQL", "Docker"],
+    "skills": [],
+    "techStack": [
+      "React",
+      "Flow",
+      "Jest",
+      "Enzyme",
+      "Sass",
+      "Less",
+      "Git",
+      "GitLab",
+      "Npm",
+      "Webpack",
+      "Jira",
+      "Confluence",
+      "Kibana",
+      "Sentry",
+      "ESLint"
+    ],
     "logo": "",
-    "experienceUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/experience/"
+    "experienceUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/experience/",
+    "title": "Software Engineer"
   },
   {
-    "id": "job-3",
-    "companyName": "Harborview Digital",
-    "location": "Remote",
-    "startDate": "2016-09-01",
-    "endDate": "2018-12-21",
+    "id": "elsevier-2016-08",
+    "companyName": "Elsevier",
+    "location": "London",
+    "startDate": "2016-08-01",
+    "endDate": "2016-12-01",
     "responsibilities": [
-      "Implemented responsive marketing pages for client campaigns",
-      "Collaborated with designers to build a shared style guide"
+      "Led the Mendeley Data team, taking ownership of recruitment, supporting day-to-day team operations, and contributing to estimation and planning for upcoming work."
     ],
-    "skills": ["JavaScript", "CSS", "HTML", "jQuery"],
+    "skills": [],
+    "techStack": [],
     "logo": "",
-    "experienceUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/experience/"
+    "experienceUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/experience/",
+    "title": "Lead Developer"
+  },
+  {
+    "id": "capco-2012-12",
+    "companyName": "Capco",
+    "location": "London",
+    "startDate": "2012-12-01",
+    "endDate": "2016-08-01",
+    "responsibilities": [
+      "Progressed through multiple roles while delivering internal products and client-facing prototypes across web, API and mobile platforms.",
+      "Built and rebranded an internal document management application and helped launch it globally after a rigorous security review.",
+      "Delivered a client prototype end-to-end as the sole developer and contributed to client visualisation work on the MEAN stack.",
+      "Worked across four internal projects, including two production web applications, an API and a mobile app nearing global launch.",
+      "Led a team of 8–10 developers across London and Bratislava, managing planning, releases, stakeholder communication, onboarding and delivery, while remaining hands-on technically."
+    ],
+    "skills": [],
+    "techStack": [],
+    "logo": "",
+    "experienceUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/experience/",
+    "title": "Senior Developer / Innovation Architect"
   }
 ]
