@@ -1,29 +1,29 @@
-import { skillCategory, skillColor, skillShadeIndex } from './skillColor';
+import { skillCategory, skillColour, skillShadeIndex } from './skillColour.helpers';
 
-describe('skillColor', () => {
+describe('skillColour', () => {
   test('engineering skills map to primary', () => {
-    expect(skillColor('React')).toBe('primary');
-    expect(skillColor('TypeScript')).toBe('primary');
+    expect(skillColour('React')).toBe('primary');
+    expect(skillColour('TypeScript')).toBe('primary');
   });
 
   test('managerial skills map to secondary', () => {
-    expect(skillColor('Team Leadership')).toBe('secondary');
-    expect(skillColor('Roadmap Planning')).toBe('secondary');
+    expect(skillColour('Team Leadership')).toBe('secondary');
+    expect(skillColour('Roadmap Planning')).toBe('secondary');
   });
 
   test('soft skills map to success', () => {
-    expect(skillColor('Mentoring')).toBe('success');
-    expect(skillColor('Team Onboarding')).toBe('success');
+    expect(skillColour('Mentoring')).toBe('success');
+    expect(skillColour('Team Onboarding')).toBe('success');
   });
 
   test('unknown skills map to info', () => {
-    expect(skillColor('Rust')).toBe('info');
-    expect(skillColor('Cobol')).toBe('info');
+    expect(skillColour('Rust')).toBe('info');
+    expect(skillColour('Cobol')).toBe('info');
   });
 
-  test('always returns the same color for the same skill', () => {
-    expect(skillColor('GraphQL')).toBe(skillColor('GraphQL'));
-    expect(skillColor('Rust')).toBe(skillColor('Rust'));
+  test('always returns the same colour for the same skill', () => {
+    expect(skillColour('GraphQL')).toBe(skillColour('GraphQL'));
+    expect(skillColour('Rust')).toBe(skillColour('Rust'));
   });
 });
 

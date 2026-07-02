@@ -3,28 +3,28 @@ import type { ChipProps } from '@mui/material/Chip';
 import { useTheme } from '@mui/material/styles';
 import type { ReactNode } from 'react';
 
-import { computeShadeColor } from '../../utils/computeShadeColor';
+import { computeShadeColour } from '../../utils/computeShadeColour';
 
 export interface TagProps {
   children: ReactNode;
-  color?: ChipProps['color'];
+  colour?: ChipProps['color'];
   shadeIndex?: number;
 }
 
-export function Tag({ children, color, shadeIndex }: TagProps) {
+export function Tag({ children, colour, shadeIndex }: TagProps) {
   const theme = useTheme();
 
-  if (shadeIndex !== undefined && color !== undefined && color !== 'default') {
-    const paletteEntry = theme.palette[color as keyof typeof theme.palette];
+  if (shadeIndex !== undefined && colour !== undefined && colour !== 'default') {
+    const paletteEntry = theme.palette[colour as keyof typeof theme.palette];
     if (paletteEntry !== null && typeof paletteEntry === 'object' && 'main' in paletteEntry) {
-      const { bg, textColor } = computeShadeColor(
+      const { bg, textColour } = computeShadeColour(
         (paletteEntry as { main: string }).main,
         shadeIndex,
         theme.palette.getContrastText
       );
-      return <Chip size="small" label={children} sx={{ bgcolor: bg, color: textColor }} />;
+      return <Chip size="small" label={children} sx={{ bgcolor: bg, color: textColour }} />;
     }
   }
 
-  return <Chip label={children} color={color} size="small" />;
+  return <Chip label={children} color={colour} size="small" />;
 }

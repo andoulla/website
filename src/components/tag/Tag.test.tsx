@@ -9,19 +9,19 @@ describe('Tag', () => {
     expect(screen.getByText('React')).toBeVisible();
   });
 
-  test('has no axe violations with default color', async () => {
+  test('has no axe violations with default colour', async () => {
     const screen = render(<Tag>React</Tag>);
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('has no axe violations with a chip color', async () => {
-    const screen = render(<Tag color="primary">React</Tag>);
+  test('has no axe violations with a chip colour', async () => {
+    const screen = render(<Tag colour="primary">React</Tag>);
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('renders with a shade override when shadeIndex is provided', () => {
     const screen = render(
-      <Tag color="primary" shadeIndex={2}>
+      <Tag colour="primary" shadeIndex={2}>
         React
       </Tag>
     );
@@ -30,7 +30,7 @@ describe('Tag', () => {
 
   test('has no axe violations with a shade override', async () => {
     const screen = render(
-      <Tag color="primary" shadeIndex={2}>
+      <Tag colour="primary" shadeIndex={2}>
         React
       </Tag>
     );
