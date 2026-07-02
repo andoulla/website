@@ -5,4 +5,6 @@ export interface SkillSummary {
   years: number;
   category: SkillCategory;
   colour: SkillColour;
+  jobIds: string[];
+  recommendationIds: string[];
 }

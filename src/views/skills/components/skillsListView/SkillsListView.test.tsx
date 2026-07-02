@@ -8,9 +8,30 @@ import type { SkillSummary } from '../../../../utils/calculateSkillYears';
 import { SkillsListView } from './SkillsListView';
 
 const SKILLS: SkillSummary[] = [
-  { skill: 'React', years: 4, category: 'engineering', colour: 'primary' },
-  { skill: 'Team Leadership', years: 3, category: 'managerial', colour: 'secondary' },
-  { skill: 'Mentoring', years: 2, category: 'soft-skills', colour: 'success' },
+  {
+    skill: 'React',
+    years: 4,
+    category: 'engineering',
+    colour: 'primary',
+    jobIds: ['job-1'],
+    recommendationIds: [],
+  },
+  {
+    skill: 'Team Leadership',
+    years: 3,
+    category: 'managerial',
+    colour: 'secondary',
+    jobIds: ['job-1'],
+    recommendationIds: [],
+  },
+  {
+    skill: 'Mentoring',
+    years: 2,
+    category: 'soft-skills',
+    colour: 'success',
+    jobIds: ['job-1'],
+    recommendationIds: ['rec-1'],
+  },
 ];
 
 const RECOMMENDATIONS: Recommendation[] = [
@@ -20,7 +41,6 @@ const RECOMMENDATIONS: Recommendation[] = [
     authorInitials: 'A.B.',
     authorRole: { jobTitle: 'Engineer', company: 'Acme' },
     text: 'Excellent mentor.',
-    skills: ['Mentoring'],
     postedDate: '2026-01-01',
     recommendationUrl: '',
   },

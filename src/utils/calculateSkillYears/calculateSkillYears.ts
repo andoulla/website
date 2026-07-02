@@ -1,5 +1,7 @@
+import { skills as defaultSkills } from '../../data/skills';
+import type { Skill } from '../../data/skills.types';
 import type { WorkExperience } from '../../types';
-import { skillCategory, skillColour } from '../skillColour';
+import { skillColour } from '../skillColour';
 import type { SkillCategory } from '../skillColour';
 
 import type { SkillSummary } from './calculateSkillYears.types';
@@ -19,25 +21,30 @@ function durationYears(startDate: string, endDate: string | null, today: Date): 
 
 export function calculateSkillYears(
   experiences: WorkExperience[],
+  allSkills: Skill[] = defaultSkills,
   today: Date = new Date()
 ): SkillSummary[] {
-  const totals = new Map<string, number>();
+  const experienceById = new Map(experiences.map((e) => [e.id, e]));
 
-  for (const exp of experiences) {
-    const years = durationYears(exp.startDate, exp.endDate, today);
-    // Deduplicate within this job so a skill in both techStack and skills counts once.
-    const jobSkills = new Set([...exp.techStack, ...exp.skills]);
-    for (const skill of jobSkills) {
-      totals.set(skill, (totals.get(skill) ?? 0) + years);
-    }
-  }
+  const summaries: SkillSummary[] = allSkills
+    .filter((skill) => skill.jobIds.length > 0)
+    .map((skill) => {
+      const years = skill.jobIds.reduce((total, jobId) => {
+        const exp = experienceById.get(jobId);
+        if (exp === undefined) return total;
+        return total + durationYears(exp.startDate, exp.endDate, today);
+      }, 0);
 
-  const summaries: SkillSummary[] = Array.from(totals.entries()).map(([skill, years]) => ({
-    skill,
-    years: Math.round(years * 10) / 10,
-    category: skillCategory(skill),
-    colour: skillColour(skill),
-  }));
+      return {
+        skill: skill.name,
+        years: Math.round(years * 10) / 10,
+        category: skill.category,
+        colour: skillColour(skill.name),
+        jobIds: skill.jobIds,
+        recommendationIds: skill.recommendationIds,
+      };
+    })
+    .filter((s) => s.years > 0);
 
   return summaries.sort((a, b) => {
     const catDiff = CATEGORY_ORDER[a.category] - CATEGORY_ORDER[b.category];

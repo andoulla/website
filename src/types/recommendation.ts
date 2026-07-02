@@ -9,7 +9,6 @@ export interface Recommendation {
     company: string;
   };
   text: string;
-  skills: string[];
   postedDate: string;
   recommendationUrl: string;
 }

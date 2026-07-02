@@ -1,15 +1,25 @@
+import type { Skill } from '../../data/skills.types';
 import type {
   Recommendation,
   WorkExperience,
   WorkExperienceWithRecommendations,
 } from '../../types';
 
+export type { WorkExperienceWithRecommendations } from '../../types';
+
 export function joinJobsWithRecommendations(
   jobs: WorkExperience[],
-  recommendations: Recommendation[]
+  recommendations: Recommendation[],
+  skills: Skill[]
 ): WorkExperienceWithRecommendations[] {
   return jobs.map((job) => ({
     ...job,
-    recommendations: recommendations.filter((recommendation) => recommendation.jobId === job.id),
+    recommendations: recommendations.filter((r) => r.jobId === job.id),
+    techStack: skills
+      .filter((s) => s.type === 'tech' && s.jobIds.includes(job.id))
+      .map((s) => s.name),
+    skills: skills
+      .filter((s) => s.type === 'skill' && s.jobIds.includes(job.id))
+      .map((s) => s.name),
   }));
 }

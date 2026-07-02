@@ -9,14 +9,14 @@ import { Skills } from './Skills';
 
 const EXPERIENCES: WorkExperienceWithRecommendations[] = [
   {
-    id: 'job-1',
+    id: 'atom-learning-2021-01',
     companyName: 'Acme',
     location: 'Remote',
     startDate: '2024-01-01',
     endDate: '2026-07-02',
     responsibilities: [],
-    techStack: ['React'],
-    skills: ['Team Leadership'],
+    techStack: [],
+    skills: [],
     logo: '',
     experienceUrl: '',
     recommendations: [],

@@ -1,3 +1,5 @@
+import { skills } from '../../data/skills';
+
 import type { SkillCategory, SkillColour } from './skillColour.types';
 
 const CATEGORY_COLOUR_MAP: Record<SkillCategory, SkillColour> = {
@@ -7,67 +9,9 @@ const CATEGORY_COLOUR_MAP: Record<SkillCategory, SkillColour> = {
   other: 'info',
 };
 
-const SKILL_CATEGORY_MAP: Record<string, SkillCategory> = {
-  // Engineering — tech stack
-  React: 'engineering',
-  TypeScript: 'engineering',
-  JavaScript: 'engineering',
-  'Node.js': 'engineering',
-  GraphQL: 'engineering',
-  PostgreSQL: 'engineering',
-  Docker: 'engineering',
-  CSS: 'engineering',
-  HTML: 'engineering',
-  jQuery: 'engineering',
-  'React Query': 'engineering',
-  RTL: 'engineering',
-  Jest: 'engineering',
-  Playwright: 'engineering',
-  Cypress: 'engineering',
-  'CSS-in-JS': 'engineering',
-  Stitches: 'engineering',
-  'Radix UI': 'engineering',
-  'Git/GitHub': 'engineering',
-  Yarn: 'engineering',
-  ESLint: 'engineering',
-  Prettier: 'engineering',
-  Sentry: 'engineering',
-  Jira: 'engineering',
-  Notion: 'engineering',
-  Flow: 'engineering',
-  Enzyme: 'engineering',
-  Sass: 'engineering',
-  Less: 'engineering',
-  Git: 'engineering',
-  GitLab: 'engineering',
-  Npm: 'engineering',
-  Webpack: 'engineering',
-  Confluence: 'engineering',
-  Kibana: 'engineering',
-  // Engineering — practices
-  Accessibility: 'engineering',
-  'Design System': 'engineering',
-  'Testing Strategy': 'engineering',
-  'Performance Optimisation': 'engineering',
-  'Design System Adoption': 'engineering',
-  // Managerial
-  'Team Leadership': 'managerial',
-  'Technical Direction': 'managerial',
-  'Cross-functional Delivery': 'managerial',
-  'Stakeholder Management': 'managerial',
-  'Roadmap Planning': 'managerial',
-  'Release Management': 'managerial',
-  'Project Planning': 'managerial',
-  'Estimation & Planning': 'managerial',
-  'Team Operations': 'managerial',
-  Recruitment: 'managerial',
-  'Stakeholder Communication': 'managerial',
-  'Agile Delivery': 'managerial',
-  // Soft skills
-  Mentoring: 'soft-skills',
-  'Team Onboarding': 'soft-skills',
-  Onboarding: 'soft-skills',
-};
+const SKILL_CATEGORY_MAP: Record<string, SkillCategory> = Object.fromEntries(
+  skills.map((s) => [s.name, s.category])
+);
 
 export function skillCategory(skill: string): SkillCategory {
   return SKILL_CATEGORY_MAP[skill] ?? 'other';

@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
-import type { Recommendation } from '../../../../data/recommendations';
+import type { Recommendation } from '../../../../types';
 
 import { RecommendationText } from './RecommendationText';
 

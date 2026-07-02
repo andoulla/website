@@ -58,7 +58,9 @@ export function SkillsListView({ skills, recommendations, highlightedSkill }: Sk
   );
 
   const linkedRecs =
-    popover !== null ? recommendations.filter((r) => r.skills.includes(popover.skill.skill)) : [];
+    popover !== null
+      ? recommendations.filter((r) => popover.skill.recommendationIds.includes(r.id))
+      : [];
 
   function dotColour(skill: SkillSummary): string {
     const { colour } = skill;

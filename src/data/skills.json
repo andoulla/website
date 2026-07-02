@@ -1,0 +1,411 @@
+[
+  {
+    "name": "React",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "TypeScript",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "JavaScript",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": [],
+    "recommendationIds": []
+  },
+  {
+    "name": "Node.js",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": [],
+    "recommendationIds": []
+  },
+  {
+    "name": "GraphQL",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": [],
+    "recommendationIds": []
+  },
+  {
+    "name": "PostgreSQL",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": [],
+    "recommendationIds": []
+  },
+  {
+    "name": "Docker",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": [],
+    "recommendationIds": []
+  },
+  {
+    "name": "CSS",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": [],
+    "recommendationIds": []
+  },
+  {
+    "name": "HTML",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": [],
+    "recommendationIds": []
+  },
+  {
+    "name": "jQuery",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": [],
+    "recommendationIds": []
+  },
+  {
+    "name": "React Query",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "RTL",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Jest",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Playwright",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Cypress",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "CSS-in-JS",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Stitches",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Radix UI",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Git/GitHub",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Yarn",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "ESLint",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Prettier",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Sentry",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Jira",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Notion",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Flow",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Enzyme",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Sass",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Less",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Git",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "GitLab",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Npm",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Webpack",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Confluence",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Kibana",
+    "category": "engineering",
+    "type": "tech",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Accessibility",
+    "category": "engineering",
+    "type": "skill",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Design System",
+    "category": "engineering",
+    "type": "skill",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Testing Strategy",
+    "category": "engineering",
+    "type": "skill",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Performance Optimisation",
+    "category": "engineering",
+    "type": "skill",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Design System Adoption",
+    "category": "engineering",
+    "type": "skill",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Team Leadership",
+    "category": "managerial",
+    "type": "skill",
+    "jobIds": ["atom-learning-2021-01", "elsevier-2016-08", "capco-2012-12"],
+    "recommendationIds": [
+      "atom-learning-a.v.-3ff664",
+      "atom-learning-c.b.-da52d1",
+      "notch-r.d.-c7d93c",
+      "kkr-r.w.-0866e0",
+      "sovos-s.s.-f05549",
+      "news-uk-l.h.-53ebcc"
+    ]
+  },
+  {
+    "name": "Technical Direction",
+    "category": "managerial",
+    "type": "skill",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": [
+      "atom-learning-a.v.-3ff664",
+      "atom-learning-c.t.-dead22",
+      "sovos-s.s.-f05549",
+      "news-uk-l.h.-53ebcc"
+    ]
+  },
+  {
+    "name": "Cross-functional Delivery",
+    "category": "managerial",
+    "type": "skill",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": [
+      "atom-learning-l.s.-cec225",
+      "atom-learning-c.t.-dead22",
+      "atom-learning-c.b.-da52d1",
+      "hexagon-ab-g.r.-c50701"
+    ]
+  },
+  {
+    "name": "Stakeholder Management",
+    "category": "managerial",
+    "type": "skill",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": ["atom-learning-l.s.-cec225", "atom-learning-c.b.-da52d1"]
+  },
+  {
+    "name": "Roadmap Planning",
+    "category": "managerial",
+    "type": "skill",
+    "jobIds": ["atom-learning-2021-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Release Management",
+    "category": "managerial",
+    "type": "skill",
+    "jobIds": ["capco-2012-12"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Project Planning",
+    "category": "managerial",
+    "type": "skill",
+    "jobIds": ["capco-2012-12"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Estimation & Planning",
+    "category": "managerial",
+    "type": "skill",
+    "jobIds": ["elsevier-2016-08"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Team Operations",
+    "category": "managerial",
+    "type": "skill",
+    "jobIds": ["elsevier-2016-08"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Recruitment",
+    "category": "managerial",
+    "type": "skill",
+    "jobIds": ["elsevier-2016-08"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Stakeholder Communication",
+    "category": "managerial",
+    "type": "skill",
+    "jobIds": ["capco-2012-12"],
+    "recommendationIds": ["kkr-r.w.-0866e0", "sovos-s.s.-f05549", "news-uk-l.h.-53ebcc"]
+  },
+  {
+    "name": "Agile Delivery",
+    "category": "managerial",
+    "type": "skill",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": ["notch-r.d.-c7d93c"]
+  },
+  {
+    "name": "Mentoring",
+    "category": "soft-skills",
+    "type": "skill",
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
+    "recommendationIds": [
+      "atom-learning-a.v.-3ff664",
+      "atom-learning-l.s.-cec225",
+      "9fin-c.u.-befdbd",
+      "notch-r.d.-c7d93c",
+      "hexagon-ab-g.r.-c50701",
+      "fio-s-quest-d.m.-6222ce"
+    ]
+  },
+  {
+    "name": "Team Onboarding",
+    "category": "soft-skills",
+    "type": "skill",
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": ["9fin-c.u.-befdbd", "hexagon-ab-g.r.-c50701"]
+  },
+  {
+    "name": "Onboarding",
+    "category": "soft-skills",
+    "type": "skill",
+    "jobIds": ["capco-2012-12"],
+    "recommendationIds": []
+  }
+]

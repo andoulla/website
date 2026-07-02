@@ -13,7 +13,6 @@ import { Skills } from './views/skills';
 // TODO: ensure that sensitive data is not stored in repo
 // TODO: build page for articles
 // TODO: add education (by default in time line view, filter out url based)
-// TODO: move skills to a centralise data file
 // TODO: remove company title from recommender
 // TODO: put recommender on the top
 // TODO: prefer arrow functions were possible, if not comment why on top of function

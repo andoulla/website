@@ -14,6 +14,7 @@ const testExperiences: WorkExperienceWithRecommendations[] = [
     endDate: null,
     responsibilities: [],
     skills: [],
+    techStack: [],
     logo: '',
     experienceUrl: 'https://www.linkedin.com/in/example/details/experience/',
     recommendations: [],
