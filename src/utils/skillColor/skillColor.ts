@@ -80,3 +80,11 @@ export function skillCategory(skill: string): SkillCategory {
 export function skillColor(skill: string): SkillColor {
   return CATEGORY_COLOR_MAP[skillCategory(skill)];
 }
+
+const SHADE_COUNT = 6;
+
+/** Stable 0–5 index used to pick a shade of the category color for a given skill. */
+export function skillShadeIndex(skill: string): number {
+  const charSum = [...skill].reduce((sum, c) => sum + c.charCodeAt(0), 0);
+  return charSum % SHADE_COUNT;
+}

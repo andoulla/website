@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 
-import { skillColor } from '../../utils/skillColor';
+import { skillColor, skillShadeIndex } from '../../utils/skillColor';
 import { Tag } from '../tag';
 
 export interface TagListProps {
@@ -12,7 +12,9 @@ export function TagList({ items }: TagListProps) {
     <Box component="ul" sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, p: 0, m: 0 }}>
       {items.map((item) => (
         <Box key={item} component="li" sx={{ listStyle: 'none' }}>
-          <Tag color={skillColor(item)}>{item}</Tag>
+          <Tag color={skillColor(item)} shadeIndex={skillShadeIndex(item)}>
+            {item}
+          </Tag>
         </Box>
       ))}
     </Box>

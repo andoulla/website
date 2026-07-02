@@ -1,4 +1,4 @@
-import { skillCategory, skillColor } from './skillColor';
+import { skillCategory, skillColor, skillShadeIndex } from './skillColor';
 
 describe('skillColor', () => {
   test('engineering skills map to primary', () => {
@@ -36,5 +36,25 @@ describe('skillCategory', () => {
 
   test('returns other for unknown skills', () => {
     expect(skillCategory('Rust')).toBe('other');
+  });
+});
+
+describe('skillShadeIndex', () => {
+  test('returns a number between 0 and 5 inclusive', () => {
+    const idx = skillShadeIndex('React');
+    expect(idx).toBeGreaterThanOrEqual(0);
+    expect(idx).toBeLessThanOrEqual(5);
+  });
+
+  test('always returns the same index for the same skill', () => {
+    expect(skillShadeIndex('TypeScript')).toBe(skillShadeIndex('TypeScript'));
+    expect(skillShadeIndex('Mentoring')).toBe(skillShadeIndex('Mentoring'));
+  });
+
+  test('different skills can produce different indices', () => {
+    const indices = ['React', 'TypeScript', 'Jest', 'Playwright', 'Sass', 'Webpack'].map(
+      skillShadeIndex
+    );
+    expect(new Set(indices).size).toBeGreaterThan(1);
   });
 });
