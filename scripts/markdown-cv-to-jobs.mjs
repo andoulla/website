@@ -80,6 +80,7 @@ function parseJobBlock(block) {
   let startDate = null;
   let endDate = null;
   const responsibilities = [];
+  const skills = [];
   const techStack = [];
 
   for (let i = 1; i < block.length; i++) {
@@ -90,6 +91,13 @@ function parseJobBlock(block) {
     if (/^\*\*Tech:/i.test(line)) {
       const techText = stripBold(line).replace(/^Tech:\s*/i, '');
       techStack.push(...techText.split(/,\s*/).map((s) => s.trim()).filter(Boolean));
+      continue;
+    }
+
+    // Skills line: **Skills:** Skill, Skill
+    if (/^\*\*Skills:/i.test(line)) {
+      const skillsText = stripBold(line).replace(/^Skills:\s*/i, '');
+      skills.push(...skillsText.split(/,\s*/).map((s) => s.trim()).filter(Boolean));
       continue;
     }
 
@@ -119,7 +127,7 @@ function parseJobBlock(block) {
     responsibilities.push(line);
   }
 
-  return { companyName, title, location, startDate, endDate, responsibilities, skills: [], techStack, logo: '' };
+  return { companyName, title, location, startDate, endDate, responsibilities, skills, techStack, logo: '' };
 }
 
 function main() {

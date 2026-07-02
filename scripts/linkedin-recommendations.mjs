@@ -123,6 +123,14 @@ async function main() {
   const jobs = JSON.parse(readFileSync('src/data/jobs.json', 'utf-8'));
   const map = loadMap();
 
+  // Build a lookup of existing skills by recommendation ID so manual skill tags
+  // survive re-imports — LinkedIn's CSV has no skills column.
+  const existingSkillsById = existsSync(outputPath)
+    ? Object.fromEntries(
+        JSON.parse(readFileSync(outputPath, 'utf-8')).map((r) => [r.id, r.skills ?? []]),
+      )
+    : {};
+
   const rl = createInterface({ input: process.stdin, output: process.stderr });
 
   const usedIds = new Set();
@@ -154,9 +162,10 @@ async function main() {
 
     // Content-derived id (company + initials + hash of text), not position-derived.
     const base = `${slugify(company)}-${authorInitials.toLowerCase()}-${createHash('sha1').update(text).digest('hex').slice(0, 6)}`;
+    const id = uniqueId(base, usedIds);
 
     recommendations.push({
-      id: uniqueId(base, usedIds),
+      id,
       jobId,
       authorInitials,
       authorRole: {
@@ -164,6 +173,7 @@ async function main() {
         company,
       },
       text,
+      skills: existingSkillsById[id] ?? [],
       postedDate: parseCreationDate(row[idx.creationDate]),
       recommendationUrl,
     });

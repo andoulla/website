@@ -20,7 +20,17 @@
       "Founded and later co-led the Frontend Guild, driving coding standards, code quality improvements, deprecation of the old design system, documentation improvements, mentoring, and planning for visual regression testing with Playwright and Argos.",
       "Progressed from Lead Developer to Senior Lead Developer."
     ],
-    "skills": [],
+    "skills": [
+      "Team Leadership",
+      "Technical Direction",
+      "Cross-functional Delivery",
+      "Stakeholder Management",
+      "Mentoring",
+      "Roadmap Planning",
+      "Design System",
+      "Testing Strategy",
+      "Accessibility"
+    ],
     "techStack": [
       "React",
       "TypeScript",
@@ -59,7 +69,13 @@
       "Drove adoption of the design system in the B2B editor to improve brand compliance.",
       "Supported hiring for technical roles and mentored a junior engineer outside the immediate team."
     ],
-    "skills": [],
+    "skills": [
+      "Performance Optimisation",
+      "Mentoring",
+      "Team Onboarding",
+      "Design System Adoption",
+      "Agile Delivery"
+    ],
     "techStack": [
       "React",
       "Flow",
@@ -90,7 +106,7 @@
     "responsibilities": [
       "Led the Mendeley Data team, taking ownership of recruitment, supporting day-to-day team operations, and contributing to estimation and planning for upcoming work."
     ],
-    "skills": [],
+    "skills": ["Team Leadership", "Recruitment", "Team Operations", "Estimation & Planning"],
     "techStack": [],
     "logo": "",
     "experienceUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/experience/",
@@ -109,7 +125,13 @@
       "Worked across four internal projects, including two production web applications, an API and a mobile app nearing global launch.",
       "Led a team of 8–10 developers across London and Bratislava, managing planning, releases, stakeholder communication, onboarding and delivery, while remaining hands-on technically."
     ],
-    "skills": [],
+    "skills": [
+      "Team Leadership",
+      "Stakeholder Communication",
+      "Release Management",
+      "Onboarding",
+      "Project Planning"
+    ],
     "techStack": [],
     "logo": "",
     "experienceUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/experience/",

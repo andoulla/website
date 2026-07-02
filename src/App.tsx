@@ -14,6 +14,9 @@ import { Skills } from './views/skills';
 // TODO: update data using the script
 // TODO: build page for articles
 // TODO: finish skills to have themed colours
+// TODO: add education (by default in time line view, filter out url based)
+// TODO: move skills to a centralise data file
+// TODO: remove company title from recommender
 function App() {
   return (
     <ThemeContextProvider>
