@@ -22,7 +22,7 @@ function makeRecommendation(overrides: Partial<Recommendation> = {}): Recommenda
   return {
     id: 'rec-1',
     jobId: 'job-1',
-    authorInitials: 'JD',
+    authorInitials: 'J.D.',
     authorRole: { jobTitle: 'Manager', company: 'Acme Corp' },
     text: 'Great work.',
     postedDate: '2021-01-01',

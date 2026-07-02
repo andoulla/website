@@ -57,7 +57,7 @@ describe('WorkExperienceCard', () => {
             {
               id: 'rec-1',
               jobId: 'job-1',
-              authorInitials: 'PS',
+              authorInitials: 'P.S.',
               authorRole: { jobTitle: 'Engineering Manager', company: 'Nimbus Analytics' },
               text: 'Great work.',
               postedDate: '2023-06-12',
@@ -69,7 +69,7 @@ describe('WorkExperienceCard', () => {
     );
 
     expect(screen.getByText('Recommendations')).toBeVisible();
-    expect(screen.getByText('PS, Engineering Manager, Nimbus Analytics')).toBeVisible();
+    expect(screen.getByText('P.S., Engineering Manager, Nimbus Analytics')).toBeVisible();
   });
 
   test('omits the Recommendations section when there are none', () => {
@@ -92,7 +92,7 @@ describe('WorkExperienceCard', () => {
             {
               id: 'rec-1',
               jobId: 'job-1',
-              authorInitials: 'PS',
+              authorInitials: 'P.S.',
               authorRole: { jobTitle: 'Engineering Manager', company: 'Nimbus Analytics' },
               text: 'Great work.',
               postedDate: '2023-06-12',

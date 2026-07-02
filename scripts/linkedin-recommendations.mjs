@@ -12,8 +12,7 @@
 // Usage:
 //   yarn import:rec <path-to-Recommendations_Received.csv> [outputPath]
 //
-// Defaults outputPath to src/data/recommendations.linkedin.json (review/diff
-// before replacing src/data/recommendations.json yourself).
+// Defaults outputPath to src/data/recommendations.json.
 
 import { createHash } from 'crypto';
 import { readFileSync, writeFileSync } from 'fs';
@@ -21,9 +20,14 @@ import { readFileSync, writeFileSync } from 'fs';
 import { parseCsv } from './lib/csv.mjs';
 import { slugify, uniqueId } from './lib/slug.mjs';
 
-// "M/D/YYYY" (e.g. "1/15/2022") -> "YYYY-MM-DD".
+// "MM/DD/YY, HH:MM AM/PM" (new, e.g. "05/18/26, 09:25 AM") or legacy "M/D/YYYY" -> "YYYY-MM-DD".
 function parseCreationDate(value) {
   const trimmed = value.trim();
+  const newMatch = /^(\d{1,2})\/(\d{1,2})\/(\d{2}),\s+\d{1,2}:\d{2}\s+[AP]M$/.exec(trimmed);
+  if (newMatch !== null) {
+    const [, month, day, year2] = newMatch;
+    return `20${year2}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  }
   const match = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(trimmed);
   if (match === null) {
     throw new Error(`Unrecognized LinkedIn date format: "${value}"`);
@@ -32,13 +36,15 @@ function parseCreationDate(value) {
   return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 }
 
-// First+Last name -> two uppercase initials. The full name itself is never captured.
+// First+Last name -> "A.B." initials. Uses the first Unicode letter in each name,
+// skipping any leading emoji or non-letter characters. The full name itself is never captured.
 function toInitials(firstName, lastName) {
-  return `${firstName.trim().charAt(0)}${lastName.trim().charAt(0)}`.toUpperCase();
+  const firstLetter = (name) => Array.from(name.trim()).find((c) => /\p{L}/u.test(c)) ?? '';
+  return `${firstLetter(firstName).toUpperCase()}.${firstLetter(lastName).toUpperCase()}.`;
 }
 
 function main() {
-  const [inputPath, outputPath = 'src/data/recommendations.linkedin.json'] = process.argv.slice(2);
+  const [inputPath, outputPath = 'src/data/recommendations.json'] = process.argv.slice(2);
   if (inputPath === undefined) {
     console.error('Usage: yarn import:rec <Recommendations_Received.csv> [outputPath]');
     process.exit(1);

@@ -8,7 +8,7 @@ import { RecommendationText } from './RecommendationText';
 const recommendation: Recommendation = {
   id: 'rec-1',
   jobId: 'job-1',
-  authorInitials: 'PS',
+  authorInitials: 'P.S.',
   authorRole: { jobTitle: 'Engineering Manager', company: 'Acme Corp' },
   text: 'Great work.',
   postedDate: '2022-01-15',
@@ -19,8 +19,8 @@ describe('RecommendationText', () => {
   test('renders the text, attribution, and author initials', () => {
     const screen = render(<RecommendationText recommendation={recommendation} />);
     expect(screen.getByText('"Great work."')).toBeVisible();
-    expect(screen.getByText('PS, Engineering Manager, Acme Corp')).toBeVisible();
-    expect(screen.getByText('PS')).toBeVisible();
+    expect(screen.getByText('P.S., Engineering Manager, Acme Corp')).toBeVisible();
+    expect(screen.getByText('P.S.')).toBeVisible();
   });
 
   test('has no axe violations', async () => {

@@ -1,38 +1,134 @@
 [
   {
-    "id": "rec-1",
-    "jobId": "job-1",
-    "authorInitials": "PS",
-    "authorRole": { "jobTitle": "Engineering Manager", "company": "Nimbus Analytics" },
-    "text": "One of the most reliable engineers I've worked with — consistently raises the bar for code quality.",
-    "postedDate": "2023-06-12",
+    "id": "atom-learning-a.v.-3ff664",
+    "jobId": "",
+    "authorInitials": "A.V.",
+    "authorRole": {
+      "jobTitle": "Senior Backend Software Engineer",
+      "company": "Atom Learning"
+    },
+    "text": "I had the pleasure of working with Mariandi as my manager, and I can confidently say she is one of the most well-rounded leaders I've come across. Beyond being an excellent developer with deep technical instincts, she takes her management responsibilities to heart in a way that is genuinely rare.  What stood out most was how much she cared about the growth of the people on her team. She made time for 1:1s that actually mattered, gave thoughtful and honest feedback, and consistently looked for opportunities to stretch us into more challenging work. She balanced advocating for the team with shipping great work, and somehow made both look effortless.  Any team would be lucky to have her. I learned a lot from working with her and would jump at the chance to do so again.",
+    "postedDate": "2026-05-18",
     "recommendationUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/recommendations/"
   },
   {
-    "id": "rec-2",
-    "jobId": "job-1",
-    "authorInitials": "TR",
-    "authorRole": { "jobTitle": "Senior Designer", "company": "Nimbus Analytics" },
-    "text": "Made accessibility a first-class concern in every feature we shipped together.",
-    "postedDate": "2023-11-03",
+    "id": "atom-learning-l.s.-cec225",
+    "jobId": "",
+    "authorInitials": "L.S.",
+    "authorRole": {
+      "jobTitle": "Data Engineer",
+      "company": "Atom Learning"
+    },
+    "text": "Mariandi was my manager at Atom Learning, and one of the most supportive leaders I've worked with. She genuinely she cares about her team and is deeply invested in helping people rewxh their full potential.  She provided clear direction, helped me set meaningful goals and took the time to mentor me. Thanks to her guidance I was able to grow in my role and take on new challenges with more confidence.   She also has a strong ability to call out and question when there might be potential scope creep or where there could be unnecessary steps being introduced. This really helps the team stay focused and improves efficiency.   Mariandi is able to balance high expectations with empathy. She pushes her team to do their best, while making sure they feel supported. I would really recommend her as a leader and mentor.",
+    "postedDate": "2026-04-28",
     "recommendationUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/recommendations/"
   },
   {
-    "id": "rec-3",
-    "jobId": "job-2",
-    "authorInitials": "HB",
-    "authorRole": { "jobTitle": "CTO", "company": "Brightleaf Software" },
-    "text": "Took ownership of our CI/CD overhaul and reduced deploy times by 70%.",
-    "postedDate": "2021-09-20",
+    "id": "atom-learning-c.t.-dead22",
+    "jobId": "",
+    "authorInitials": "C.T.",
+    "authorRole": {
+      "jobTitle": "Staff Software Engineer",
+      "company": "Atom Learning"
+    },
+    "text": "I worked with Mariandi for ~5 years and she always demonstrated a high degree of enthusiasm and motivation. She always focussed on building solid, reliable processes and making sure no energy is wasted in tasks that ultimately bring no results. She always has the end user in mind and wants to solve real product problems.  Mariandi brings a high level of motivation and a focus on practical delivery to all her projects, and would be a fantastic asset to any engineering team.",
+    "postedDate": "2026-04-28",
     "recommendationUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/recommendations/"
   },
   {
-    "id": "rec-4",
-    "jobId": "job-2",
-    "authorInitials": "MW",
-    "authorRole": { "jobTitle": "Product Manager", "company": "Brightleaf Software" },
-    "text": "Always translated ambiguous requirements into solid technical plans.",
-    "postedDate": "2020-05-14",
+    "id": "atom-learning-c.b.-da52d1",
+    "jobId": "",
+    "authorInitials": "C.B.",
+    "authorRole": {
+      "jobTitle": "Senior Software Engineer",
+      "company": "Atom Learning"
+    },
+    "text": "I've worked with Mariandi for five years at Atom Learning, and she is definitely one of the best developers and tech leads I've had the pleasure of working with. Mariandi excels at planning and executing the delivery of complex features while navigating product requirements with ease. She is also an amazing leader who empowers others with their day-to-day tasks while making sure that the whole team works in unison.  If you are looking for a tech leader with great soft and technical skills, then Mariandi is an outstanding candidate.",
+    "postedDate": "2026-04-22",
+    "recommendationUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/recommendations/"
+  },
+  {
+    "id": "9fin-c.u.-befdbd",
+    "jobId": "",
+    "authorInitials": "C.U.",
+    "authorRole": {
+      "jobTitle": "Senior Software Engineer",
+      "company": "9fin"
+    },
+    "text": "Mariandi was a great mentor whilst I worked at MOO. We were both part of the business to business team, specialised on the frontend crafting of the dashboard that allowed bulk orders for larger customers. She was very understanding and allowed me to explore new concepts while lending me a helping hand when necessary. She helped me grow into writing code confidently, but also encouraged me to speaking my mind when I had ideas that would benefit the team ways of working. Overall she is a is a great engineer and empathetic person to have in your team :)",
+    "postedDate": "2024-02-15",
+    "recommendationUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/recommendations/"
+  },
+  {
+    "id": "notch-r.d.-c7d93c",
+    "jobId": "",
+    "authorInitials": "R.D.",
+    "authorRole": {
+      "jobTitle": "Front-end Developer (React)",
+      "company": "Notch"
+    },
+    "text": "I've worked alongside Mariandi for close to a year now and during this time she has shown her dedication and love for work. She does not leave a leaf unturned and will ensure her work is completed to the highest standard. She is an excellent team player with a can-do approach who often takes the lead during team ceremonies and helps the team come together to reach the best results. I also had the pleasure of being her mentee where she helped me to reach my goals, provided constructive feedback, shared her experiences, and encouraged me along the way. As a junior developer, I valued and learned from her every day and I hope we will get to work together in the future.",
+    "postedDate": "2020-05-06",
+    "recommendationUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/recommendations/"
+  },
+  {
+    "id": "hexagon-ab-g.r.-c50701",
+    "jobId": "",
+    "authorInitials": "G.R.",
+    "authorRole": {
+      "jobTitle": "Senior Software Engineer",
+      "company": "Hexagon AB"
+    },
+    "text": "Mariandi consistently proves herself to be competent, flexible developer and a thoughtful mentor. She knows how to ask the right ‘why’ questions on code reviews and has a lot of perspective on effective ways of mentoring that I’m personally used in my own mentoring exercises.  She cares deeply about the entire team succeeding and it’s shown through her work on redefining the on-boarding process ensuring new starters have a more seamless transition onto the team and helping them take true ownership by committing code to the project within the first week.  She has a fundamental understanding of the business needs and knows how to weigh those against the needs of the team and the value of the work being undertaken. She brings with her the glue that binds a good team: knowledge, empathy and the understanding that no detail is too small.",
+    "postedDate": "2020-04-27",
+    "recommendationUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/recommendations/"
+  },
+  {
+    "id": "fio-s-quest-d.m.-6222ce",
+    "jobId": "",
+    "authorInitials": "D.M.",
+    "authorRole": {
+      "jobTitle": "Founder",
+      "company": "Fio's Quest"
+    },
+    "text": "Mariandi was amazing to work with.   We both worked as Software Engineers on MOO's B2B services, primarily focussing on the frontend. She's not just goal focused, she understands the goal is helping people, not a feature on a ticket. She was exceptionally supportive to those around her, not only helping us learn new skills, but boosting our confidence too.  I would jump at the opportunity to work with her again, and anyone hiring her is gaining a tremendous asset.",
+    "postedDate": "2019-06-25",
+    "recommendationUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/recommendations/"
+  },
+  {
+    "id": "kkr-r.w.-0866e0",
+    "jobId": "",
+    "authorInitials": "R.W.",
+    "authorRole": {
+      "jobTitle": "Lead Engineer",
+      "company": "KKR"
+    },
+    "text": "Marinadi is an extremely organised, focused, hardworking leader who constantly strives to improve and challenge herself.  As well as being extremely technically competent Mariandi was able to manage a number of different projects and move between technologies and requirements seamlessly.  On a personal level I found Mariandi really approachable and immensely supportive of her team.",
+    "postedDate": "2017-01-25",
+    "recommendationUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/recommendations/"
+  },
+  {
+    "id": "sovos-s.s.-f05549",
+    "jobId": "",
+    "authorInitials": "S.S.",
+    "authorRole": {
+      "jobTitle": "Product Manager",
+      "company": "Sovos"
+    },
+    "text": "Mariandi is a very talented and dedicated Software Engineer. We've worked together at Capco while she was managing all the development teams for the internal software projects. She did it brilliantly by engaging in a very honest, interested and dedicated way not only with consultants for specification and design work, but also with her dev team. She is always willing to help and she gets involved in development activities whenever needed. She's very interested and tries to always keep up with the latest technologies. Mariandi is a very strong Software Engineer and Dev Lead with whom is a pleasure to work with.",
+    "postedDate": "2017-01-21",
+    "recommendationUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/recommendations/"
+  },
+  {
+    "id": "news-uk-l.h.-53ebcc",
+    "jobId": "",
+    "authorInitials": "L.H.",
+    "authorRole": {
+      "jobTitle": "Head of Delivery - Data",
+      "company": "News UK"
+    },
+    "text": "Mariandi and I joined a team that had lost it's momentum mid project lifecycle. Speaking from a coaching perspective, Mariandi immediately impressed me with how quickly she took control and ownership of some of the issues that had been ignored and passed around for some time. She is honest but diplomatic, with the ability to diffuse difficult situations, but at the same time look out for the best interests of her team. Mariandi is not afraid of rolling  her sleeves up and getting involved in the detail. She is one of the strongest technical leads I have worked with, and she is a pleasure to engage with.",
+    "postedDate": "2017-01-06",
     "recommendationUrl": "https://www.linkedin.com/in/mariandi-stylianou/details/recommendations/"
   }
 ]
