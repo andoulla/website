@@ -56,7 +56,7 @@ function SkillsContent() {
           highlightedSkill={highlightedSkill}
         />
       ) : (
-        <SkillsGraphView />
+        <SkillsGraphView skills={skills} experiences={experiences} />
       )}
     </>
   );

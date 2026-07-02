@@ -1,13 +1,7 @@
 import { skills } from '../../data/skills';
 
+import { CATEGORY_COLOUR_MAP } from './skillColour.constants';
 import type { SkillCategory, SkillColour } from './skillColour.types';
-
-const CATEGORY_COLOUR_MAP: Record<SkillCategory, SkillColour> = {
-  engineering: 'primary',
-  managerial: 'secondary',
-  'soft-skills': 'success',
-  other: 'info',
-};
 
 const SKILL_CATEGORY_MAP: Record<string, SkillCategory> = Object.fromEntries(
   skills.map((s) => [s.name, s.category])
