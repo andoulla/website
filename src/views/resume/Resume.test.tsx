@@ -2,7 +2,7 @@ import { act, render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
 import { ResumeDataProvider } from '../../context/resumeData';
-import type { WorkExperienceWithRecommendations } from '../../utils/joinJobsWithRecommendations';
+import type { WorkExperienceWithRecommendations } from '../../types';
 
 import { Resume } from './Resume';
 
@@ -19,6 +19,7 @@ const testExperiences: WorkExperienceWithRecommendations[] = [
   endDate: null,
   responsibilities: [],
   skills: [],
+  techStack: [],
   logo: '',
   experienceUrl: 'https://www.linkedin.com/in/example/details/experience/',
   recommendations: [],

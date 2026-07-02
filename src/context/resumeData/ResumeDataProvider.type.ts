@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { WorkExperienceWithRecommendations } from '../../utils/joinJobsWithRecommendations';
+import type { WorkExperienceWithRecommendations } from '../../types';
 
 export type ExperiencesPromise = Promise<WorkExperienceWithRecommendations[]>;
 

@@ -1,9 +1,8 @@
-import type { Recommendation } from '../../data/recommendations';
-import type { WorkExperience } from '../../data/jobs';
-
-export interface WorkExperienceWithRecommendations extends WorkExperience {
-  recommendations: Recommendation[];
-}
+import type {
+  Recommendation,
+  WorkExperience,
+  WorkExperienceWithRecommendations,
+} from '../../types';
 
 export function joinJobsWithRecommendations(
   jobs: WorkExperience[],

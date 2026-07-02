@@ -1,6 +1,6 @@
 import { ARTIFICIAL_DELAY_MS } from '../../constants';
+import type { WorkExperienceWithRecommendations } from '../../types';
 import { joinJobsWithRecommendations } from '../joinJobsWithRecommendations';
-import type { WorkExperienceWithRecommendations } from '../joinJobsWithRecommendations';
 
 export async function loadExperiences(): Promise<WorkExperienceWithRecommendations[]> {
   // Dynamic import() code-splits the data so it isn't pulled in at module load; the

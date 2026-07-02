@@ -1,17 +1,5 @@
-import recommendationsData from './recommendations.json';
-import type { WorkExperience } from './jobs';
+import type { Recommendation } from '../types';
 
-export interface Recommendation {
-  id: string;
-  jobId: WorkExperience['id'];
-  authorInitials: string;
-  authorRole: {
-    jobTitle: string;
-    company: string;
-  };
-  text: string;
-  postedDate: string;
-  recommendationUrl: string;
-}
+import recommendationsData from './recommendations.json';
 
 export const recommendations: Recommendation[] = recommendationsData;
