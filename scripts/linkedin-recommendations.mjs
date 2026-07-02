@@ -21,7 +21,7 @@
 // Defaults outputPath to src/data/recommendations.json.
 
 import { createHash } from 'crypto';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { createInterface } from 'readline';
 
 import { parseCsv } from './lib/csv.mjs';
@@ -123,14 +123,6 @@ async function main() {
   const jobs = JSON.parse(readFileSync('src/data/jobs.json', 'utf-8'));
   const map = loadMap();
 
-  // Build a lookup of existing skills by recommendation ID so manual skill tags
-  // survive re-imports — LinkedIn's CSV has no skills column.
-  const existingSkillsById = existsSync(outputPath)
-    ? Object.fromEntries(
-        JSON.parse(readFileSync(outputPath, 'utf-8')).map((r) => [r.id, r.skills ?? []]),
-      )
-    : {};
-
   const rl = createInterface({ input: process.stdin, output: process.stderr });
 
   const usedIds = new Set();
@@ -173,7 +165,6 @@ async function main() {
         company,
       },
       text,
-      skills: existingSkillsById[id] ?? [],
       postedDate: parseCreationDate(row[idx.creationDate]),
       recommendationUrl,
     });
@@ -190,7 +181,8 @@ async function main() {
       `\nNote: only initials are stored — recommenders' full names from the CSV were never ` +
       `written to this file. "recommendationUrl" points at your profile's ` +
       `recommendations section (LinkedIn doesn't expose a per-recommendation URL), so it's ` +
-      `the same link on every entry.`,
+      `the same link on every entry.\n` +
+      `Skills highlighted by each recommendation are not in the CSV — add them to src/data/skills.json instead.`,
   );
 }
 

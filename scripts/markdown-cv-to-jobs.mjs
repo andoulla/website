@@ -80,26 +80,13 @@ function parseJobBlock(block) {
   let startDate = null;
   let endDate = null;
   const responsibilities = [];
-  const skills = [];
-  const techStack = [];
 
   for (let i = 1; i < block.length; i++) {
     const line = block[i];
     if (line === '') continue;
 
-    // Tech line: **Tech:** Skill, Skill (check before fully-bold test)
-    if (/^\*\*Tech:/i.test(line)) {
-      const techText = stripBold(line).replace(/^Tech:\s*/i, '');
-      techStack.push(...techText.split(/,\s*/).map((s) => s.trim()).filter(Boolean));
-      continue;
-    }
-
-    // Skills line: **Skills:** Skill, Skill
-    if (/^\*\*Skills:/i.test(line)) {
-      const skillsText = stripBold(line).replace(/^Skills:\s*/i, '');
-      skills.push(...skillsText.split(/,\s*/).map((s) => s.trim()).filter(Boolean));
-      continue;
-    }
+    // Skills/Tech lines are intentionally skipped — skills now live in src/data/skills.json.
+    if (/^\*\*(Tech|Skills):/i.test(line)) continue;
 
     // Fully bold line (**...**): date line or sub-section heading within a job
     if (/^\*\*.+\*\*$/.test(line)) {
@@ -127,7 +114,7 @@ function parseJobBlock(block) {
     responsibilities.push(line);
   }
 
-  return { companyName, title, location, startDate, endDate, responsibilities, skills, techStack, logo: '' };
+  return { companyName, title, location, startDate, endDate, responsibilities, logo: '' };
 }
 
 function main() {
@@ -196,8 +183,9 @@ function main() {
   writeFileSync(outputPath, `${JSON.stringify(withIds, null, 2)}\n`);
   console.error(
     `Wrote ${withIds.length} job(s) to ${outputPath}.\n` +
-      `Note: "logo" is left empty — fill it in manually. ` +
-      `"title" isn't part of the current WorkExperience type — decide where it should live before merging.`,
+      `Note: "logo" is left empty — fill it in manually.\n` +
+      `"title" isn't part of the current WorkExperience type — decide where it should live before merging.\n` +
+      `Skills and tech stack are not written here — add them to src/data/skills.json instead.`,
   );
 }
 
