@@ -1,6 +1,6 @@
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
 
 export interface BulletListProps {
   items: string[];
@@ -8,10 +8,10 @@ export interface BulletListProps {
 
 export function BulletList({ items }: BulletListProps) {
   return (
-    <List dense disablePadding>
+    <List dense disablePadding sx={{ listStyle: 'disc', pl: 2.5 }}>
       {items.map((item) => (
-        <ListItem key={item} disableGutters>
-          <ListItemText primary={item} />
+        <ListItem key={item} disableGutters sx={{ display: 'list-item', py: 0 }}>
+          <Typography variant="body2">{item}</Typography>
         </ListItem>
       ))}
     </List>

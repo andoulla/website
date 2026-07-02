@@ -17,7 +17,11 @@ const VARIANT_BY_LEVEL = {
 export function Section({ title, titleLevel = 2, children }: SectionProps) {
   return (
     <Box component="section">
-      <Typography component={`h${titleLevel}`} variant={VARIANT_BY_LEVEL[titleLevel]}>
+      <Typography
+        component={`h${titleLevel}`}
+        variant={VARIANT_BY_LEVEL[titleLevel]}
+        sx={{ fontWeight: 'medium' }}
+      >
         {title}
       </Typography>
       <Box sx={{ mt: 1 }}>{children}</Box>

@@ -3,12 +3,13 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 
 import { BulletList } from '../../../../components/bulletList';
 import { Section } from '../../../../components/section';
 import { TagList } from '../../../../components/tagList';
+import type { WorkExperienceWithRecommendations } from '../../../../types';
 import { RecommendationText } from '../recommendationText';
-import type { WorkExperienceWithRecommendations } from '../../../../utils/joinJobsWithRecommendations';
 
 export interface WorkExperienceCardProps {
   experience: WorkExperienceWithRecommendations;
@@ -55,8 +56,22 @@ export function WorkExperienceCard({ experience }: WorkExperienceCardProps) {
         subheader={`${experience.location} · ${duration}`}
       />
       <CardContent>
+        {experience.techStack.length > 0 && (
+          <>
+            <Section title="Tech Stack" titleLevel={4}>
+              <Typography variant="body2" color="text.secondary">
+                {experience.techStack.join(', ')}
+              </Typography>
+            </Section>
+            <Divider sx={{ my: 2 }} />
+          </>
+        )}
         <Section title="Responsibilities" titleLevel={4}>
-          <BulletList items={experience.responsibilities} />
+          {experience.responsibilities.length === 1 ? (
+            <Typography variant="body2">{experience.responsibilities[0]}</Typography>
+          ) : (
+            <BulletList items={experience.responsibilities} />
+          )}
         </Section>
         <Divider sx={{ my: 2 }} />
         <Section title="Key Skills" titleLevel={4}>

@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
-import type { WorkExperienceWithRecommendations } from '../../../../utils/joinJobsWithRecommendations';
+import type { WorkExperienceWithRecommendations } from '../../../../types';
 
 import { WorkExperienceCard } from './WorkExperienceCard';
 
@@ -16,6 +16,7 @@ function makeExperience(
     endDate: null,
     responsibilities: ['Lead frontend architecture'],
     skills: ['React', 'TypeScript'],
+    techStack: ['React', 'TypeScript'],
     logo: '',
     experienceUrl: 'https://www.linkedin.com/in/example/details/experience/',
     recommendations: [],
@@ -38,8 +39,20 @@ describe('WorkExperienceCard', () => {
     const screen = render(<WorkExperienceCard experience={makeExperience()} />);
 
     expect(screen.getByRole('heading', { level: 3, name: 'Nimbus Analytics' })).toBeVisible();
+    expect(screen.getByRole('heading', { level: 4, name: 'Tech Stack' })).toBeVisible();
     expect(screen.getByRole('heading', { level: 4, name: 'Responsibilities' })).toBeVisible();
     expect(screen.getByRole('heading', { level: 4, name: 'Key Skills' })).toBeVisible();
+  });
+
+  test('renders tech stack items as comma-separated text', () => {
+    const screen = render(
+      <WorkExperienceCard
+        experience={makeExperience({ techStack: ['Vite', 'Jest', 'Playwright'] })}
+      />
+    );
+
+    expect(screen.getByRole('heading', { level: 4, name: 'Tech Stack' })).toBeVisible();
+    expect(screen.getByText('Vite, Jest, Playwright')).toBeVisible();
   });
 
   test('renders the end month for a past role instead of "Present"', () => {
