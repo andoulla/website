@@ -1,46 +1,82 @@
 import type { ChipProps } from '@mui/material/Chip';
 
+export type SkillCategory = 'engineering' | 'managerial' | 'soft-skills' | 'other';
+
 type SkillColor = NonNullable<ChipProps['color']>;
 
-/** Explicit, curated skill -> color map so each known skill always renders the same color. */
-const SKILL_COLOR_MAP: Record<string, SkillColor> = {
-  React: 'info',
-  TypeScript: 'primary',
-  JavaScript: 'warning',
-  'Node.js': 'success',
-  GraphQL: 'secondary',
-  PostgreSQL: 'primary',
-  Docker: 'info',
-  Accessibility: 'success',
-  CSS: 'secondary',
-  HTML: 'warning',
-  jQuery: 'error',
+const CATEGORY_COLOR_MAP: Record<SkillCategory, SkillColor> = {
+  engineering: 'primary',
+  managerial: 'secondary',
+  'soft-skills': 'success',
+  other: 'info',
 };
 
-/** Stable fallback palette for any skill not present in the curated map above. */
-const FALLBACK_COLORS: SkillColor[] = [
-  'primary',
-  'secondary',
-  'success',
-  'warning',
-  'info',
-  'error',
-];
+const SKILL_CATEGORY_MAP: Record<string, SkillCategory> = {
+  // Engineering — tech stack
+  React: 'engineering',
+  TypeScript: 'engineering',
+  JavaScript: 'engineering',
+  'Node.js': 'engineering',
+  GraphQL: 'engineering',
+  PostgreSQL: 'engineering',
+  Docker: 'engineering',
+  CSS: 'engineering',
+  HTML: 'engineering',
+  jQuery: 'engineering',
+  'React Query': 'engineering',
+  RTL: 'engineering',
+  Jest: 'engineering',
+  Playwright: 'engineering',
+  Cypress: 'engineering',
+  'CSS-in-JS': 'engineering',
+  Stitches: 'engineering',
+  'Radix UI': 'engineering',
+  'Git/GitHub': 'engineering',
+  Yarn: 'engineering',
+  ESLint: 'engineering',
+  Prettier: 'engineering',
+  Sentry: 'engineering',
+  Jira: 'engineering',
+  Notion: 'engineering',
+  Flow: 'engineering',
+  Enzyme: 'engineering',
+  Sass: 'engineering',
+  Less: 'engineering',
+  Git: 'engineering',
+  GitLab: 'engineering',
+  Npm: 'engineering',
+  Webpack: 'engineering',
+  Confluence: 'engineering',
+  Kibana: 'engineering',
+  // Engineering — practices
+  Accessibility: 'engineering',
+  'Design System': 'engineering',
+  'Testing Strategy': 'engineering',
+  'Performance Optimisation': 'engineering',
+  'Design System Adoption': 'engineering',
+  // Managerial
+  'Team Leadership': 'managerial',
+  'Technical Direction': 'managerial',
+  'Cross-functional Delivery': 'managerial',
+  'Stakeholder Management': 'managerial',
+  'Roadmap Planning': 'managerial',
+  'Release Management': 'managerial',
+  'Project Planning': 'managerial',
+  'Estimation & Planning': 'managerial',
+  'Team Operations': 'managerial',
+  Recruitment: 'managerial',
+  'Stakeholder Communication': 'managerial',
+  'Agile Delivery': 'managerial',
+  // Soft skills
+  Mentoring: 'soft-skills',
+  'Team Onboarding': 'soft-skills',
+  Onboarding: 'soft-skills',
+};
 
-/**
- * Map a skill to a MUI palette color. Known skills use the curated map; unknown skills
- * fall back to a stable hash so a given skill always renders the same color everywhere.
- */
+export function skillCategory(skill: string): SkillCategory {
+  return SKILL_CATEGORY_MAP[skill] ?? 'other';
+}
+
 export function skillColor(skill: string): SkillColor {
-  const mapped = SKILL_COLOR_MAP[skill];
-  if (mapped !== undefined) {
-    return mapped;
-  }
-
-  // Sum the character codes for a stable, deterministic index — the same skill always
-  // TODO: remove this just get a map of colours and skills, no need to use charcodesumm
-  // resolves to the same fallback color.
-  const charCodeSum = [...skill].reduce((sum, char) => sum + char.charCodeAt(0), 0);
-
-  return FALLBACK_COLORS[charCodeSum % FALLBACK_COLORS.length];
+  return CATEGORY_COLOR_MAP[skillCategory(skill)];
 }
