@@ -6,21 +6,21 @@ import type { ExperiencesPromise, ResumeDataProviderProps } from './ResumeDataPr
 
 const ResumeDataContext = createContext<ExperiencesPromise | null>(null);
 
-export function useResumeData() {
+export const useResumeData = () => {
   const promise = use(ResumeDataContext);
   if (promise === null) {
     throw new Error('useResumeData must be used within a ResumeDataProvider');
   }
   return use(promise);
-}
+};
 
-export function ResumeDataProvider({
+export const ResumeDataProvider = ({
   children,
   loader = loadExperiences,
-}: ResumeDataProviderProps) {
+}: ResumeDataProviderProps) => {
   // Lazy initializer: React calls loader() exactly once, on first mount, so the data
   // load is deferred to render time (not module load) and the promise is kept stable.
   const [experiencesPromise] = useState(loader);
 
   return <ResumeDataContext value={experiencesPromise}>{children}</ResumeDataContext>;
-}
+};

@@ -11,19 +11,19 @@ import type {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-export function useThemeContext(): ThemeContextValue {
+export const useThemeContext = (): ThemeContextValue => {
   const ctx = use(ThemeContext);
   if (ctx === null) {
     throw new Error('useThemeContext must be used within a ThemeContextProvider');
   }
   return ctx;
-}
+};
 
-export function ThemeContextProvider({
+export const ThemeContextProvider = ({
   children,
   initialTheme = 'green',
   initialDarkMode = false,
-}: ThemeContextProviderProps) {
+}: ThemeContextProviderProps) => {
   const [themeName, setThemeName] = useState<ThemeName>(initialTheme);
   const [isDarkMode, setIsDarkMode] = useState(initialDarkMode);
 
@@ -40,4 +40,4 @@ export function ThemeContextProvider({
       <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>
     </ThemeContext>
   );
-}
+};

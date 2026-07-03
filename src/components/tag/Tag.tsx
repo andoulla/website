@@ -12,7 +12,7 @@ export interface TagProps {
   onClick?: () => void;
 }
 
-export function Tag({ children, colour, shadeIndex, onClick }: TagProps) {
+export const Tag = ({ children, colour, shadeIndex, onClick }: TagProps) => {
   const theme = useTheme();
 
   if (shadeIndex !== undefined && colour !== undefined && colour !== 'default') {
@@ -35,4 +35,4 @@ export function Tag({ children, colour, shadeIndex, onClick }: TagProps) {
   }
 
   return <Chip label={children} color={colour} size="small" onClick={onClick} />;
-}
+};

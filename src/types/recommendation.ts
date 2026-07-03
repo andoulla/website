@@ -6,7 +6,6 @@ export interface Recommendation {
   authorInitials: string;
   authorRole: {
     jobTitle: string;
-    company: string;
   };
   text: string;
   postedDate: string;

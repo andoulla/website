@@ -16,7 +16,7 @@ export interface SkillFilterBarProps {
   onChange: (value: 'all' | SkillCategory) => void;
 }
 
-export function SkillFilterBar({ categories, activeFilter, onChange }: SkillFilterBarProps) {
+export const SkillFilterBar = ({ categories, activeFilter, onChange }: SkillFilterBarProps) => {
   return (
     <ToggleButtonGroup
       value={activeFilter}
@@ -36,4 +36,4 @@ export function SkillFilterBar({ categories, activeFilter, onChange }: SkillFilt
       ))}
     </ToggleButtonGroup>
   );
-}
+};

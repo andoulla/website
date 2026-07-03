@@ -7,7 +7,7 @@ import { RecommendationText } from './RecommendationText';
 
 const recommendation = new Recommendation()
   .authorInitials('P.S.')
-  .authorRole({ jobTitle: 'Engineering Manager', company: 'Acme Corp' })
+  .authorRole({ jobTitle: 'Engineering Manager' })
   .text('Great work.')
   .postedDate('2022-01-15')
   .mock();
@@ -17,7 +17,7 @@ describe('RecommendationText', () => {
     const screen = render(<RecommendationText recommendation={recommendation} />);
 
     expect(screen.getByText('"Great work."')).toBeVisible();
-    expect(screen.getByText('P.S., Engineering Manager, Acme Corp')).toBeVisible();
+    expect(screen.getByText('P.S., Engineering Manager')).toBeVisible();
     expect(screen.getByText('P.S.')).toBeVisible();
   });
 

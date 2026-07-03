@@ -13,9 +13,8 @@ import Stack from '@mui/material/Stack';
 
 const SKELETON_ITEM_COUNT = 3;
 // TODO: rename this to something beter than experience, Job, Role, position or a combination of those. Maybe WorkExperience or WorkExperienceItem.
-// TODO: check and convert to arrow functions
 
-function WorkExperienceCardSkeleton() {
+const WorkExperienceCardSkeleton = () => {
   return (
     <Card>
       <CardHeader title={<Skeleton width="40%" />} subheader={<Skeleton width="60%" />} />
@@ -28,9 +27,9 @@ function WorkExperienceCardSkeleton() {
       </CardContent>
     </Card>
   );
-}
+};
 
-export function WorkExperienceTimelineSkeleton() {
+export const WorkExperienceTimelineSkeleton = () => {
   return (
     <div role="status" aria-label="Loading work experience">
       <Timeline
@@ -59,4 +58,4 @@ export function WorkExperienceTimelineSkeleton() {
       </Timeline>
     </div>
   );
-}
+};

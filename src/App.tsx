@@ -10,15 +10,12 @@ import { Skills } from './views/skills';
 // TODO: Add animation on scroll on resume
 // TODO: check mobile layout and add mobile-specific adjustments as needed
 // TODO: check for unnecessary re-renders and performance
-// TODO: ensure that sensitive data is not stored in repo
 // TODO: build page for articles
 // TODO: add education (by default in time line view, filter out url based)
-// TODO: remove company title from recommender
-// TODO: put recommender on the top
-// TODO: prefer arrow functions were possible, if not comment why on top of function
+
 // TODO: linting rule to avoid wrong imports from same level
 // TODO: in skills agregate skills together, ds with ds adption, and remove  category from popup
-function App() {
+const App = () => {
   return (
     <ThemeContextProvider>
       <CssBaseline />
@@ -33,6 +30,6 @@ function App() {
       </ResumeDataProvider>
     </ThemeContextProvider>
   );
-}
+};
 
 export default App;

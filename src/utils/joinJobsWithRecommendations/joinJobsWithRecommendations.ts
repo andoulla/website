@@ -7,11 +7,11 @@ import type {
 
 export type { WorkExperienceWithRecommendations } from '../../types';
 
-export function joinJobsWithRecommendations(
+export const joinJobsWithRecommendations = (
   jobs: WorkExperience[],
   recommendations: Recommendation[],
   skills: Skill[]
-): WorkExperienceWithRecommendations[] {
+): WorkExperienceWithRecommendations[] => {
   return jobs.map((job) => ({
     ...job,
     recommendations: recommendations.filter((r) => r.jobId === job.id),
@@ -22,4 +22,4 @@ export function joinJobsWithRecommendations(
       .filter((s) => s.type === 'skill' && s.jobIds.includes(job.id))
       .map((s) => s.name),
   }));
-}
+};

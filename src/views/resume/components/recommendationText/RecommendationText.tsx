@@ -10,7 +10,7 @@ export interface RecommendationTextProps {
   recommendation: Recommendation;
 }
 
-export function RecommendationText({ recommendation }: RecommendationTextProps) {
+export const RecommendationText = ({ recommendation }: RecommendationTextProps) => {
   const color = 'primary';
   return (
     <Card
@@ -22,10 +22,7 @@ export function RecommendationText({ recommendation }: RecommendationTextProps) 
       })}
     >
       <CardContent>
-        <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-          {`"${recommendation.text}"`}
-        </Typography>
-        <Stack direction="row" spacing={1} sx={{ mt: 1, alignItems: 'center' }}>
+        <Stack direction="row" spacing={1} sx={{ mb: 1, alignItems: 'center' }}>
           <Avatar
             sx={(theme) => ({
               width: 28,
@@ -38,11 +35,13 @@ export function RecommendationText({ recommendation }: RecommendationTextProps) 
             {recommendation.authorInitials}
           </Avatar>
           <Typography variant="caption" color="text.secondary">
-            {recommendation.authorInitials}, {recommendation.authorRole.jobTitle},{' '}
-            {recommendation.authorRole.company}
+            {recommendation.authorInitials}, {recommendation.authorRole.jobTitle}
           </Typography>
         </Stack>
+        <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+          {`"${recommendation.text}"`}
+        </Typography>
       </CardContent>
     </Card>
   );
-}
+};

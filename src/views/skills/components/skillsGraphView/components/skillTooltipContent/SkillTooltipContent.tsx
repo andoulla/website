@@ -20,7 +20,7 @@ export interface SkillTooltipContentProps {
   companyNames: string[];
 }
 
-export function SkillTooltipContent({ skill, companyNames }: SkillTooltipContentProps) {
+export const SkillTooltipContent = ({ skill, companyNames }: SkillTooltipContentProps) => {
   const theme = useTheme();
 
   return (
@@ -50,4 +50,4 @@ export function SkillTooltipContent({ skill, companyNames }: SkillTooltipContent
       )}
     </Paper>
   );
-}
+};

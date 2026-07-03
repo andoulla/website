@@ -31,7 +31,7 @@ const toggleButtonGroupSx = {
   },
 } as const;
 
-export function NavBar() {
+export const NavBar = () => {
   const { themeName, toggleTheme, isDarkMode, toggleDarkMode } = useThemeContext();
   const nextTheme = themeName === 'green' ? 'purple' : 'green';
 
@@ -76,4 +76,4 @@ export function NavBar() {
       </Toolbar>
     </AppBar>
   );
-}
+};

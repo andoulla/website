@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 import { baseTokens, darkTokens, lightTokens } from './tokens';
 
-export function createGreenTheme(mode: 'light' | 'dark') {
+export const createGreenTheme = (mode: 'light' | 'dark') => {
   const tokens = mode === 'light' ? lightTokens : darkTokens;
   return createTheme({
     typography: baseTokens.typography,
@@ -29,4 +29,4 @@ export function createGreenTheme(mode: 'light' | 'dark') {
       action: { focus: mode === 'light' ? '#EEF4E6' : '#1a3010' },
     },
   });
-}
+};

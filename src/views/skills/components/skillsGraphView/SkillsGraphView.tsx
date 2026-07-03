@@ -15,7 +15,7 @@ export interface SkillsGraphViewProps {
   experiences: WorkExperienceWithRecommendations[];
 }
 
-export function SkillsGraphView({ skills, experiences }: SkillsGraphViewProps) {
+export const SkillsGraphView = ({ skills, experiences }: SkillsGraphViewProps) => {
   const [filterCategory, setFilterCategory] = useState<'all' | SkillCategory>('all');
 
   const companyNameMap = useMemo(
@@ -44,4 +44,4 @@ export function SkillsGraphView({ skills, experiences }: SkillsGraphViewProps) {
       <SkillsBarChart skills={filteredSkills} companyNameMap={companyNameMap} />
     </>
   );
-}
+};

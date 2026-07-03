@@ -6,7 +6,7 @@ export interface BulletListProps {
   items: string[];
 }
 
-export function BulletList({ items }: BulletListProps) {
+export const BulletList = ({ items }: BulletListProps) => {
   return (
     <List dense disablePadding sx={{ listStyle: 'disc', pl: 2.5 }}>
       {items.map((item) => (
@@ -16,4 +16,4 @@ export function BulletList({ items }: BulletListProps) {
       ))}
     </List>
   );
-}
+};

@@ -39,7 +39,11 @@ interface PopoverState {
 
 const skillElementId = (name: string) => `skill-${encodeURIComponent(name)}`;
 
-export function SkillsListView({ skills, recommendations, highlightedSkill }: SkillsListViewProps) {
+export const SkillsListView = ({
+  skills,
+  recommendations,
+  highlightedSkill,
+}: SkillsListViewProps) => {
   const theme = useTheme();
   const [popover, setPopover] = useState<PopoverState | null>(null);
 
@@ -62,7 +66,7 @@ export function SkillsListView({ skills, recommendations, highlightedSkill }: Sk
       ? recommendations.filter((r) => popover.skill.recommendationIds.includes(r.id))
       : [];
 
-  function dotColour(skill: SkillSummary): string {
+  const dotColour = (skill: SkillSummary): string => {
     const { colour } = skill;
     if (colour === 'default') return theme.palette.grey[400];
     const paletteEntry = theme.palette[colour as keyof typeof theme.palette];
@@ -75,7 +79,7 @@ export function SkillsListView({ skills, recommendations, highlightedSkill }: Sk
       theme.palette.getContrastText
     );
     return bg;
-  }
+  };
 
   return (
     <>
@@ -158,4 +162,4 @@ export function SkillsListView({ skills, recommendations, highlightedSkill }: Sk
       </Popover>
     </>
   );
-}
+};

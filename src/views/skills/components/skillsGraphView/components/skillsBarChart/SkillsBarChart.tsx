@@ -28,35 +28,35 @@ const MIN_HEIGHT = 200;
 
 // Safely resolves a SkillColour key to the palette's .main hex value.
 // Mirrors the dotColour() pattern in SkillsListView.
-function getPaletteMain(colour: SkillColour, theme: Theme): string {
+const getPaletteMain = (colour: SkillColour, theme: Theme): string => {
   if (colour === 'default') return theme.palette.grey[400];
   const entry = theme.palette[colour as keyof typeof theme.palette];
   if (entry !== null && typeof entry === 'object' && 'main' in entry) {
     return (entry as { main: string }).main;
   }
   return theme.palette.grey[400];
-}
+};
 
 interface SkillBarTooltipProps extends TooltipContentProps<number, string> {
   companyNameMap: Map<string, string>;
 }
 
 // Bridges Recharts tooltip payload → SkillTooltipContent props.
-function SkillBarTooltip({ active, payload, companyNameMap }: SkillBarTooltipProps) {
+const SkillBarTooltip = ({ active, payload, companyNameMap }: SkillBarTooltipProps) => {
   if (!active || payload === undefined || payload.length === 0) return null;
   const skill = payload[0].payload as SkillSummary;
   const companyNames = skill.jobIds
     .map((id) => companyNameMap.get(id))
     .filter((name): name is string => name !== undefined);
   return <SkillTooltipContent skill={skill} companyNames={companyNames} />;
-}
+};
 
 export interface SkillsBarChartProps {
   skills: SkillSummary[];
   companyNameMap: Map<string, string>;
 }
 
-export function SkillsBarChart({ skills, companyNameMap }: SkillsBarChartProps) {
+export const SkillsBarChart = ({ skills, companyNameMap }: SkillsBarChartProps) => {
   const theme = useTheme();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
@@ -187,4 +187,4 @@ export function SkillsBarChart({ skills, companyNameMap }: SkillsBarChartProps) 
       </Box>
     </Stack>
   );
-}
+};

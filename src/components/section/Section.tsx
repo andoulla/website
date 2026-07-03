@@ -14,7 +14,7 @@ const VARIANT_BY_LEVEL = {
   4: 'subtitle1',
 } as const;
 
-export function Section({ title, titleLevel = 2, children }: SectionProps) {
+export const Section = ({ title, titleLevel = 2, children }: SectionProps) => {
   return (
     <Box component="section">
       <Typography
@@ -27,4 +27,4 @@ export function Section({ title, titleLevel = 2, children }: SectionProps) {
       <Box sx={{ mt: 1 }}>{children}</Box>
     </Box>
   );
-}
+};

@@ -17,7 +17,7 @@ import { SkillsListView } from './components/skillsListView';
 
 type ViewMode = 'list' | 'graph';
 
-function SkillsContent() {
+const SkillsContent = () => {
   const experiences = useResumeData();
   const skills = calculateSkillYears(experiences);
   const recommendations = experiences.flatMap((e) => e.recommendations);
@@ -60,9 +60,9 @@ function SkillsContent() {
       )}
     </>
   );
-}
+};
 
-export function Skills() {
+export const Skills = () => {
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
       <Typography variant="h3" component="h1" sx={{ mb: 3 }}>
@@ -79,4 +79,4 @@ export function Skills() {
       </Suspense>
     </Container>
   );
-}
+};

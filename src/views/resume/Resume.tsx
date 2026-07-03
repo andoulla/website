@@ -18,7 +18,7 @@ import { WorkExperienceCard } from './components/workExperienceCard';
 import { WorkExperienceTimelineSkeleton } from './components/workExperienceTimelineSkeleton';
 import { pickRandomRoleIcon } from './roleIcons';
 
-function ExperienceList() {
+const ExperienceList = () => {
   const experiences = useResumeData();
 
   // Pick a random icon per role once so it stays stable across re-renders.
@@ -58,9 +58,9 @@ function ExperienceList() {
       })}
     </Timeline>
   );
-}
+};
 
-export function Resume() {
+export const Resume = () => {
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
       <Box sx={{ mb: 5, textAlign: 'center' }}>
@@ -76,4 +76,4 @@ export function Resume() {
       </Section>
     </Container>
   );
-}
+};

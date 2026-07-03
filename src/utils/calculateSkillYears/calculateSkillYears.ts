@@ -13,17 +13,17 @@ const CATEGORY_ORDER: Record<SkillCategory, number> = {
   other: 3,
 };
 
-function durationYears(startDate: string, endDate: string | null, today: Date): number {
+const durationYears = (startDate: string, endDate: string | null, today: Date): number => {
   const start = new Date(startDate);
   const end = endDate !== null ? new Date(endDate) : today;
   return (end.getTime() - start.getTime()) / (365.25 * 24 * 60 * 60 * 1000);
-}
+};
 
-export function calculateSkillYears(
+export const calculateSkillYears = (
   experiences: WorkExperience[],
   allSkills: Skill[] = defaultSkills,
   today: Date = new Date()
-): SkillSummary[] {
+): SkillSummary[] => {
   const experienceById = new Map(experiences.map((e) => [e.id, e]));
 
   const summaries: SkillSummary[] = allSkills
@@ -51,4 +51,4 @@ export function calculateSkillYears(
     if (catDiff !== 0) return catDiff;
     return b.years - a.years;
   });
-}
+};

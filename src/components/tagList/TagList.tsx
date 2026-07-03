@@ -8,7 +8,7 @@ export interface TagListProps {
   onItemClick?: (item: string) => void;
 }
 
-export function TagList({ items, onItemClick }: TagListProps) {
+export const TagList = ({ items, onItemClick }: TagListProps) => {
   return (
     <Box component="ul" sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, p: 0, m: 0 }}>
       {items.map((item) => (
@@ -30,4 +30,4 @@ export function TagList({ items, onItemClick }: TagListProps) {
       ))}
     </Box>
   );
-}
+};

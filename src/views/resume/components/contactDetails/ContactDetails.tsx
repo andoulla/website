@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 
 import { contact } from '../../../../data/contact';
 
-export function ContactDetails() {
+export const ContactDetails = () => {
   return (
     <Stack direction="row" spacing={2} sx={{ justifyContent: 'center', mt: 0.5 }}>
       <Link href={`mailto:${contact.email}`} underline="hover" color="primary">
@@ -35,4 +35,4 @@ export function ContactDetails() {
       </Link>
     </Stack>
   );
-}
+};

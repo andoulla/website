@@ -31,17 +31,17 @@ const MONTH_NAMES = [
   'Dec',
 ];
 
-function formatMonthYear(isoDate: string): string {
+const formatMonthYear = (isoDate: string): string => {
   const [year, month] = isoDate.split('-');
   return `${MONTH_NAMES[Number(month) - 1]} ${year}`;
-}
+};
 
-function formatDuration(startDate: string, endDate: string | null): string {
+const formatDuration = (startDate: string, endDate: string | null): string => {
   const end = endDate === null ? 'Present' : formatMonthYear(endDate);
   return `${formatMonthYear(startDate)} – ${end}`;
-}
+};
 
-export function WorkExperienceCard({ experience }: WorkExperienceCardProps) {
+export const WorkExperienceCard = ({ experience }: WorkExperienceCardProps) => {
   const navigate = useNavigate();
   const duration = formatDuration(experience.startDate, experience.endDate);
 
@@ -105,4 +105,4 @@ export function WorkExperienceCard({ experience }: WorkExperienceCardProps) {
       </CardContent>
     </Card>
   );
-}
+};
