@@ -112,7 +112,7 @@ export function SkillsListView({ skills, recommendations, highlightedSkill }: Sk
                       />
                       <ListItemText primary={s.skill} />
                       <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-                        {`est. ${s.years} years`}
+                        {`est. ${s.years} year${s.years === 1 ? '' : 's'}`}
                       </Typography>
                     </ListItemButton>
                   </ListItem>
@@ -145,7 +145,7 @@ export function SkillsListView({ skills, recommendations, highlightedSkill }: Sk
               {linkedRecs.map((rec) => (
                 <Box key={rec.id}>
                   <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-                    {rec.authorInitials} · {rec.authorRole.jobTitle}, {rec.authorRole.company}
+                    {rec.authorInitials} · {rec.authorRole.jobTitle}
                   </Typography>
                   <Typography variant="body2" sx={{ mt: 0.5 }}>
                     {rec.text}

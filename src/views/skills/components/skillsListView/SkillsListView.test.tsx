@@ -26,7 +26,7 @@ const SKILLS = [
 const RECOMMENDATIONS = [
   new Recommendation()
     .authorInitials('A.B.')
-    .authorRole({ jobTitle: 'Engineer', company: 'Acme' })
+    .authorRole({ jobTitle: 'Engineer' })
     .text('Excellent mentor.')
     .postedDate('2026-01-01')
     .recommendationUrl('')
@@ -43,6 +43,13 @@ describe('SkillsListView', () => {
     expect(screen.getByText('est. 3 years')).toBeVisible();
     expect(screen.getByText('Mentoring')).toBeVisible();
     expect(screen.getByText('est. 2 years')).toBeVisible();
+  });
+
+  test('renders "year" (singular) when a skill has exactly 1 year', () => {
+    const skills = [new SkillSummary().skill('Docker').years(1).mock()];
+    const screen = render(<SkillsListView skills={skills} recommendations={[]} />);
+
+    expect(screen.getByText('est. 1 year')).toBeVisible();
   });
 
   test('renders category section headings', () => {
