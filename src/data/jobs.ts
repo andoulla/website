@@ -1,5 +1,5 @@
-import type { WorkExperience } from '../types';
+import type { TimelineEvent } from '../types';
 
 import jobsData from './jobs.json';
 
-export const jobs: WorkExperience[] = jobsData;
+export const jobs: TimelineEvent[] = jobsData;

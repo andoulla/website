@@ -1,5 +1,6 @@
-export interface WorkExperience {
+export interface TimelineEvent {
   id: string;
+  type: 'work' | 'education' | 'other';
   companyName: string;
   location: string;
   startDate: string;

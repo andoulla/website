@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 
-import type { WorkExperienceWithRecommendations } from '../../types';
+import type { TimelineEventWithRecommendations } from '../../types';
 
-export type ExperiencesPromise = Promise<WorkExperienceWithRecommendations[]>;
+export type ExperiencesPromise = Promise<TimelineEventWithRecommendations[]>;
 
 export interface ResumeDataProviderProps {
   children: ReactNode;

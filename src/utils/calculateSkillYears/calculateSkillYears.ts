@@ -1,6 +1,6 @@
 import { skills as defaultSkills } from '../../data/skills';
 import type { Skill } from '../../data/skills.types';
-import type { WorkExperience } from '../../types';
+import type { TimelineEvent } from '../../types';
 import { skillColour } from '../skillColour';
 import type { SkillCategory } from '../skillColour';
 
@@ -20,7 +20,7 @@ const durationYears = (startDate: string, endDate: string | null, today: Date): 
 };
 
 export const calculateSkillYears = (
-  experiences: WorkExperience[],
+  experiences: TimelineEvent[],
   allSkills: Skill[] = defaultSkills,
   today: Date = new Date()
 ): SkillSummary[] => {

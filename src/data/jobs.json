@@ -1,6 +1,7 @@
 [
   {
     "id": "atom-learning-2021-01",
+    "type": "work",
     "companyName": "Atom Learning",
     "location": "Remote",
     "startDate": "2021-01-01",
@@ -26,6 +27,7 @@
   },
   {
     "id": "moo-2017-01",
+    "type": "work",
     "companyName": "Moo",
     "location": "London",
     "startDate": "2017-01-01",
@@ -45,6 +47,7 @@
   },
   {
     "id": "elsevier-2016-08",
+    "type": "work",
     "companyName": "Elsevier",
     "location": "London",
     "startDate": "2016-08-01",
@@ -58,6 +61,7 @@
   },
   {
     "id": "capco-2012-12",
+    "type": "work",
     "companyName": "Capco",
     "location": "London",
     "startDate": "2012-12-01",

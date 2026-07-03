@@ -1,7 +1,7 @@
 import { act, render } from '@testing-library/react';
 import { Suspense } from 'react';
 
-import { WorkExperience } from '../../testing';
+import { TimelineEvent } from '../../testing';
 
 import { ResumeDataProvider, useResumeData } from './ResumeDataProvider';
 
@@ -18,7 +18,7 @@ describe('ResumeDataProvider', () => {
       screen = render(
         <ResumeDataProvider
           loader={() =>
-            Promise.resolve([new WorkExperience().companyName('Nimbus Analytics').mock()])
+            Promise.resolve([new TimelineEvent().companyName('Nimbus Analytics').mock()])
           }
         >
           <Suspense fallback={<p>Loading</p>}>

@@ -14,8 +14,8 @@ import { Section } from '../../components/section';
 import { useResumeData } from '../../context/resumeData';
 
 import { ContactDetails } from './components/contactDetails';
-import { WorkExperienceCard } from './components/workExperienceCard';
-import { WorkExperienceTimelineSkeleton } from './components/workExperienceTimelineSkeleton';
+import { TimelineEventCard } from './components/timelineEventCard';
+import { TimelineEventSkeleton } from './components/timelineEventSkeleton';
 import { pickRandomRoleIcon } from './roleIcons';
 
 const ExperienceList = () => {
@@ -51,7 +51,7 @@ const ExperienceList = () => {
               {index < experiences.length - 1 && <TimelineConnector />}
             </TimelineSeparator>
             <TimelineContent sx={{ pr: 0 }}>
-              <WorkExperienceCard experience={experience} />
+              <TimelineEventCard experience={experience} />
             </TimelineContent>
           </TimelineItem>
         );
@@ -70,7 +70,7 @@ export const Resume = () => {
         <ContactDetails />
       </Box>
       <Section title="Work Experience">
-        <Suspense fallback={<WorkExperienceTimelineSkeleton />}>
+        <Suspense fallback={<TimelineEventSkeleton />}>
           <ExperienceList />
         </Suspense>
       </Section>

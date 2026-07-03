@@ -2,11 +2,11 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
-import { SkillSummary, WorkExperience } from '../../../../testing';
+import { SkillSummary, TimelineEvent } from '../../../../testing';
 
 import { SkillsGraphView } from './SkillsGraphView';
 
-const EXPERIENCE = new WorkExperience()
+const EXPERIENCE = new TimelineEvent()
   .companyName('Acme')
   .startDate('2022-01-01')
   .endDate('2024-01-01')

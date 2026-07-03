@@ -1,7 +1,7 @@
 import { loadExperiences } from './loadExperiences';
 
 describe('loadExperiences', () => {
-  test('resolves to work experiences each with a recommendations array', async () => {
+  test('resolves to timeline events each with a recommendations array', async () => {
     const experiences = await loadExperiences();
 
     expect(experiences.length).toBeGreaterThan(0);

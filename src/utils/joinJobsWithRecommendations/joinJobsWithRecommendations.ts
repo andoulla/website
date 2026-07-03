@@ -1,17 +1,13 @@
 import type { Skill } from '../../data/skills.types';
-import type {
-  Recommendation,
-  WorkExperience,
-  WorkExperienceWithRecommendations,
-} from '../../types';
+import type { Recommendation, TimelineEvent, TimelineEventWithRecommendations } from '../../types';
 
-export type { WorkExperienceWithRecommendations } from '../../types';
+export type { TimelineEventWithRecommendations } from '../../types';
 
 export const joinJobsWithRecommendations = (
-  jobs: WorkExperience[],
+  jobs: TimelineEvent[],
   recommendations: Recommendation[],
   skills: Skill[]
-): WorkExperienceWithRecommendations[] => {
+): TimelineEventWithRecommendations[] => {
   return jobs.map((job) => ({
     ...job,
     recommendations: recommendations.filter((r) => r.jobId === job.id),

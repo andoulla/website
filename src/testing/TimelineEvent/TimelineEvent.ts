@@ -1,16 +1,21 @@
-import type { Recommendation, WorkExperienceWithRecommendations } from '../../types';
+import type { Recommendation, TimelineEventWithRecommendations } from '../../types';
 
-import { defaultWorkExperience } from './WorkExperience.data';
+import { defaultTimelineEvent } from './TimelineEvent.data';
 
-export class WorkExperience {
-  private data: WorkExperienceWithRecommendations;
+export class TimelineEvent {
+  private data: TimelineEventWithRecommendations;
 
   constructor() {
-    this.data = { ...defaultWorkExperience };
+    this.data = { ...defaultTimelineEvent };
   }
 
   id(id: string): this {
     this.data = { ...this.data, id };
+    return this;
+  }
+
+  type(type: 'work' | 'education' | 'other'): this {
+    this.data = { ...this.data, type };
     return this;
   }
 
@@ -64,7 +69,7 @@ export class WorkExperience {
     return this;
   }
 
-  mock(): WorkExperienceWithRecommendations {
+  mock(): TimelineEventWithRecommendations {
     return { ...this.data };
   }
 }

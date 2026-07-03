@@ -1,10 +1,10 @@
-import { Recommendation, Skill, WorkExperience } from '../../testing';
+import { Recommendation, Skill, TimelineEvent } from '../../testing';
 
 import { joinJobsWithRecommendations } from './joinJobsWithRecommendations';
 
 describe('joinJobsWithRecommendations', () => {
   it('attaches matching recommendations to their job, in original order', () => {
-    const jobs = [new WorkExperience().mock()];
+    const jobs = [new TimelineEvent().mock()];
     const recommendations = [new Recommendation().mock(), new Recommendation().id('rec-2').mock()];
 
     const result = joinJobsWithRecommendations(jobs, recommendations, []);
@@ -14,7 +14,7 @@ describe('joinJobsWithRecommendations', () => {
   });
 
   it('returns an empty recommendations array when no recommendation matches', () => {
-    const jobs = [new WorkExperience().id('job-3').mock()];
+    const jobs = [new TimelineEvent().id('job-3').mock()];
     const recommendations = [new Recommendation().mock()];
 
     const result = joinJobsWithRecommendations(jobs, recommendations, []);
@@ -23,7 +23,7 @@ describe('joinJobsWithRecommendations', () => {
   });
 
   it('does not leak recommendations from one job onto another', () => {
-    const jobs = [new WorkExperience().mock(), new WorkExperience().id('job-2').mock()];
+    const jobs = [new TimelineEvent().mock(), new TimelineEvent().id('job-2').mock()];
     const recommendations = [new Recommendation().mock()];
 
     const result = joinJobsWithRecommendations(jobs, recommendations, []);
@@ -37,7 +37,7 @@ describe('joinJobsWithRecommendations', () => {
   });
 
   it('populates techStack from skills with type "tech" matching the job ID', () => {
-    const jobs = [new WorkExperience().mock()];
+    const jobs = [new TimelineEvent().mock()];
     const skills = [
       new Skill().name('React').mock(),
       new Skill().name('TypeScript').mock(),
@@ -50,7 +50,7 @@ describe('joinJobsWithRecommendations', () => {
   });
 
   it('populates skills from skills with type "skill" matching the job ID', () => {
-    const jobs = [new WorkExperience().mock()];
+    const jobs = [new TimelineEvent().mock()];
     const skills = [
       new Skill().name('Team Leadership').type('skill').mock(),
       new Skill().name('Mentoring').type('skill').jobIds(['job-2']).mock(),
@@ -62,7 +62,7 @@ describe('joinJobsWithRecommendations', () => {
   });
 
   it('preserves all original job fields', () => {
-    const job = new WorkExperience().companyName('Acme Corp').mock();
+    const job = new TimelineEvent().companyName('Acme Corp').mock();
 
     const [result] = joinJobsWithRecommendations([job], [], []);
 

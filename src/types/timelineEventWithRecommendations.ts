@@ -1,7 +1,7 @@
 import type { Recommendation } from './recommendation';
-import type { WorkExperience } from './workExperience';
+import type { TimelineEvent } from './timelineEvent';
 
-export interface WorkExperienceWithRecommendations extends WorkExperience {
+export interface TimelineEventWithRecommendations extends TimelineEvent {
   recommendations: Recommendation[];
   techStack: string[];
   skills: string[];

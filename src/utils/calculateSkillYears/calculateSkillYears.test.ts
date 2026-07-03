@@ -1,4 +1,4 @@
-import { Skill, WorkExperience } from '../../testing';
+import { Skill, TimelineEvent } from '../../testing';
 
 import { calculateSkillYears } from './calculateSkillYears';
 
@@ -6,7 +6,7 @@ const TODAY = new Date('2026-07-02');
 
 describe('calculateSkillYears', () => {
   test('returns a SkillSummary for each skill that has matching job IDs', () => {
-    const job = new WorkExperience().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock();
+    const job = new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock();
     const result = calculateSkillYears(
       [job],
       [new Skill().name('React').jobIds(['j1']).mock()],
@@ -20,8 +20,8 @@ describe('calculateSkillYears', () => {
   test('sums years for a skill appearing in multiple jobs', () => {
     const result = calculateSkillYears(
       [
-        new WorkExperience().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock(),
-        new WorkExperience().id('j2').startDate('2018-01-01').endDate('2020-01-01').mock(),
+        new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock(),
+        new TimelineEvent().id('j2').startDate('2018-01-01').endDate('2020-01-01').mock(),
       ],
       [new Skill().name('React').jobIds(['j1', 'j2']).mock()],
       TODAY
@@ -33,7 +33,7 @@ describe('calculateSkillYears', () => {
 
   test('uses today for a current role (null endDate)', () => {
     const result = calculateSkillYears(
-      [new WorkExperience().id('j1').startDate('2024-07-02').endDate(null).mock()],
+      [new TimelineEvent().id('j1').startDate('2024-07-02').endDate(null).mock()],
       [new Skill().name('TypeScript').jobIds(['j1']).mock()],
       TODAY
     );
@@ -44,7 +44,7 @@ describe('calculateSkillYears', () => {
 
   test('excludes skills whose job IDs do not match any experience', () => {
     const result = calculateSkillYears(
-      [new WorkExperience().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock()],
+      [new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock()],
       [new Skill().name('React').jobIds(['unknown-id']).mock()],
       TODAY
     );
@@ -54,7 +54,7 @@ describe('calculateSkillYears', () => {
 
   test('excludes skills with no job IDs', () => {
     const result = calculateSkillYears(
-      [new WorkExperience().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock()],
+      [new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock()],
       [new Skill().name('React').jobIds([]).mock()],
       TODAY
     );
@@ -63,7 +63,7 @@ describe('calculateSkillYears', () => {
   });
 
   test('sorts engineering before managerial, then soft-skills, then other', () => {
-    const job = new WorkExperience().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock();
+    const job = new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock();
     const result = calculateSkillYears(
       [job],
       [
@@ -85,8 +85,8 @@ describe('calculateSkillYears', () => {
   test('sorts by years descending within the same category', () => {
     const result = calculateSkillYears(
       [
-        new WorkExperience().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock(),
-        new WorkExperience().id('j2').startDate('2018-01-01').endDate('2020-01-01').mock(),
+        new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock(),
+        new TimelineEvent().id('j2').startDate('2018-01-01').endDate('2020-01-01').mock(),
       ],
       [
         new Skill().name('React').jobIds(['j1', 'j2']).mock(),
@@ -102,7 +102,7 @@ describe('calculateSkillYears', () => {
 
   test('assigns the correct category and colour to each skill', () => {
     const result = calculateSkillYears(
-      [new WorkExperience().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock()],
+      [new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock()],
       [new Skill().name('React').jobIds(['j1']).mock()],
       TODAY
     );
@@ -114,7 +114,7 @@ describe('calculateSkillYears', () => {
 
   test('passes through jobIds and recommendationIds from the skill definition', () => {
     const result = calculateSkillYears(
-      [new WorkExperience().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock()],
+      [new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock()],
       [new Skill().name('React').jobIds(['j1']).recommendationIds(['rec-1']).mock()],
       TODAY
     );

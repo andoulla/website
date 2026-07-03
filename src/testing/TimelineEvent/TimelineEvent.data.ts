@@ -1,7 +1,8 @@
-import type { WorkExperienceWithRecommendations } from '../../types';
+import type { TimelineEventWithRecommendations } from '../../types';
 
-export const defaultWorkExperience: WorkExperienceWithRecommendations = {
+export const defaultTimelineEvent: TimelineEventWithRecommendations = {
   id: 'job-1',
+  type: 'work',
   companyName: 'Acme Corp',
   location: 'Remote',
   startDate: '2020-01-01',

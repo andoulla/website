@@ -3,22 +3,18 @@ import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
 import { ResumeDataProvider } from '../../context/resumeData';
-import { WorkExperience } from '../../testing';
-import type { WorkExperienceWithRecommendations } from '../../types';
+import { TimelineEvent } from '../../testing';
+import type { TimelineEventWithRecommendations } from '../../types';
 
 import { Resume } from './Resume';
 
 const testExperiences = [
-  new WorkExperience().id('job-1').companyName('Nimbus Analytics').startDate('2022-04-01').mock(),
-  new WorkExperience()
-    .id('job-2')
-    .companyName('Brightleaf Software')
-    .startDate('2022-04-01')
-    .mock(),
-  new WorkExperience().id('job-3').companyName('Harborview Digital').startDate('2022-04-01').mock(),
+  new TimelineEvent().id('job-1').companyName('Nimbus Analytics').startDate('2022-04-01').mock(),
+  new TimelineEvent().id('job-2').companyName('Brightleaf Software').startDate('2022-04-01').mock(),
+  new TimelineEvent().id('job-3').companyName('Harborview Digital').startDate('2022-04-01').mock(),
 ];
 
-async function renderResume(loader: () => Promise<WorkExperienceWithRecommendations[]>) {
+async function renderResume(loader: () => Promise<TimelineEventWithRecommendations[]>) {
   let result!: ReturnType<typeof render>;
 
   await act(async () => {
@@ -38,10 +34,10 @@ describe('Resume', () => {
   test('shows the loading state until the data resolves', async () => {
     // A promise that never settles keeps the component suspended on the fallback.
     const screen = await renderResume(
-      () => new Promise<WorkExperienceWithRecommendations[]>(() => undefined)
+      () => new Promise<TimelineEventWithRecommendations[]>(() => undefined)
     );
 
-    expect(screen.getByRole('status', { name: 'Loading work experience' })).toBeVisible();
+    expect(screen.getByRole('status', { name: 'Loading timeline' })).toBeVisible();
   });
 
   test('renders the name heading and every job once the data resolves', async () => {
@@ -55,7 +51,7 @@ describe('Resume', () => {
 
   test('has no axe violations in the loading state', async () => {
     const screen = await renderResume(
-      () => new Promise<WorkExperienceWithRecommendations[]>(() => undefined)
+      () => new Promise<TimelineEventWithRecommendations[]>(() => undefined)
     );
 
     expect(await axe(screen.container)).toHaveNoViolations();

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import Alert from '@mui/material/Alert';
 
-import type { WorkExperienceWithRecommendations } from '../../../../types';
+import type { TimelineEventWithRecommendations } from '../../../../types';
 import type { SkillSummary } from '../../../../utils/calculateSkillYears';
 import type { SkillCategory } from '../../../../utils/skillColour';
 
@@ -12,7 +12,7 @@ const CATEGORY_ORDER: SkillCategory[] = ['engineering', 'managerial', 'soft-skil
 
 export interface SkillsGraphViewProps {
   skills: SkillSummary[];
-  experiences: WorkExperienceWithRecommendations[];
+  experiences: TimelineEventWithRecommendations[];
 }
 
 export const SkillsGraphView = ({ skills, experiences }: SkillsGraphViewProps) => {

@@ -2,11 +2,11 @@ import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
-import { Recommendation, WorkExperience } from '../../../../testing';
+import { Recommendation, TimelineEvent } from '../../../../testing';
 
-import { WorkExperienceCard } from './WorkExperienceCard';
+import { TimelineEventCard } from './TimelineEventCard';
 
-const experience = new WorkExperience()
+const experience = new TimelineEvent()
   .companyName('Nimbus Analytics')
   .location('London, UK')
   .startDate('2022-04-01')
@@ -22,9 +22,9 @@ const recommendationItem = new Recommendation()
   .postedDate('2023-06-12')
   .mock();
 
-describe('WorkExperienceCard', () => {
+describe('TimelineEventCard', () => {
   test('renders company details, responsibilities, and skills', () => {
-    const screen = render(<WorkExperienceCard experience={experience} />, {
+    const screen = render(<TimelineEventCard experience={experience} />, {
       wrapper: MemoryRouter,
     });
 
@@ -36,7 +36,7 @@ describe('WorkExperienceCard', () => {
   });
 
   test('places the company and its sections correctly in the heading hierarchy', () => {
-    const screen = render(<WorkExperienceCard experience={experience} />, {
+    const screen = render(<TimelineEventCard experience={experience} />, {
       wrapper: MemoryRouter,
     });
 
@@ -48,7 +48,7 @@ describe('WorkExperienceCard', () => {
 
   test('renders tech stack items as comma-separated text', () => {
     const screen = render(
-      <WorkExperienceCard
+      <TimelineEventCard
         experience={{ ...experience, techStack: ['Vite', 'Jest', 'Playwright'] }}
       />,
       { wrapper: MemoryRouter }
@@ -60,7 +60,7 @@ describe('WorkExperienceCard', () => {
 
   test('renders the end month for a past role instead of "Present"', () => {
     const screen = render(
-      <WorkExperienceCard experience={{ ...experience, endDate: '2023-09-30' }} />,
+      <TimelineEventCard experience={{ ...experience, endDate: '2023-09-30' }} />,
       { wrapper: MemoryRouter }
     );
 
@@ -69,7 +69,7 @@ describe('WorkExperienceCard', () => {
 
   test('renders recommendations when present', () => {
     const screen = render(
-      <WorkExperienceCard experience={{ ...experience, recommendations: [recommendationItem] }} />,
+      <TimelineEventCard experience={{ ...experience, recommendations: [recommendationItem] }} />,
       { wrapper: MemoryRouter }
     );
 
@@ -78,7 +78,7 @@ describe('WorkExperienceCard', () => {
   });
 
   test('omits the Recommendations section when there are none', () => {
-    const screen = render(<WorkExperienceCard experience={experience} />, {
+    const screen = render(<TimelineEventCard experience={experience} />, {
       wrapper: MemoryRouter,
     });
 
@@ -86,7 +86,7 @@ describe('WorkExperienceCard', () => {
   });
 
   test('has no axe violations without recommendations', async () => {
-    const screen = render(<WorkExperienceCard experience={experience} />, {
+    const screen = render(<TimelineEventCard experience={experience} />, {
       wrapper: MemoryRouter,
     });
 
@@ -95,7 +95,7 @@ describe('WorkExperienceCard', () => {
 
   test('has no axe violations with recommendations', async () => {
     const screen = render(
-      <WorkExperienceCard experience={{ ...experience, recommendations: [recommendationItem] }} />,
+      <TimelineEventCard experience={{ ...experience, recommendations: [recommendationItem] }} />,
       { wrapper: MemoryRouter }
     );
 

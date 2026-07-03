@@ -9,11 +9,11 @@ import Typography from '@mui/material/Typography';
 import { BulletList } from '../../../../components/bulletList';
 import { Section } from '../../../../components/section';
 import { TagList } from '../../../../components/tagList';
-import type { WorkExperienceWithRecommendations } from '../../../../types';
+import type { TimelineEventWithRecommendations } from '../../../../types';
 import { RecommendationText } from '../recommendationText';
 
-export interface WorkExperienceCardProps {
-  experience: WorkExperienceWithRecommendations;
+export interface TimelineEventCardProps {
+  experience: TimelineEventWithRecommendations;
 }
 
 const MONTH_NAMES = [
@@ -41,7 +41,7 @@ const formatDuration = (startDate: string, endDate: string | null): string => {
   return `${formatMonthYear(startDate)} – ${end}`;
 };
 
-export const WorkExperienceCard = ({ experience }: WorkExperienceCardProps) => {
+export const TimelineEventCard = ({ experience }: TimelineEventCardProps) => {
   const navigate = useNavigate();
   const duration = formatDuration(experience.startDate, experience.endDate);
 

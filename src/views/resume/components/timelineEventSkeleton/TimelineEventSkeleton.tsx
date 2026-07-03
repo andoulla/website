@@ -12,9 +12,8 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 
 const SKELETON_ITEM_COUNT = 3;
-// TODO: rename this to something beter than experience, Job, Role, position or a combination of those. Maybe WorkExperience or WorkExperienceItem.
 
-const WorkExperienceCardSkeleton = () => {
+const TimelineEventCardSkeleton = () => {
   return (
     <Card>
       <CardHeader title={<Skeleton width="40%" />} subheader={<Skeleton width="60%" />} />
@@ -29,9 +28,9 @@ const WorkExperienceCardSkeleton = () => {
   );
 };
 
-export const WorkExperienceTimelineSkeleton = () => {
+export const TimelineEventSkeleton = () => {
   return (
-    <div role="status" aria-label="Loading work experience">
+    <div role="status" aria-label="Loading timeline">
       <Timeline
         // Match the loaded timeline: full-width cards, no opposite-content column,
         // and the same top spacing below the heading.
@@ -51,7 +50,7 @@ export const WorkExperienceTimelineSkeleton = () => {
               {index < SKELETON_ITEM_COUNT - 1 && <TimelineConnector />}
             </TimelineSeparator>
             <TimelineContent sx={{ pr: 0 }}>
-              <WorkExperienceCardSkeleton />
+              <TimelineEventCardSkeleton />
             </TimelineContent>
           </TimelineItem>
         ))}

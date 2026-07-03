@@ -1,8 +1,8 @@
-import type { WorkExperience } from './workExperience';
+import type { TimelineEvent } from './timelineEvent';
 
 export interface Recommendation {
   id: string;
-  jobId: WorkExperience['id'];
+  jobId: TimelineEvent['id'];
   authorInitials: string;
   authorRole: {
     jobTitle: string;

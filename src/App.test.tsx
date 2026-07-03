@@ -2,14 +2,14 @@ import { act, render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
 import App from './App';
-import { WorkExperience } from './testing';
+import { TimelineEvent } from './testing';
 
 // Stub the deferred loader so the home route renders its data instantly in tests.
 // (ts-jest hoists jest.mock above the imports above.)
 jest.mock('./utils/loadExperiences', () => ({
   loadExperiences: () =>
     Promise.resolve([
-      new WorkExperience()
+      new TimelineEvent()
         .id('job-1')
         .companyName('Nimbus Analytics')
         .startDate('2022-04-01')

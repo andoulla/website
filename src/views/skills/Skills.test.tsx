@@ -3,12 +3,12 @@ import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
 import { ResumeDataProvider } from '../../context/resumeData';
-import { WorkExperience } from '../../testing';
+import { TimelineEvent } from '../../testing';
 
 import { Skills } from './Skills';
 
 const EXPERIENCES = [
-  new WorkExperience()
+  new TimelineEvent()
     .id('atom-learning-2021-01')
     .companyName('Acme')
     .startDate('2024-01-01')
@@ -16,10 +16,12 @@ const EXPERIENCES = [
     .mock(),
 ];
 
-function renderWithProvider() {
+const neverResolve = () => new Promise<typeof EXPERIENCES>(() => undefined);
+
+function renderWithProvider(loader = () => Promise.resolve(EXPERIENCES)) {
   return render(
     <MemoryRouter>
-      <ResumeDataProvider loader={() => Promise.resolve(EXPERIENCES)}>
+      <ResumeDataProvider loader={loader}>
         <Skills />
       </ResumeDataProvider>
     </MemoryRouter>
@@ -27,8 +29,12 @@ function renderWithProvider() {
 }
 
 describe('Skills', () => {
-  test('renders the page heading', () => {
+  test('renders the page heading', async () => {
     const screen = renderWithProvider();
+
+    await act(async () => {
+      await Promise.resolve();
+    });
 
     expect(screen.getByRole('heading', { level: 1, name: 'Skills' })).toBeVisible();
   });
@@ -55,7 +61,7 @@ describe('Skills', () => {
   });
 
   test('has no axe violations on initial render', async () => {
-    const screen = renderWithProvider();
+    const screen = renderWithProvider(neverResolve);
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
