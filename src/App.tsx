@@ -6,8 +6,8 @@ import { ThemeContextProvider } from './context/theme';
 import { ResumeDataProvider } from './context/resumeData';
 import { Resume } from './views/resume';
 import { Skills } from './views/skills';
-
-// TODO: Add animation on scroll
+// TODO: check tests for warnings and fix
+// TODO: Add animation on scroll on resume
 // TODO: check mobile layout and add mobile-specific adjustments as needed
 // TODO: check for unnecessary re-renders and performance
 // TODO: ensure that sensitive data is not stored in repo
@@ -17,6 +17,7 @@ import { Skills } from './views/skills';
 // TODO: put recommender on the top
 // TODO: prefer arrow functions were possible, if not comment why on top of function
 // TODO: linting rule to avoid wrong imports from same level
+// TODO: in skills agregate skills together, ds with ds adption, and remove  category from popup
 function App() {
   return (
     <ThemeContextProvider>

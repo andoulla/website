@@ -3,31 +3,24 @@ import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
 import { ResumeDataProvider } from '../../context/resumeData';
+import { WorkExperience } from '../../testing';
 import type { WorkExperienceWithRecommendations } from '../../types';
 
 import { Resume } from './Resume';
 
-// TODO: replace with test class
-const testExperiences: WorkExperienceWithRecommendations[] = [
-  'Nimbus Analytics',
-  'Brightleaf Software',
-  'Harborview Digital',
-].map((companyName, index) => ({
-  id: `job-${index + 1}`,
-  companyName,
-  location: 'Remote',
-  startDate: '2022-04-01',
-  endDate: null,
-  responsibilities: [],
-  skills: [],
-  techStack: [],
-  logo: '',
-  experienceUrl: 'https://www.linkedin.com/in/example/details/experience/',
-  recommendations: [],
-}));
+const testExperiences = [
+  new WorkExperience().id('job-1').companyName('Nimbus Analytics').startDate('2022-04-01').mock(),
+  new WorkExperience()
+    .id('job-2')
+    .companyName('Brightleaf Software')
+    .startDate('2022-04-01')
+    .mock(),
+  new WorkExperience().id('job-3').companyName('Harborview Digital').startDate('2022-04-01').mock(),
+];
 
 async function renderResume(loader: () => Promise<WorkExperienceWithRecommendations[]>) {
   let result!: ReturnType<typeof render>;
+
   await act(async () => {
     result = render(
       <MemoryRouter>
@@ -64,11 +57,13 @@ describe('Resume', () => {
     const screen = await renderResume(
       () => new Promise<WorkExperienceWithRecommendations[]>(() => undefined)
     );
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('has no axe violations in the loaded state', async () => {
     const screen = await renderResume(() => Promise.resolve(testExperiences));
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

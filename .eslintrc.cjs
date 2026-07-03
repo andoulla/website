@@ -60,6 +60,10 @@ module.exports = {
         '@typescript-eslint/no-unsafe-assignment': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
+        'padding-line-between-statements': [
+          'error',
+          { blankLine: 'always', prev: ['const', 'let', 'var'], next: 'expression' },
+        ],
       },
     },
   ],

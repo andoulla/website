@@ -1,57 +1,11 @@
-import type { Skill } from '../../data/skills.types';
-import type { Recommendation, WorkExperience } from '../../types';
+import { Recommendation, Skill, WorkExperience } from '../../testing';
 
 import { joinJobsWithRecommendations } from './joinJobsWithRecommendations';
 
-function makeJob(overrides: Partial<WorkExperience> = {}): WorkExperience {
-  return {
-    id: 'job-1',
-    companyName: 'Acme Corp',
-    location: 'Remote',
-    startDate: '2020-01-01',
-    endDate: null,
-    responsibilities: [],
-    logo: '',
-    experienceUrl: 'https://www.linkedin.com/in/example/details/experience/',
-    ...overrides,
-  };
-}
-
-function makeRecommendation(overrides: Partial<Recommendation> = {}): Recommendation {
-  return {
-    id: 'rec-1',
-    jobId: 'job-1',
-    authorInitials: 'J.D.',
-    authorRole: { jobTitle: 'Manager', company: 'Acme Corp' },
-    text: 'Great work.',
-    postedDate: '2021-01-01',
-    recommendationUrl: 'https://www.linkedin.com/in/example/details/recommendations/',
-    ...overrides,
-  };
-}
-
-function makeSkill(
-  name: string,
-  jobIds: string[],
-  overrides: Partial<Omit<Skill, 'name' | 'jobIds'>> = {}
-): Skill {
-  return {
-    name,
-    category: 'engineering',
-    type: 'tech',
-    jobIds,
-    recommendationIds: [],
-    ...overrides,
-  };
-}
-
 describe('joinJobsWithRecommendations', () => {
   it('attaches matching recommendations to their job, in original order', () => {
-    const jobs = [makeJob({ id: 'job-1' })];
-    const recommendations = [
-      makeRecommendation({ id: 'rec-1', jobId: 'job-1' }),
-      makeRecommendation({ id: 'rec-2', jobId: 'job-1' }),
-    ];
+    const jobs = [new WorkExperience().mock()];
+    const recommendations = [new Recommendation().mock(), new Recommendation().id('rec-2').mock()];
 
     const result = joinJobsWithRecommendations(jobs, recommendations, []);
 
@@ -60,8 +14,8 @@ describe('joinJobsWithRecommendations', () => {
   });
 
   it('returns an empty recommendations array when no recommendation matches', () => {
-    const jobs = [makeJob({ id: 'job-3' })];
-    const recommendations = [makeRecommendation({ jobId: 'job-1' })];
+    const jobs = [new WorkExperience().id('job-3').mock()];
+    const recommendations = [new Recommendation().mock()];
 
     const result = joinJobsWithRecommendations(jobs, recommendations, []);
 
@@ -69,8 +23,8 @@ describe('joinJobsWithRecommendations', () => {
   });
 
   it('does not leak recommendations from one job onto another', () => {
-    const jobs = [makeJob({ id: 'job-1' }), makeJob({ id: 'job-2' })];
-    const recommendations = [makeRecommendation({ id: 'rec-1', jobId: 'job-1' })];
+    const jobs = [new WorkExperience().mock(), new WorkExperience().id('job-2').mock()];
+    const recommendations = [new Recommendation().mock()];
 
     const result = joinJobsWithRecommendations(jobs, recommendations, []);
 
@@ -79,15 +33,15 @@ describe('joinJobsWithRecommendations', () => {
   });
 
   it('returns an empty array when there are no jobs', () => {
-    expect(joinJobsWithRecommendations([], [makeRecommendation()], [])).toEqual([]);
+    expect(joinJobsWithRecommendations([], [new Recommendation().mock()], [])).toEqual([]);
   });
 
   it('populates techStack from skills with type "tech" matching the job ID', () => {
-    const jobs = [makeJob({ id: 'job-1' })];
+    const jobs = [new WorkExperience().mock()];
     const skills = [
-      makeSkill('React', ['job-1'], { type: 'tech' }),
-      makeSkill('TypeScript', ['job-1'], { type: 'tech' }),
-      makeSkill('Jest', ['job-2'], { type: 'tech' }),
+      new Skill().name('React').mock(),
+      new Skill().name('TypeScript').mock(),
+      new Skill().name('Jest').jobIds(['job-2']).mock(),
     ];
 
     const [result] = joinJobsWithRecommendations(jobs, [], skills);
@@ -96,10 +50,10 @@ describe('joinJobsWithRecommendations', () => {
   });
 
   it('populates skills from skills with type "skill" matching the job ID', () => {
-    const jobs = [makeJob({ id: 'job-1' })];
+    const jobs = [new WorkExperience().mock()];
     const skills = [
-      makeSkill('Team Leadership', ['job-1'], { type: 'skill' }),
-      makeSkill('Mentoring', ['job-2'], { type: 'skill' }),
+      new Skill().name('Team Leadership').type('skill').mock(),
+      new Skill().name('Mentoring').type('skill').jobIds(['job-2']).mock(),
     ];
 
     const [result] = joinJobsWithRecommendations(jobs, [], skills);
@@ -108,7 +62,7 @@ describe('joinJobsWithRecommendations', () => {
   });
 
   it('preserves all original job fields', () => {
-    const job = makeJob({ companyName: 'Acme Corp' });
+    const job = new WorkExperience().companyName('Acme Corp').mock();
 
     const [result] = joinJobsWithRecommendations([job], [], []);
 

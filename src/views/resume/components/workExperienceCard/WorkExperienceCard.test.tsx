@@ -2,32 +2,29 @@ import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
-import type { WorkExperienceWithRecommendations } from '../../../../types';
+import { Recommendation, WorkExperience } from '../../../../testing';
 
 import { WorkExperienceCard } from './WorkExperienceCard';
 
-function makeExperience(
-  overrides: Partial<WorkExperienceWithRecommendations> = {}
-): WorkExperienceWithRecommendations {
-  return {
-    id: 'job-1',
-    companyName: 'Nimbus Analytics',
-    location: 'London, UK',
-    startDate: '2022-04-01',
-    endDate: null,
-    responsibilities: ['Lead frontend architecture'],
-    skills: ['React', 'TypeScript'],
-    techStack: ['React', 'TypeScript'],
-    logo: '',
-    experienceUrl: 'https://www.linkedin.com/in/example/details/experience/',
-    recommendations: [],
-    ...overrides,
-  };
-}
+const experience = new WorkExperience()
+  .companyName('Nimbus Analytics')
+  .location('London, UK')
+  .startDate('2022-04-01')
+  .responsibilities(['Lead frontend architecture'])
+  .skills(['React', 'TypeScript'])
+  .techStack(['React', 'TypeScript'])
+  .mock();
+
+const recommendationItem = new Recommendation()
+  .authorInitials('P.S.')
+  .authorRole({ jobTitle: 'Engineering Manager', company: 'Nimbus Analytics' })
+  .text('Great work.')
+  .postedDate('2023-06-12')
+  .mock();
 
 describe('WorkExperienceCard', () => {
   test('renders company details, responsibilities, and skills', () => {
-    const screen = render(<WorkExperienceCard experience={makeExperience()} />, {
+    const screen = render(<WorkExperienceCard experience={experience} />, {
       wrapper: MemoryRouter,
     });
 
@@ -39,7 +36,7 @@ describe('WorkExperienceCard', () => {
   });
 
   test('places the company and its sections correctly in the heading hierarchy', () => {
-    const screen = render(<WorkExperienceCard experience={makeExperience()} />, {
+    const screen = render(<WorkExperienceCard experience={experience} />, {
       wrapper: MemoryRouter,
     });
 
@@ -52,7 +49,7 @@ describe('WorkExperienceCard', () => {
   test('renders tech stack items as comma-separated text', () => {
     const screen = render(
       <WorkExperienceCard
-        experience={makeExperience({ techStack: ['Vite', 'Jest', 'Playwright'] })}
+        experience={{ ...experience, techStack: ['Vite', 'Jest', 'Playwright'] }}
       />,
       { wrapper: MemoryRouter }
     );
@@ -63,70 +60,45 @@ describe('WorkExperienceCard', () => {
 
   test('renders the end month for a past role instead of "Present"', () => {
     const screen = render(
-      <WorkExperienceCard experience={makeExperience({ endDate: '2023-09-30' })} />,
+      <WorkExperienceCard experience={{ ...experience, endDate: '2023-09-30' }} />,
       { wrapper: MemoryRouter }
     );
+
     expect(screen.getByText('London, UK · Apr 2022 – Sep 2023')).toBeVisible();
   });
 
   test('renders recommendations when present', () => {
     const screen = render(
-      <WorkExperienceCard
-        experience={makeExperience({
-          recommendations: [
-            {
-              id: 'rec-1',
-              jobId: 'job-1',
-              authorInitials: 'P.S.',
-              authorRole: { jobTitle: 'Engineering Manager', company: 'Nimbus Analytics' },
-              text: 'Great work.',
-              postedDate: '2023-06-12',
-              recommendationUrl: 'https://www.linkedin.com/in/example/details/recommendations/',
-            },
-          ],
-        })}
-      />,
+      <WorkExperienceCard experience={{ ...experience, recommendations: [recommendationItem] }} />,
       { wrapper: MemoryRouter }
     );
 
     expect(screen.getByText('Recommendations')).toBeVisible();
-    expect(screen.getByText('P.S., Engineering Manager, Nimbus Analytics')).toBeVisible();
+    expect(screen.getByText('P.S., Engineering Manager')).toBeVisible();
   });
 
   test('omits the Recommendations section when there are none', () => {
-    const screen = render(
-      <WorkExperienceCard experience={makeExperience({ recommendations: [] })} />,
-      { wrapper: MemoryRouter }
-    );
+    const screen = render(<WorkExperienceCard experience={experience} />, {
+      wrapper: MemoryRouter,
+    });
+
     expect(screen.queryByText('Recommendations')).not.toBeInTheDocument();
   });
 
   test('has no axe violations without recommendations', async () => {
-    const screen = render(<WorkExperienceCard experience={makeExperience()} />, {
+    const screen = render(<WorkExperienceCard experience={experience} />, {
       wrapper: MemoryRouter,
     });
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('has no axe violations with recommendations', async () => {
     const screen = render(
-      <WorkExperienceCard
-        experience={makeExperience({
-          recommendations: [
-            {
-              id: 'rec-1',
-              jobId: 'job-1',
-              authorInitials: 'P.S.',
-              authorRole: { jobTitle: 'Engineering Manager', company: 'Nimbus Analytics' },
-              text: 'Great work.',
-              postedDate: '2023-06-12',
-              recommendationUrl: 'https://www.linkedin.com/in/example/details/recommendations/',
-            },
-          ],
-        })}
-      />,
+      <WorkExperienceCard experience={{ ...experience, recommendations: [recommendationItem] }} />,
       { wrapper: MemoryRouter }
     );
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

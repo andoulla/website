@@ -2,53 +2,41 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
-import type { Recommendation } from '../../../../types';
-import type { SkillSummary } from '../../../../utils/calculateSkillYears';
+import { Recommendation, SkillSummary } from '../../../../testing';
 
 import { SkillsListView } from './SkillsListView';
 
-const SKILLS: SkillSummary[] = [
-  {
-    skill: 'React',
-    years: 4,
-    category: 'engineering',
-    colour: 'primary',
-    jobIds: ['job-1'],
-    recommendationIds: [],
-  },
-  {
-    skill: 'Team Leadership',
-    years: 3,
-    category: 'managerial',
-    colour: 'secondary',
-    jobIds: ['job-1'],
-    recommendationIds: [],
-  },
-  {
-    skill: 'Mentoring',
-    years: 2,
-    category: 'soft-skills',
-    colour: 'success',
-    jobIds: ['job-1'],
-    recommendationIds: ['rec-1'],
-  },
+const SKILLS = [
+  new SkillSummary().years(4).mock(),
+  new SkillSummary()
+    .skill('Team Leadership')
+    .years(3)
+    .category('managerial')
+    .colour('secondary')
+    .mock(),
+  new SkillSummary()
+    .skill('Mentoring')
+    .years(2)
+    .category('soft-skills')
+    .colour('success')
+    .recommendationIds(['rec-1'])
+    .mock(),
 ];
 
-const RECOMMENDATIONS: Recommendation[] = [
-  {
-    id: 'rec-1',
-    jobId: 'job-1',
-    authorInitials: 'A.B.',
-    authorRole: { jobTitle: 'Engineer', company: 'Acme' },
-    text: 'Excellent mentor.',
-    postedDate: '2026-01-01',
-    recommendationUrl: '',
-  },
+const RECOMMENDATIONS = [
+  new Recommendation()
+    .authorInitials('A.B.')
+    .authorRole({ jobTitle: 'Engineer', company: 'Acme' })
+    .text('Excellent mentor.')
+    .postedDate('2026-01-01')
+    .recommendationUrl('')
+    .mock(),
 ];
 
 describe('SkillsListView', () => {
   test('renders a list item for each skill with name and years', () => {
     const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByText('est. 4 years')).toBeVisible();
     expect(screen.getByText('Team Leadership')).toBeVisible();
@@ -59,6 +47,7 @@ describe('SkillsListView', () => {
 
   test('renders category section headings', () => {
     const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+
     expect(screen.getByText('Engineering')).toBeVisible();
     expect(screen.getByText('Managerial')).toBeVisible();
     expect(screen.getByText('Soft Skills')).toBeVisible();
@@ -66,12 +55,14 @@ describe('SkillsListView', () => {
 
   test('does not render a section for a category with no skills', () => {
     const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+
     expect(screen.queryByText('Other')).not.toBeInTheDocument();
   });
 
   test('opens a popover with linked recommendations on list item click', async () => {
     const user = userEvent.setup();
     const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+
     await user.click(screen.getByText('Mentoring'));
     expect(screen.getByText('Excellent mentor.')).toBeVisible();
   });
@@ -79,6 +70,7 @@ describe('SkillsListView', () => {
   test('shows empty state in popover when no recommendations match', async () => {
     const user = userEvent.setup();
     const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+
     await user.click(screen.getByText('React'));
     expect(screen.getByText('No recommendations yet.')).toBeVisible();
   });
@@ -87,11 +79,13 @@ describe('SkillsListView', () => {
     const screen = render(
       <SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} highlightedSkill="React" />
     );
+
     expect(screen.getByRole('button', { name: /React/ })).toBeVisible();
   });
 
   test('has no axe violations', async () => {
     const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
@@ -99,6 +93,7 @@ describe('SkillsListView', () => {
     const screen = render(
       <SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} highlightedSkill="React" />
     );
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });
