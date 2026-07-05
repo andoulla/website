@@ -1,4 +1,4 @@
-import { Suspense, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -19,8 +19,11 @@ type ViewMode = 'list' | 'graph';
 
 const SkillsContent = () => {
   const experiences = useResumeData();
-  const skills = calculateSkillYears(experiences);
-  const recommendations = experiences.flatMap((e) => e.recommendations);
+  const skills = useMemo(() => calculateSkillYears(experiences), [experiences]);
+  const recommendations = useMemo(
+    () => experiences.flatMap((e) => e.recommendations),
+    [experiences]
+  );
 
   const [searchParams] = useSearchParams();
   const highlightedSkill = searchParams.get('skill') ?? undefined;

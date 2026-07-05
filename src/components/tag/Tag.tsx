@@ -1,7 +1,7 @@
 import Chip from '@mui/material/Chip';
 import type { ChipProps } from '@mui/material/Chip';
 import { useTheme } from '@mui/material/styles';
-import type { ReactNode } from 'react';
+import { memo, type ReactNode } from 'react';
 
 import { computeShadeColour } from '../../utils/computeShadeColour';
 
@@ -12,7 +12,7 @@ export interface TagProps {
   onClick?: () => void;
 }
 
-export const Tag = ({ children, colour, shadeIndex, onClick }: TagProps) => {
+export const Tag = memo(({ children, colour, shadeIndex, onClick }: TagProps) => {
   const theme = useTheme();
 
   if (shadeIndex !== undefined && colour !== undefined && colour !== 'default') {
@@ -35,4 +35,6 @@ export const Tag = ({ children, colour, shadeIndex, onClick }: TagProps) => {
   }
 
   return <Chip label={children} color={colour} size="small" onClick={onClick} />;
-};
+});
+
+Tag.displayName = 'Tag';

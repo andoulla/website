@@ -24,3 +24,11 @@ Data is loaded asynchronously via React 19's `use()` hook under `Suspense` — t
 - `yarn lint:fix` — fix lintable issues
 - `yarn format` — format code with Prettier
 - `yarn typecheck` — run TypeScript type checking
+
+## Performance notes
+
+Fixed a handful of unnecessary re-render sources (no React Compiler is enabled, so memoization is manual):
+
+- Memoized `ThemeContextProvider`'s context value and toggle callbacks
+- Memoized derived skill/recommendation computations in the Skills views
+- Stabilized list-item click callbacks and added `React.memo` to `Tag`, `TagList`, `TimelineEventCard`, and `RecommendationText`

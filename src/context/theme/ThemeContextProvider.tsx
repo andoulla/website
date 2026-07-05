@@ -1,5 +1,5 @@
 import { ThemeProvider } from '@mui/material/styles';
-import { createContext, use, useMemo, useState } from 'react';
+import { createContext, use, useCallback, useMemo, useState } from 'react';
 
 import { createGreenTheme, createPurpleTheme } from '../../themes';
 
@@ -27,16 +27,24 @@ export const ThemeContextProvider = ({
   const [themeName, setThemeName] = useState<ThemeName>(initialTheme);
   const [isDarkMode, setIsDarkMode] = useState(initialDarkMode);
 
-  const toggleTheme = () => setThemeName((n) => (n === 'green' ? 'purple' : 'green'));
-  const toggleDarkMode = () => setIsDarkMode((d) => !d);
+  const toggleTheme = useCallback(
+    () => setThemeName((n) => (n === 'green' ? 'purple' : 'green')),
+    []
+  );
+  const toggleDarkMode = useCallback(() => setIsDarkMode((d) => !d), []);
 
   const muiTheme = useMemo(() => {
     const mode = isDarkMode ? 'dark' : 'light';
     return themeName === 'green' ? createGreenTheme(mode) : createPurpleTheme(mode);
   }, [themeName, isDarkMode]);
 
+  const contextValue = useMemo(
+    () => ({ themeName, toggleTheme, isDarkMode, toggleDarkMode }),
+    [themeName, toggleTheme, isDarkMode, toggleDarkMode]
+  );
+
   return (
-    <ThemeContext value={{ themeName, toggleTheme, isDarkMode, toggleDarkMode }}>
+    <ThemeContext value={contextValue}>
       <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>
     </ThemeContext>
   );

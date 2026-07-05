@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -41,9 +42,16 @@ const formatDuration = (startDate: string, endDate: string | null): string => {
   return `${formatMonthYear(startDate)} – ${end}`;
 };
 
-export const TimelineEventCard = ({ experience }: TimelineEventCardProps) => {
+export const TimelineEventCard = memo(({ experience }: TimelineEventCardProps) => {
   const navigate = useNavigate();
   const duration = formatDuration(experience.startDate, experience.endDate);
+
+  const handleSkillClick = useCallback(
+    (skill: string) => {
+      void navigate(`/skills?skill=${encodeURIComponent(skill)}`);
+    },
+    [navigate]
+  );
 
   return (
     <Card elevation={0}>
@@ -77,12 +85,7 @@ export const TimelineEventCard = ({ experience }: TimelineEventCardProps) => {
         </Section>
         <Divider sx={{ my: 2 }} />
         <Section title="Key Skills" titleLevel={4}>
-          <TagList
-            items={experience.skills}
-            onItemClick={(skill) => {
-              void navigate(`/skills?skill=${encodeURIComponent(skill)}`);
-            }}
-          />
+          <TagList items={experience.skills} onItemClick={handleSkillClick} />
         </Section>
         {experience.recommendations.length > 0 && (
           <>
@@ -105,4 +108,6 @@ export const TimelineEventCard = ({ experience }: TimelineEventCardProps) => {
       </CardContent>
     </Card>
   );
-};
+});
+
+TimelineEventCard.displayName = 'TimelineEventCard';

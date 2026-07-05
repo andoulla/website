@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -10,7 +11,7 @@ export interface RecommendationTextProps {
   recommendation: Recommendation;
 }
 
-export const RecommendationText = ({ recommendation }: RecommendationTextProps) => {
+export const RecommendationText = memo(({ recommendation }: RecommendationTextProps) => {
   const color = 'primary';
   return (
     <Card
@@ -44,4 +45,6 @@ export const RecommendationText = ({ recommendation }: RecommendationTextProps) 
       </CardContent>
     </Card>
   );
-};
+});
+
+RecommendationText.displayName = 'RecommendationText';

@@ -23,16 +23,24 @@ export const SkillsGraphView = ({ skills, experiences }: SkillsGraphViewProps) =
     [experiences]
   );
 
-  const categories = CATEGORY_ORDER.filter((cat) => skills.some((s) => s.category === cat));
+  const categories = useMemo(
+    () => CATEGORY_ORDER.filter((cat) => skills.some((s) => s.category === cat)),
+    [skills]
+  );
+
+  const filteredSkills = useMemo(
+    () =>
+      filterCategory === 'all'
+        ? skills
+        : [...skills.filter((s) => s.category === filterCategory)].sort(
+            (a, b) => b.years - a.years
+          ),
+    [skills, filterCategory]
+  );
 
   if (skills.length === 0) {
     return <Alert severity="info">No skill data available.</Alert>;
   }
-
-  const filteredSkills =
-    filterCategory === 'all'
-      ? skills
-      : [...skills.filter((s) => s.category === filterCategory)].sort((a, b) => b.years - a.years);
 
   return (
     <>

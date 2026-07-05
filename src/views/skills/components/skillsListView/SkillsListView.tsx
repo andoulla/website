@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
@@ -53,33 +53,43 @@ export const SkillsListView = ({
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [highlightedSkill]);
 
-  const byCategory = CATEGORY_ORDER.reduce<Record<SkillCategory, SkillSummary[]>>(
-    (acc, cat) => {
-      acc[cat] = skills.filter((s) => s.category === cat);
-      return acc;
-    },
-    { engineering: [], managerial: [], 'soft-skills': [], other: [] }
+  const byCategory = useMemo(
+    () =>
+      CATEGORY_ORDER.reduce<Record<SkillCategory, SkillSummary[]>>(
+        (acc, cat) => {
+          acc[cat] = skills.filter((s) => s.category === cat);
+          return acc;
+        },
+        { engineering: [], managerial: [], 'soft-skills': [], other: [] }
+      ),
+    [skills]
   );
 
-  const linkedRecs =
-    popover !== null
-      ? recommendations.filter((r) => popover.skill.recommendationIds.includes(r.id))
-      : [];
+  const linkedRecs = useMemo(
+    () =>
+      popover !== null
+        ? recommendations.filter((r) => popover.skill.recommendationIds.includes(r.id))
+        : [],
+    [popover, recommendations]
+  );
 
-  const dotColour = (skill: SkillSummary): string => {
-    const { colour } = skill;
-    if (colour === 'default') return theme.palette.grey[400];
-    const paletteEntry = theme.palette[colour as keyof typeof theme.palette];
-    if (paletteEntry === null || typeof paletteEntry !== 'object' || !('main' in paletteEntry)) {
-      return theme.palette.grey[400];
-    }
-    const { bg } = computeShadeColour(
-      (paletteEntry as { main: string }).main,
-      skillShadeIndex(skill.skill),
-      theme.palette.getContrastText
-    );
-    return bg;
-  };
+  const dotColour = useCallback(
+    (skill: SkillSummary): string => {
+      const { colour } = skill;
+      if (colour === 'default') return theme.palette.grey[400];
+      const paletteEntry = theme.palette[colour as keyof typeof theme.palette];
+      if (paletteEntry === null || typeof paletteEntry !== 'object' || !('main' in paletteEntry)) {
+        return theme.palette.grey[400];
+      }
+      const { bg } = computeShadeColour(
+        (paletteEntry as { main: string }).main,
+        skillShadeIndex(skill.skill),
+        theme.palette.getContrastText
+      );
+      return bg;
+    },
+    [theme]
+  );
 
   return (
     <>
