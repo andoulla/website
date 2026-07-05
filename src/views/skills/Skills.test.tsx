@@ -30,9 +30,10 @@ function renderWithProvider(loader = () => Promise.resolve(EXPERIENCES)) {
 
 describe('Skills', () => {
   test('renders the page heading', async () => {
-    const screen = renderWithProvider();
+    let screen!: ReturnType<typeof render>;
 
     await act(async () => {
+      screen = renderWithProvider();
       await Promise.resolve();
     });
 
@@ -61,7 +62,12 @@ describe('Skills', () => {
   });
 
   test('has no axe violations on initial render', async () => {
-    const screen = renderWithProvider(neverResolve);
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider(neverResolve);
+      await Promise.resolve();
+    });
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });

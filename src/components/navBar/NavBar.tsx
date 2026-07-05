@@ -50,7 +50,7 @@ export const NavBar = () => {
             Skills
           </NavLink>
         </Stack>
-        <Stack direction="row" alignItems="center" spacing={1} sx={{ ml: 'auto' }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', ml: 'auto' }}>
           <IconButton
             aria-label={`Switch to ${nextTheme} theme`}
             color="inherit"

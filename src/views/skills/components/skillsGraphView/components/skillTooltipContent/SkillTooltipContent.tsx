@@ -42,7 +42,7 @@ export const SkillTooltipContent = ({ skill, companyNames }: SkillTooltipContent
         <Chip label={CATEGORY_LABELS[skill.category]} color={skill.colour} size="small" />
       </Box>
       {companyNames.length > 0 && (
-        <Stack direction="row" flexWrap="wrap" gap={0.5}>
+        <Stack direction="row" gap={0.5} sx={{ flexWrap: 'wrap' }}>
           {companyNames.map((name) => (
             <Chip key={name} label={name} size="small" variant="outlined" />
           ))}
