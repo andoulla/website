@@ -8,10 +8,10 @@ import type { Theme } from '@mui/material/styles';
 import { lighten, useTheme } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 
-import type { SkillSummary } from '../../../../../../utils/calculateSkillYears';
-import { CATEGORY_COLOUR_MAP } from '../../../../../../utils/skillColour';
-import type { SkillCategory, SkillColour } from '../../../../../../utils/skillColour';
-import { SkillTooltipContent } from '../skillTooltipContent';
+import type { SkillSummary } from '@/utils/calculateSkillYears';
+import { CATEGORY_COLOUR_MAP } from '@/utils/skillColour';
+import type { SkillCategory, SkillColour } from '@/utils/skillColour';
+import { SkillTooltipContent } from '@/views/skills/components/skillsGraphView/components/skillTooltipContent';
 
 const CATEGORY_ORDER: SkillCategory[] = ['engineering', 'managerial', 'soft-skills', 'other'];
 

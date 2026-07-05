@@ -1,4 +1,4 @@
-import type { Skill } from '../../data/skills.types';
+import type { Skill } from '@/data/skills.types';
 
 export const defaultSkill: Skill = {
   name: 'React',

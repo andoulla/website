@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import Alert from '@mui/material/Alert';
 
-import type { TimelineEventWithRecommendations } from '../../../../types';
-import type { SkillSummary } from '../../../../utils/calculateSkillYears';
-import type { SkillCategory } from '../../../../utils/skillColour';
+import type { TimelineEventWithRecommendations } from '@/types';
+import type { SkillSummary } from '@/utils/calculateSkillYears';
+import type { SkillCategory } from '@/utils/skillColour';
 
 import { SkillFilterBar } from './components/skillFilterBar';
 import { SkillsBarChart } from './components/skillsBarChart';

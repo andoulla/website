@@ -1,4 +1,4 @@
-import { Skill, TimelineEvent } from '../../testing';
+import { Skill, TimelineEvent } from '@/testing';
 
 import { calculateSkillYears } from './calculateSkillYears';
 

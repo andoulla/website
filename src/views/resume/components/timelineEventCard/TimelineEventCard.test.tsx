@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
-import { Recommendation, TimelineEvent } from '../../../../testing';
+import { Recommendation, TimelineEvent } from '@/testing';
 
 import { TimelineEventCard } from './TimelineEventCard';
 

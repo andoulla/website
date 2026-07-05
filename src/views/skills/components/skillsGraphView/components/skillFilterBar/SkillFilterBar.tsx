@@ -1,7 +1,7 @@
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-import type { SkillCategory } from '../../../../../../utils/skillColour';
+import type { SkillCategory } from '@/utils/skillColour';
 
 const CATEGORY_LABELS: Record<SkillCategory, string> = {
   engineering: 'Engineering',

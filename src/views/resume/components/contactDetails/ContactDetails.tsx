@@ -4,7 +4,7 @@ import LinkedIn from '@mui/icons-material/LinkedIn';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 
-import { contact } from '../../../../data/contact';
+import { contact } from '@/data/contact';
 
 export const ContactDetails = () => {
   return (

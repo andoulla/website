@@ -9,8 +9,8 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 
-import { useResumeData } from '../../context/resumeData';
-import { calculateSkillYears } from '../../utils/calculateSkillYears';
+import { useResumeData } from '@/context/resumeData';
+import { calculateSkillYears } from '@/utils/calculateSkillYears';
 
 import { SkillsGraphView } from './components/skillsGraphView';
 import { SkillsListView } from './components/skillsListView';

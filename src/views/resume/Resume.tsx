@@ -10,8 +10,8 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { Suspense, useMemo } from 'react';
 
-import { Section } from '../../components/section';
-import { useResumeData } from '../../context/resumeData';
+import { Section } from '@/components/section';
+import { useResumeData } from '@/context/resumeData';
 
 import { ContactDetails } from './components/contactDetails';
 import { TimelineEventCard } from './components/timelineEventCard';

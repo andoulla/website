@@ -1,5 +1,5 @@
-import type { SkillSummary as SkillSummaryData } from '../../utils/calculateSkillYears';
-import type { SkillCategory, SkillColour } from '../../utils/skillColour';
+import type { SkillSummary as SkillSummaryData } from '@/utils/calculateSkillYears';
+import type { SkillCategory, SkillColour } from '@/utils/skillColour';
 
 import { defaultSkillSummary } from './SkillSummary.data';
 

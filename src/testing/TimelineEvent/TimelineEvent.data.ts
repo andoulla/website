@@ -1,4 +1,4 @@
-import type { TimelineEventWithRecommendations } from '../../types';
+import type { TimelineEventWithRecommendations } from '@/types';
 
 export const defaultTimelineEvent: TimelineEventWithRecommendations = {
   id: 'job-1',

@@ -2,7 +2,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
-import { ThemeContextProvider } from '../../context/theme';
+import { ThemeContextProvider } from '@/context/theme';
 
 import { NavBar } from './NavBar';
 

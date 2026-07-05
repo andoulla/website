@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
-import { SkillSummary } from '../../../../../../testing';
+import { SkillSummary } from '@/testing';
 
 import { SkillTooltipContent } from './SkillTooltipContent';
 

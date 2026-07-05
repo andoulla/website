@@ -5,8 +5,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
-import type { SkillSummary } from '../../../../../../utils/calculateSkillYears';
-import type { SkillCategory } from '../../../../../../utils/skillColour';
+import type { SkillSummary } from '@/utils/calculateSkillYears';
+import type { SkillCategory } from '@/utils/skillColour';
 
 const CATEGORY_LABELS: Record<SkillCategory, string> = {
   engineering: 'Engineering',

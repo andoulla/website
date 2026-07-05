@@ -10,12 +10,12 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
-import { Section } from '../../../../components/section';
-import type { Recommendation } from '../../../../types';
-import type { SkillSummary } from '../../../../utils/calculateSkillYears';
-import type { SkillCategory } from '../../../../utils/skillColour';
-import { skillShadeIndex } from '../../../../utils/skillColour';
-import { computeShadeColour } from '../../../../utils/computeShadeColour';
+import { Section } from '@/components/section';
+import type { Recommendation } from '@/types';
+import type { SkillSummary } from '@/utils/calculateSkillYears';
+import type { SkillCategory } from '@/utils/skillColour';
+import { skillShadeIndex } from '@/utils/skillColour';
+import { computeShadeColour } from '@/utils/computeShadeColour';
 
 interface SkillsListViewProps {
   skills: SkillSummary[];

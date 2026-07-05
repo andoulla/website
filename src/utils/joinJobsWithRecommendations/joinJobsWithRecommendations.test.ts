@@ -1,4 +1,4 @@
-import { Recommendation, Skill, TimelineEvent } from '../../testing';
+import { Recommendation, Skill, TimelineEvent } from '@/testing';
 
 import { joinJobsWithRecommendations } from './joinJobsWithRecommendations';
 

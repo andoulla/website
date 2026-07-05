@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
-import type { SkillCategory } from '../../../../../../utils/skillColour';
+import type { SkillCategory } from '@/utils/skillColour';
 
 import { SkillFilterBar } from './SkillFilterBar';
 

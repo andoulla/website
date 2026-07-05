@@ -1,4 +1,4 @@
-import { skills } from '../../data/skills';
+import { skills } from '@/data/skills';
 
 import { CATEGORY_COLOUR_MAP } from './skillColour.constants';
 import type { SkillCategory, SkillColour } from './skillColour.types';

@@ -1,4 +1,4 @@
-import type { Skill as SkillType, SkillType as SkillEntryType } from '../../data/skills.types';
+import type { Skill as SkillType, SkillType as SkillEntryType } from '@/data/skills.types';
 
 import { defaultSkill } from './Skill.data';
 

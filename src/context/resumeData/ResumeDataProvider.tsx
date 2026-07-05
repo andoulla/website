@@ -1,6 +1,6 @@
 import { createContext, use, useState } from 'react';
 
-import { loadExperiences } from '../../utils/loadExperiences';
+import { loadExperiences } from '@/utils/loadExperiences';
 
 import type { ExperiencesPromise, ResumeDataProviderProps } from './ResumeDataProvider.type';
 

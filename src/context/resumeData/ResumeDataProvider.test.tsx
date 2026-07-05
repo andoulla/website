@@ -1,7 +1,7 @@
 import { act, render } from '@testing-library/react';
 import { Suspense } from 'react';
 
-import { TimelineEvent } from '../../testing';
+import { TimelineEvent } from '@/testing';
 
 import { ResumeDataProvider, useResumeData } from './ResumeDataProvider';
 

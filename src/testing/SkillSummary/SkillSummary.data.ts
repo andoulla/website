@@ -1,4 +1,4 @@
-import type { SkillSummary } from '../../utils/calculateSkillYears';
+import type { SkillSummary } from '@/utils/calculateSkillYears';
 
 export const defaultSkillSummary: SkillSummary = {
   skill: 'React',

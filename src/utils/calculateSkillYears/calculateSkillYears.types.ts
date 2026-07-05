@@ -1,4 +1,4 @@
-import type { SkillCategory, SkillColour } from '../skillColour';
+import type { SkillCategory, SkillColour } from '@/utils/skillColour';
 
 export interface SkillSummary {
   skill: string;

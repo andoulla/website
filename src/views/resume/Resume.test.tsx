@@ -2,9 +2,9 @@ import { act, render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
-import { ResumeDataProvider } from '../../context/resumeData';
-import { TimelineEvent } from '../../testing';
-import type { TimelineEventWithRecommendations } from '../../types';
+import { ResumeDataProvider } from '@/context/resumeData';
+import { TimelineEvent } from '@/testing';
+import type { TimelineEventWithRecommendations } from '@/types';
 
 import { Resume } from './Resume';
 

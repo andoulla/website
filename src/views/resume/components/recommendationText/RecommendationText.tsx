@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import type { Recommendation } from '../../../../types';
+import type { Recommendation } from '@/types';
 
 export interface RecommendationTextProps {
   recommendation: Recommendation;

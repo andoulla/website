@@ -1,4 +1,4 @@
-import type { Recommendation, TimelineEventWithRecommendations } from '../../types';
+import type { Recommendation, TimelineEventWithRecommendations } from '@/types';
 
 import { defaultTimelineEvent } from './TimelineEvent.data';
 

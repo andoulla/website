@@ -1,4 +1,4 @@
-import type { Recommendation } from '../types';
+import type { Recommendation } from '@/types';
 
 import recommendationsData from './recommendations.json';
 

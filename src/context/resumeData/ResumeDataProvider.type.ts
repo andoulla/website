@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { TimelineEventWithRecommendations } from '../../types';
+import type { TimelineEventWithRecommendations } from '@/types';
 
 export type ExperiencesPromise = Promise<TimelineEventWithRecommendations[]>;
 

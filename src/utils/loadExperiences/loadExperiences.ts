@@ -1,14 +1,14 @@
-import { ARTIFICIAL_DELAY_MS } from '../../constants';
-import type { TimelineEventWithRecommendations } from '../../types';
-import { joinJobsWithRecommendations } from '../joinJobsWithRecommendations';
+import { ARTIFICIAL_DELAY_MS } from '@/constants';
+import type { TimelineEventWithRecommendations } from '@/types';
+import { joinJobsWithRecommendations } from '@/utils/joinJobsWithRecommendations';
 
 export async function loadExperiences(): Promise<TimelineEventWithRecommendations[]> {
   // Dynamic import() code-splits the data so it isn't pulled in at module load; the
   // third Promise.all entry runs the artificial delay concurrently with the imports.
   const [{ jobs }, { recommendations }, { skills }] = await Promise.all([
-    import('../../data/jobs'),
-    import('../../data/recommendations'),
-    import('../../data/skills'),
+    import('@/data/jobs'),
+    import('@/data/recommendations'),
+    import('@/data/skills'),
     new Promise((resolve) => setTimeout(resolve, ARTIFICIAL_DELAY_MS)),
   ]);
 

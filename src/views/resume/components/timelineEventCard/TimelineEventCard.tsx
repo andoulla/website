@@ -7,11 +7,11 @@ import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
-import { BulletList } from '../../../../components/bulletList';
-import { Section } from '../../../../components/section';
-import { TagList } from '../../../../components/tagList';
-import type { TimelineEventWithRecommendations } from '../../../../types';
-import { RecommendationText } from '../recommendationText';
+import { BulletList } from '@/components/bulletList';
+import { Section } from '@/components/section';
+import { TagList } from '@/components/tagList';
+import type { TimelineEventWithRecommendations } from '@/types';
+import { RecommendationText } from '@/views/resume/components/recommendationText';
 
 export interface TimelineEventCardProps {
   experience: TimelineEventWithRecommendations;

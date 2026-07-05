@@ -7,7 +7,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Toolbar from '@mui/material/Toolbar';
 import { NavLink } from 'react-router-dom';
 
-import { useThemeContext } from '../../context/theme';
+import { useThemeContext } from '@/context/theme';
 
 const navLinkStyle = ({ isActive }: { isActive: boolean }): React.CSSProperties => ({
   color: 'inherit',

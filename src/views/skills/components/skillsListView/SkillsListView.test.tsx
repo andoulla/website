@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
-import { Recommendation, SkillSummary } from '../../../../testing';
+import { Recommendation, SkillSummary } from '@/testing';
 
 import { SkillsListView } from './SkillsListView';
 

@@ -1,4 +1,4 @@
-import type { Recommendation as RecommendationType } from '../../types';
+import type { Recommendation as RecommendationType } from '@/types';
 
 import { defaultRecommendation } from './Recommendation.data';
 

@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import Box from '@mui/material/Box';
 
-import { skillColour, skillShadeIndex } from '../../utils/skillColour';
-import { Tag } from '../tag';
+import { skillColour, skillShadeIndex } from '@/utils/skillColour';
+import { Tag } from '@/components/tag';
 
 export interface TagListProps {
   items: string[];

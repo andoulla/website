@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
-import { Recommendation } from '../../../../testing';
+import { Recommendation } from '@/testing';
 
 import { RecommendationText } from './RecommendationText';
 

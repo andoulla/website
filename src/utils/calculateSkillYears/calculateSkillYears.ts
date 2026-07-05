@@ -1,8 +1,8 @@
-import { skills as defaultSkills } from '../../data/skills';
-import type { Skill } from '../../data/skills.types';
-import type { TimelineEvent } from '../../types';
-import { skillColour } from '../skillColour';
-import type { SkillCategory } from '../skillColour';
+import { skills as defaultSkills } from '@/data/skills';
+import type { Skill } from '@/data/skills.types';
+import type { TimelineEvent } from '@/types';
+import { skillColour } from '@/utils/skillColour';
+import type { SkillCategory } from '@/utils/skillColour';
 
 import type { SkillSummary } from './calculateSkillYears.types';
 

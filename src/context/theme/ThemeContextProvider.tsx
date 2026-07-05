@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { createContext, use, useCallback, useMemo, useState } from 'react';
 
-import { createGreenTheme, createPurpleTheme } from '../../themes';
+import { createGreenTheme, createPurpleTheme } from '@/themes';
 
 import type {
   ThemeContextProviderProps,

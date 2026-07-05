@@ -3,7 +3,7 @@ import type { ChipProps } from '@mui/material/Chip';
 import { useTheme } from '@mui/material/styles';
 import { memo, type ReactNode } from 'react';
 
-import { computeShadeColour } from '../../utils/computeShadeColour';
+import { computeShadeColour } from '@/utils/computeShadeColour';
 
 export interface TagProps {
   children: ReactNode;

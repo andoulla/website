@@ -1,7 +1,7 @@
-import type { Skill } from '../../data/skills.types';
-import type { Recommendation, TimelineEvent, TimelineEventWithRecommendations } from '../../types';
+import type { Skill } from '@/data/skills.types';
+import type { Recommendation, TimelineEvent, TimelineEventWithRecommendations } from '@/types';
 
-export type { TimelineEventWithRecommendations } from '../../types';
+export type { TimelineEventWithRecommendations } from '@/types';
 
 export const joinJobsWithRecommendations = (
   jobs: TimelineEvent[],
