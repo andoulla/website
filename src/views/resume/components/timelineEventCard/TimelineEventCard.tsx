@@ -11,7 +11,8 @@ import { BulletList } from '@/components/bulletList';
 import { Section } from '@/components/section';
 import { TagList } from '@/components/tagList';
 import type { TimelineEventWithRecommendations } from '@/types';
-import { RecommendationText } from '@/views/resume/components/recommendationText';
+
+import { RecommendationText } from './components/recommendationText';
 
 export interface TimelineEventCardProps {
   experience: TimelineEventWithRecommendations;

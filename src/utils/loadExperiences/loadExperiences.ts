@@ -1,6 +1,7 @@
 import { ARTIFICIAL_DELAY_MS } from '@/constants';
 import type { TimelineEventWithRecommendations } from '@/types';
-import { joinJobsWithRecommendations } from '@/utils/joinJobsWithRecommendations';
+
+import { joinJobsWithRecommendations } from './joinJobsWithRecommendations';
 
 export async function loadExperiences(): Promise<TimelineEventWithRecommendations[]> {
   // Dynamic import() code-splits the data so it isn't pulled in at module load; the

@@ -45,7 +45,13 @@ function isAllowed(currentDir, importDir, srcRoot) {
   const impRel = path.relative(srcRoot, importDir);
   if (currRel.startsWith('..') || impRel.startsWith('..')) return false;
 
-  return currRel.split(sep)[0] !== impRel.split(sep)[0];
+  const currTop = currRel.split(sep)[0];
+  const impTop = impRel.split(sep)[0];
+
+  // Utils are allowed to depend on other utils.
+  if (currTop === 'utils' && impTop === 'utils') return true;
+
+  return currTop !== impTop;
 }
 
 module.exports = {
