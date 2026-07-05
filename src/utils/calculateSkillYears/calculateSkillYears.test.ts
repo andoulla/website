@@ -122,4 +122,55 @@ describe('calculateSkillYears', () => {
     expect(result[0].jobIds).toEqual(['j1']);
     expect(result[0].recommendationIds).toEqual(['rec-1']);
   });
+
+  test('breaks down years per company for a skill spanning multiple jobs', () => {
+    const result = calculateSkillYears(
+      [
+        new TimelineEvent()
+          .id('j1')
+          .companyName('Acme')
+          .startDate('2020-01-01')
+          .endDate('2022-01-01')
+          .mock(),
+        new TimelineEvent()
+          .id('j2')
+          .companyName('Globex')
+          .startDate('2018-01-01')
+          .endDate('2020-01-01')
+          .mock(),
+      ],
+      [new Skill().name('React').jobIds(['j1', 'j2']).mock()],
+      TODAY
+    );
+    const react = result.find((s) => s.skill === 'React');
+
+    expect(react?.companyYears).toEqual([
+      { name: 'Acme', years: 2 },
+      { name: 'Globex', years: 2 },
+    ]);
+  });
+
+  test('sums years across jobs at the same company for one skill', () => {
+    const result = calculateSkillYears(
+      [
+        new TimelineEvent()
+          .id('j1')
+          .companyName('Acme')
+          .startDate('2020-01-01')
+          .endDate('2021-01-01')
+          .mock(),
+        new TimelineEvent()
+          .id('j2')
+          .companyName('Acme')
+          .startDate('2021-01-01')
+          .endDate('2022-01-01')
+          .mock(),
+      ],
+      [new Skill().name('React').jobIds(['j1', 'j2']).mock()],
+      TODAY
+    );
+    const react = result.find((s) => s.skill === 'React');
+
+    expect(react?.companyYears).toEqual([{ name: 'Acme', years: 2 }]);
+  });
 });

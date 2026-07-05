@@ -38,26 +38,18 @@ const getPaletteMain = (colour: SkillColour, theme: Theme): string => {
   return theme.palette.grey[400];
 };
 
-interface SkillBarTooltipProps extends TooltipContentProps<number, string> {
-  companyNameMap: Map<string, string>;
-}
-
 // Bridges Recharts tooltip payload → SkillTooltipContent props.
-const SkillBarTooltip = ({ active, payload, companyNameMap }: SkillBarTooltipProps) => {
+const SkillBarTooltip = ({ active, payload }: TooltipContentProps<number, string>) => {
   if (!active || payload === undefined || payload.length === 0) return null;
   const skill = payload[0].payload as SkillSummary;
-  const companyNames = skill.jobIds
-    .map((id) => companyNameMap.get(id))
-    .filter((name): name is string => name !== undefined);
-  return <SkillTooltipContent skill={skill} companyNames={companyNames} />;
+  return <SkillTooltipContent skill={skill} />;
 };
 
 export interface SkillsBarChartProps {
   skills: SkillSummary[];
-  companyNameMap: Map<string, string>;
 }
 
-export const SkillsBarChart = ({ skills, companyNameMap }: SkillsBarChartProps) => {
+export const SkillsBarChart = ({ skills }: SkillsBarChartProps) => {
   const theme = useTheme();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
@@ -84,10 +76,6 @@ export const SkillsBarChart = ({ skills, companyNameMap }: SkillsBarChartProps) 
   const maxLabelLength = Math.max(...skills.map((s) => s.skill.length));
   const yAxisWidth = Math.min(Math.max(maxLabelLength * 7, 80), 160);
 
-  const renderTooltip = (props: TooltipContentProps<number, string>) => (
-    <SkillBarTooltip {...props} companyNameMap={companyNameMap} />
-  );
-
   return (
     <Stack spacing={1}>
       {/* Horizontal bar chart — layout="vertical" = bars grow left-to-right in Recharts */}
@@ -113,7 +101,7 @@ export const SkillsBarChart = ({ skills, companyNameMap }: SkillsBarChartProps) 
             tickLine={false}
             axisLine={false}
           />
-          <Tooltip content={renderTooltip} cursor={{ fill: theme.palette.action.hover }} />
+          <Tooltip content={SkillBarTooltip} cursor={{ fill: theme.palette.action.hover }} />
           <Bar
             dataKey="years"
             radius={[0, 4, 4, 0]}

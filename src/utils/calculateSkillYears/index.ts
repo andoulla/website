@@ -1,2 +1,2 @@
 export { calculateSkillYears } from './calculateSkillYears';
-export type { SkillSummary } from './calculateSkillYears.types';
+export type { SkillCompanyYears, SkillSummary } from './calculateSkillYears.types';

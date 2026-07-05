@@ -13,7 +13,6 @@ import { Skills } from './views/skills';
 // TODO: build page for articles
 // TODO: add education (by default in time line view, filter out url based)
 
-// TODO: in skills agregate skills together, ds with ds adption, and remove  category from popup
 const App = () => {
   return (
     <ThemeContextProvider>

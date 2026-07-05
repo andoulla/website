@@ -29,11 +29,21 @@ export const calculateSkillYears = (
   const summaries: SkillSummary[] = allSkills
     .filter((skill) => skill.jobIds.length > 0)
     .map((skill) => {
+      const companyYearsMap = new Map<string, number>();
+
       const years = skill.jobIds.reduce((total, jobId) => {
         const exp = experienceById.get(jobId);
         if (exp === undefined) return total;
-        return total + durationYears(exp.startDate, exp.endDate, today);
+        const jobYears = durationYears(exp.startDate, exp.endDate, today);
+        const priorYears = companyYearsMap.get(exp.companyName) ?? 0;
+        companyYearsMap.set(exp.companyName, priorYears + jobYears);
+        return total + jobYears;
       }, 0);
+
+      const companyYears = [...companyYearsMap.entries()].map(([name, companyYearsTotal]) => ({
+        name,
+        years: Math.round(companyYearsTotal * 10) / 10,
+      }));
 
       return {
         skill: skill.name,
@@ -42,6 +52,7 @@ export const calculateSkillYears = (
         colour: skillColour(skill.name),
         jobIds: skill.jobIds,
         recommendationIds: skill.recommendationIds,
+        companyYears,
       };
     })
     .filter((s) => s.years > 0);

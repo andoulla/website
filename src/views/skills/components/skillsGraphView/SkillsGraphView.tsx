@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import Alert from '@mui/material/Alert';
 
-import type { TimelineEventWithRecommendations } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import type { SkillCategory } from '@/utils/skillColour';
 
@@ -12,16 +11,10 @@ const CATEGORY_ORDER: SkillCategory[] = ['engineering', 'managerial', 'soft-skil
 
 export interface SkillsGraphViewProps {
   skills: SkillSummary[];
-  experiences: TimelineEventWithRecommendations[];
 }
 
-export const SkillsGraphView = ({ skills, experiences }: SkillsGraphViewProps) => {
+export const SkillsGraphView = ({ skills }: SkillsGraphViewProps) => {
   const [filterCategory, setFilterCategory] = useState<'all' | SkillCategory>('all');
-
-  const companyNameMap = useMemo(
-    () => new Map(experiences.map((e) => [e.id, e.companyName])),
-    [experiences]
-  );
 
   const categories = useMemo(
     () => CATEGORY_ORDER.filter((cat) => skills.some((s) => s.category === cat)),
@@ -49,7 +42,7 @@ export const SkillsGraphView = ({ skills, experiences }: SkillsGraphViewProps) =
         activeFilter={filterCategory}
         onChange={setFilterCategory}
       />
-      <SkillsBarChart skills={filteredSkills} companyNameMap={companyNameMap} />
+      <SkillsBarChart skills={filteredSkills} />
     </>
   );
 };

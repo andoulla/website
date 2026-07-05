@@ -59,7 +59,7 @@ const SkillsContent = () => {
           highlightedSkill={highlightedSkill}
         />
       ) : (
-        <SkillsGraphView skills={skills} experiences={experiences} />
+        <SkillsGraphView skills={skills} />
       )}
     </>
   );

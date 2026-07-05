@@ -7,4 +7,5 @@ export const defaultSkillSummary: SkillSummary = {
   colour: 'primary',
   jobIds: ['job-1'],
   recommendationIds: [],
+  companyYears: [{ name: 'Acme Corp', years: 1 }],
 };

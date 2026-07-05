@@ -12,18 +12,13 @@ const SKILLS = [
     .years(2)
     .category('soft-skills')
     .colour('success')
-    .jobIds(['job-2'])
+    .companyYears([{ name: 'Globex', years: 2 }])
     .mock(),
 ];
 
-const COMPANY_MAP = new Map([
-  ['job-1', 'Acme Corp'],
-  ['job-2', 'Globex'],
-]);
-
 describe('SkillsBarChart', () => {
   test('renders the accessible table with a row per skill plus a header', () => {
-    const screen = render(<SkillsBarChart skills={SKILLS} companyNameMap={COMPANY_MAP} />);
+    const screen = render(<SkillsBarChart skills={SKILLS} />);
 
     // thead row + 2 data rows = 3
     expect(screen.getAllByRole('row')).toHaveLength(3);
@@ -32,7 +27,7 @@ describe('SkillsBarChart', () => {
   });
 
   test('renders legend entries for categories present in skills', () => {
-    const screen = render(<SkillsBarChart skills={SKILLS} companyNameMap={COMPANY_MAP} />);
+    const screen = render(<SkillsBarChart skills={SKILLS} />);
 
     // Each label appears twice: once in the legend and once in the accessible table
     expect(screen.getAllByText('Engineering')).toHaveLength(2);
@@ -40,26 +35,26 @@ describe('SkillsBarChart', () => {
   });
 
   test('does not render a legend entry for absent categories', () => {
-    const screen = render(<SkillsBarChart skills={SKILLS} companyNameMap={COMPANY_MAP} />);
+    const screen = render(<SkillsBarChart skills={SKILLS} />);
 
     expect(screen.queryByText('Managerial')).not.toBeInTheDocument();
     expect(screen.queryByText('Other')).not.toBeInTheDocument();
   });
 
   test('shows empty state message when skills array is empty', () => {
-    const screen = render(<SkillsBarChart skills={[]} companyNameMap={new Map()} />);
+    const screen = render(<SkillsBarChart skills={[]} />);
 
     expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
   });
 
   test('has no axe violations with skills', async () => {
-    const screen = render(<SkillsBarChart skills={SKILLS} companyNameMap={COMPANY_MAP} />);
+    const screen = render(<SkillsBarChart skills={SKILLS} />);
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('has no axe violations when empty', async () => {
-    const screen = render(<SkillsBarChart skills={[]} companyNameMap={new Map()} />);
+    const screen = render(<SkillsBarChart skills={[]} />);
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });

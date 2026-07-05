@@ -17,56 +17,7 @@
     "name": "JavaScript",
     "category": "engineering",
     "type": "tech",
-    "jobIds": [],
-    "recommendationIds": []
-  },
-  {
-    "name": "Node.js",
-    "category": "engineering",
-    "type": "tech",
-    "jobIds": [],
-    "recommendationIds": []
-  },
-  {
-    "name": "GraphQL",
-    "category": "engineering",
-    "type": "tech",
-    "jobIds": [],
-    "recommendationIds": []
-  },
-  {
-    "name": "PostgreSQL",
-    "category": "engineering",
-    "type": "tech",
-    "jobIds": [],
-    "recommendationIds": []
-  },
-  {
-    "name": "Docker",
-    "category": "engineering",
-    "type": "tech",
-    "jobIds": [],
-    "recommendationIds": []
-  },
-  {
-    "name": "CSS",
-    "category": "engineering",
-    "type": "tech",
-    "jobIds": [],
-    "recommendationIds": []
-  },
-  {
-    "name": "HTML",
-    "category": "engineering",
-    "type": "tech",
-    "jobIds": [],
-    "recommendationIds": []
-  },
-  {
-    "name": "jQuery",
-    "category": "engineering",
-    "type": "tech",
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -129,7 +80,7 @@
     "name": "Git/GitHub",
     "category": "engineering",
     "type": "tech",
-    "jobIds": ["atom-learning-2021-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -203,13 +154,6 @@
     "recommendationIds": []
   },
   {
-    "name": "Git",
-    "category": "engineering",
-    "type": "tech",
-    "jobIds": ["moo-2017-01"],
-    "recommendationIds": []
-  },
-  {
     "name": "GitLab",
     "category": "engineering",
     "type": "tech",
@@ -255,7 +199,7 @@
     "name": "Design System",
     "category": "engineering",
     "type": "skill",
-    "jobIds": ["atom-learning-2021-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -267,13 +211,6 @@
   },
   {
     "name": "Performance Optimisation",
-    "category": "engineering",
-    "type": "skill",
-    "jobIds": ["moo-2017-01"],
-    "recommendationIds": []
-  },
-  {
-    "name": "Design System Adoption",
     "category": "engineering",
     "type": "skill",
     "jobIds": ["moo-2017-01"],
@@ -398,14 +335,7 @@
     "name": "Team Onboarding",
     "category": "soft-skills",
     "type": "skill",
-    "jobIds": ["moo-2017-01"],
+    "jobIds": ["moo-2017-01", "capco-2012-12"],
     "recommendationIds": ["9fin-c.u.-befdbd", "hexagon-ab-g.r.-c50701"]
-  },
-  {
-    "name": "Onboarding",
-    "category": "soft-skills",
-    "type": "skill",
-    "jobIds": ["capco-2012-12"],
-    "recommendationIds": []
   }
 ]
