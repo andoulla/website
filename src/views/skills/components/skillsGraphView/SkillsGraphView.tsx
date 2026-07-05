@@ -5,8 +5,8 @@ import type { TimelineEventWithRecommendations } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import type { SkillCategory } from '@/utils/skillColour';
 
-import { SkillFilterBar } from './components/skillFilterBar';
-import { SkillsBarChart } from './components/skillsBarChart';
+import { SkillFilterBar } from './skillFilterBar';
+import { SkillsBarChart } from './skillsBarChart';
 
 const CATEGORY_ORDER: SkillCategory[] = ['engineering', 'managerial', 'soft-skills', 'other'];
 

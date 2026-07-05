@@ -12,7 +12,7 @@ import { Section } from '@/components/section';
 import { TagList } from '@/components/tagList';
 import type { TimelineEventWithRecommendations } from '@/types';
 
-import { RecommendationText } from './components/recommendationText';
+import { RecommendationText } from './recommendationText';
 
 export interface TimelineEventCardProps {
   experience: TimelineEventWithRecommendations;

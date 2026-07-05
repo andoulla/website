@@ -45,9 +45,9 @@ Skills have **no dedicated data file** — `calculateSkillYears(experiences)` de
 
 ## Directory layout
 
-- [src/components/](src/components/) — shared/reusable UI components (BulletList, NavBar, Section, Tag, TagList)
+- [src/components/](src/components/) — shared/reusable UI components (BulletList, NavBar, Section, TagList)
 - [src/views/](src/views/) — page-level views; each may have a `components/` sub-folder for view-specific components
-  - [src/views/resume/](src/views/resume/) — sub-components: ContactDetails, WorkExperienceCard, WorkExperienceTimelineSkeleton, RecommendationText
+  - [src/views/resume/](src/views/resume/) — sub-components: ContactDetails, TimelineEventCard, TimelineEventSkeleton
   - [src/views/skills/](src/views/skills/) — sub-components: SkillsListView, SkillsGraphView
 - [src/context/](src/context/) — React context providers (resumeData, theme)
 - [src/data/](src/data/) — JSON fixtures + typed `.ts` wrappers (jobs, recommendations, contact)
@@ -57,5 +57,26 @@ Skills have **no dedicated data file** — `calculateSkillYears(experiences)` de
   - `calculateSkillYears` — derives `SkillSummary[]` from `WorkExperience[]`
   - `skillColour` — maps skill name → MUI colour + category (`engineering` | `managerial` | `soft-skills` | `other`)
   - `computeShadeColour` — shade interpolation helper used by skillColour
-  - `joinJobsWithRecommendations` — joins jobs + recommendations into `WorkExperienceWithRecommendations[]`
-  - `loadExperiences` — async loader used by ResumeDataProvider
+  - `loadExperiences` — async loader used by ResumeDataProvider, joins jobs + recommendations into `WorkExperienceWithRecommendations[]` via its `joinJobsWithRecommendations` sub-util
+
+### Nesting convention
+
+A component/util folder that owns a child used _only_ by itself nests that child directly by name (no intermediate `components/` wrapper — that name is reserved for the top-level `views/*/components/` split above) rather than placing it next to it. This keeps ownership obvious and sidesteps sibling-folder imports (see [code-style.md](.claude/rules/code-style.md)) — a child folder can always reach up to its parent, but nothing outside the parent reaches sideways into the child.
+
+Folder names are camelCase and match the PascalCase component/function they contain; each folder gets an `index.ts` barrel export. A folder may also carry a `Name.types.ts` for types shared across files in that folder, `Name.constants.ts`, and `Name.helpers.ts` for local-only utilities. Once a helper is needed by more than one folder, move it out of `Name.helpers.ts` and into `src/utils/` instead of importing it across folders, dropping the `.helpers` suffix on the move (e.g. `Tag.helpers.ts` → `src/utils/tag/tag.ts`). Example, `src/components/tagList/`:
+
+```
+tagList/
+├── TagList.tsx
+├── TagList.test.tsx
+├── index.ts
+└── tag/
+    ├── Tag.tsx
+    ├── Tag.test.tsx
+    ├── Tag.types.ts
+    ├── Tag.constants.ts
+    ├── Tag.helpers.ts
+    └── index.ts
+```
+
+`TagList.tsx` imports `Tag` from `./tag` (child); nothing outside `tagList/` imports `Tag` directly. The same pattern repeats for utils, e.g. `src/utils/loadExperiences/joinJobsWithRecommendations/`.

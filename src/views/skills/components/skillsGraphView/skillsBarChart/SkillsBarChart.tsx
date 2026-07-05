@@ -12,7 +12,7 @@ import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { CATEGORY_COLOUR_MAP } from '@/utils/skillColour';
 import type { SkillCategory, SkillColour } from '@/utils/skillColour';
 
-import { SkillTooltipContent } from './components/skillTooltipContent';
+import { SkillTooltipContent } from './skillTooltipContent';
 
 const CATEGORY_ORDER: SkillCategory[] = ['engineering', 'managerial', 'soft-skills', 'other'];
 

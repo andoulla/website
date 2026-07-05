@@ -1,8 +1,10 @@
 # Code style
 
-- One component/util per folder: `ComponentName.tsx`, co-located `ComponentName.test.tsx`, and an `index.ts` barrel export. See [src/components/tag/](../../src/components/tag/) for the pattern.
+- One component/util per folder: `ComponentName.tsx`, co-located `ComponentName.test.tsx`, and an `index.ts` barrel export. See [src/components/tagList/](../../src/components/tagList/) for the pattern.
+- Never import across sibling or cousin folders (e.g. `../otherComponent`, or reaching from one view's `components/` into another's). If code is shared, either nest the child directly under the folder that owns it (`ownerFolder/childFolder/`) or lift it to a common ancestor — see the nesting convention in [CLAUDE.md](../../CLAUDE.md). This is enforced by the local ESLint rule [no-sibling-folder-imports](../../eslint-local-rules/no-sibling-folder-imports.cjs): imports within the same subtree, into an ancestor, or across top-level `src/*` directories (e.g. `views` → `utils`) are fine; a true sibling-folder reach is not.
 - When types defined inside a file need to be used elsewhere, extract them into a co-located `x.types.ts` file and import from there. Do not define reusable types inline in the implementation file.
-- Utility helper implementations use the suffix `x.helpers.ts` (e.g. `skillColor.helpers.ts`). Co-located tests follow the same stem: `x.helpers.test.ts`.
+- Utility helper implementations use the suffix `x.helpers.ts` (e.g. `skillColor.helpers.ts`). Co-located tests follow the same stem: `x.helpers.test.ts`. Once a helper is needed by more than one folder, move it out of `x.helpers.ts` and into `src/utils/` instead of importing it across folders, dropping the `.helpers` suffix on the move (e.g. `Tag.helpers.ts` → `src/utils/tag/tag.ts`).
+- Local-only constants live in a co-located `x.constants.ts` file, following the same stem convention.
 - Notable ESLint rules to respect: no `any` (`@typescript-eslint/no-explicit-any`), no floating/misused promises, `consistent-type-imports`, `strict-boolean-expressions`, and grouped/ordered imports (builtin → external → internal → parent → sibling → index, with blank lines between groups).
 - Prettier: single quotes, semicolons, trailing commas (ES5), 100 char width ([.prettierrc](../../.prettierrc)).
 - Prefer `const` arrow functions over `function` declarations (`export const Foo = () => { ... }`). If a `function` declaration is required (e.g. generators, hoisting), add a comment above it explaining why.
