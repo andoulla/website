@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
 import { SkillSummary } from '@/testing';
@@ -17,38 +16,16 @@ const SKILLS = [
 ];
 
 describe('SkillsGraphView', () => {
-  test('renders the All filter button', () => {
-    const screen = render(<SkillsGraphView skills={SKILLS} />);
-
-    expect(screen.getByRole('button', { name: 'All' })).toBeVisible();
-  });
-
-  test('renders a filter button for each category present in skills', () => {
-    const screen = render(<SkillsGraphView skills={SKILLS} />);
-
-    expect(screen.getByRole('button', { name: 'Engineering' })).toBeVisible();
-    expect(screen.getByRole('button', { name: 'Managerial' })).toBeVisible();
-  });
-
-  test('does not render a filter button for categories absent from skills', () => {
-    const screen = render(<SkillsGraphView skills={SKILLS} />);
-
-    expect(screen.queryByRole('button', { name: 'Soft Skills' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Other' })).not.toBeInTheDocument();
-  });
-
-  test('shows all skills in the accessible table by default', () => {
-    const screen = render(<SkillsGraphView skills={SKILLS} />);
+  test('shows all skills in the accessible table when filter is "all"', () => {
+    const screen = render(<SkillsGraphView skills={SKILLS} filterCategory="all" />);
 
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByText('Team Leadership')).toBeVisible();
   });
 
-  test('filtering to a category shows only matching skills', async () => {
-    const user = userEvent.setup();
-    const screen = render(<SkillsGraphView skills={SKILLS} />);
+  test('filtering to a category shows only matching skills', () => {
+    const screen = render(<SkillsGraphView skills={SKILLS} filterCategory="engineering" />);
 
-    await user.click(screen.getByRole('button', { name: 'Engineering' }));
     // header row + 1 data row for the one engineering skill
     expect(screen.getAllByRole('row')).toHaveLength(2);
     expect(screen.getByText('React')).toBeVisible();
@@ -56,19 +33,19 @@ describe('SkillsGraphView', () => {
   });
 
   test('shows the no-data Alert when skills array is empty', () => {
-    const screen = render(<SkillsGraphView skills={[]} />);
+    const screen = render(<SkillsGraphView skills={[]} filterCategory="all" />);
 
     expect(screen.getByRole('alert')).toBeVisible();
   });
 
   test('has no axe violations with data', async () => {
-    const screen = render(<SkillsGraphView skills={SKILLS} />);
+    const screen = render(<SkillsGraphView skills={SKILLS} filterCategory="all" />);
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('has no axe violations with empty data', async () => {
-    const screen = render(<SkillsGraphView skills={[]} />);
+    const screen = render(<SkillsGraphView skills={[]} filterCategory="all" />);
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });

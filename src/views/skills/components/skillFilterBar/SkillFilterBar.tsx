@@ -26,7 +26,7 @@ export const SkillFilterBar = ({ categories, activeFilter, onChange }: SkillFilt
       }}
       size="small"
       aria-label="Filter skills by category"
-      sx={{ mb: 2, flexWrap: 'wrap', gap: 0.5 }}
+      sx={{ flexWrap: 'wrap', gap: 0.5 }}
     >
       <ToggleButton value="all">All</ToggleButton>
       {categories.map((cat) => (

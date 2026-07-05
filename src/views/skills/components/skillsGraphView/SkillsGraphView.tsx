@@ -1,26 +1,17 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import Alert from '@mui/material/Alert';
 
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import type { SkillCategory } from '@/utils/skillColour';
 
-import { SkillFilterBar } from './skillFilterBar';
 import { SkillsBarChart } from './skillsBarChart';
-
-const CATEGORY_ORDER: SkillCategory[] = ['engineering', 'managerial', 'soft-skills', 'other'];
 
 export interface SkillsGraphViewProps {
   skills: SkillSummary[];
+  filterCategory: 'all' | SkillCategory;
 }
 
-export const SkillsGraphView = ({ skills }: SkillsGraphViewProps) => {
-  const [filterCategory, setFilterCategory] = useState<'all' | SkillCategory>('all');
-
-  const categories = useMemo(
-    () => CATEGORY_ORDER.filter((cat) => skills.some((s) => s.category === cat)),
-    [skills]
-  );
-
+export const SkillsGraphView = ({ skills, filterCategory }: SkillsGraphViewProps) => {
   const filteredSkills = useMemo(
     () =>
       filterCategory === 'all'
@@ -35,14 +26,5 @@ export const SkillsGraphView = ({ skills }: SkillsGraphViewProps) => {
     return <Alert severity="info">No skill data available.</Alert>;
   }
 
-  return (
-    <>
-      <SkillFilterBar
-        categories={categories}
-        activeFilter={filterCategory}
-        onChange={setFilterCategory}
-      />
-      <SkillsBarChart skills={filteredSkills} />
-    </>
-  );
+  return <SkillsBarChart skills={filteredSkills} />;
 };

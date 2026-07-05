@@ -66,6 +66,15 @@ describe('SkillsListView', () => {
     expect(screen.queryByText('Other')).not.toBeInTheDocument();
   });
 
+  test('shows the company/year breakdown in a tooltip on hover', async () => {
+    const user = userEvent.setup();
+    const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+
+    await user.hover(screen.getByText('React'));
+
+    expect(await screen.findByText('Acme Corp · 1 year')).toBeVisible();
+  });
+
   test('opens a popover with linked recommendations on list item click', async () => {
     const user = userEvent.setup();
     const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);

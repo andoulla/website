@@ -7,10 +7,12 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Popover from '@mui/material/Popover';
 import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
 import { Section } from '@/components/section';
+import { SkillTooltipContent } from '@/components/skillTooltipContent';
 import type { Recommendation } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import type { SkillCategory } from '@/utils/skillColour';
@@ -101,34 +103,41 @@ export const SkillsListView = ({
                 const isHighlighted = s.skill === highlightedSkill;
                 return (
                   <ListItem key={s.skill} disablePadding>
-                    <ListItemButton
-                      id={skillElementId(s.skill)}
-                      onClick={(e) => {
-                        setPopover({ anchor: e.currentTarget, skill: s });
-                      }}
-                      sx={{
-                        borderRadius: 1,
-                        transition: 'background-color 0.4s ease',
-                        ...(isHighlighted && {
-                          bgcolor: alpha(theme.palette.primary.main, 0.12),
-                        }),
+                    <Tooltip
+                      title={<SkillTooltipContent skill={s} />}
+                      slotProps={{
+                        tooltip: { sx: { bgcolor: 'transparent', p: 0, maxWidth: 'none' } },
                       }}
                     >
-                      <Box
-                        sx={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: '50%',
-                          bgcolor: dotColour(s),
-                          flexShrink: 0,
-                          mr: 1.5,
+                      <ListItemButton
+                        id={skillElementId(s.skill)}
+                        onClick={(e) => {
+                          setPopover({ anchor: e.currentTarget, skill: s });
                         }}
-                      />
-                      <ListItemText primary={s.skill} />
-                      <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-                        {`est. ${s.years} year${s.years === 1 ? '' : 's'}`}
-                      </Typography>
-                    </ListItemButton>
+                        sx={{
+                          borderRadius: 1,
+                          transition: 'background-color 0.4s ease',
+                          ...(isHighlighted && {
+                            bgcolor: alpha(theme.palette.primary.main, 0.12),
+                          }),
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: '50%',
+                            bgcolor: dotColour(s),
+                            flexShrink: 0,
+                            mr: 1.5,
+                          }}
+                        />
+                        <ListItemText primary={s.skill} />
+                        <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                          {`est. ${s.years} year${s.years === 1 ? '' : 's'}`}
+                        </Typography>
+                      </ListItemButton>
+                    </Tooltip>
                   </ListItem>
                 );
               })}

@@ -61,6 +61,19 @@ describe('Skills', () => {
     expect(screen.getByRole('button', { name: 'Graph view' })).toBeVisible();
   });
 
+  test('defaults to the graph view on load', async () => {
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider();
+      await Promise.resolve();
+    });
+    expect(screen.getByRole('button', { name: 'Graph view' })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
+  });
+
   test('has no axe violations on initial render', async () => {
     let screen!: ReturnType<typeof render>;
 

@@ -8,11 +8,10 @@ import type { Theme } from '@mui/material/styles';
 import { lighten, useTheme } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 
+import { SkillTooltipContent } from '@/components/skillTooltipContent';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { CATEGORY_COLOUR_MAP } from '@/utils/skillColour';
 import type { SkillCategory, SkillColour } from '@/utils/skillColour';
-
-import { SkillTooltipContent } from './skillTooltipContent';
 
 const CATEGORY_ORDER: SkillCategory[] = ['engineering', 'managerial', 'soft-skills', 'other'];
 
@@ -24,6 +23,7 @@ const CATEGORY_LABELS: Record<SkillCategory, string> = {
 };
 
 const BAR_HEIGHT = 36;
+const BAR_SIZE = 14;
 const CHART_PADDING = 64;
 const MIN_HEIGHT = 200;
 
@@ -105,6 +105,7 @@ export const SkillsBarChart = ({ skills }: SkillsBarChartProps) => {
           <Bar
             dataKey="years"
             radius={[0, 4, 4, 0]}
+            barSize={BAR_SIZE}
             isAnimationActive={false}
             onMouseEnter={(_data, index) => {
               setHoverIndex(index);

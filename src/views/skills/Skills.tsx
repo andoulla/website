@@ -11,11 +11,15 @@ import Typography from '@mui/material/Typography';
 
 import { useResumeData } from '@/context/resumeData';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
+import type { SkillCategory } from '@/utils/skillColour';
 
+import { SkillFilterBar } from './components/skillFilterBar';
 import { SkillsGraphView } from './components/skillsGraphView';
 import { SkillsListView } from './components/skillsListView';
 
 type ViewMode = 'list' | 'graph';
+
+const CATEGORY_ORDER: SkillCategory[] = ['engineering', 'managerial', 'soft-skills', 'other'];
 
 const SkillsContent = () => {
   const experiences = useResumeData();
@@ -28,11 +32,33 @@ const SkillsContent = () => {
   const [searchParams] = useSearchParams();
   const highlightedSkill = searchParams.get('skill') ?? undefined;
 
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>('graph');
+  const [filterCategory, setFilterCategory] = useState<'all' | SkillCategory>('all');
+
+  const categories = useMemo(
+    () => CATEGORY_ORDER.filter((cat) => skills.some((s) => s.category === cat)),
+    [skills]
+  );
 
   return (
     <>
-      <Stack direction="row" sx={{ mb: 3, justifyContent: 'flex-end' }}>
+      <Stack
+        direction="row"
+        sx={{
+          mb: { xs: 1.5, sm: 3 },
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 1,
+        }}
+      >
+        {viewMode === 'graph' && (
+          <SkillFilterBar
+            categories={categories}
+            activeFilter={filterCategory}
+            onChange={setFilterCategory}
+          />
+        )}
         <ToggleButtonGroup
           value={viewMode}
           exclusive
@@ -41,6 +67,7 @@ const SkillsContent = () => {
           }}
           size="small"
           aria-label="View mode"
+          sx={{ ml: 'auto' }}
         >
           <ToggleButton value="list" aria-label="List view">
             <ViewListIcon fontSize="small" sx={{ mr: 0.5 }} />
@@ -59,7 +86,7 @@ const SkillsContent = () => {
           highlightedSkill={highlightedSkill}
         />
       ) : (
-        <SkillsGraphView skills={skills} />
+        <SkillsGraphView skills={skills} filterCategory={filterCategory} />
       )}
     </>
   );
@@ -68,7 +95,7 @@ const SkillsContent = () => {
 export const Skills = () => {
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
-      <Typography variant="h3" component="h1" sx={{ mb: 3 }}>
+      <Typography variant="h3" component="h1" sx={{ mb: { xs: 1.5, sm: 3 } }}>
         Skills
       </Typography>
       <Suspense
