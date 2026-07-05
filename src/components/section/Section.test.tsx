@@ -10,6 +10,7 @@ describe('Section', () => {
         <p>Content</p>
       </Section>
     );
+
     expect(screen.getByRole('heading', { level: 2, name: 'Responsibilities' })).toBeVisible();
     expect(screen.getByText('Content')).toBeVisible();
   });
@@ -20,6 +21,7 @@ describe('Section', () => {
         <p>Content</p>
       </Section>
     );
+
     expect(screen.getByRole('heading', { level: 3, name: 'Key Skills' })).toBeVisible();
   });
 
@@ -29,6 +31,7 @@ describe('Section', () => {
         <p>Content</p>
       </Section>
     );
+
     expect(screen.getByRole('heading', { level: 4, name: 'References' })).toBeVisible();
   });
 
@@ -38,6 +41,7 @@ describe('Section', () => {
         <p>Content</p>
       </Section>
     );
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
@@ -47,6 +51,7 @@ describe('Section', () => {
         <p>Content</p>
       </Section>
     );
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
@@ -56,6 +61,7 @@ describe('Section', () => {
         <p>Content</p>
       </Section>
     );
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

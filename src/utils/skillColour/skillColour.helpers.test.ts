@@ -42,6 +42,7 @@ describe('skillCategory', () => {
 describe('skillShadeIndex', () => {
   test('returns a number between 0 and 5 inclusive', () => {
     const idx = skillShadeIndex('React');
+
     expect(idx).toBeGreaterThanOrEqual(0);
     expect(idx).toBeLessThanOrEqual(5);
   });
@@ -55,6 +56,7 @@ describe('skillShadeIndex', () => {
     const indices = ['React', 'TypeScript', 'Jest', 'Playwright', 'Sass', 'Webpack'].map(
       skillShadeIndex
     );
+
     expect(new Set(indices).size).toBeGreaterThan(1);
   });
 });

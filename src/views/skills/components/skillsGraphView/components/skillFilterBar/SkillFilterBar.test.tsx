@@ -13,6 +13,7 @@ describe('SkillFilterBar', () => {
     const screen = render(
       <SkillFilterBar categories={CATEGORIES} activeFilter="all" onChange={jest.fn()} />
     );
+
     expect(screen.getByRole('button', { name: 'All' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Engineering' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Managerial' })).toBeVisible();
@@ -24,6 +25,7 @@ describe('SkillFilterBar', () => {
     const screen = render(
       <SkillFilterBar categories={CATEGORIES} activeFilter="all" onChange={onChange} />
     );
+
     await user.click(screen.getByRole('button', { name: 'Engineering' }));
     expect(onChange).toHaveBeenCalledWith('engineering');
   });
@@ -34,6 +36,7 @@ describe('SkillFilterBar', () => {
     const screen = render(
       <SkillFilterBar categories={CATEGORIES} activeFilter="engineering" onChange={onChange} />
     );
+
     await user.click(screen.getByRole('button', { name: 'All' }));
     expect(onChange).toHaveBeenCalledWith('all');
   });
@@ -44,6 +47,7 @@ describe('SkillFilterBar', () => {
     const screen = render(
       <SkillFilterBar categories={CATEGORIES} activeFilter="all" onChange={onChange} />
     );
+
     await user.click(screen.getByRole('button', { name: 'All' }));
     expect(onChange).not.toHaveBeenCalled();
   });
@@ -52,6 +56,7 @@ describe('SkillFilterBar', () => {
     const screen = render(
       <SkillFilterBar categories={CATEGORIES} activeFilter="all" onChange={jest.fn()} />
     );
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

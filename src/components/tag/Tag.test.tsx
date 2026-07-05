@@ -6,16 +6,19 @@ import { Tag } from './Tag';
 describe('Tag', () => {
   test('renders children as the tag label', () => {
     const screen = render(<Tag>React</Tag>);
+
     expect(screen.getByText('React')).toBeVisible();
   });
 
   test('has no axe violations with default colour', async () => {
     const screen = render(<Tag>React</Tag>);
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('has no axe violations with a chip colour', async () => {
     const screen = render(<Tag colour="primary">React</Tag>);
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
@@ -25,6 +28,7 @@ describe('Tag', () => {
         React
       </Tag>
     );
+
     expect(screen.getByText('React')).toBeVisible();
   });
 
@@ -34,6 +38,7 @@ describe('Tag', () => {
         React
       </Tag>
     );
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

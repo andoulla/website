@@ -13,6 +13,7 @@ describe('computeShadeColour', () => {
 
   test('returns bg and textColour strings', () => {
     const result = computeShadeColour('#3B6D11', 0, mockGetContrastText);
+
     expect(typeof result.bg).toBe('string');
     expect(typeof result.textColour).toBe('string');
   });
@@ -20,18 +21,21 @@ describe('computeShadeColour', () => {
   test('shade index 1 produces a lighter bg than index 0', () => {
     const base = computeShadeColour('#3B6D11', 0, mockGetContrastText);
     const lighter = computeShadeColour('#3B6D11', 1, mockGetContrastText);
+
     expect(rgbSum(lighter.bg)).toBeGreaterThan(rgbSum(base.bg));
   });
 
   test('shade index 4 produces a darker bg than index 0', () => {
     const base = computeShadeColour('#3B6D11', 0, mockGetContrastText);
     const darker = computeShadeColour('#3B6D11', 4, mockGetContrastText);
+
     expect(rgbSum(darker.bg)).toBeLessThan(rgbSum(base.bg));
   });
 
   test('shade index 6 wraps to the same bg as index 0', () => {
     const a = computeShadeColour('#3B6D11', 0, mockGetContrastText);
     const b = computeShadeColour('#3B6D11', 6, mockGetContrastText);
+
     expect(a.bg).toBe(b.bg);
   });
 
@@ -44,6 +48,7 @@ describe('computeShadeColour', () => {
   test('always returns the same result for the same inputs', () => {
     const a = computeShadeColour('#A300A3', 3, mockGetContrastText);
     const b = computeShadeColour('#A300A3', 3, mockGetContrastText);
+
     expect(a.bg).toBe(b.bg);
   });
 });

@@ -22,10 +22,12 @@ describe('NavBar', () => {
     expect(screen.getByRole('navigation')).toBeVisible();
 
     const homeLink = screen.getByRole('link', { name: 'Home' });
+
     expect(homeLink).toBeVisible();
     expect(homeLink).toHaveAttribute('href', '/');
 
     const skillsLink = screen.getByRole('link', { name: 'Skills' });
+
     expect(skillsLink).toBeVisible();
     expect(skillsLink).toHaveAttribute('href', '/skills');
   });
@@ -82,23 +84,27 @@ describe('NavBar', () => {
 
   test('has no axe violations with green light theme', async () => {
     const screen = renderNavBar();
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('has no axe violations with purple light theme', async () => {
     const screen = renderNavBar();
+
     fireEvent.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('has no axe violations with green dark theme', async () => {
     const screen = renderNavBar();
+
     fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('has no axe violations with purple dark theme', async () => {
     const screen = renderNavBar();
+
     fireEvent.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
     fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
     expect(await axe(screen.container)).toHaveNoViolations();
