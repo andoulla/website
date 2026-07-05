@@ -22,6 +22,7 @@ module.exports = {
     'jsx-a11y',
     'import',
     'prettier',
+    'local',
   ],
   extends: [
     'eslint:recommended',
@@ -77,6 +78,7 @@ module.exports = {
     '@typescript-eslint/no-floating-promises': 'error',
     '@typescript-eslint/no-misused-promises': 'error',
     '@typescript-eslint/consistent-type-imports': 'error',
+    'local/no-sibling-folder-imports': 'warn',
     'import/order': [
       'error',
       {

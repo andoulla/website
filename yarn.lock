@@ -2851,6 +2851,9 @@ eslint-plugin-jsx-a11y@^6.10.2:
     safe-regex-test "^1.0.3"
     string.prototype.includes "^2.0.1"
 
+"eslint-plugin-local@file:./eslint-local-rules":
+  version "1.0.0"
+
 eslint-plugin-prettier@^5.5.6:
   version "5.5.6"
   resolved "https://registry.npmjs.org/eslint-plugin-prettier/-/eslint-plugin-prettier-5.5.6.tgz"
