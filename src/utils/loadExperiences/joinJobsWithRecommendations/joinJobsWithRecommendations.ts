@@ -10,12 +10,12 @@ export const joinJobsWithRecommendations = (
 ): TimelineEventWithRecommendations[] => {
   return jobs.map((job) => ({
     ...job,
-    recommendations: recommendations.filter((r) => r.jobId === job.id),
+    recommendations: recommendations.filter((recommendation) => recommendation.jobId === job.id),
     techStack: skills
-      .filter((s) => s.type === 'tech' && s.jobIds.includes(job.id))
-      .map((s) => s.name),
+      .filter((skill) => skill.type === 'tech' && skill.jobIds.includes(job.id))
+      .map((skill) => skill.name),
     skills: skills
-      .filter((s) => s.type === 'skill' && s.jobIds.includes(job.id))
-      .map((s) => s.name),
+      .filter((skill) => skill.type === 'skill' && skill.jobIds.includes(job.id))
+      .map((skill) => skill.name),
   }));
 };
