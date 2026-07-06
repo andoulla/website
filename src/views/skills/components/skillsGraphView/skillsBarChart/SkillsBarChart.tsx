@@ -131,12 +131,12 @@ export const SkillsBarChart = ({ skills }: SkillsBarChartProps) => {
       {/* Legend — styled like a figure caption: muted text, dots vertically centred with labels */}
       <Stack
         direction="row"
-        gap={2}
+        spacing={2}
         aria-hidden="true"
         sx={{ flexWrap: 'wrap', justifyContent: 'center', pt: 0.5 }}
       >
         {legendEntries.map(({ cat, colour, label }) => (
-          <Stack key={cat} direction="row" gap={0.75} sx={{ alignItems: 'center' }}>
+          <Stack key={cat} direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
             <Box
               sx={{
                 width: 8,
