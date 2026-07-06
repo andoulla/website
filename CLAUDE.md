@@ -15,7 +15,12 @@ A minimal React + TypeScript web app run in strict mode across the whole toolcha
 
 ## Verifying changes
 
-Do NOT run any verification commands (typecheck, lint, tests) — the user runs them all.
+Do NOT run any verification commands (typecheck, lint, tests) — the user runs them all. This also
+means: don't start the dev server, open the app in a browser, or take screenshots to verify UI
+changes yourself. Instead, once changes are made, walk the user through verifying each distinct
+change one by one, interactively — ask them to check a single change, wait for their confirmation
+(or feedback), then move on to the next one, rather than dumping a full list of changes to verify
+all at once.
 
 ## Routes
 
