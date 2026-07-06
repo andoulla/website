@@ -64,16 +64,16 @@ export const SkillsBarChart = ({ skills }: SkillsBarChartProps) => {
   const chartHeight = Math.max(MIN_HEIGHT, skills.length * BAR_HEIGHT + CHART_PADDING);
 
   // Legend: one entry per category present, in fixed display order.
-  const legendEntries = CATEGORY_ORDER.filter((cat) => skills.some((s) => s.category === cat)).map(
-    (cat) => ({
-      cat,
-      colour: CATEGORY_COLOUR_MAP[cat],
-      label: CATEGORY_LABELS[cat],
-    })
-  );
+  const legendEntries = CATEGORY_ORDER.filter((cat) =>
+    skills.some((skill) => skill.category === cat)
+  ).map((cat) => ({
+    cat,
+    colour: CATEGORY_COLOUR_MAP[cat],
+    label: CATEGORY_LABELS[cat],
+  }));
 
   // Y-axis width: longer skill names need more space, capped for mobile.
-  const maxLabelLength = Math.max(...skills.map((s) => s.skill.length));
+  const maxLabelLength = Math.max(...skills.map((skill) => skill.skill.length));
   const yAxisWidth = Math.min(Math.max(maxLabelLength * 7, 80), 160);
 
   return (
@@ -165,11 +165,11 @@ export const SkillsBarChart = ({ skills }: SkillsBarChartProps) => {
           </tr>
         </thead>
         <tbody>
-          {skills.map((s) => (
-            <tr key={s.skill}>
-              <td>{s.skill}</td>
-              <td>{s.years}</td>
-              <td>{CATEGORY_LABELS[s.category]}</td>
+          {skills.map((skill) => (
+            <tr key={skill.skill}>
+              <td>{skill.skill}</td>
+              <td>{skill.years}</td>
+              <td>{CATEGORY_LABELS[skill.category]}</td>
             </tr>
           ))}
         </tbody>
