@@ -24,6 +24,11 @@ export class TimelineEvent {
     return this;
   }
 
+  title(title: string): this {
+    this.data = { ...this.data, title };
+    return this;
+  }
+
   location(location: string): this {
     this.data = { ...this.data, location };
     return this;
@@ -41,16 +46,6 @@ export class TimelineEvent {
 
   responsibilities(responsibilities: string[]): this {
     this.data = { ...this.data, responsibilities };
-    return this;
-  }
-
-  logo(logo: string): this {
-    this.data = { ...this.data, logo };
-    return this;
-  }
-
-  experienceUrl(experienceUrl: string): this {
-    this.data = { ...this.data, experienceUrl };
     return this;
   }
 

@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import LinkedIn from '@mui/icons-material/LinkedIn';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -18,6 +20,7 @@ import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 import type { Recommendation } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { computeShadeColour } from '@/utils/computeShadeColour';
+import { formatDate } from '@/utils/formatDate';
 import {
   CATEGORY_LABELS,
   CATEGORY_ORDER,
@@ -225,6 +228,17 @@ export const SkillsListView = ({
                 <Box key={rec.id}>
                   <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                     {rec.authorInitials} · {rec.authorRole.jobTitle}
+                    <Link
+                      href={rec.recommendationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="View full recommendation on LinkedIn"
+                      sx={{ ml: 0.5 }}
+                    >
+                      <LinkedIn fontSize="inherit" sx={{ verticalAlign: 'middle' }} />
+                    </Link>
+                    {' · '}
+                    {formatDate(rec.postedDate)}
                   </Typography>
                   <Typography variant="body2" sx={{ mt: 0.5 }}>
                     {rec.text}

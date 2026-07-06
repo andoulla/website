@@ -29,7 +29,7 @@ const RECOMMENDATIONS = [
     .authorRole({ jobTitle: 'Engineer' })
     .text('Excellent mentor.')
     .postedDate('2026-01-01')
-    .recommendationUrl('')
+    .recommendationUrl('https://www.linkedin.com/in/example/details/recommendations/')
     .mock(),
 ];
 

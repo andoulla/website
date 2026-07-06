@@ -8,6 +8,7 @@ import { TimelineEventCard } from './TimelineEventCard';
 
 const experience = new TimelineEvent()
   .companyName('Nimbus Analytics')
+  .title('Staff Frontend Engineer')
   .location('London, UK')
   .startDate('2022-04-01')
   .responsibilities(['Lead frontend architecture'])
@@ -29,7 +30,9 @@ describe('TimelineEventCard', () => {
     });
 
     expect(screen.getByText('Nimbus Analytics')).toBeVisible();
-    expect(screen.getByText('London, UK · Apr 2022 – Present')).toBeVisible();
+    expect(
+      screen.getByText('Staff Frontend Engineer · London, UK · Apr 2022 – Present')
+    ).toBeVisible();
     expect(screen.getByText('Lead frontend architecture')).toBeVisible();
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByText('TypeScript')).toBeVisible();
@@ -64,7 +67,9 @@ describe('TimelineEventCard', () => {
       { wrapper: MemoryRouter }
     );
 
-    expect(screen.getByText('London, UK · Apr 2022 – Sep 2023')).toBeVisible();
+    expect(
+      screen.getByText('Staff Frontend Engineer · London, UK · Apr 2022 – Sep 2023')
+    ).toBeVisible();
   });
 
   test('renders recommendations when present', () => {
@@ -74,7 +79,7 @@ describe('TimelineEventCard', () => {
     );
 
     expect(screen.getByText('Recommendations')).toBeVisible();
-    expect(screen.getByText('P.S., Engineering Manager')).toBeVisible();
+    expect(screen.getByText('P.S., Engineering Manager · 12 Jun 2023')).toBeVisible();
   });
 
   test('omits the Recommendations section when there are none', () => {

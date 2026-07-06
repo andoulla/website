@@ -64,7 +64,7 @@ export const TimelineEventCard = memo(({ experience }: TimelineEventCardProps) =
           title: { variant: 'h6', component: 'h3' },
           subheader: { variant: 'body2' },
         }}
-        subheader={`${experience.location} · ${duration}`}
+        subheader={`${experience.title} · ${experience.location} · ${duration}`}
       />
       <CardContent>
         {experience.techStack.length > 0 && (
