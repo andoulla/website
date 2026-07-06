@@ -7,10 +7,10 @@ describe('ContactDetails', () => {
   test('renders email, LinkedIn, and GitHub contact links', () => {
     const screen = render(<ContactDetails />);
 
-    const emailLink = screen.getByRole('link', { name: 'm.a.s@hotmail.com' });
+    const emailLink = screen.getByRole('link', { name: 'm.a.stylianou@hotmail.com' });
 
     expect(emailLink).toBeVisible();
-    expect(emailLink).toHaveAttribute('href', 'mailto:m.a.s@hotmail.com');
+    expect(emailLink).toHaveAttribute('href', 'mailto:m.a.stylianou@hotmail.com');
 
     const linkedInLink = screen.getByRole('link', { name: 'LinkedIn' });
 
