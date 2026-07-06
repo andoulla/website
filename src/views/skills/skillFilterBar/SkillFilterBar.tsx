@@ -43,7 +43,7 @@ export const SkillFilterBar = ({
     const isSelected = selectedCategories.includes(category);
     onCategoriesChange(
       isSelected
-        ? selectedCategories.filter((c) => c !== category)
+        ? selectedCategories.filter((selectedCategory) => selectedCategory !== category)
         : [...selectedCategories, category]
     );
 
@@ -61,7 +61,7 @@ export const SkillFilterBar = ({
   const toggleSubCategory = (subCategory: SkillSubCategory) => {
     onSubCategoriesChange(
       selectedSubCategories.includes(subCategory)
-        ? selectedSubCategories.filter((s) => s !== subCategory)
+        ? selectedSubCategories.filter((selectedSubCategory) => selectedSubCategory !== subCategory)
         : [...selectedSubCategories, subCategory]
     );
   };

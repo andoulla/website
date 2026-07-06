@@ -29,7 +29,7 @@ const SkillsContent = () => {
   const experiences = useResumeData();
   const skills = useMemo(() => calculateSkillYears(experiences), [experiences]);
   const recommendations = useMemo(
-    () => experiences.flatMap((e) => e.recommendations),
+    () => experiences.flatMap((experience) => experience.recommendations),
     [experiences]
   );
 
@@ -62,7 +62,7 @@ const SkillsContent = () => {
   const [selectedCategories, setSelectedCategories] = useState<SkillCategory[]>([]);
 
   const categories = useMemo(
-    () => CATEGORY_ORDER.filter((cat) => skills.some((s) => s.category === cat)),
+    () => CATEGORY_ORDER.filter((cat) => skills.some((skill) => skill.category === cat)),
     [skills]
   );
 
@@ -70,7 +70,7 @@ const SkillsContent = () => {
     () =>
       categories.reduce<Partial<Record<SkillCategory, SkillSubCategory[]>>>((acc, cat) => {
         const subCategories = SUBCATEGORIES_BY_CATEGORY[cat].filter((sub) =>
-          skills.some((s) => s.category === cat && s.subCategory === sub)
+          skills.some((skill) => skill.category === cat && skill.subCategory === sub)
         );
         if (subCategories.length > 0) acc[cat] = subCategories;
         return acc;

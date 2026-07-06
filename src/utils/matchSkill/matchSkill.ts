@@ -28,9 +28,9 @@ export const matchSkill = (
   }
 
   for (const skill of allSkills) {
-    const synonym = skill.synonyms.find((s) => normalize(s) === normalizedTerm);
-    if (synonym !== undefined) {
-      return { skill, matchedOn: 'synonym', matchedTerm: synonym };
+    const matchedSynonym = skill.synonyms.find((synonym) => normalize(synonym) === normalizedTerm);
+    if (matchedSynonym !== undefined) {
+      return { skill, matchedOn: 'synonym', matchedTerm: matchedSynonym };
     }
   }
 

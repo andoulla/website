@@ -70,20 +70,20 @@ const SkillItemsList = ({ skills, highlightedSkill, onItemClick }: SkillItemsLis
 
   return (
     <List disablePadding dense>
-      {skills.map((s) => {
-        const isHighlighted = s.skill === highlightedSkill;
+      {skills.map((skill) => {
+        const isHighlighted = skill.skill === highlightedSkill;
         return (
-          <ListItem key={s.skill} disablePadding>
+          <ListItem key={skill.skill} disablePadding>
             <Tooltip
-              title={<SkillTooltipContent skill={s} />}
+              title={<SkillTooltipContent skill={skill} />}
               slotProps={{
                 tooltip: { sx: { bgcolor: 'transparent', p: 0, maxWidth: 'none' } },
               }}
             >
               <ListItemButton
-                id={skillElementId(s.skill)}
+                id={skillElementId(skill.skill)}
                 onClick={(e) => {
-                  onItemClick(e.currentTarget, s);
+                  onItemClick(e.currentTarget, skill);
                 }}
                 sx={{
                   borderRadius: 1,
@@ -98,14 +98,14 @@ const SkillItemsList = ({ skills, highlightedSkill, onItemClick }: SkillItemsLis
                     width: 8,
                     height: 8,
                     borderRadius: '50%',
-                    bgcolor: dotColour(s, theme),
+                    bgcolor: dotColour(skill, theme),
                     flexShrink: 0,
                     mr: 1.5,
                   }}
                 />
-                <ListItemText primary={s.skill} />
+                <ListItemText primary={skill.skill} />
                 <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-                  {`est. ${s.years} year${s.years === 1 ? '' : 's'}`}
+                  {`est. ${skill.years} year${skill.years === 1 ? '' : 's'}`}
                 </Typography>
               </ListItemButton>
             </Tooltip>
@@ -133,7 +133,7 @@ export const SkillsListView = ({
     () =>
       CATEGORY_ORDER.reduce<Record<SkillCategory, SkillSummary[]>>(
         (acc, cat) => {
-          acc[cat] = skills.filter((s) => s.category === cat);
+          acc[cat] = skills.filter((skill) => skill.category === cat);
           return acc;
         },
         { engineering: [], managerial: [], 'soft-skills': [], other: [] }
@@ -148,7 +148,7 @@ export const SkillsListView = ({
           acc[cat] = SUBCATEGORIES_BY_CATEGORY[cat]
             .map((subCategory) => ({
               subCategory,
-              skills: byCategory[cat].filter((s) => s.subCategory === subCategory),
+              skills: byCategory[cat].filter((skill) => skill.subCategory === subCategory),
             }))
             .filter((group) => group.skills.length > 0);
           return acc;
@@ -161,7 +161,9 @@ export const SkillsListView = ({
   const linkedRecs = useMemo(
     () =>
       popover !== null
-        ? recommendations.filter((r) => popover.skill.recommendationIds.includes(r.id))
+        ? recommendations.filter((recommendation) =>
+            popover.skill.recommendationIds.includes(recommendation.id)
+          )
         : [],
     [popover, recommendations]
   );

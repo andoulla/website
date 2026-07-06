@@ -22,9 +22,9 @@ export const SkillsGraphView = ({
 
     return skills
       .filter(
-        (s) =>
-          (selectedCategories.length === 0 || selectedCategories.includes(s.category)) &&
-          (selectedSubCategories.length === 0 || selectedSubCategories.includes(s.subCategory))
+        (skill) =>
+          (selectedCategories.length === 0 || selectedCategories.includes(skill.category)) &&
+          (selectedSubCategories.length === 0 || selectedSubCategories.includes(skill.subCategory))
       )
       .sort((a, b) => b.years - a.years);
   }, [skills, selectedCategories, selectedSubCategories]);
