@@ -59,7 +59,7 @@ export const SkillsListView = ({
     () =>
       CATEGORY_ORDER.reduce<Record<SkillCategory, SkillSummary[]>>(
         (acc, cat) => {
-          acc[cat] = skills.filter((s) => s.category === cat);
+          acc[cat] = skills.filter((skill) => skill.category === cat);
           return acc;
         },
         { engineering: [], managerial: [], 'soft-skills': [], other: [] }
@@ -70,7 +70,9 @@ export const SkillsListView = ({
   const linkedRecs = useMemo(
     () =>
       popover !== null
-        ? recommendations.filter((r) => popover.skill.recommendationIds.includes(r.id))
+        ? recommendations.filter((recommendation) =>
+            popover.skill.recommendationIds.includes(recommendation.id)
+          )
         : [],
     [popover, recommendations]
   );
@@ -99,20 +101,20 @@ export const SkillsListView = ({
         {CATEGORY_ORDER.filter((cat) => byCategory[cat].length > 0).map((cat) => (
           <Section key={cat} title={CATEGORY_LABELS[cat]}>
             <List disablePadding dense>
-              {byCategory[cat].map((s) => {
-                const isHighlighted = s.skill === highlightedSkill;
+              {byCategory[cat].map((skill) => {
+                const isHighlighted = skill.skill === highlightedSkill;
                 return (
-                  <ListItem key={s.skill} disablePadding>
+                  <ListItem key={skill.skill} disablePadding>
                     <Tooltip
-                      title={<SkillTooltipContent skill={s} />}
+                      title={<SkillTooltipContent skill={skill} />}
                       slotProps={{
                         tooltip: { sx: { bgcolor: 'transparent', p: 0, maxWidth: 'none' } },
                       }}
                     >
                       <ListItemButton
-                        id={skillElementId(s.skill)}
+                        id={skillElementId(skill.skill)}
                         onClick={(e) => {
-                          setPopover({ anchor: e.currentTarget, skill: s });
+                          setPopover({ anchor: e.currentTarget, skill });
                         }}
                         sx={{
                           borderRadius: 1,
@@ -127,14 +129,14 @@ export const SkillsListView = ({
                             width: 8,
                             height: 8,
                             borderRadius: '50%',
-                            bgcolor: dotColour(s),
+                            bgcolor: dotColour(skill),
                             flexShrink: 0,
                             mr: 1.5,
                           }}
                         />
-                        <ListItemText primary={s.skill} />
+                        <ListItemText primary={skill.skill} />
                         <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-                          {`est. ${s.years} year${s.years === 1 ? '' : 's'}`}
+                          {`est. ${skill.years} year${skill.years === 1 ? '' : 's'}`}
                         </Typography>
                       </ListItemButton>
                     </Tooltip>
