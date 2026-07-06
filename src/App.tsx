@@ -8,16 +8,16 @@ import { Resume } from './views/resume';
 import { Skills } from './views/skills';
 
 // TODO: Add animation on scroll on resume
-// TODO: check mobile layout and add mobile-specific adjustments as needed
 
 // TODO: build page for articles
 // TODO: add education (by default in time line view, filter out url based)
-// TODO: use Linkedin links and tests
+
 // TODO: separation of unit and integration tests
 // TODO: check lighthouse metrics
 // TODO: github tags
-// TODO: fix ledger and add histogram view for skills
-// TODO: replace email
+// TODO: add histogram view for skills
+// TODO: ATS optimisation
+
 const App = () => {
   return (
     <ThemeContextProvider>
