@@ -16,7 +16,7 @@ export const SkillsGraphView = ({ skills, filterCategory }: SkillsGraphViewProps
     () =>
       filterCategory === 'all'
         ? skills
-        : [...skills.filter((s) => s.category === filterCategory)].sort(
+        : [...skills.filter((skill) => skill.category === filterCategory)].sort(
             (a, b) => b.years - a.years
           ),
     [skills, filterCategory]
