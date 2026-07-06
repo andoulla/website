@@ -5,6 +5,21 @@ const fs = require('fs');
 
 const ALIAS_PREFIX = '@/';
 
+// One-directional layering for top-level src/* directories: a directory may only
+// import from a strictly lower-ranked layer (e.g. `views` may import from `utils`,
+// but `utils` may never import from `views`). Directories not listed here (e.g. a
+// root-level file like `constants.ts`, or the test-only `testing/` mocks) are
+// exempt — see the special-casing in `isAllowed` below.
+const LAYER_RANK = {
+  types: 0,
+  themes: 0,
+  data: 1,
+  utils: 2,
+  context: 3,
+  components: 4,
+  views: 5,
+};
+
 function resolveImportDir(fromDir, importSource, srcRoot) {
   const resolved =
     importSource.startsWith(ALIAS_PREFIX) && srcRoot !== null
@@ -36,9 +51,6 @@ function isAllowed(currentDir, importDir, srcRoot) {
   // Same directory, import is inside own subtree, or import is a proper ancestor
   if (curr === imp || imp.startsWith(curr) || curr.startsWith(imp)) return true;
 
-  // Crossing between two different top-level src/* directories (e.g. utils -> types,
-  // views -> components) is the codebase's intended layering. Only a common ancestor
-  // deeper than src/ itself (a true sibling-folder reach) stays disallowed.
   if (srcRoot === null) return false;
 
   const currRel = path.relative(srcRoot, currentDir);
@@ -51,7 +63,23 @@ function isAllowed(currentDir, importDir, srcRoot) {
   // Utils are allowed to depend on other utils.
   if (currTop === 'utils' && impTop === 'utils') return true;
 
-  return currTop !== impTop;
+  // Root-level files (e.g. constants.ts resolve to '' here) and the test-only
+  // `testing/` mocks sit outside the layering graph: anything may reach them, and
+  // `testing` itself may reach into lower layers to build typed mocks.
+  if (currTop === '' || impTop === '' || currTop === 'testing' || impTop === 'testing') {
+    return true;
+  }
+
+  const currRank = LAYER_RANK[currTop];
+  const impRank = LAYER_RANK[impTop];
+
+  // Unrecognized top-level directories aren't part of the layering graph yet —
+  // don't falsely flag them until LAYER_RANK is updated to account for them.
+  if (currRank === undefined || impRank === undefined) return true;
+
+  // A directory may only import from a strictly lower layer (e.g. `views` (5) may
+  // import from `utils` (2), but `utils` may not import from `views`).
+  return currRank > impRank;
 }
 
 module.exports = {
