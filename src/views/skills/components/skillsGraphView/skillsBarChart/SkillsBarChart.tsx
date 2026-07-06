@@ -39,7 +39,7 @@ const getPaletteMain = (colour: SkillColour, theme: Theme): string => {
 };
 
 // Bridges Recharts tooltip payload → SkillTooltipContent props.
-const SkillBarTooltip = ({ active, payload }: TooltipContentProps<number, string>) => {
+const SkillBarTooltip = ({ active, payload }: TooltipContentProps) => {
   if (!active || payload === undefined || payload.length === 0) return null;
   const skill = payload[0].payload as SkillSummary;
   return <SkillTooltipContent skill={skill} />;
