@@ -19,7 +19,7 @@
   },
   "keywords": [],
   "author": "m.a.s",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "type": "commonjs",
   "lint-staged": {
     "**/*.{ts,tsx,js,jsx}": [

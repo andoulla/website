@@ -1,5 +1,15 @@
 # Website
 
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![MUI](https://img.shields.io/badge/MUI-9-007FFF?logo=mui&logoColor=white)
+![Jest](https://img.shields.io/badge/tested_with-Jest-C21325?logo=jest&logoColor=white)
+![ESLint](https://img.shields.io/badge/ESLint-enabled-4B32C3?logo=eslint&logoColor=white)
+![Prettier](https://img.shields.io/badge/code_style-Prettier-F7B93E?logo=prettier&logoColor=black)
+![License: PolyForm Noncommercial](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)
+![Last commit](https://img.shields.io/github/last-commit/andoulla/website)
+
 A minimal React + TypeScript web app with strict mode, ESLint, Prettier, and Jest + React Testing Library.
 
 This is a personal project I'm using to explore Claude's models and features, with the aim of understanding their capabilities and learning how to use them effectively. It also serves as a testbed for working with all libraries and frameworks in strict mode, to see how that discipline shapes the development process and the resulting code.
