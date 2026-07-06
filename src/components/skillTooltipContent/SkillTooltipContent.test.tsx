@@ -36,6 +36,13 @@ describe('SkillTooltipContent', () => {
     expect(screen.getByText('Globex · 1 year')).toBeVisible();
   });
 
+  test('renders the sub-category label', () => {
+    const skill = new SkillSummary().skill('React Testing Library').subCategory('testing').mock();
+    const screen = render(<SkillTooltipContent skill={skill} />);
+
+    expect(screen.getByText('Testing')).toBeVisible();
+  });
+
   test('renders a total years figure that matches the sum of the per-company breakdown', () => {
     const companyYears = [
       { name: 'Acme', years: 2 },

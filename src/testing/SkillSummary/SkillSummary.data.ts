@@ -4,6 +4,7 @@ export const defaultSkillSummary: SkillSummary = {
   skill: 'React',
   years: 1,
   category: 'engineering',
+  subCategory: 'frontend-development',
   colour: 'primary',
   jobIds: ['job-1'],
   recommendationIds: [],

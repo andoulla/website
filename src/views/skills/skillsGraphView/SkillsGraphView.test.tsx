@@ -11,20 +11,29 @@ const SKILLS = [
     .skill('Team Leadership')
     .years(2)
     .category('managerial')
+    .subCategory('leadership')
     .colour('secondary')
     .mock(),
 ];
 
 describe('SkillsGraphView', () => {
-  test('shows all skills in the accessible table when filter is "all"', () => {
-    const screen = render(<SkillsGraphView skills={SKILLS} filterCategory="all" />);
+  test('shows all skills in the accessible table when no filters are active', () => {
+    const screen = render(
+      <SkillsGraphView skills={SKILLS} selectedCategories={[]} selectedSubCategories={[]} />
+    );
 
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByText('Team Leadership')).toBeVisible();
   });
 
   test('filtering to a category shows only matching skills', () => {
-    const screen = render(<SkillsGraphView skills={SKILLS} filterCategory="engineering" />);
+    const screen = render(
+      <SkillsGraphView
+        skills={SKILLS}
+        selectedCategories={['engineering']}
+        selectedSubCategories={[]}
+      />
+    );
 
     // header row + 1 data row for the one engineering skill
     expect(screen.getAllByRole('row')).toHaveLength(2);
@@ -32,20 +41,53 @@ describe('SkillsGraphView', () => {
     expect(screen.queryByText('Team Leadership')).not.toBeInTheDocument();
   });
 
+  test('filtering to a subcategory shows only matching skills', () => {
+    const screen = render(
+      <SkillsGraphView
+        skills={SKILLS}
+        selectedCategories={[]}
+        selectedSubCategories={['leadership']}
+      />
+    );
+
+    expect(screen.getAllByRole('row')).toHaveLength(2);
+    expect(screen.getByText('Team Leadership')).toBeVisible();
+    expect(screen.queryByText('React')).not.toBeInTheDocument();
+  });
+
+  test('combines category and subcategory filters', () => {
+    const screen = render(
+      <SkillsGraphView
+        skills={SKILLS}
+        selectedCategories={['managerial']}
+        selectedSubCategories={['frontend-development']}
+      />
+    );
+
+    expect(screen.queryByText('React')).not.toBeInTheDocument();
+    expect(screen.queryByText('Team Leadership')).not.toBeInTheDocument();
+  });
+
   test('shows the no-data Alert when skills array is empty', () => {
-    const screen = render(<SkillsGraphView skills={[]} filterCategory="all" />);
+    const screen = render(
+      <SkillsGraphView skills={[]} selectedCategories={[]} selectedSubCategories={[]} />
+    );
 
     expect(screen.getByRole('alert')).toBeVisible();
   });
 
   test('has no axe violations with data', async () => {
-    const screen = render(<SkillsGraphView skills={SKILLS} filterCategory="all" />);
+    const screen = render(
+      <SkillsGraphView skills={SKILLS} selectedCategories={[]} selectedSubCategories={[]} />
+    );
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('has no axe violations with empty data', async () => {
-    const screen = render(<SkillsGraphView skills={[]} filterCategory="all" />);
+    const screen = render(
+      <SkillsGraphView skills={[]} selectedCategories={[]} selectedSubCategories={[]} />
+    );
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });

@@ -123,6 +123,16 @@ describe('calculateSkillYears', () => {
     expect(result[0].recommendationIds).toEqual(['rec-1']);
   });
 
+  test('passes through subCategory from the skill definition', () => {
+    const result = calculateSkillYears(
+      [new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock()],
+      [new Skill().name('React Testing Library').subCategory('testing').jobIds(['j1']).mock()],
+      TODAY
+    );
+
+    expect(result[0].subCategory).toBe('testing');
+  });
+
   test('breaks down years per company for a skill spanning multiple jobs', () => {
     const result = calculateSkillYears(
       [

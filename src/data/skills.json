@@ -2,224 +2,288 @@
   {
     "name": "React",
     "category": "engineering",
+    "subCategory": "frontend-development",
     "type": "tech",
+    "synonyms": ["ReactJS", "React.js"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "TypeScript",
     "category": "engineering",
+    "subCategory": "frontend-development",
     "type": "tech",
+    "synonyms": ["TS"],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
     "name": "JavaScript",
     "category": "engineering",
+    "subCategory": "frontend-development",
     "type": "tech",
+    "synonyms": ["JS", "ECMAScript"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
     "name": "React Query",
     "category": "engineering",
+    "subCategory": "frontend-development",
     "type": "tech",
+    "synonyms": ["TanStack Query", "RQ"],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
-    "name": "RTL",
+    "name": "React Testing Library",
     "category": "engineering",
+    "subCategory": "testing",
     "type": "tech",
+    "synonyms": ["RTL"],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
     "name": "Jest",
     "category": "engineering",
+    "subCategory": "testing",
     "type": "tech",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Playwright",
     "category": "engineering",
+    "subCategory": "testing",
     "type": "tech",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
     "name": "Cypress",
     "category": "engineering",
+    "subCategory": "testing",
     "type": "tech",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
     "name": "CSS-in-JS",
     "category": "engineering",
+    "subCategory": "styling",
     "type": "tech",
+    "synonyms": ["CSS in JS"],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
     "name": "Stitches",
     "category": "engineering",
+    "subCategory": "styling",
     "type": "tech",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
     "name": "Radix UI",
     "category": "engineering",
+    "subCategory": "styling",
     "type": "tech",
+    "synonyms": ["Radix"],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
     "name": "Git/GitHub",
     "category": "engineering",
+    "subCategory": "tooling",
     "type": "tech",
+    "synonyms": ["Git", "GitHub", "Source Control", "Repository"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Yarn",
     "category": "engineering",
+    "subCategory": "tooling",
     "type": "tech",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
     "name": "ESLint",
     "category": "engineering",
+    "subCategory": "tooling",
     "type": "tech",
+    "synonyms": ["ES Lint"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Prettier",
     "category": "engineering",
+    "subCategory": "tooling",
     "type": "tech",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
     "name": "Sentry",
     "category": "engineering",
+    "subCategory": "tooling",
     "type": "tech",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Jira",
     "category": "engineering",
+    "subCategory": "collaboration-tools",
     "type": "tech",
+    "synonyms": ["JIRA"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Notion",
     "category": "engineering",
+    "subCategory": "collaboration-tools",
     "type": "tech",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
     "name": "Flow",
     "category": "engineering",
+    "subCategory": "frontend-development",
     "type": "tech",
+    "synonyms": ["Flowtype", "Facebook Flow"],
     "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Enzyme",
     "category": "engineering",
+    "subCategory": "testing",
     "type": "tech",
+    "synonyms": [],
     "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Sass",
     "category": "engineering",
+    "subCategory": "styling",
     "type": "tech",
+    "synonyms": ["SCSS"],
     "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Less",
     "category": "engineering",
+    "subCategory": "styling",
     "type": "tech",
+    "synonyms": ["LESS"],
     "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "GitLab",
     "category": "engineering",
+    "subCategory": "tooling",
     "type": "tech",
+    "synonyms": [],
     "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Npm",
     "category": "engineering",
+    "subCategory": "tooling",
     "type": "tech",
+    "synonyms": ["NPM", "Node Package Manager"],
     "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Webpack",
     "category": "engineering",
+    "subCategory": "tooling",
     "type": "tech",
+    "synonyms": [],
     "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Confluence",
     "category": "engineering",
+    "subCategory": "collaboration-tools",
     "type": "tech",
+    "synonyms": [],
     "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Kibana",
     "category": "engineering",
+    "subCategory": "tooling",
     "type": "tech",
+    "synonyms": [],
     "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Accessibility",
     "category": "engineering",
+    "subCategory": "accessibility",
     "type": "skill",
+    "synonyms": ["a11y", "A11Y"],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
     "name": "Design System",
     "category": "engineering",
+    "subCategory": "design-system",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Testing Strategy",
     "category": "engineering",
+    "subCategory": "testing",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
     "name": "Performance Optimisation",
     "category": "engineering",
+    "subCategory": "performance",
     "type": "skill",
+    "synonyms": ["Performance Optimization", "Perf"],
     "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
     "name": "Team Leadership",
     "category": "managerial",
+    "subCategory": "leadership",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01", "elsevier-2016-08", "capco-2012-12"],
     "recommendationIds": [
       "atom-learning-a.v.-3ff664",
@@ -233,7 +297,9 @@
   {
     "name": "Technical Direction",
     "category": "managerial",
+    "subCategory": "leadership",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": [
       "atom-learning-a.v.-3ff664",
@@ -245,7 +311,9 @@
   {
     "name": "Cross-functional Delivery",
     "category": "managerial",
+    "subCategory": "delivery-planning",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": [
       "atom-learning-l.s.-cec225",
@@ -257,70 +325,90 @@
   {
     "name": "Stakeholder Management",
     "category": "managerial",
+    "subCategory": "stakeholder-management",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": ["atom-learning-l.s.-cec225", "atom-learning-c.b.-da52d1"]
   },
   {
     "name": "Roadmap Planning",
     "category": "managerial",
+    "subCategory": "delivery-planning",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
     "name": "Release Management",
     "category": "managerial",
+    "subCategory": "delivery-planning",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["capco-2012-12"],
     "recommendationIds": []
   },
   {
     "name": "Project Planning",
     "category": "managerial",
+    "subCategory": "delivery-planning",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["capco-2012-12"],
     "recommendationIds": []
   },
   {
     "name": "Estimation & Planning",
     "category": "managerial",
+    "subCategory": "delivery-planning",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["elsevier-2016-08"],
     "recommendationIds": []
   },
   {
     "name": "Team Operations",
     "category": "managerial",
+    "subCategory": "leadership",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["elsevier-2016-08"],
     "recommendationIds": []
   },
   {
     "name": "Recruitment",
     "category": "managerial",
+    "subCategory": "leadership",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["elsevier-2016-08"],
     "recommendationIds": []
   },
   {
     "name": "Stakeholder Communication",
     "category": "managerial",
+    "subCategory": "stakeholder-management",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["capco-2012-12"],
     "recommendationIds": ["kkr-r.w.-0866e0", "sovos-s.s.-f05549", "news-uk-l.h.-53ebcc"]
   },
   {
     "name": "Agile Delivery",
     "category": "managerial",
+    "subCategory": "delivery-planning",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["moo-2017-01"],
     "recommendationIds": ["notch-r.d.-c7d93c"]
   },
   {
     "name": "Mentoring",
     "category": "soft-skills",
+    "subCategory": "mentoring",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": [
       "atom-learning-a.v.-3ff664",
@@ -334,7 +422,9 @@
   {
     "name": "Team Onboarding",
     "category": "soft-skills",
+    "subCategory": "mentoring",
     "type": "skill",
+    "synonyms": [],
     "jobIds": ["moo-2017-01", "capco-2012-12"],
     "recommendationIds": ["9fin-c.u.-befdbd", "hexagon-ab-g.r.-c50701"]
   }

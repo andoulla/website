@@ -1,39 +1,158 @@
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { useId, useState } from 'react';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import Divider from '@mui/material/Divider';
+import ListItemText from '@mui/material/ListItemText';
+import ListSubheader from '@mui/material/ListSubheader';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
-import type { SkillCategory } from '@/utils/skillColour';
-
-const CATEGORY_LABELS: Record<SkillCategory, string> = {
-  engineering: 'Engineering',
-  managerial: 'Managerial',
-  'soft-skills': 'Soft Skills',
-  other: 'Other',
-};
+import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
+import { CATEGORY_LABELS, SUBCATEGORY_LABELS } from '@/utils/skillCategory';
 
 export interface SkillFilterBarProps {
   categories: SkillCategory[];
-  activeFilter: 'all' | SkillCategory;
-  onChange: (value: 'all' | SkillCategory) => void;
+  subCategoriesByCategory: Partial<Record<SkillCategory, SkillSubCategory[]>>;
+  selectedCategories: SkillCategory[];
+  selectedSubCategories: SkillSubCategory[];
+  onCategoriesChange: (categories: SkillCategory[]) => void;
+  onSubCategoriesChange: (subCategories: SkillSubCategory[]) => void;
 }
 
-export const SkillFilterBar = ({ categories, activeFilter, onChange }: SkillFilterBarProps) => {
+const MENU_ITEM_SX = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  gap: 2,
+} as const;
+
+export const SkillFilterBar = ({
+  categories,
+  subCategoriesByCategory,
+  selectedCategories,
+  selectedSubCategories,
+  onCategoriesChange,
+  onSubCategoriesChange,
+}: SkillFilterBarProps) => {
+  const menuId = useId();
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const open = anchorEl !== null;
+
+  const toggleCategory = (category: SkillCategory) => {
+    const isSelected = selectedCategories.includes(category);
+    onCategoriesChange(
+      isSelected
+        ? selectedCategories.filter((c) => c !== category)
+        : [...selectedCategories, category]
+    );
+
+    if (isSelected) {
+      const subCategoriesForCategory = subCategoriesByCategory[category] ?? [];
+      const nextSubCategories = selectedSubCategories.filter(
+        (sub) => !subCategoriesForCategory.includes(sub)
+      );
+      if (nextSubCategories.length !== selectedSubCategories.length) {
+        onSubCategoriesChange(nextSubCategories);
+      }
+    }
+  };
+
+  const toggleSubCategory = (subCategory: SkillSubCategory) => {
+    onSubCategoriesChange(
+      selectedSubCategories.includes(subCategory)
+        ? selectedSubCategories.filter((s) => s !== subCategory)
+        : [...selectedSubCategories, subCategory]
+    );
+  };
+
+  const categoriesForSubCategories =
+    selectedCategories.length > 0 ? selectedCategories : categories;
+  const subCategoryGroups = categoriesForSubCategories
+    .map((category) => ({
+      category,
+      subCategories: subCategoriesByCategory[category] ?? [],
+    }))
+    .filter((group) => group.subCategories.length > 0);
+
+  const activeCount = selectedCategories.length + selectedSubCategories.length;
+  const label = activeCount === 0 ? 'All' : `Filters (${activeCount})`;
+
   return (
-    <ToggleButtonGroup
-      value={activeFilter}
-      exclusive
-      onChange={(_e, next: 'all' | SkillCategory | null) => {
-        if (next !== null) onChange(next);
-      }}
-      size="small"
-      aria-label="Filter skills by category"
-      sx={{ flexWrap: 'wrap', gap: 0.5 }}
-    >
-      <ToggleButton value="all">All</ToggleButton>
-      {categories.map((cat) => (
-        <ToggleButton key={cat} value={cat}>
-          {CATEGORY_LABELS[cat]}
-        </ToggleButton>
-      ))}
-    </ToggleButtonGroup>
+    <>
+      <Button
+        variant="outlined"
+        size="small"
+        color="inherit"
+        startIcon={<FilterListIcon fontSize="small" />}
+        onClick={(e) => setAnchorEl(e.currentTarget)}
+        aria-haspopup="true"
+        aria-expanded={open}
+        aria-controls={open ? menuId : undefined}
+        aria-label={`Filter skills by category and subcategory, currently: ${label}`}
+      >
+        {label}
+      </Button>
+      <Menu
+        id={menuId}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={() => setAnchorEl(null)}
+        slotProps={{ paper: { sx: { minWidth: 220 } } }}
+      >
+        <ListSubheader>Category</ListSubheader>
+        {categories.map((category) => (
+          <MenuItem
+            key={category}
+            role="menuitemcheckbox"
+            aria-checked={selectedCategories.includes(category)}
+            onClick={() => toggleCategory(category)}
+            sx={MENU_ITEM_SX}
+          >
+            <ListItemText>{CATEGORY_LABELS[category]}</ListItemText>
+            <Checkbox
+              edge="end"
+              tabIndex={-1}
+              disableRipple
+              size="small"
+              checked={selectedCategories.includes(category)}
+              sx={{ p: 0 }}
+            />
+          </MenuItem>
+        ))}
+        {subCategoryGroups.length > 0 && <Divider />}
+        {subCategoryGroups.length > 0 && <ListSubheader>Subcategory</ListSubheader>}
+        {subCategoryGroups.flatMap(({ category, subCategories }) => [
+          subCategoryGroups.length > 1 ? (
+            <ListSubheader
+              key={`${category}-heading`}
+              disableSticky
+              sx={{ pl: 3, lineHeight: 2.5, fontSize: '0.75rem' }}
+            >
+              {CATEGORY_LABELS[category]}
+            </ListSubheader>
+          ) : null,
+          ...subCategories.map((subCategory) => (
+            <MenuItem
+              key={subCategory}
+              role="menuitemcheckbox"
+              aria-checked={selectedSubCategories.includes(subCategory)}
+              onClick={() => toggleSubCategory(subCategory)}
+              sx={{ ...MENU_ITEM_SX, pl: 4 }}
+            >
+              <ListItemText>{SUBCATEGORY_LABELS[subCategory]}</ListItemText>
+              <Checkbox
+                edge="end"
+                tabIndex={-1}
+                disableRipple
+                size="small"
+                checked={selectedSubCategories.includes(subCategory)}
+                sx={{ p: 0 }}
+              />
+            </MenuItem>
+          )),
+        ])}
+      </Menu>
+    </>
   );
 };

@@ -66,6 +66,27 @@ describe('SkillsListView', () => {
     expect(screen.queryByText('Other')).not.toBeInTheDocument();
   });
 
+  test('groups skills into sub-category headings when a category has more than one sub-category present', () => {
+    const skills = [
+      new SkillSummary().skill('React').subCategory('frontend-development').mock(),
+      new SkillSummary().skill('Jest').subCategory('testing').mock(),
+    ];
+    const screen = render(<SkillsListView skills={skills} recommendations={[]} />);
+
+    expect(screen.getByText('Frontend Development')).toBeVisible();
+    expect(screen.getByText('Testing')).toBeVisible();
+  });
+
+  test('does not render a sub-category heading when a category has only one sub-category present', () => {
+    const skills = [
+      new SkillSummary().skill('React').subCategory('frontend-development').mock(),
+      new SkillSummary().skill('TypeScript').subCategory('frontend-development').mock(),
+    ];
+    const screen = render(<SkillsListView skills={skills} recommendations={[]} />);
+
+    expect(screen.queryByText('Frontend Development')).not.toBeInTheDocument();
+  });
+
   test('shows the company/year breakdown in a tooltip on hover', async () => {
     const user = userEvent.setup();
     const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);

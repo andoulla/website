@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -10,8 +10,9 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 
 import { useResumeData } from '@/context/resumeData';
+import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
-import type { SkillCategory } from '@/utils/skillColour';
+import { CATEGORY_ORDER, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory';
 
 import { SkillFilterBar } from './skillFilterBar';
 import { SkillsGraphView } from './skillsGraphView';
@@ -19,7 +20,10 @@ import { SkillsListView } from './skillsListView';
 
 type ViewMode = 'list' | 'graph';
 
-const CATEGORY_ORDER: SkillCategory[] = ['engineering', 'managerial', 'soft-skills', 'other'];
+const SUBCATEGORY_PARAM = 'subCategory';
+
+const parseSubCategories = (raw: string | null): SkillSubCategory[] =>
+  raw !== null && raw.length > 0 ? (raw.split(',') as SkillSubCategory[]) : [];
 
 const SkillsContent = () => {
   const experiences = useResumeData();
@@ -29,15 +33,49 @@ const SkillsContent = () => {
     [experiences]
   );
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const highlightedSkill = searchParams.get('skill') ?? undefined;
+  const selectedSubCategories = useMemo(
+    () => parseSubCategories(searchParams.get(SUBCATEGORY_PARAM)),
+    [searchParams]
+  );
+
+  const setSelectedSubCategories = useCallback(
+    (next: SkillSubCategory[]) => {
+      setSearchParams(
+        (prev) => {
+          const params = new URLSearchParams(prev);
+          if (next.length > 0) {
+            params.set(SUBCATEGORY_PARAM, next.join(','));
+          } else {
+            params.delete(SUBCATEGORY_PARAM);
+          }
+          return params;
+        },
+        { replace: true }
+      );
+    },
+    [setSearchParams]
+  );
 
   const [viewMode, setViewMode] = useState<ViewMode>('graph');
-  const [filterCategory, setFilterCategory] = useState<'all' | SkillCategory>('all');
+  const [selectedCategories, setSelectedCategories] = useState<SkillCategory[]>([]);
 
   const categories = useMemo(
     () => CATEGORY_ORDER.filter((cat) => skills.some((s) => s.category === cat)),
     [skills]
+  );
+
+  const subCategoriesByCategory = useMemo(
+    () =>
+      categories.reduce<Partial<Record<SkillCategory, SkillSubCategory[]>>>((acc, cat) => {
+        const subCategories = SUBCATEGORIES_BY_CATEGORY[cat].filter((sub) =>
+          skills.some((s) => s.category === cat && s.subCategory === sub)
+        );
+        if (subCategories.length > 0) acc[cat] = subCategories;
+        return acc;
+      }, {}),
+    [categories, skills]
   );
 
   return (
@@ -55,8 +93,11 @@ const SkillsContent = () => {
         {viewMode === 'graph' && (
           <SkillFilterBar
             categories={categories}
-            activeFilter={filterCategory}
-            onChange={setFilterCategory}
+            subCategoriesByCategory={subCategoriesByCategory}
+            selectedCategories={selectedCategories}
+            selectedSubCategories={selectedSubCategories}
+            onCategoriesChange={setSelectedCategories}
+            onSubCategoriesChange={setSelectedSubCategories}
           />
         )}
         <ToggleButtonGroup
@@ -86,7 +127,11 @@ const SkillsContent = () => {
           highlightedSkill={highlightedSkill}
         />
       ) : (
-        <SkillsGraphView skills={skills} filterCategory={filterCategory} />
+        <SkillsGraphView
+          skills={skills}
+          selectedCategories={selectedCategories}
+          selectedSubCategories={selectedSubCategories}
+        />
       )}
     </>
   );

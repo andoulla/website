@@ -1,3 +1,4 @@
+import type { SkillSubCategory } from '@/data/skills.types';
 import type {
   SkillCompanyYears,
   SkillSummary as SkillSummaryData,
@@ -25,6 +26,11 @@ export class SkillSummary {
 
   category(category: SkillCategory): this {
     this.data = { ...this.data, category };
+    return this;
+  }
+
+  subCategory(subCategory: SkillSubCategory): this {
+    this.data = { ...this.data, subCategory };
     return this;
   }
 

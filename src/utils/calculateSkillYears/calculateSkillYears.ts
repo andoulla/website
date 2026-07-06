@@ -1,17 +1,10 @@
 import { skills as defaultSkills } from '@/data/skills';
 import type { Skill } from '@/data/skills.types';
 import type { TimelineEvent } from '@/types';
+import { CATEGORY_ORDER } from '@/utils/skillCategory';
 import { skillColour } from '@/utils/skillColour';
-import type { SkillCategory } from '@/utils/skillColour';
 
 import type { SkillSummary } from './calculateSkillYears.types';
-
-const CATEGORY_ORDER: Record<SkillCategory, number> = {
-  engineering: 0,
-  managerial: 1,
-  'soft-skills': 2,
-  other: 3,
-};
 
 const durationYears = (startDate: string, endDate: string | null, today: Date): number => {
   const start = new Date(startDate);
@@ -49,6 +42,7 @@ export const calculateSkillYears = (
         skill: skill.name,
         years: Math.round(years * 10) / 10,
         category: skill.category,
+        subCategory: skill.subCategory,
         colour: skillColour(skill.name),
         jobIds: skill.jobIds,
         recommendationIds: skill.recommendationIds,
@@ -58,7 +52,7 @@ export const calculateSkillYears = (
     .filter((s) => s.years > 0);
 
   return summaries.sort((a, b) => {
-    const catDiff = CATEGORY_ORDER[a.category] - CATEGORY_ORDER[b.category];
+    const catDiff = CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category);
     if (catDiff !== 0) return catDiff;
     return b.years - a.years;
   });

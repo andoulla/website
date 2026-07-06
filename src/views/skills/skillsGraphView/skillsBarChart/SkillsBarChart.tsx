@@ -10,17 +10,9 @@ import { visuallyHidden } from '@mui/utils';
 
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
+import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/utils/skillCategory';
 import { CATEGORY_COLOUR_MAP } from '@/utils/skillColour';
-import type { SkillCategory, SkillColour } from '@/utils/skillColour';
-
-const CATEGORY_ORDER: SkillCategory[] = ['engineering', 'managerial', 'soft-skills', 'other'];
-
-const CATEGORY_LABELS: Record<SkillCategory, string> = {
-  engineering: 'Engineering',
-  managerial: 'Managerial',
-  'soft-skills': 'Soft Skills',
-  other: 'Other',
-};
+import type { SkillColour } from '@/utils/skillColour';
 
 const BAR_HEIGHT = 36;
 const BAR_SIZE = 14;

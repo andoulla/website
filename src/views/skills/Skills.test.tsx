@@ -1,6 +1,7 @@
 import { act, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useSearchParams } from 'react-router-dom';
 
 import { ResumeDataProvider } from '@/context/resumeData';
 import { TimelineEvent } from '@/testing';
@@ -18,11 +19,20 @@ const EXPERIENCES = [
 
 const neverResolve = () => new Promise<typeof EXPERIENCES>(() => undefined);
 
-function renderWithProvider(loader = () => Promise.resolve(EXPERIENCES)) {
+const SearchParamsDisplay = () => {
+  const [searchParams] = useSearchParams();
+  return <span>{`search:${searchParams.toString()}`}</span>;
+};
+
+function renderWithProvider(
+  loader = () => Promise.resolve(EXPERIENCES),
+  initialEntries = ['/skills']
+) {
   return render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={initialEntries}>
       <ResumeDataProvider loader={loader}>
         <Skills />
+        <SearchParamsDisplay />
       </ResumeDataProvider>
     </MemoryRouter>
   );
@@ -72,6 +82,53 @@ describe('Skills', () => {
       'aria-pressed',
       'true'
     );
+  });
+
+  test('initializes the subcategory filter from the URL query param', async () => {
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider(
+        () => Promise.resolve(EXPERIENCES),
+        ['/skills?subCategory=testing']
+      );
+      await Promise.resolve();
+    });
+
+    expect(screen.getByRole('button', { name: /Filters \(1\)/ })).toBeVisible();
+  });
+
+  test('reflects a subcategory filter selection as a URL query param', async () => {
+    const user = userEvent.setup();
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider();
+      await Promise.resolve();
+    });
+
+    await user.click(screen.getByRole('button', { name: /All/ }));
+    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
+
+    expect(screen.getByText('search:subCategory=testing')).toBeVisible();
+  });
+
+  test('removes the subcategory query param when the filter is cleared', async () => {
+    const user = userEvent.setup();
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider(
+        () => Promise.resolve(EXPERIENCES),
+        ['/skills?subCategory=testing']
+      );
+      await Promise.resolve();
+    });
+
+    await user.click(screen.getByRole('button', { name: /Filters/ }));
+    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
+
+    expect(screen.getByText('search:')).toBeVisible();
   });
 
   test('has no axe violations on initial render', async () => {

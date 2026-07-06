@@ -2,60 +2,237 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
-import type { SkillCategory } from '@/utils/skillColour';
+import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 
 import { SkillFilterBar } from './SkillFilterBar';
 
 const CATEGORIES: SkillCategory[] = ['engineering', 'managerial'];
 
+const SUBCATEGORIES_BY_CATEGORY: Partial<Record<SkillCategory, SkillSubCategory[]>> = {
+  engineering: ['frontend-development', 'testing'],
+  managerial: ['leadership'],
+};
+
 describe('SkillFilterBar', () => {
-  test('renders All button and one button per category', () => {
+  test('renders a trigger button showing "All" when no filters are active', () => {
     const screen = render(
-      <SkillFilterBar categories={CATEGORIES} activeFilter="all" onChange={jest.fn()} />
+      <SkillFilterBar
+        categories={CATEGORIES}
+        subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
+        selectedCategories={[]}
+        selectedSubCategories={[]}
+        onCategoriesChange={jest.fn()}
+        onSubCategoriesChange={jest.fn()}
+      />
     );
 
-    expect(screen.getByRole('button', { name: 'All' })).toBeVisible();
-    expect(screen.getByRole('button', { name: 'Engineering' })).toBeVisible();
-    expect(screen.getByRole('button', { name: 'Managerial' })).toBeVisible();
+    expect(screen.getByRole('button', { name: /All/ })).toBeVisible();
   });
 
-  test('calls onChange with the selected category when a category button is clicked', async () => {
+  test('renders a trigger button showing the active filter count', () => {
+    const screen = render(
+      <SkillFilterBar
+        categories={CATEGORIES}
+        subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
+        selectedCategories={['engineering']}
+        selectedSubCategories={['testing']}
+        onCategoriesChange={jest.fn()}
+        onSubCategoriesChange={jest.fn()}
+      />
+    );
+
+    expect(screen.getByRole('button', { name: /Filters \(2\)/ })).toBeVisible();
+  });
+
+  test('opens a menu with a checkbox item per category', async () => {
     const user = userEvent.setup();
-    const onChange = jest.fn();
     const screen = render(
-      <SkillFilterBar categories={CATEGORIES} activeFilter="all" onChange={onChange} />
+      <SkillFilterBar
+        categories={CATEGORIES}
+        subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
+        selectedCategories={[]}
+        selectedSubCategories={[]}
+        onCategoriesChange={jest.fn()}
+        onSubCategoriesChange={jest.fn()}
+      />
     );
 
-    await user.click(screen.getByRole('button', { name: 'Engineering' }));
-    expect(onChange).toHaveBeenCalledWith('engineering');
+    await user.click(screen.getByRole('button', { name: /All/ }));
+
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'Engineering', checked: false })
+    ).toBeVisible();
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'Managerial', checked: false })
+    ).toBeVisible();
   });
 
-  test('calls onChange with all when the All button is clicked', async () => {
+  test('calls onCategoriesChange adding the category when an unselected category is clicked', async () => {
     const user = userEvent.setup();
-    const onChange = jest.fn();
+    const onCategoriesChange = jest.fn();
     const screen = render(
-      <SkillFilterBar categories={CATEGORIES} activeFilter="engineering" onChange={onChange} />
+      <SkillFilterBar
+        categories={CATEGORIES}
+        subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
+        selectedCategories={[]}
+        selectedSubCategories={[]}
+        onCategoriesChange={onCategoriesChange}
+        onSubCategoriesChange={jest.fn()}
+      />
     );
 
-    await user.click(screen.getByRole('button', { name: 'All' }));
-    expect(onChange).toHaveBeenCalledWith('all');
+    await user.click(screen.getByRole('button', { name: /All/ }));
+    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
+    expect(onCategoriesChange).toHaveBeenCalledWith(['engineering']);
   });
 
-  test('does not call onChange when clicking the already-active button', async () => {
+  test('calls onCategoriesChange removing the category when an already-selected category is clicked', async () => {
     const user = userEvent.setup();
-    const onChange = jest.fn();
+    const onCategoriesChange = jest.fn();
     const screen = render(
-      <SkillFilterBar categories={CATEGORIES} activeFilter="all" onChange={onChange} />
+      <SkillFilterBar
+        categories={CATEGORIES}
+        subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
+        selectedCategories={['engineering', 'managerial']}
+        selectedSubCategories={[]}
+        onCategoriesChange={onCategoriesChange}
+        onSubCategoriesChange={jest.fn()}
+      />
     );
 
-    await user.click(screen.getByRole('button', { name: 'All' }));
-    expect(onChange).not.toHaveBeenCalled();
+    await user.click(screen.getByRole('button', { name: /Filters/ }));
+    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
+    expect(onCategoriesChange).toHaveBeenCalledWith(['managerial']);
   });
 
-  test('has no axe violations', async () => {
+  test('prunes selected subcategories that belong to a category being deselected', async () => {
+    const user = userEvent.setup();
+    const onSubCategoriesChange = jest.fn();
     const screen = render(
-      <SkillFilterBar categories={CATEGORIES} activeFilter="all" onChange={jest.fn()} />
+      <SkillFilterBar
+        categories={CATEGORIES}
+        subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
+        selectedCategories={['engineering']}
+        selectedSubCategories={['testing']}
+        onCategoriesChange={jest.fn()}
+        onSubCategoriesChange={onSubCategoriesChange}
+      />
     );
+
+    await user.click(screen.getByRole('button', { name: /Filters/ }));
+    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
+    expect(onSubCategoriesChange).toHaveBeenCalledWith([]);
+  });
+
+  test('shows subcategories for all categories, grouped, when no category is selected', async () => {
+    const user = userEvent.setup();
+    const screen = render(
+      <SkillFilterBar
+        categories={CATEGORIES}
+        subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
+        selectedCategories={[]}
+        selectedSubCategories={[]}
+        onCategoriesChange={jest.fn()}
+        onSubCategoriesChange={jest.fn()}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: /All/ }));
+
+    expect(screen.getByText('Frontend Development')).toBeVisible();
+    expect(screen.getByText('Testing')).toBeVisible();
+    expect(screen.getByText('Leadership')).toBeVisible();
+  });
+
+  test('scopes subcategory options to the selected categories', async () => {
+    const user = userEvent.setup();
+    const screen = render(
+      <SkillFilterBar
+        categories={CATEGORIES}
+        subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
+        selectedCategories={['engineering']}
+        selectedSubCategories={[]}
+        onCategoriesChange={jest.fn()}
+        onSubCategoriesChange={jest.fn()}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: /Filters/ }));
+
+    expect(screen.getByText('Frontend Development')).toBeVisible();
+    expect(screen.getByText('Testing')).toBeVisible();
+    expect(screen.queryByText('Leadership')).not.toBeInTheDocument();
+  });
+
+  test('calls onSubCategoriesChange when a subcategory item is clicked, without touching categories', async () => {
+    const user = userEvent.setup();
+    const onCategoriesChange = jest.fn();
+    const onSubCategoriesChange = jest.fn();
+    const screen = render(
+      <SkillFilterBar
+        categories={CATEGORIES}
+        subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
+        selectedCategories={[]}
+        selectedSubCategories={[]}
+        onCategoriesChange={onCategoriesChange}
+        onSubCategoriesChange={onSubCategoriesChange}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: /All/ }));
+    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
+    expect(onSubCategoriesChange).toHaveBeenCalledWith(['testing']);
+    expect(onCategoriesChange).not.toHaveBeenCalled();
+  });
+
+  test('calls onSubCategoriesChange removing an already-selected subcategory when clicked again', async () => {
+    const user = userEvent.setup();
+    const onSubCategoriesChange = jest.fn();
+    const screen = render(
+      <SkillFilterBar
+        categories={CATEGORIES}
+        subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
+        selectedCategories={[]}
+        selectedSubCategories={['testing']}
+        onCategoriesChange={jest.fn()}
+        onSubCategoriesChange={onSubCategoriesChange}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: /Filters/ }));
+    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
+    expect(onSubCategoriesChange).toHaveBeenCalledWith([]);
+  });
+
+  test('has no axe violations when closed', async () => {
+    const screen = render(
+      <SkillFilterBar
+        categories={CATEGORIES}
+        subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
+        selectedCategories={[]}
+        selectedSubCategories={[]}
+        onCategoriesChange={jest.fn()}
+        onSubCategoriesChange={jest.fn()}
+      />
+    );
+
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('has no axe violations when open', async () => {
+    const user = userEvent.setup();
+    const screen = render(
+      <SkillFilterBar
+        categories={CATEGORIES}
+        subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
+        selectedCategories={[]}
+        selectedSubCategories={[]}
+        onCategoriesChange={jest.fn()}
+        onSubCategoriesChange={jest.fn()}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: /All/ }));
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });

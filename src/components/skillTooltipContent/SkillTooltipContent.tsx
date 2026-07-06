@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
 import type { SkillSummary } from '@/utils/calculateSkillYears';
+import { SUBCATEGORY_LABELS } from '@/utils/skillCategory';
 
 export interface SkillTooltipContentProps {
   skill: SkillSummary;
@@ -26,6 +27,9 @@ export const SkillTooltipContent = ({ skill }: SkillTooltipContentProps) => {
     >
       <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
         {skill.skill}
+      </Typography>
+      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+        {SUBCATEGORY_LABELS[skill.subCategory]}
       </Typography>
       <Typography
         variant="body2"
