@@ -13,9 +13,9 @@ import { Suspense, useMemo } from 'react';
 import { Section } from '@/components/section';
 import { useResumeData } from '@/context/resumeData';
 
-import { ContactDetails } from './components/contactDetails';
-import { TimelineEventCard } from './components/timelineEventCard';
-import { TimelineEventSkeleton } from './components/timelineEventSkeleton';
+import { ContactDetails } from './contactDetails';
+import { TimelineEventCard } from './timelineEventCard';
+import { TimelineEventSkeleton } from './timelineEventSkeleton';
 import { pickRandomRoleIcon } from './roleIcons';
 
 const ExperienceList = () => {

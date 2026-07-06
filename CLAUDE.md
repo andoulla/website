@@ -46,7 +46,7 @@ Skills have **no dedicated data file** — `calculateSkillYears(experiences)` de
 ## Directory layout
 
 - [src/components/](src/components/) — shared/reusable UI components (BulletList, NavBar, Section, TagList)
-- [src/views/](src/views/) — page-level views; each may have a `components/` sub-folder for view-specific components
+- [src/views/](src/views/) — page-level views; view-specific components nest directly under the owning view (see nesting convention below)
   - [src/views/resume/](src/views/resume/) — sub-components: ContactDetails, TimelineEventCard, TimelineEventSkeleton
   - [src/views/skills/](src/views/skills/) — sub-components: SkillsListView, SkillsGraphView
 - [src/context/](src/context/) — React context providers (resumeData, theme)
@@ -61,7 +61,7 @@ Skills have **no dedicated data file** — `calculateSkillYears(experiences)` de
 
 ### Nesting convention
 
-A component/util folder that owns a child used _only_ by itself nests that child directly by name (no intermediate `components/` wrapper — that name is reserved for the top-level `views/*/components/` split above) rather than placing it next to it. This keeps ownership obvious and sidesteps sibling-folder imports (see [code-style.md](.claude/rules/code-style.md)) — a child folder can always reach up to its parent, but nothing outside the parent reaches sideways into the child.
+A component/util folder that owns a child used _only_ by itself nests that child directly by name (no intermediate `components/` wrapper) rather than placing it next to it. This keeps ownership obvious and sidesteps sibling-folder imports (see [code-style.md](.claude/rules/code-style.md)) — a child folder can always reach up to its parent, but nothing outside the parent reaches sideways into the child. This applies uniformly, including under `views/*` — e.g. `views/skills/skillFilterBar/`, not `views/skills/components/skillFilterBar/`.
 
 Folder names are camelCase and match the PascalCase component/function they contain; each folder gets an `index.ts` barrel export. A folder may also carry a `Name.types.ts` for types shared across files in that folder, `Name.constants.ts`, and `Name.helpers.ts` for local-only utilities. Once a helper is needed by more than one folder, move it out of `Name.helpers.ts` and into `src/utils/` instead of importing it across folders, dropping the `.helpers` suffix on the move (e.g. `Tag.helpers.ts` → `src/utils/tag/tag.ts`). Example, `src/components/tagList/`:
 

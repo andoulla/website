@@ -13,9 +13,9 @@ import { useResumeData } from '@/context/resumeData';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
 import type { SkillCategory } from '@/utils/skillColour';
 
-import { SkillFilterBar } from './components/skillFilterBar';
-import { SkillsGraphView } from './components/skillsGraphView';
-import { SkillsListView } from './components/skillsListView';
+import { SkillFilterBar } from './skillFilterBar';
+import { SkillsGraphView } from './skillsGraphView';
+import { SkillsListView } from './skillsListView';
 
 type ViewMode = 'list' | 'graph';
 
