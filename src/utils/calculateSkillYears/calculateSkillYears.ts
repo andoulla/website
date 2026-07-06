@@ -17,7 +17,7 @@ export const calculateSkillYears = (
   allSkills: Skill[] = defaultSkills,
   today: Date = new Date()
 ): SkillSummary[] => {
-  const experienceById = new Map(experiences.map((e) => [e.id, e]));
+  const experienceById = new Map(experiences.map((experience) => [experience.id, experience]));
 
   const summaries: SkillSummary[] = allSkills
     .filter((skill) => skill.jobIds.length > 0)
@@ -49,7 +49,7 @@ export const calculateSkillYears = (
         companyYears,
       };
     })
-    .filter((s) => s.years > 0);
+    .filter((summary) => summary.years > 0);
 
   return summaries.sort((a, b) => {
     const catDiff = CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category);

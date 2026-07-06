@@ -22,9 +22,9 @@ export interface SkillFilterBarProps {
 
 const MENU_ITEM_SX = {
   display: 'flex',
-  justifyContent: 'space-between',
   alignItems: 'center',
-  gap: 2,
+  gap: 1.5,
+  pl: 4,
 } as const;
 
 export const SkillFilterBar = ({
@@ -43,7 +43,7 @@ export const SkillFilterBar = ({
     const isSelected = selectedCategories.includes(category);
     onCategoriesChange(
       isSelected
-        ? selectedCategories.filter((c) => c !== category)
+        ? selectedCategories.filter((selectedCategory) => selectedCategory !== category)
         : [...selectedCategories, category]
     );
 
@@ -61,7 +61,7 @@ export const SkillFilterBar = ({
   const toggleSubCategory = (subCategory: SkillSubCategory) => {
     onSubCategoriesChange(
       selectedSubCategories.includes(subCategory)
-        ? selectedSubCategories.filter((s) => s !== subCategory)
+        ? selectedSubCategories.filter((selectedSubCategory) => selectedSubCategory !== subCategory)
         : [...selectedSubCategories, subCategory]
     );
   };
@@ -109,15 +109,15 @@ export const SkillFilterBar = ({
             onClick={() => toggleCategory(category)}
             sx={MENU_ITEM_SX}
           >
-            <ListItemText>{CATEGORY_LABELS[category]}</ListItemText>
             <Checkbox
-              edge="end"
+              edge="start"
               tabIndex={-1}
               disableRipple
               size="small"
               checked={selectedCategories.includes(category)}
               sx={{ p: 0 }}
             />
+            <ListItemText>{CATEGORY_LABELS[category]}</ListItemText>
           </MenuItem>
         ))}
         {subCategoryGroups.length > 0 && <Divider />}
@@ -138,17 +138,17 @@ export const SkillFilterBar = ({
               role="menuitemcheckbox"
               aria-checked={selectedSubCategories.includes(subCategory)}
               onClick={() => toggleSubCategory(subCategory)}
-              sx={{ ...MENU_ITEM_SX, pl: 4 }}
+              sx={MENU_ITEM_SX}
             >
-              <ListItemText>{SUBCATEGORY_LABELS[subCategory]}</ListItemText>
               <Checkbox
-                edge="end"
+                edge="start"
                 tabIndex={-1}
                 disableRipple
                 size="small"
                 checked={selectedSubCategories.includes(subCategory)}
                 sx={{ p: 0 }}
               />
+              <ListItemText>{SUBCATEGORY_LABELS[subCategory]}</ListItemText>
             </MenuItem>
           )),
         ])}

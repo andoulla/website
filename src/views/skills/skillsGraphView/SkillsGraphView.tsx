@@ -3,6 +3,7 @@ import Alert from '@mui/material/Alert';
 
 import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
+import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 
 import { SkillsBarChart } from './skillsBarChart';
 
@@ -17,17 +18,13 @@ export const SkillsGraphView = ({
   selectedCategories,
   selectedSubCategories,
 }: SkillsGraphViewProps) => {
-  const filteredSkills = useMemo(() => {
-    if (selectedCategories.length === 0 && selectedSubCategories.length === 0) return skills;
-
-    return skills
-      .filter(
-        (s) =>
-          (selectedCategories.length === 0 || selectedCategories.includes(s.category)) &&
-          (selectedSubCategories.length === 0 || selectedSubCategories.includes(s.subCategory))
-      )
-      .sort((a, b) => b.years - a.years);
-  }, [skills, selectedCategories, selectedSubCategories]);
+  const filteredSkills = useMemo(
+    () =>
+      filterSkillsByCategory(skills, selectedCategories, selectedSubCategories).sort(
+        (a, b) => b.years - a.years
+      ),
+    [skills, selectedCategories, selectedSubCategories]
+  );
 
   if (skills.length === 0) {
     return <Alert severity="info">No skill data available.</Alert>;

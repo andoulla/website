@@ -14,30 +14,49 @@ import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
 import { CATEGORY_ORDER, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory';
 
+import { CATEGORY_PARAM, SUBCATEGORY_PARAM } from './Skills.constants';
+import { parseCategories, parseSubCategories, reorderFilterParams } from './Skills.helpers';
 import { SkillFilterBar } from './skillFilterBar';
 import { SkillsGraphView } from './skillsGraphView';
 import { SkillsListView } from './skillsListView';
 
 type ViewMode = 'list' | 'graph';
 
-const SUBCATEGORY_PARAM = 'subCategory';
-
-const parseSubCategories = (raw: string | null): SkillSubCategory[] =>
-  raw !== null && raw.length > 0 ? (raw.split(',') as SkillSubCategory[]) : [];
-
 const SkillsContent = () => {
   const experiences = useResumeData();
   const skills = useMemo(() => calculateSkillYears(experiences), [experiences]);
   const recommendations = useMemo(
-    () => experiences.flatMap((e) => e.recommendations),
+    () => experiences.flatMap((experience) => experience.recommendations),
     [experiences]
   );
 
   const [searchParams, setSearchParams] = useSearchParams();
   const highlightedSkill = searchParams.get('skill') ?? undefined;
+  const selectedCategories = useMemo(
+    () => parseCategories(searchParams.get(CATEGORY_PARAM)),
+    [searchParams]
+  );
   const selectedSubCategories = useMemo(
     () => parseSubCategories(searchParams.get(SUBCATEGORY_PARAM)),
     [searchParams]
+  );
+
+  const setSelectedCategories = useCallback(
+    (next: SkillCategory[]) => {
+      setSearchParams(
+        (prev) => {
+          const params = new URLSearchParams(prev);
+          if (next.length > 0) {
+            params.set(CATEGORY_PARAM, next.join(','));
+          } else {
+            params.delete(CATEGORY_PARAM);
+          }
+          return reorderFilterParams(params);
+        },
+        { replace: true }
+      );
+    },
+    [setSearchParams]
   );
 
   const setSelectedSubCategories = useCallback(
@@ -50,7 +69,7 @@ const SkillsContent = () => {
           } else {
             params.delete(SUBCATEGORY_PARAM);
           }
-          return params;
+          return reorderFilterParams(params);
         },
         { replace: true }
       );
@@ -59,10 +78,9 @@ const SkillsContent = () => {
   );
 
   const [viewMode, setViewMode] = useState<ViewMode>('graph');
-  const [selectedCategories, setSelectedCategories] = useState<SkillCategory[]>([]);
 
   const categories = useMemo(
-    () => CATEGORY_ORDER.filter((cat) => skills.some((s) => s.category === cat)),
+    () => CATEGORY_ORDER.filter((cat) => skills.some((skill) => skill.category === cat)),
     [skills]
   );
 
@@ -70,7 +88,7 @@ const SkillsContent = () => {
     () =>
       categories.reduce<Partial<Record<SkillCategory, SkillSubCategory[]>>>((acc, cat) => {
         const subCategories = SUBCATEGORIES_BY_CATEGORY[cat].filter((sub) =>
-          skills.some((s) => s.category === cat && s.subCategory === sub)
+          skills.some((skill) => skill.category === cat && skill.subCategory === sub)
         );
         if (subCategories.length > 0) acc[cat] = subCategories;
         return acc;
@@ -90,16 +108,14 @@ const SkillsContent = () => {
           gap: 1,
         }}
       >
-        {viewMode === 'graph' && (
-          <SkillFilterBar
-            categories={categories}
-            subCategoriesByCategory={subCategoriesByCategory}
-            selectedCategories={selectedCategories}
-            selectedSubCategories={selectedSubCategories}
-            onCategoriesChange={setSelectedCategories}
-            onSubCategoriesChange={setSelectedSubCategories}
-          />
-        )}
+        <SkillFilterBar
+          categories={categories}
+          subCategoriesByCategory={subCategoriesByCategory}
+          selectedCategories={selectedCategories}
+          selectedSubCategories={selectedSubCategories}
+          onCategoriesChange={setSelectedCategories}
+          onSubCategoriesChange={setSelectedSubCategories}
+        />
         <ToggleButtonGroup
           value={viewMode}
           exclusive
@@ -125,6 +141,8 @@ const SkillsContent = () => {
           skills={skills}
           recommendations={recommendations}
           highlightedSkill={highlightedSkill}
+          selectedCategories={selectedCategories}
+          selectedSubCategories={selectedSubCategories}
         />
       ) : (
         <SkillsGraphView

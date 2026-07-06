@@ -56,16 +56,16 @@ export const SkillsBarChart = ({ skills }: SkillsBarChartProps) => {
   const chartHeight = Math.max(MIN_HEIGHT, skills.length * BAR_HEIGHT + CHART_PADDING);
 
   // Legend: one entry per category present, in fixed display order.
-  const legendEntries = CATEGORY_ORDER.filter((cat) => skills.some((s) => s.category === cat)).map(
-    (cat) => ({
-      cat,
-      colour: CATEGORY_COLOUR_MAP[cat],
-      label: CATEGORY_LABELS[cat],
-    })
-  );
+  const legendEntries = CATEGORY_ORDER.filter((cat) =>
+    skills.some((skill) => skill.category === cat)
+  ).map((cat) => ({
+    cat,
+    colour: CATEGORY_COLOUR_MAP[cat],
+    label: CATEGORY_LABELS[cat],
+  }));
 
   // Y-axis width: longer skill names need more space, capped for mobile.
-  const maxLabelLength = Math.max(...skills.map((s) => s.skill.length));
+  const maxLabelLength = Math.max(...skills.map((skill) => skill.skill.length));
   const yAxisWidth = Math.min(Math.max(maxLabelLength * 7, 80), 160);
 
   return (
@@ -121,14 +121,19 @@ export const SkillsBarChart = ({ skills }: SkillsBarChartProps) => {
       </ResponsiveContainer>
 
       {/* Legend — styled like a figure caption: muted text, dots vertically centred with labels */}
-      <Stack
-        direction="row"
-        spacing={2}
+      <Box
         aria-hidden="true"
-        sx={{ flexWrap: 'wrap', justifyContent: 'center', pt: 0.5 }}
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          rowGap: 1.5,
+          columnGap: 3,
+          pt: 1,
+        }}
       >
         {legendEntries.map(({ cat, colour, label }) => (
-          <Stack key={cat} direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
+          <Box key={cat} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Box
               sx={{
                 width: 8,
@@ -139,12 +144,12 @@ export const SkillsBarChart = ({ skills }: SkillsBarChartProps) => {
                 opacity: 0.7,
               }}
             />
-            <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1 }}>
+            <Typography variant="caption" color="text.secondary">
               {label}
             </Typography>
-          </Stack>
+          </Box>
         ))}
-      </Stack>
+      </Box>
 
       {/* Visually hidden table — accessible text alternative for screen readers */}
       <Box component="table" sx={visuallyHidden} aria-label="Skills data table">
@@ -157,11 +162,11 @@ export const SkillsBarChart = ({ skills }: SkillsBarChartProps) => {
           </tr>
         </thead>
         <tbody>
-          {skills.map((s) => (
-            <tr key={s.skill}>
-              <td>{s.skill}</td>
-              <td>{s.years}</td>
-              <td>{CATEGORY_LABELS[s.category]}</td>
+          {skills.map((skill) => (
+            <tr key={skill.skill}>
+              <td>{skill.skill}</td>
+              <td>{skill.years}</td>
+              <td>{CATEGORY_LABELS[skill.category]}</td>
             </tr>
           ))}
         </tbody>

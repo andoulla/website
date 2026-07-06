@@ -4,7 +4,7 @@ import { axe } from 'jest-axe';
 
 import { Recommendation, SkillSummary } from '@/testing';
 
-import { SkillsListView } from './SkillsListView';
+import { SkillsListView, type SkillsListViewProps } from './SkillsListView';
 
 const SKILLS = [
   new SkillSummary().years(4).mock(),
@@ -33,9 +33,20 @@ const RECOMMENDATIONS = [
     .mock(),
 ];
 
+const renderListView = (props: Partial<SkillsListViewProps> = {}) =>
+  render(
+    <SkillsListView
+      skills={SKILLS}
+      recommendations={RECOMMENDATIONS}
+      selectedCategories={[]}
+      selectedSubCategories={[]}
+      {...props}
+    />
+  );
+
 describe('SkillsListView', () => {
   test('renders a list item for each skill with name and years', () => {
-    const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+    const screen = renderListView();
 
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByText('est. 4 years')).toBeVisible();
@@ -47,13 +58,13 @@ describe('SkillsListView', () => {
 
   test('renders "year" (singular) when a skill has exactly 1 year', () => {
     const skills = [new SkillSummary().skill('Docker').years(1).mock()];
-    const screen = render(<SkillsListView skills={skills} recommendations={[]} />);
+    const screen = renderListView({ skills, recommendations: [] });
 
     expect(screen.getByText('est. 1 year')).toBeVisible();
   });
 
   test('renders category section headings', () => {
-    const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+    const screen = renderListView();
 
     expect(screen.getByText('Engineering')).toBeVisible();
     expect(screen.getByText('Managerial')).toBeVisible();
@@ -61,7 +72,7 @@ describe('SkillsListView', () => {
   });
 
   test('does not render a section for a category with no skills', () => {
-    const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+    const screen = renderListView();
 
     expect(screen.queryByText('Other')).not.toBeInTheDocument();
   });
@@ -71,7 +82,7 @@ describe('SkillsListView', () => {
       new SkillSummary().skill('React').subCategory('frontend-development').mock(),
       new SkillSummary().skill('Jest').subCategory('testing').mock(),
     ];
-    const screen = render(<SkillsListView skills={skills} recommendations={[]} />);
+    const screen = renderListView({ skills, recommendations: [] });
 
     expect(screen.getByText('Frontend Development')).toBeVisible();
     expect(screen.getByText('Testing')).toBeVisible();
@@ -82,14 +93,14 @@ describe('SkillsListView', () => {
       new SkillSummary().skill('React').subCategory('frontend-development').mock(),
       new SkillSummary().skill('TypeScript').subCategory('frontend-development').mock(),
     ];
-    const screen = render(<SkillsListView skills={skills} recommendations={[]} />);
+    const screen = renderListView({ skills, recommendations: [] });
 
     expect(screen.queryByText('Frontend Development')).not.toBeInTheDocument();
   });
 
   test('shows the company/year breakdown in a tooltip on hover', async () => {
     const user = userEvent.setup();
-    const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+    const screen = renderListView();
 
     await user.hover(screen.getByText('React'));
 
@@ -98,7 +109,7 @@ describe('SkillsListView', () => {
 
   test('opens a popover with linked recommendations on list item click', async () => {
     const user = userEvent.setup();
-    const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+    const screen = renderListView();
 
     await user.click(screen.getByText('Mentoring'));
     expect(screen.getByText('Excellent mentor.')).toBeVisible();
@@ -106,30 +117,55 @@ describe('SkillsListView', () => {
 
   test('shows empty state in popover when no recommendations match', async () => {
     const user = userEvent.setup();
-    const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+    const screen = renderListView();
 
     await user.click(screen.getByText('React'));
     expect(screen.getByText('No recommendations yet.')).toBeVisible();
   });
 
   test('applies a highlight to the skill matching highlightedSkill', () => {
-    const screen = render(
-      <SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} highlightedSkill="React" />
-    );
+    const screen = renderListView({ highlightedSkill: 'React' });
 
-    expect(screen.getByRole('button', { name: /React/ })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
+  });
+
+  test('hides skills outside the selected categories', () => {
+    const screen = renderListView({ selectedCategories: ['managerial'] });
+
+    expect(screen.getByText('Team Leadership')).toBeVisible();
+    expect(screen.queryByText('React')).not.toBeInTheDocument();
+  });
+
+  test('does not render a section for a category with no matching skills after filtering', () => {
+    const screen = renderListView({ selectedCategories: ['managerial'] });
+
+    expect(screen.queryByText('Engineering')).not.toBeInTheDocument();
+    expect(screen.queryByText('Soft Skills')).not.toBeInTheDocument();
+  });
+
+  test('hides skills outside the selected subcategories', () => {
+    const skills = [
+      new SkillSummary().skill('React').subCategory('frontend-development').mock(),
+      new SkillSummary().skill('Jest').subCategory('testing').mock(),
+    ];
+    const screen = renderListView({
+      skills,
+      recommendations: [],
+      selectedSubCategories: ['testing'],
+    });
+
+    expect(screen.getByText('Jest')).toBeVisible();
+    expect(screen.queryByText('React')).not.toBeInTheDocument();
   });
 
   test('has no axe violations', async () => {
-    const screen = render(<SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} />);
+    const screen = renderListView();
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('has no axe violations with a highlighted skill', async () => {
-    const screen = render(
-      <SkillsListView skills={SKILLS} recommendations={RECOMMENDATIONS} highlightedSkill="React" />
-    );
+    const screen = renderListView({ highlightedSkill: 'React' });
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
