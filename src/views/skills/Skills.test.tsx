@@ -19,6 +19,10 @@ const EXPERIENCES = [
 
 const neverResolve = () => new Promise<typeof EXPERIENCES>(() => undefined);
 
+const ALL_LABEL = 'Filter skills by category and subcategory, currently: All';
+const FILTERS_1_LABEL = 'Filter skills by category and subcategory, currently: Filters (1)';
+const FILTERS_2_LABEL = 'Filter skills by category and subcategory, currently: Filters (2)';
+
 const SearchParamsDisplay = () => {
   const [searchParams] = useSearchParams();
   return <span>{`search:${searchParams.toString()}`}</span>;
@@ -95,7 +99,7 @@ describe('Skills', () => {
 
     await user.click(screen.getByRole('button', { name: 'List view' }));
 
-    expect(screen.getByRole('button', { name: /All/ })).toBeVisible();
+    expect(screen.getByRole('button', { name: ALL_LABEL })).toBeVisible();
   });
 
   test('initializes the category filter from the URL query param', async () => {
@@ -109,7 +113,7 @@ describe('Skills', () => {
       await Promise.resolve();
     });
 
-    expect(screen.getByRole('button', { name: /Filters \(1\)/ })).toBeVisible();
+    expect(screen.getByRole('button', { name: FILTERS_1_LABEL })).toBeVisible();
   });
 
   test('reflects a category filter selection as a URL query param', async () => {
@@ -121,7 +125,7 @@ describe('Skills', () => {
       await Promise.resolve();
     });
 
-    await user.click(screen.getByRole('button', { name: /All/ }));
+    await user.click(screen.getByRole('button', { name: ALL_LABEL }));
     await user.click(screen.getByRole('menuitemcheckbox', { name: 'Managerial' }));
 
     expect(screen.getByText('search:category=managerial')).toBeVisible();
@@ -139,7 +143,7 @@ describe('Skills', () => {
       await Promise.resolve();
     });
 
-    await user.click(screen.getByRole('button', { name: /Filters/ }));
+    await user.click(screen.getByRole('button', { name: FILTERS_1_LABEL }));
     await user.click(screen.getByRole('menuitemcheckbox', { name: 'Managerial' }));
 
     expect(screen.getByText('search:')).toBeVisible();
@@ -157,7 +161,7 @@ describe('Skills', () => {
     });
 
     expect(screen.getByText('search:category=engineering&subCategory=testing')).toBeVisible();
-    expect(screen.getByRole('button', { name: /Filters \(2\)/ })).toBeVisible();
+    expect(screen.getByRole('button', { name: FILTERS_2_LABEL })).toBeVisible();
   });
 
   test('initializes the subcategory filter from the URL query param', async () => {
@@ -171,7 +175,7 @@ describe('Skills', () => {
       await Promise.resolve();
     });
 
-    expect(screen.getByRole('button', { name: /Filters \(1\)/ })).toBeVisible();
+    expect(screen.getByRole('button', { name: FILTERS_1_LABEL })).toBeVisible();
   });
 
   test('reflects a subcategory filter selection as a URL query param', async () => {
@@ -183,7 +187,7 @@ describe('Skills', () => {
       await Promise.resolve();
     });
 
-    await user.click(screen.getByRole('button', { name: /All/ }));
+    await user.click(screen.getByRole('button', { name: ALL_LABEL }));
     await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
 
     expect(screen.getByText('search:subCategory=testing')).toBeVisible();
@@ -201,7 +205,7 @@ describe('Skills', () => {
       await Promise.resolve();
     });
 
-    await user.click(screen.getByRole('button', { name: /Filters/ }));
+    await user.click(screen.getByRole('button', { name: FILTERS_1_LABEL }));
     await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
 
     expect(screen.getByText('search:')).toBeVisible();

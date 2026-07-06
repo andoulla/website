@@ -33,6 +33,18 @@ describe('parseSubCategories', () => {
     expect(result).toEqual([]);
   });
 
+  test('returns an empty array when the param is an empty string', () => {
+    const result = parseSubCategories('');
+
+    expect(result).toEqual([]);
+  });
+
+  test('splits a single subcategory', () => {
+    const result = parseSubCategories('testing');
+
+    expect(result).toEqual(['testing']);
+  });
+
   test('splits multiple comma-separated subcategories', () => {
     const result = parseSubCategories('testing,leadership');
 

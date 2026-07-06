@@ -126,7 +126,7 @@ describe('SkillsListView', () => {
   test('applies a highlight to the skill matching highlightedSkill', () => {
     const screen = renderListView({ highlightedSkill: 'React' });
 
-    expect(screen.getByRole('button', { name: /React/ })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
   });
 
   test('hides skills outside the selected categories', () => {

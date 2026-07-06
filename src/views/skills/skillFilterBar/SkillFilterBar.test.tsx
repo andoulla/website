@@ -2,22 +2,19 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
-import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
+import { CATEGORY_ORDER, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory';
 
 import { SkillFilterBar } from './SkillFilterBar';
 
-const CATEGORIES: SkillCategory[] = ['engineering', 'managerial'];
-
-const SUBCATEGORIES_BY_CATEGORY: Partial<Record<SkillCategory, SkillSubCategory[]>> = {
-  engineering: ['frontend-development', 'testing'],
-  managerial: ['leadership'],
-};
+const ALL_LABEL = 'Filter skills by category and subcategory, currently: All';
+const FILTERS_1_LABEL = 'Filter skills by category and subcategory, currently: Filters (1)';
+const FILTERS_2_LABEL = 'Filter skills by category and subcategory, currently: Filters (2)';
 
 describe('SkillFilterBar', () => {
   test('renders a trigger button showing "All" when no filters are active', () => {
     const screen = render(
       <SkillFilterBar
-        categories={CATEGORIES}
+        categories={CATEGORY_ORDER}
         subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
         selectedCategories={[]}
         selectedSubCategories={[]}
@@ -26,13 +23,13 @@ describe('SkillFilterBar', () => {
       />
     );
 
-    expect(screen.getByRole('button', { name: /All/ })).toBeVisible();
+    expect(screen.getByRole('button', { name: ALL_LABEL })).toBeVisible();
   });
 
   test('renders a trigger button showing the active filter count', () => {
     const screen = render(
       <SkillFilterBar
-        categories={CATEGORIES}
+        categories={CATEGORY_ORDER}
         subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
         selectedCategories={['engineering']}
         selectedSubCategories={['testing']}
@@ -41,14 +38,14 @@ describe('SkillFilterBar', () => {
       />
     );
 
-    expect(screen.getByRole('button', { name: /Filters \(2\)/ })).toBeVisible();
+    expect(screen.getByRole('button', { name: FILTERS_2_LABEL })).toBeVisible();
   });
 
   test('opens a menu with a checkbox item per category', async () => {
     const user = userEvent.setup();
     const screen = render(
       <SkillFilterBar
-        categories={CATEGORIES}
+        categories={CATEGORY_ORDER}
         subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
         selectedCategories={[]}
         selectedSubCategories={[]}
@@ -57,7 +54,7 @@ describe('SkillFilterBar', () => {
       />
     );
 
-    await user.click(screen.getByRole('button', { name: /All/ }));
+    await user.click(screen.getByRole('button', { name: ALL_LABEL }));
 
     expect(
       screen.getByRole('menuitemcheckbox', { name: 'Engineering', checked: false })
@@ -65,6 +62,10 @@ describe('SkillFilterBar', () => {
     expect(
       screen.getByRole('menuitemcheckbox', { name: 'Managerial', checked: false })
     ).toBeVisible();
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'Soft Skills', checked: false })
+    ).toBeVisible();
+    expect(screen.getByRole('menuitemcheckbox', { name: 'Other', checked: false })).toBeVisible();
   });
 
   test('calls onCategoriesChange adding the category when an unselected category is clicked', async () => {
@@ -72,7 +73,7 @@ describe('SkillFilterBar', () => {
     const onCategoriesChange = jest.fn();
     const screen = render(
       <SkillFilterBar
-        categories={CATEGORIES}
+        categories={CATEGORY_ORDER}
         subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
         selectedCategories={[]}
         selectedSubCategories={[]}
@@ -81,7 +82,7 @@ describe('SkillFilterBar', () => {
       />
     );
 
-    await user.click(screen.getByRole('button', { name: /All/ }));
+    await user.click(screen.getByRole('button', { name: ALL_LABEL }));
     await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
     expect(onCategoriesChange).toHaveBeenCalledWith(['engineering']);
   });
@@ -91,7 +92,7 @@ describe('SkillFilterBar', () => {
     const onCategoriesChange = jest.fn();
     const screen = render(
       <SkillFilterBar
-        categories={CATEGORIES}
+        categories={CATEGORY_ORDER}
         subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
         selectedCategories={['engineering', 'managerial']}
         selectedSubCategories={[]}
@@ -100,7 +101,7 @@ describe('SkillFilterBar', () => {
       />
     );
 
-    await user.click(screen.getByRole('button', { name: /Filters/ }));
+    await user.click(screen.getByRole('button', { name: FILTERS_2_LABEL }));
     await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
     expect(onCategoriesChange).toHaveBeenCalledWith(['managerial']);
   });
@@ -110,7 +111,7 @@ describe('SkillFilterBar', () => {
     const onSubCategoriesChange = jest.fn();
     const screen = render(
       <SkillFilterBar
-        categories={CATEGORIES}
+        categories={CATEGORY_ORDER}
         subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
         selectedCategories={['engineering']}
         selectedSubCategories={['testing']}
@@ -119,7 +120,7 @@ describe('SkillFilterBar', () => {
       />
     );
 
-    await user.click(screen.getByRole('button', { name: /Filters/ }));
+    await user.click(screen.getByRole('button', { name: FILTERS_2_LABEL }));
     await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
     expect(onSubCategoriesChange).toHaveBeenCalledWith([]);
   });
@@ -128,7 +129,7 @@ describe('SkillFilterBar', () => {
     const user = userEvent.setup();
     const screen = render(
       <SkillFilterBar
-        categories={CATEGORIES}
+        categories={CATEGORY_ORDER}
         subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
         selectedCategories={[]}
         selectedSubCategories={[]}
@@ -137,18 +138,27 @@ describe('SkillFilterBar', () => {
       />
     );
 
-    await user.click(screen.getByRole('button', { name: /All/ }));
+    await user.click(screen.getByRole('button', { name: ALL_LABEL }));
 
     expect(screen.getByText('Frontend Development')).toBeVisible();
     expect(screen.getByText('Testing')).toBeVisible();
+    expect(screen.getByText('Styling & UI')).toBeVisible();
+    expect(screen.getByText('Design System')).toBeVisible();
+    expect(screen.getByText('Tooling')).toBeVisible();
+    expect(screen.getByText('Collaboration Tools')).toBeVisible();
+    expect(screen.getByText('Accessibility')).toBeVisible();
+    expect(screen.getByText('Performance')).toBeVisible();
     expect(screen.getByText('Leadership')).toBeVisible();
+    expect(screen.getByText('Delivery & Planning')).toBeVisible();
+    expect(screen.getByText('Stakeholder Management')).toBeVisible();
+    expect(screen.getByText('Mentoring')).toBeVisible();
   });
 
   test('scopes subcategory options to the selected categories', async () => {
     const user = userEvent.setup();
     const screen = render(
       <SkillFilterBar
-        categories={CATEGORIES}
+        categories={CATEGORY_ORDER}
         subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
         selectedCategories={['engineering']}
         selectedSubCategories={[]}
@@ -157,11 +167,12 @@ describe('SkillFilterBar', () => {
       />
     );
 
-    await user.click(screen.getByRole('button', { name: /Filters/ }));
+    await user.click(screen.getByRole('button', { name: FILTERS_1_LABEL }));
 
     expect(screen.getByText('Frontend Development')).toBeVisible();
     expect(screen.getByText('Testing')).toBeVisible();
     expect(screen.queryByText('Leadership')).not.toBeInTheDocument();
+    expect(screen.queryByText('Mentoring')).not.toBeInTheDocument();
   });
 
   test('calls onSubCategoriesChange when a subcategory item is clicked, without touching categories', async () => {
@@ -170,7 +181,7 @@ describe('SkillFilterBar', () => {
     const onSubCategoriesChange = jest.fn();
     const screen = render(
       <SkillFilterBar
-        categories={CATEGORIES}
+        categories={CATEGORY_ORDER}
         subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
         selectedCategories={[]}
         selectedSubCategories={[]}
@@ -179,7 +190,7 @@ describe('SkillFilterBar', () => {
       />
     );
 
-    await user.click(screen.getByRole('button', { name: /All/ }));
+    await user.click(screen.getByRole('button', { name: ALL_LABEL }));
     await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
     expect(onSubCategoriesChange).toHaveBeenCalledWith(['testing']);
     expect(onCategoriesChange).not.toHaveBeenCalled();
@@ -190,7 +201,7 @@ describe('SkillFilterBar', () => {
     const onSubCategoriesChange = jest.fn();
     const screen = render(
       <SkillFilterBar
-        categories={CATEGORIES}
+        categories={CATEGORY_ORDER}
         subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
         selectedCategories={[]}
         selectedSubCategories={['testing']}
@@ -199,7 +210,7 @@ describe('SkillFilterBar', () => {
       />
     );
 
-    await user.click(screen.getByRole('button', { name: /Filters/ }));
+    await user.click(screen.getByRole('button', { name: FILTERS_1_LABEL }));
     await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
     expect(onSubCategoriesChange).toHaveBeenCalledWith([]);
   });
@@ -207,7 +218,7 @@ describe('SkillFilterBar', () => {
   test('has no axe violations when closed', async () => {
     const screen = render(
       <SkillFilterBar
-        categories={CATEGORIES}
+        categories={CATEGORY_ORDER}
         subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
         selectedCategories={[]}
         selectedSubCategories={[]}
@@ -223,7 +234,7 @@ describe('SkillFilterBar', () => {
     const user = userEvent.setup();
     const screen = render(
       <SkillFilterBar
-        categories={CATEGORIES}
+        categories={CATEGORY_ORDER}
         subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
         selectedCategories={[]}
         selectedSubCategories={[]}
@@ -232,7 +243,7 @@ describe('SkillFilterBar', () => {
       />
     );
 
-    await user.click(screen.getByRole('button', { name: /All/ }));
+    await user.click(screen.getByRole('button', { name: ALL_LABEL }));
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
