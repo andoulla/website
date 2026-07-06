@@ -1,11 +1,14 @@
 import { memo } from 'react';
+import LinkedIn from '@mui/icons-material/LinkedIn';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import type { Recommendation } from '@/types';
+import { formatDate } from '@/utils/formatDate';
 
 export interface RecommendationTextProps {
   recommendation: Recommendation;
@@ -37,6 +40,17 @@ export const RecommendationText = memo(({ recommendation }: RecommendationTextPr
           </Avatar>
           <Typography variant="caption" color="text.secondary">
             {recommendation.authorInitials}, {recommendation.authorRole.jobTitle}
+            <Link
+              href={recommendation.recommendationUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View full recommendation on LinkedIn"
+              sx={{ ml: 0.5 }}
+            >
+              <LinkedIn fontSize="inherit" sx={{ verticalAlign: 'middle' }} />
+            </Link>
+            {' · '}
+            {formatDate(recommendation.postedDate)}
           </Typography>
         </Stack>
         <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
