@@ -11,10 +11,7 @@ import { Skills } from './views/skills';
 
 // TODO: build page for articles
 // TODO: add education (by default in time line view, filter out url based)
-
-// TODO: separation of unit and integration tests
 // TODO: check lighthouse metrics
-// TODO: github tags
 // TODO: add histogram view for skills
 // TODO: ATS optimisation
 
