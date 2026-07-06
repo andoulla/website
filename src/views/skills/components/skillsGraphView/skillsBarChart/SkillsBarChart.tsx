@@ -39,7 +39,7 @@ const getPaletteMain = (colour: SkillColour, theme: Theme): string => {
 };
 
 // Bridges Recharts tooltip payload → SkillTooltipContent props.
-const SkillBarTooltip = ({ active, payload }: TooltipContentProps<number, string>) => {
+const SkillBarTooltip = ({ active, payload }: TooltipContentProps) => {
   if (!active || payload === undefined || payload.length === 0) return null;
   const skill = payload[0].payload as SkillSummary;
   return <SkillTooltipContent skill={skill} />;
@@ -131,12 +131,12 @@ export const SkillsBarChart = ({ skills }: SkillsBarChartProps) => {
       {/* Legend — styled like a figure caption: muted text, dots vertically centred with labels */}
       <Stack
         direction="row"
-        gap={2}
+        spacing={2}
         aria-hidden="true"
         sx={{ flexWrap: 'wrap', justifyContent: 'center', pt: 0.5 }}
       >
         {legendEntries.map(({ cat, colour, label }) => (
-          <Stack key={cat} direction="row" gap={0.75} sx={{ alignItems: 'center' }}>
+          <Stack key={cat} direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
             <Box
               sx={{
                 width: 8,
