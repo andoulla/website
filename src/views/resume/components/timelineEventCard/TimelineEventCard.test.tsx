@@ -17,7 +17,7 @@ const experience = new TimelineEvent()
 
 const recommendationItem = new Recommendation()
   .authorInitials('P.S.')
-  .authorRole({ jobTitle: 'Engineering Manager', company: 'Nimbus Analytics' })
+  .authorRole({ jobTitle: 'Engineering Manager' })
   .text('Great work.')
   .postedDate('2023-06-12')
   .mock();
