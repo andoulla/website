@@ -18,6 +18,7 @@ import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 import type { Recommendation } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { computeShadeColour } from '@/utils/computeShadeColour';
+import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 import {
   CATEGORY_LABELS,
   CATEGORY_ORDER,
@@ -26,10 +27,12 @@ import {
 } from '@/utils/skillCategory';
 import { skillShadeIndex } from '@/utils/skillColour';
 
-interface SkillsListViewProps {
+export interface SkillsListViewProps {
   skills: SkillSummary[];
   recommendations: Recommendation[];
   highlightedSkill?: string;
+  selectedCategories: SkillCategory[];
+  selectedSubCategories: SkillSubCategory[];
 }
 
 interface PopoverState {
@@ -120,6 +123,8 @@ export const SkillsListView = ({
   skills,
   recommendations,
   highlightedSkill,
+  selectedCategories,
+  selectedSubCategories,
 }: SkillsListViewProps) => {
   const [popover, setPopover] = useState<PopoverState | null>(null);
 
@@ -129,16 +134,21 @@ export const SkillsListView = ({
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [highlightedSkill]);
 
+  const filteredSkills = useMemo(
+    () => filterSkillsByCategory(skills, selectedCategories, selectedSubCategories),
+    [skills, selectedCategories, selectedSubCategories]
+  );
+
   const byCategory = useMemo(
     () =>
       CATEGORY_ORDER.reduce<Record<SkillCategory, SkillSummary[]>>(
         (acc, cat) => {
-          acc[cat] = skills.filter((s) => s.category === cat);
+          acc[cat] = filteredSkills.filter((s) => s.category === cat);
           return acc;
         },
         { engineering: [], managerial: [], 'soft-skills': [], other: [] }
       ),
-    [skills]
+    [filteredSkills]
   );
 
   const subGroupsByCategory = useMemo(
