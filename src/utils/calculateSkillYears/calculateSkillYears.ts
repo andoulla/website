@@ -44,6 +44,7 @@ export const calculateSkillYears = (
         category: skill.category,
         subCategory: skill.subCategory,
         colour: skillColour(skill.name),
+        synonyms: skill.synonyms,
         jobIds: skill.jobIds,
         recommendationIds: skill.recommendationIds,
         companyYears,

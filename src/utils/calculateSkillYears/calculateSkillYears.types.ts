@@ -12,6 +12,7 @@ export interface SkillSummary {
   category: SkillCategory;
   subCategory: SkillSubCategory;
   colour: SkillColour;
+  synonyms: string[];
   jobIds: string[];
   recommendationIds: string[];
   companyYears: SkillCompanyYears[];

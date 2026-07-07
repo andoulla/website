@@ -1,4 +1,9 @@
-import { parseCategories, parseSubCategories, reorderFilterParams } from './Skills.helpers';
+import {
+  parseCategories,
+  parseSearch,
+  parseSubCategories,
+  reorderFilterParams,
+} from './Skills.helpers';
 
 describe('parseCategories', () => {
   test('returns an empty array when the param is null', () => {
@@ -49,6 +54,20 @@ describe('parseSubCategories', () => {
     const result = parseSubCategories('testing,leadership');
 
     expect(result).toEqual(['testing', 'leadership']);
+  });
+});
+
+describe('parseSearch', () => {
+  test('returns an empty string when the param is null', () => {
+    const result = parseSearch(null);
+
+    expect(result).toBe('');
+  });
+
+  test('returns the raw value when present', () => {
+    const result = parseSearch('react');
+
+    expect(result).toBe('react');
   });
 });
 

@@ -10,6 +10,9 @@ export const parseCategories = (raw: string | null): SkillCategory[] =>
 export const parseSubCategories = (raw: string | null): SkillSubCategory[] =>
   raw !== null && raw.length > 0 ? (raw.split(',') as SkillSubCategory[]) : [];
 
+// Reads the `search` URL param, defaulting to an empty string when absent.
+export const parseSearch = (raw: string | null): string => raw ?? '';
+
 // Keeps `category` ahead of `subCategory` in the URL regardless of which was set most recently.
 export const reorderFilterParams = (params: URLSearchParams): URLSearchParams => {
   const ordered = new URLSearchParams();

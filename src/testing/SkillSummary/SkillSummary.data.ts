@@ -6,6 +6,7 @@ export const defaultSkillSummary: SkillSummary = {
   category: 'engineering',
   subCategory: 'frontend-development',
   colour: 'primary',
+  synonyms: [],
   jobIds: ['job-1'],
   recommendationIds: [],
   companyYears: [{ name: 'Acme Corp', years: 1 }],

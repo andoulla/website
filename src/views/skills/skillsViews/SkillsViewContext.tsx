@@ -22,6 +22,7 @@ export const SkillsViewContextProvider = ({
   selectedCategories,
   selectedSubCategories,
   highlightedSkill,
+  searchTerm,
 }: SkillsViewContextProviderProps) => {
   const value = useMemo<SkillsViewContextValue>(
     () => ({
@@ -30,8 +31,16 @@ export const SkillsViewContextProvider = ({
       selectedCategories,
       selectedSubCategories,
       highlightedSkill,
+      searchTerm,
     }),
-    [skills, recommendations, selectedCategories, selectedSubCategories, highlightedSkill]
+    [
+      skills,
+      recommendations,
+      selectedCategories,
+      selectedSubCategories,
+      highlightedSkill,
+      searchTerm,
+    ]
   );
 
   return <SkillsViewContext.Provider value={value}>{children}</SkillsViewContext.Provider>;

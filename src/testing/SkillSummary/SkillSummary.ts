@@ -39,6 +39,11 @@ export class SkillSummary {
     return this;
   }
 
+  synonyms(synonyms: string[]): this {
+    this.data = { ...this.data, synonyms };
+    return this;
+  }
+
   jobIds(jobIds: string[]): this {
     this.data = { ...this.data, jobIds };
     return this;

@@ -1,0 +1,1 @@
+export { skillMatchesSearch } from './skillMatchesSearch';

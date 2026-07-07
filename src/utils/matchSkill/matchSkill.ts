@@ -1,13 +1,8 @@
 import { skills as defaultSkills } from '@/data/skills';
 import type { Skill } from '@/data/skills.types';
+import { normalizeSearchTerm as normalize } from '@/utils/normalizeSearchTerm';
 
 import type { MatchSkillResult } from './matchSkill.types';
-
-const normalize = (value: string): string =>
-  value
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, '');
 
 /**
  * Authoring-time helper: looks up a raw tech/skill term (e.g. from a new job's

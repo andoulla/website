@@ -10,6 +10,7 @@ export interface SkillsViewContextValue {
   selectedCategories: SkillCategory[];
   selectedSubCategories: SkillSubCategory[];
   highlightedSkill?: string;
+  searchTerm: string;
 }
 
 export interface SkillsViewContextProviderProps extends SkillsViewContextValue {
