@@ -5,6 +5,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
+import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -49,7 +50,11 @@ const formatDuration = (startDate: string, endDate: string | null): string => {
 export const TimelineEventCard = memo(({ experience }: TimelineEventCardProps) => {
   const navigate = useNavigate();
   const duration = formatDuration(experience.startDate, experience.endDate);
-  const { ref, isInView } = useInView<HTMLDivElement>();
+  const theme = useTheme();
+  // Mobile cards run nearly the full viewport height, so the default threshold would need a
+  // long scroll before triggering; a lower threshold starts the fade as soon as the card peeks in.
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { ref, isInView } = useInView<HTMLDivElement>({ threshold: isMobile ? 0.05 : 0.15 });
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
 
   const handleSkillClick = useCallback(
@@ -100,7 +105,10 @@ export const TimelineEventCard = memo(({ experience }: TimelineEventCardProps) =
               <Box
                 sx={{
                   display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
+                  gridTemplateColumns:
+                    experience.recommendations.length > 1
+                      ? { xs: '1fr', sm: 'repeat(2, 1fr)' }
+                      : '1fr',
                   gap: 1.5,
                 }}
               >
