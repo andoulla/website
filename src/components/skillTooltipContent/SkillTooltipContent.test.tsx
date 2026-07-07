@@ -59,6 +59,13 @@ describe('SkillTooltipContent', () => {
     expect(screen.getByText(`${total} years`)).toBeVisible();
   });
 
+  test('does not render a chip stack when there are no companies', () => {
+    const skill = new SkillSummary().skill('TypeScript').years(1).companyYears([]).mock();
+    const screen = render(<SkillTooltipContent skill={skill} />);
+
+    expect(screen.queryByText('·', { exact: false })).not.toBeInTheDocument();
+  });
+
   test('has no axe violations', async () => {
     const skill = new SkillSummary().skill('TypeScript').years(3).mock();
     const screen = render(<SkillTooltipContent skill={skill} />);
