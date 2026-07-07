@@ -221,4 +221,43 @@ describe('Skills', () => {
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
+
+  test('has no axe violations in the loaded graph view', async () => {
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider();
+      await Promise.resolve();
+    });
+
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('has no axe violations in the loaded list view', async () => {
+    const user = userEvent.setup();
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider();
+      await Promise.resolve();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'List view' }));
+
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('has no axe violations with the filter menu open', async () => {
+    const user = userEvent.setup();
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider();
+      await Promise.resolve();
+    });
+
+    await user.click(screen.getByRole('button', { name: ALL_LABEL }));
+
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
 });

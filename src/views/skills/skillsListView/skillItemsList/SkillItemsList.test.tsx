@@ -53,4 +53,12 @@ describe('SkillItemsList', () => {
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
+
+  test('has no axe violations with a highlighted skill', async () => {
+    const screen = render(
+      <SkillItemsList skills={SKILLS} highlightedSkill="React" onItemClick={jest.fn()} />
+    );
+
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
 });

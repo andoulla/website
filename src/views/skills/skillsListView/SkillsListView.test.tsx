@@ -169,4 +169,13 @@ describe('SkillsListView', () => {
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
+
+  test('has no axe violations with the popover open and recommendations shown', async () => {
+    const user = userEvent.setup();
+    const screen = renderListView();
+
+    await user.click(screen.getByText('Mentoring'));
+
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
 });
