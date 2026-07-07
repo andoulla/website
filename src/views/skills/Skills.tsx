@@ -13,11 +13,19 @@ import Typography from '@mui/material/Typography';
 import { useResumeData } from '@/context/resumeData';
 import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
+import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 import { CATEGORY_ORDER, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory';
+import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 
-import { CATEGORY_PARAM, SUBCATEGORY_PARAM } from './Skills.constants';
-import { parseCategories, parseSubCategories, reorderFilterParams } from './Skills.helpers';
+import { CATEGORY_PARAM, SEARCH_PARAM, SUBCATEGORY_PARAM } from './Skills.constants';
+import {
+  parseCategories,
+  parseSearch,
+  parseSubCategories,
+  reorderFilterParams,
+} from './Skills.helpers';
 import { SkillFilterBar } from './skillFilterBar';
+import { SkillSearchBar } from './skillSearchBar';
 import {
   SkillsGraphView,
   SkillsListView,
@@ -88,6 +96,51 @@ const SkillsContent = () => {
     [setSearchParams]
   );
 
+  // Held in local state rather than read straight from `searchParams`: the URL update round-trips
+  // through router navigation, and a controlled input driven by that async state drops keystrokes
+  // typed faster than the round-trip (React resets the DOM value back to the stale render).
+  const [searchTerm, setSearchTermState] = useState(() =>
+    parseSearch(searchParams.get(SEARCH_PARAM))
+  );
+
+  const setSearchTerm = useCallback(
+    (next: string) => {
+      setSearchTermState(next);
+      setSearchParams(
+        (prev) => {
+          const params = new URLSearchParams(prev);
+          if (next !== '') {
+            params.set(SEARCH_PARAM, next);
+          } else {
+            params.delete(SEARCH_PARAM);
+          }
+          return reorderFilterParams(params);
+        },
+        { replace: true }
+      );
+    },
+    [setSearchParams]
+  );
+
+  const hiddenMatchCount = useMemo(() => {
+    if (searchTerm.trim() === '') return 0;
+    const totalMatches = skills.filter((skill) => skillMatchesSearch(skill, searchTerm)).length;
+    const filteredSkills = filterSkillsByCategory(
+      skills,
+      selectedCategories,
+      selectedSubCategories
+    );
+    const visibleMatches = filteredSkills.filter((skill) =>
+      skillMatchesSearch(skill, searchTerm)
+    ).length;
+    return totalMatches - visibleMatches;
+  }, [skills, selectedCategories, selectedSubCategories, searchTerm]);
+
+  const searchHint =
+    hiddenMatchCount > 0
+      ? `${hiddenMatchCount} match${hiddenMatchCount === 1 ? '' : 'es'} hidden by filters`
+      : undefined;
+
   const [viewMode, setViewMode] = useState<ViewMode>('barchart');
 
   const categories = useMemo(
@@ -119,6 +172,7 @@ const SkillsContent = () => {
           gap: 1,
         }}
       >
+        <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
         <SkillFilterBar
           categories={categories}
           subCategoriesByCategory={subCategoriesByCategory}
@@ -154,6 +208,7 @@ const SkillsContent = () => {
         selectedCategories={selectedCategories}
         selectedSubCategories={selectedSubCategories}
         highlightedSkill={highlightedSkill}
+        searchTerm={searchTerm}
       >
         {renderSkillsView(viewMode)}
       </SkillsViewContextProvider>

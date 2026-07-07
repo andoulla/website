@@ -8,7 +8,7 @@ import { useSkillsViewContext } from '../SkillsViewContext';
 import { SkillsBarChart } from './skillsBarChart';
 
 export const SkillsGraphView = () => {
-  const { skills, selectedCategories, selectedSubCategories } = useSkillsViewContext();
+  const { skills, selectedCategories, selectedSubCategories, searchTerm } = useSkillsViewContext();
 
   const filteredSkills = useMemo(
     () =>
@@ -22,5 +22,5 @@ export const SkillsGraphView = () => {
     return <Alert severity="info">No skill data available.</Alert>;
   }
 
-  return <SkillsBarChart skills={filteredSkills} />;
+  return <SkillsBarChart skills={filteredSkills} searchTerm={searchTerm} />;
 };

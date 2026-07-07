@@ -43,6 +43,7 @@ const renderListView = (overrides: Partial<SkillsViewContextValue> = {}) =>
       recommendations={RECOMMENDATIONS}
       selectedCategories={[]}
       selectedSubCategories={[]}
+      searchTerm=""
       {...overrides}
     >
       <SkillsListView />
@@ -163,8 +164,20 @@ describe('SkillsListView', () => {
     expect(screen.queryByText('React')).not.toBeInTheDocument();
   });
 
+  test('passes the search term through to search-matching skills', () => {
+    const screen = renderListView({ searchTerm: 'rea' });
+
+    expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
+  });
+
   test('has no axe violations', async () => {
     const screen = renderListView();
+
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('has no axe violations with an active search term', async () => {
+    const screen = renderListView({ searchTerm: 'rea' });
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });

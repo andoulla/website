@@ -26,6 +26,7 @@ const renderRadarView = (overrides: Partial<SkillsViewContextValue> = {}) =>
       recommendations={[]}
       selectedCategories={[]}
       selectedSubCategories={[]}
+      searchTerm=""
       {...overrides}
     >
       <SkillsRadarView />

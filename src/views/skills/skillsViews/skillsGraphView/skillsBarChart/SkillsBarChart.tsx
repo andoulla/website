@@ -14,6 +14,8 @@ import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/utils/skillCategory';
 import { CATEGORY_COLOUR_MAP } from '@/utils/skillColour';
 import type { SkillColour } from '@/utils/skillColour';
 
+import { isBarMatch } from './SkillsBarChart.helpers';
+
 const BAR_HEIGHT = 36;
 const BAR_SIZE = 14;
 const CHART_PADDING = 64;
@@ -39,9 +41,10 @@ const SkillBarTooltip = ({ active, payload }: TooltipContentProps) => {
 
 export interface SkillsBarChartProps {
   skills: SkillSummary[];
+  searchTerm?: string;
 }
 
-export const SkillsBarChart = ({ skills }: SkillsBarChartProps) => {
+export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
   const theme = useTheme();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
@@ -108,11 +111,16 @@ export const SkillsBarChart = ({ skills }: SkillsBarChartProps) => {
           >
             {skills.map((skill, i) => {
               const fill = getPaletteMain(skill.colour, theme);
+              const isMatch = isBarMatch(skill, searchTerm);
+              const shouldLighten = i === hoverIndex && isMatch;
               return (
                 <Cell
                   key={skill.skill}
-                  fill={i === hoverIndex ? lighten(fill, 0.25) : fill}
-                  style={{ transition: 'fill 0.15s ease' }}
+                  fill={shouldLighten ? lighten(fill, 0.25) : fill}
+                  style={{
+                    opacity: isMatch ? 1 : 0.35,
+                    transition: 'fill 0.15s ease, opacity 0.2s ease',
+                  }}
                 />
               );
             })}

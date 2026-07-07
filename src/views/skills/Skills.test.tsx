@@ -226,6 +226,91 @@ describe('Skills', () => {
     expect(screen.getByText('search:')).toBeVisible();
   });
 
+  test('initializes the search term from the URL query param', async () => {
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider(() => Promise.resolve(EXPERIENCES), ['/skills?search=react']);
+      await Promise.resolve();
+    });
+
+    expect(screen.getByRole('textbox', { name: 'Search skills by name' })).toHaveValue('react');
+  });
+
+  test('reflects a typed search term as a URL query param', async () => {
+    const user = userEvent.setup();
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider();
+      await Promise.resolve();
+    });
+
+    await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
+
+    expect(screen.getByText('search:search=react')).toBeVisible();
+  });
+
+  test('removes the search query param when the search box is cleared', async () => {
+    const user = userEvent.setup();
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider(() => Promise.resolve(EXPERIENCES), ['/skills?search=react']);
+      await Promise.resolve();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Clear search' }));
+
+    expect(screen.getByText('search:')).toBeVisible();
+  });
+
+  test('shows a hidden-match hint when a filter hides skills matching the search term', async () => {
+    const user = userEvent.setup();
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider();
+      await Promise.resolve();
+    });
+
+    await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
+    await user.click(screen.getByRole('button', { name: ALL_LABEL }));
+    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Managerial' }));
+
+    expect(screen.getByText('3 matches hidden by filters')).toBeVisible();
+  });
+
+  test('uses singular wording when exactly one match is hidden by filters', async () => {
+    const user = userEvent.setup();
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider();
+      await Promise.resolve();
+    });
+
+    await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'typescript');
+    await user.click(screen.getByRole('button', { name: ALL_LABEL }));
+    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Managerial' }));
+
+    expect(screen.getByText('1 match hidden by filters')).toBeVisible();
+  });
+
+  test('does not show a hidden-match hint when no filters hide the search matches', async () => {
+    const user = userEvent.setup();
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider();
+      await Promise.resolve();
+    });
+
+    await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
+
+    expect(screen.queryByText('3 matches hidden by filters')).not.toBeInTheDocument();
+  });
+
   test('has no axe violations on initial render', async () => {
     let screen!: ReturnType<typeof render>;
 

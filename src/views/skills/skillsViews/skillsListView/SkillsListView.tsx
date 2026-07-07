@@ -35,8 +35,14 @@ interface SubCategoryGroup {
 }
 
 export const SkillsListView = () => {
-  const { skills, recommendations, highlightedSkill, selectedCategories, selectedSubCategories } =
-    useSkillsViewContext();
+  const {
+    skills,
+    recommendations,
+    highlightedSkill,
+    selectedCategories,
+    selectedSubCategories,
+    searchTerm,
+  } = useSkillsViewContext();
   const [popover, setPopover] = useState<PopoverState | null>(null);
 
   useEffect(() => {
@@ -109,6 +115,7 @@ export const SkillsListView = () => {
                     <SkillItemsList
                       skills={group.skills}
                       highlightedSkill={highlightedSkill}
+                      searchTerm={searchTerm}
                       onItemClick={handleItemClick}
                     />
                   </Section>
@@ -118,6 +125,7 @@ export const SkillsListView = () => {
               <SkillItemsList
                 skills={byCategory[cat]}
                 highlightedSkill={highlightedSkill}
+                searchTerm={searchTerm}
                 onItemClick={handleItemClick}
               />
             )}

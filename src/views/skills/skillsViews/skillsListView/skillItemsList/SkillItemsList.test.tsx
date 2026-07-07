@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
+import { alpha, createTheme } from '@mui/material/styles';
 
 import { SkillSummary } from '@/testing';
 
@@ -10,6 +11,8 @@ const SKILLS = [
   new SkillSummary().skill('React').years(4).mock(),
   new SkillSummary().skill('Docker').years(1).mock(),
 ];
+
+const theme = createTheme();
 
 describe('SkillItemsList', () => {
   test('renders each skill with its estimated years', () => {
@@ -48,8 +51,51 @@ describe('SkillItemsList', () => {
     expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
   });
 
+  test('applies a search-match accent border to a skill matching the search term', () => {
+    const screen = render(
+      <SkillItemsList skills={SKILLS} searchTerm="rea" onItemClick={jest.fn()} />
+    );
+
+    expect(screen.getByRole('button', { name: 'React est. 4 years' })).toHaveStyle({
+      boxShadow: `inset 0 0 0 1.5px ${theme.palette.primary.main}`,
+    });
+  });
+
+  test('does not apply the search-match accent to a skill not matching the search term', () => {
+    const screen = render(
+      <SkillItemsList skills={SKILLS} searchTerm="rea" onItemClick={jest.fn()} />
+    );
+
+    expect(screen.getByRole('button', { name: 'Docker est. 1 year' })).not.toHaveStyle({
+      boxShadow: `inset 0 0 0 1.5px ${theme.palette.primary.main}`,
+    });
+  });
+
+  test('applies both the highlight background and the search-match accent when a skill is both', () => {
+    const screen = render(
+      <SkillItemsList
+        skills={SKILLS}
+        highlightedSkill="React"
+        searchTerm="rea"
+        onItemClick={jest.fn()}
+      />
+    );
+    const button = screen.getByRole('button', { name: 'React est. 4 years' });
+
+    expect(button).toHaveStyle({ backgroundColor: alpha(theme.palette.primary.main, 0.12) });
+    expect(button).toHaveStyle({ boxShadow: `inset 0 0 0 1.5px ${theme.palette.primary.main}` });
+  });
+
   test('has no axe violations', async () => {
     const screen = render(<SkillItemsList skills={SKILLS} onItemClick={jest.fn()} />);
+
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('has no axe violations with a search-matching skill', async () => {
+    const screen = render(
+      <SkillItemsList skills={SKILLS} searchTerm="rea" onItemClick={jest.fn()} />
+    );
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });

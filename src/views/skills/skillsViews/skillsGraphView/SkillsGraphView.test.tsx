@@ -26,6 +26,7 @@ const renderGraphView = (overrides: Partial<SkillsViewContextValue> = {}) =>
       recommendations={[]}
       selectedCategories={[]}
       selectedSubCategories={[]}
+      searchTerm=""
       {...overrides}
     >
       <SkillsGraphView />
@@ -65,6 +66,12 @@ describe('SkillsGraphView', () => {
 
     expect(screen.queryByText('React')).not.toBeInTheDocument();
     expect(screen.queryByText('Team Leadership')).not.toBeInTheDocument();
+  });
+
+  test('passes the search term through to the bar chart', () => {
+    const screen = renderGraphView({ searchTerm: 'react' });
+
+    expect(screen.getByText('React')).toBeVisible();
   });
 
   test('shows the no-data Alert when skills array is empty', () => {
