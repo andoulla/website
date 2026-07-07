@@ -5,6 +5,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
+import { lighten } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import type { Recommendation } from '@/types';
@@ -20,7 +21,7 @@ export const RecommendationText = memo(({ recommendation }: RecommendationTextPr
     <Card
       variant="outlined"
       sx={(theme) => ({
-        borderColor: theme.palette[color].main,
+        borderColor: lighten(theme.palette[color].main, 0.4),
         borderLeftWidth: 4,
         backgroundColor: `color-mix(in srgb, ${theme.palette[color].main} 8%, ${theme.palette.background.paper})`,
       })}
@@ -32,7 +33,7 @@ export const RecommendationText = memo(({ recommendation }: RecommendationTextPr
               width: 28,
               height: 28,
               fontSize: '0.75rem',
-              bgcolor: theme.palette[color].main,
+              bgcolor: lighten(theme.palette[color].main, 0.4),
               color: theme.palette[color].contrastText,
             })}
           >
