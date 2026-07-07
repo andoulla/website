@@ -15,13 +15,14 @@ const SKILLS = [
 const theme = createTheme();
 
 describe('SkillItemsList', () => {
-  test('renders each skill with its estimated years', () => {
+  test('renders each skill with its estimated years', async () => {
     const screen = render(<SkillItemsList skills={SKILLS} onItemClick={jest.fn()} />);
 
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByText('est. 4 years')).toBeVisible();
     expect(screen.getByText('Docker')).toBeVisible();
     expect(screen.getByText('est. 1 year')).toBeVisible();
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('shows the company/year breakdown in a tooltip on hover', async () => {
@@ -43,15 +44,16 @@ describe('SkillItemsList', () => {
     expect(onItemClick).toHaveBeenCalledWith(expect.any(HTMLElement), SKILLS[0]);
   });
 
-  test('exposes the skill name and years as the accessible name for its button', () => {
+  test('exposes the skill name and years as the accessible name for its button', async () => {
     const screen = render(
       <SkillItemsList skills={SKILLS} highlightedSkill="React" onItemClick={jest.fn()} />
     );
 
     expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('applies a search-match accent border to a skill matching the search term', () => {
+  test('applies a search-match accent border to a skill matching the search term', async () => {
     const screen = render(
       <SkillItemsList skills={SKILLS} searchTerm="rea" onItemClick={jest.fn()} />
     );
@@ -59,6 +61,7 @@ describe('SkillItemsList', () => {
     expect(screen.getByRole('button', { name: 'React est. 4 years' })).toHaveStyle({
       boxShadow: `inset 0 0 0 1.5px ${theme.palette.primary.main}`,
     });
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('does not apply the search-match accent to a skill not matching the search term', () => {
@@ -84,19 +87,5 @@ describe('SkillItemsList', () => {
 
     expect(button).toHaveStyle({ backgroundColor: alpha(theme.palette.primary.main, 0.12) });
     expect(button).toHaveStyle({ boxShadow: `inset 0 0 0 1.5px ${theme.palette.primary.main}` });
-  });
-
-  test('has no axe violations', async () => {
-    const screen = render(<SkillItemsList skills={SKILLS} onItemClick={jest.fn()} />);
-
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations with a search-matching skill', async () => {
-    const screen = render(
-      <SkillItemsList skills={SKILLS} searchTerm="rea" onItemClick={jest.fn()} />
-    );
-
-    expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

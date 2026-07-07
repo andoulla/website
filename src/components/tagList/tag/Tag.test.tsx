@@ -1,5 +1,8 @@
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
+
+import * as computeShadeColourModule from '@/utils/computeShadeColour';
 
 import { Tag } from './Tag';
 
@@ -40,5 +43,30 @@ describe('Tag', () => {
     );
 
     expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('calls onClick when the tag is clicked', async () => {
+    const user = userEvent.setup();
+    const onClick = jest.fn();
+    const screen = render(<Tag onClick={onClick}>React</Tag>);
+
+    await user.click(screen.getByText('React'));
+
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  test('takes the plain Chip fallback path when colour is "default", even with a shadeIndex set', () => {
+    const computeShadeColourSpy = jest.spyOn(computeShadeColourModule, 'computeShadeColour');
+
+    const screen = render(
+      <Tag colour="default" shadeIndex={2}>
+        React
+      </Tag>
+    );
+
+    expect(screen.getByText('React')).toBeVisible();
+    expect(computeShadeColourSpy).not.toHaveBeenCalled();
+
+    computeShadeColourSpy.mockRestore();
   });
 });

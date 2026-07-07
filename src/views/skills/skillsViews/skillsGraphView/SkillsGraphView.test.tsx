@@ -74,6 +74,16 @@ describe('SkillsGraphView', () => {
     expect(screen.getByText('React')).toBeVisible();
   });
 
+  test('shows the empty-filter message from SkillsBarChart, not the no-data Alert, when filters exclude every skill', () => {
+    const screen = renderGraphView({
+      selectedCategories: ['managerial'],
+      selectedSubCategories: ['frontend-development'],
+    });
+
+    expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
   test('shows the no-data Alert when skills array is empty', () => {
     const screen = renderGraphView({ skills: [] });
 
