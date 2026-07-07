@@ -6,10 +6,10 @@ import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import { timelineOppositeContentClasses } from '@mui/lab/TimelineOppositeContent';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { Suspense, useMemo } from 'react';
 
+import { PageContainer } from '@/components/pageContainer';
 import { Section } from '@/components/section';
 import { useResumeData } from '@/context/resumeData';
 
@@ -62,7 +62,7 @@ const ExperienceList = () => {
 
 export const Resume = () => {
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
+    <PageContainer>
       <Box sx={{ mb: 5, textAlign: 'center' }}>
         <Typography variant="h3" component="h1" sx={{ mb: 0, pb: 0.5 }}>
           Mariandi Stylianou
@@ -74,6 +74,6 @@ export const Resume = () => {
           <ExperienceList />
         </Suspense>
       </Section>
-    </Container>
+    </PageContainer>
   );
 };

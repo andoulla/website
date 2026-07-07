@@ -4,12 +4,12 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import RadarIcon from '@mui/icons-material/Radar';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import CircularProgress from '@mui/material/CircularProgress';
-import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 
+import { PageContainer } from '@/components/pageContainer';
 import { useResumeData } from '@/context/resumeData';
 import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
@@ -218,7 +218,7 @@ const SkillsContent = () => {
 
 export const Skills = () => {
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
+    <PageContainer>
       <Typography variant="h3" component="h1" sx={{ mb: { xs: 1.5, sm: 3 } }}>
         Skills
       </Typography>
@@ -231,6 +231,6 @@ export const Skills = () => {
       >
         <SkillsContent />
       </Suspense>
-    </Container>
+    </PageContainer>
   );
 };
