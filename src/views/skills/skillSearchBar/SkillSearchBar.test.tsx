@@ -5,10 +5,11 @@ import { axe } from 'jest-axe';
 import { SkillSearchBar } from './SkillSearchBar';
 
 describe('SkillSearchBar', () => {
-  test('renders a text input with an accessible name', () => {
+  test('renders a text input with an accessible name', async () => {
     const screen = render(<SkillSearchBar value="" onChange={jest.fn()} />);
 
     expect(screen.getByRole('textbox', { name: 'Search skills by name' })).toBeVisible();
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('calls onChange with the typed value', async () => {
@@ -65,25 +66,12 @@ describe('SkillSearchBar', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
-  test('renders the hint text when provided', () => {
+  test('renders the hint text when provided', async () => {
     const screen = render(
       <SkillSearchBar value="react" onChange={jest.fn()} hint="1 match hidden by filters" />
     );
 
     expect(screen.getByText('1 match hidden by filters')).toBeVisible();
-  });
-
-  test('has no axe violations when empty', async () => {
-    const screen = render(<SkillSearchBar value="" onChange={jest.fn()} />);
-
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations with a value, clear button, and hint', async () => {
-    const screen = render(
-      <SkillSearchBar value="react" onChange={jest.fn()} hint="1 match hidden by filters" />
-    );
-
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

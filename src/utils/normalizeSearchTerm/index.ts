@@ -1,1 +1,0 @@
-export { normalizeSearchTerm } from './normalizeSearchTerm';

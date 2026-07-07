@@ -11,6 +11,21 @@ export interface SkillSearchBarProps {
 }
 
 export const SkillSearchBar = ({ value, onChange, hint }: SkillSearchBarProps) => {
+  const searchIcon = (
+    <InputAdornment position="start">
+      <SearchIcon fontSize="small" />
+    </InputAdornment>
+  );
+
+  const clearButton =
+    value !== '' ? (
+      <InputAdornment position="end">
+        <IconButton aria-label="Clear search" size="small" edge="end" onClick={() => onChange('')}>
+          <ClearIcon fontSize="small" />
+        </IconButton>
+      </InputAdornment>
+    ) : undefined;
+
   return (
     <TextField
       size="small"
@@ -24,26 +39,8 @@ export const SkillSearchBar = ({ value, onChange, hint }: SkillSearchBarProps) =
       sx={{ width: { xs: '100%', sm: 220 } }}
       slotProps={{
         htmlInput: { 'aria-label': 'Search skills by name' },
-        input: {
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon fontSize="small" />
-            </InputAdornment>
-          ),
-          endAdornment:
-            value !== '' ? (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="Clear search"
-                  size="small"
-                  edge="end"
-                  onClick={() => onChange('')}
-                >
-                  <ClearIcon fontSize="small" />
-                </IconButton>
-              </InputAdornment>
-            ) : undefined,
-        },
+        // MUI calls the icon/button placed inside the input's edges "adornments"
+        input: { startAdornment: searchIcon, endAdornment: clearButton },
       }}
     />
   );

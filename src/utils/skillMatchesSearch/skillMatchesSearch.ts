@@ -1,13 +1,13 @@
 import type { SkillSummary } from '@/utils/calculateSkillYears';
-import { normalizeSearchTerm } from '@/utils/normalizeSearchTerm';
+import { normaliseSearchTerm } from '@/utils/normaliseSearchTerm';
 
 const MIN_TERM_LENGTH = 2;
 
 export const skillMatchesSearch = (skill: SkillSummary, term: string): boolean => {
-  const normalizedTerm = normalizeSearchTerm(term);
-  if (normalizedTerm.length < MIN_TERM_LENGTH) return false;
+  const normalisedTerm = normaliseSearchTerm(term);
+  if (normalisedTerm.length < MIN_TERM_LENGTH) return false;
 
-  if (normalizeSearchTerm(skill.skill).includes(normalizedTerm)) return true;
+  if (normaliseSearchTerm(skill.skill).includes(normalisedTerm)) return true;
 
-  return skill.synonyms.some((synonym) => normalizeSearchTerm(synonym).includes(normalizedTerm));
+  return skill.synonyms.some((synonym) => normaliseSearchTerm(synonym).includes(normalisedTerm));
 };

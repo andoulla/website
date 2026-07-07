@@ -1,4 +1,4 @@
-export const normalizeSearchTerm = (value: string): string =>
+export const normaliseSearchTerm = (value: string): string =>
   value
     .trim()
     .toLowerCase()
