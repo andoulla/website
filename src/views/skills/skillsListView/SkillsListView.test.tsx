@@ -178,4 +178,24 @@ describe('SkillsListView', () => {
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
+
+  test('scrolls the highlighted skill into view', () => {
+    const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+
+    renderListView({ highlightedSkill: 'React' });
+
+    expect(scrollIntoViewSpy).toHaveBeenCalledWith({ behavior: 'smooth', block: 'center' });
+
+    scrollIntoViewSpy.mockRestore();
+  });
+
+  test('does not scroll when there is no highlighted skill', () => {
+    const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+
+    renderListView();
+
+    expect(scrollIntoViewSpy).not.toHaveBeenCalled();
+
+    scrollIntoViewSpy.mockRestore();
+  });
 });
