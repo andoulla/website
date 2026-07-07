@@ -25,10 +25,10 @@ import {
   SkillsViewContextProvider,
 } from './skillsViews';
 
-type ViewMode = 'graph' | 'radar' | 'list';
+type ViewMode = 'barchart' | 'radar' | 'list';
 
 const renderSkillsView = (viewMode: ViewMode) => {
-  if (viewMode === 'graph') return <SkillsGraphView />;
+  if (viewMode === 'barchart') return <SkillsGraphView />;
   if (viewMode === 'radar') return <SkillsRadarView />;
   return <SkillsListView />;
 };
@@ -88,7 +88,7 @@ const SkillsContent = () => {
     [setSearchParams]
   );
 
-  const [viewMode, setViewMode] = useState<ViewMode>('graph');
+  const [viewMode, setViewMode] = useState<ViewMode>('barchart');
 
   const categories = useMemo(
     () => CATEGORY_ORDER.filter((cat) => skills.some((skill) => skill.category === cat)),
@@ -137,7 +137,7 @@ const SkillsContent = () => {
           aria-label="View mode"
           sx={{ ml: 'auto' }}
         >
-          <ToggleButton value="graph" aria-label="Graph view">
+          <ToggleButton value="barchart" aria-label="Graph view">
             <BarChartIcon fontSize="small" />
           </ToggleButton>
           <ToggleButton value="radar" aria-label="Radar view">
