@@ -1,10 +1,16 @@
-import { render } from '@testing-library/react';
+import { render, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { Recommendation, TimelineEvent } from '@/testing';
 
 import { TimelineEventCard } from './TimelineEventCard';
+
+const LocationDisplay = () => {
+  const location = useLocation();
+  return <span>{`location:${location.pathname}${location.search}`}</span>;
+};
 
 const experience = new TimelineEvent()
   .companyName('Nimbus Analytics')
@@ -105,5 +111,55 @@ describe('TimelineEventCard', () => {
     );
 
     expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('navigates to the skill page when a skill tag is clicked', async () => {
+    const user = userEvent.setup();
+    const screen = render(
+      <MemoryRouter>
+        <TimelineEventCard experience={experience} />
+        <LocationDisplay />
+      </MemoryRouter>
+    );
+
+    await user.click(screen.getByText('React'));
+
+    expect(screen.getByText('location:/skills?skill=React')).toBeVisible();
+  });
+
+  test('omits the Tech Stack section when there is no tech stack', () => {
+    const screen = render(<TimelineEventCard experience={{ ...experience, techStack: [] }} />, {
+      wrapper: MemoryRouter,
+    });
+
+    expect(screen.queryByRole('heading', { level: 4, name: 'Tech Stack' })).not.toBeInTheDocument();
+  });
+
+  test('renders multiple responsibilities as a bullet list', () => {
+    const screen = render(
+      <TimelineEventCard
+        experience={{
+          ...experience,
+          responsibilities: ['Lead frontend architecture', 'Mentor engineers'],
+        }}
+      />,
+      { wrapper: MemoryRouter }
+    );
+
+    const responsibilitiesHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Responsibilities',
+    });
+    const responsibilitiesSection = responsibilitiesHeading.closest('section');
+
+    if (responsibilitiesSection === null) {
+      throw new Error('Expected the Responsibilities heading to sit inside a <section>');
+    }
+
+    const items = within(responsibilitiesSection).getAllByRole('listitem');
+
+    expect(items).toHaveLength(2);
+    expect(items[0]).toHaveTextContent('Lead frontend architecture');
+    expect(items[1]).toHaveTextContent('Mentor engineers');
   });
 });
