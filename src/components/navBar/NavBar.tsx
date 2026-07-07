@@ -1,10 +1,15 @@
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 import PaletteIcon from '@mui/icons-material/Palette';
 import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Toolbar from '@mui/material/Toolbar';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { NavLink } from 'react-router-dom';
 
 import { useThemeContext } from '@/context/theme';
@@ -13,6 +18,7 @@ const navLinkStyle = ({ isActive }: { isActive: boolean }): React.CSSProperties 
   color: 'inherit',
   textDecoration: 'none',
   fontWeight: isActive ? 700 : 400,
+  whiteSpace: 'nowrap',
 });
 
 const toggleButtonGroupSx = {
@@ -34,15 +40,23 @@ const toggleButtonGroupSx = {
 export const NavBar = () => {
   const { themeName, toggleTheme, isDarkMode, toggleDarkMode } = useThemeContext();
   const nextTheme = themeName === 'green' ? 'purple' : 'green';
+  const theme = useTheme();
+  const isNarrow = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <AppBar component="nav" position="static">
-      <Toolbar sx={{ position: 'relative' }}>
-        <Stack
-          direction="row"
-          spacing={3}
-          sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}
-        >
+      <Toolbar
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: '1fr auto 1fr',
+          alignItems: 'center',
+          columnGap: 1,
+        }}
+      >
+        {/* Empty spacer mirrors the controls column's grid track so the nav links land in the
+            true center of the toolbar, however wide the controls column ends up being. */}
+        <Box />
+        <Stack direction="row" spacing={isNarrow ? 1.5 : 3} sx={{ justifySelf: 'center' }}>
           <NavLink to="/" end style={navLinkStyle}>
             Home
           </NavLink>
@@ -50,7 +64,7 @@ export const NavBar = () => {
             Skills
           </NavLink>
         </Stack>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', ml: 'auto' }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifySelf: 'end' }}>
           <IconButton
             aria-label={`Switch to ${nextTheme} theme`}
             color="inherit"
@@ -69,8 +83,12 @@ export const NavBar = () => {
             sx={toggleButtonGroupSx}
             value={isDarkMode ? 'dark' : 'light'}
           >
-            <ToggleButton value="light">Light</ToggleButton>
-            <ToggleButton value="dark">Dark</ToggleButton>
+            <ToggleButton value="light" aria-label="Light">
+              {isNarrow ? <LightModeIcon fontSize="small" /> : 'Light'}
+            </ToggleButton>
+            <ToggleButton value="dark" aria-label="Dark">
+              {isNarrow ? <DarkModeIcon fontSize="small" /> : 'Dark'}
+            </ToggleButton>
           </ToggleButtonGroup>
         </Stack>
       </Toolbar>
