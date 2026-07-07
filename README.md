@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/andoulla/website/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/andoulla/website/actions/workflows/ci.yml)
 [![Lighthouse CI](https://github.com/andoulla/website/actions/workflows/lighthouse.yml/badge.svg?branch=main)](https://github.com/andoulla/website/actions/workflows/lighthouse.yml)
+[![codecov](https://codecov.io/gh/andoulla/website/branch/main/graph/badge.svg)](https://codecov.io/gh/andoulla/website)
 [![License: PolyForm Noncommercial](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE)
 ![Last commit](https://img.shields.io/github/last-commit/andoulla/website)
 
@@ -45,7 +46,18 @@ Data is loaded asynchronously via React 19's `use()` hook under `Suspense` — t
 - **[CI](.github/workflows/ci.yml)** — lint, format check, typecheck, test (with coverage), build. Runs on every PR to `main` and on push to `main`. Coverage output is uploaded as a workflow artifact and summarised in the job summary.
 - **[Lighthouse CI](.github/workflows/lighthouse.yml)** — builds the app, serves it locally, and audits Performance, Accessibility, Best Practices, and SEO. Results are uploaded as a workflow artifact and to temporary public storage; it's informational and does not block merges.
 
-There's no live coverage-percentage or Lighthouse-score badge above — both would require an external publishing service (e.g. Codecov for coverage, Lighthouse CI Server for score badges), which needs an account and a repo secret to stay accurate. The CI and Lighthouse badges above reflect pass/fail status only; full reports are available as artifacts on each workflow run.
+CI now uploads coverage to [Codecov](https://codecov.io) on every run, but the badge above won't populate until the repo is linked there — see "Codecov setup" below. There's no live Lighthouse-score badge, since that would require a hosted Lighthouse CI Server; the Lighthouse badge instead reflects the workflow's pass/fail status, and full reports are available as artifacts on each run.
+
+### Codecov setup
+
+The coverage badge and reports need a one-time setup that can't be done from the repo alone:
+
+1. Sign in to [codecov.io](https://codecov.io) with GitHub and add the `andoulla/website` repo (free for public repos).
+2. Copy the repo upload token from Codecov's settings for this repo.
+3. Add it as a repo secret named `CODECOV_TOKEN` (Settings → Secrets and variables → Actions → New repository secret).
+4. Push to `main` or open a PR — the existing `codecov/codecov-action` step in [ci.yml](.github/workflows/ci.yml) will upload `coverage/lcov.info`, and the badge will start reporting real numbers.
+
+Until that's done, the upload step no-ops safely (`fail_ci_if_error: false`) rather than failing CI.
 
 ## Performance notes
 
