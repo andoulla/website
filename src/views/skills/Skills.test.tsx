@@ -64,7 +64,7 @@ describe('Skills', () => {
     expect(screen.getByText('Team Leadership')).toBeVisible();
   });
 
-  test('renders the List/Graph toggle after data loads', async () => {
+  test('renders the List/Graph/Radar toggle after data loads', async () => {
     let screen!: ReturnType<typeof render>;
 
     await act(async () => {
@@ -73,6 +73,21 @@ describe('Skills', () => {
     });
     expect(screen.getByRole('button', { name: 'List view' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Graph view' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Radar view' })).toBeVisible();
+  });
+
+  test('shows the radar view placeholder when selected', async () => {
+    const user = userEvent.setup();
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = renderWithProvider();
+      await Promise.resolve();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Radar view' }));
+
+    expect(screen.getByRole('alert')).toBeVisible();
   });
 
   test('defaults to the graph view on load', async () => {
