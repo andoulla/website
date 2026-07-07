@@ -36,28 +36,17 @@ describe('joinJobsWithRecommendations', () => {
     expect(joinJobsWithRecommendations([], [new Recommendation().mock()], [])).toEqual([]);
   });
 
-  it('populates techStack from skills with type "tech" matching the job ID', () => {
+  it('populates techStack and skills together, split by type, excluding unmatched job IDs', () => {
     const jobs = [new TimelineEvent().mock()];
     const skills = [
       new Skill().name('React').mock(),
-      new Skill().name('TypeScript').mock(),
+      new Skill().name('Team Leadership').type('skill').mock(),
       new Skill().name('Jest').jobIds(['job-2']).mock(),
     ];
 
     const [result] = joinJobsWithRecommendations(jobs, [], skills);
 
-    expect(result.techStack).toEqual(['React', 'TypeScript']);
-  });
-
-  it('populates skills from skills with type "skill" matching the job ID', () => {
-    const jobs = [new TimelineEvent().mock()];
-    const skills = [
-      new Skill().name('Team Leadership').type('skill').mock(),
-      new Skill().name('Mentoring').type('skill').jobIds(['job-2']).mock(),
-    ];
-
-    const [result] = joinJobsWithRecommendations(jobs, [], skills);
-
+    expect(result.techStack).toEqual(['React']);
     expect(result.skills).toEqual(['Team Leadership']);
   });
 

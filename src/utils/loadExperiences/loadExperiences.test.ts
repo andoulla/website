@@ -7,6 +7,8 @@ describe('loadExperiences', () => {
     expect(experiences.length).toBeGreaterThan(0);
     for (const experience of experiences) {
       expect(Array.isArray(experience.recommendations)).toBe(true);
+      expect(Array.isArray(experience.techStack)).toBe(true);
+      expect(Array.isArray(experience.skills)).toBe(true);
       expect(
         experience.recommendations.every((recommendation) => recommendation.jobId === experience.id)
       ).toBe(true);

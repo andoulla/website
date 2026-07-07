@@ -75,4 +75,15 @@ describe('ThemeContextProvider', () => {
 
     expect(screen.getByText('light')).toBeVisible();
   });
+
+  test('honours initialTheme and initialDarkMode overrides on first render', () => {
+    const screen = render(
+      <ThemeContextProvider initialTheme="purple" initialDarkMode={true}>
+        <ThemeDisplay />
+      </ThemeContextProvider>
+    );
+
+    expect(screen.getByText('purple')).toBeVisible();
+    expect(screen.getByText('dark')).toBeVisible();
+  });
 });

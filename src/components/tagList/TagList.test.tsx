@@ -41,4 +41,13 @@ describe('TagList', () => {
     expect(onItemClick).toHaveBeenCalledWith('React');
     expect(onItemClick).toHaveBeenCalledTimes(1);
   });
+
+  test('does not throw when a tag is clicked without an onItemClick handler', async () => {
+    const user = userEvent.setup();
+    const screen = render(<TagList items={['React']} />);
+
+    await user.click(screen.getByText('React'));
+
+    expect(screen.getByText('React')).toBeVisible();
+  });
 });

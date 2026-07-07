@@ -12,13 +12,14 @@ const SKILLS = [
 ];
 
 describe('SkillItemsList', () => {
-  test('renders each skill with its estimated years', () => {
+  test('renders each skill with its estimated years', async () => {
     const screen = render(<SkillItemsList skills={SKILLS} onItemClick={jest.fn()} />);
 
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByText('est. 4 years')).toBeVisible();
     expect(screen.getByText('Docker')).toBeVisible();
     expect(screen.getByText('est. 1 year')).toBeVisible();
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('shows the company/year breakdown in a tooltip on hover', async () => {
@@ -40,17 +41,12 @@ describe('SkillItemsList', () => {
     expect(onItemClick).toHaveBeenCalledWith(expect.any(HTMLElement), SKILLS[0]);
   });
 
-  test('exposes the skill name and years as the accessible name for its button', () => {
+  test('exposes the skill name and years as the accessible name for its button', async () => {
     const screen = render(
       <SkillItemsList skills={SKILLS} highlightedSkill="React" onItemClick={jest.fn()} />
     );
 
     expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
-  });
-
-  test('has no axe violations', async () => {
-    const screen = render(<SkillItemsList skills={SKILLS} onItemClick={jest.fn()} />);
-
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

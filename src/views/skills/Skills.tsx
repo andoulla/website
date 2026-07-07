@@ -1,6 +1,7 @@
 import { Suspense, useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import RadarIcon from '@mui/icons-material/Radar';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
@@ -17,10 +18,20 @@ import { CATEGORY_ORDER, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory
 import { CATEGORY_PARAM, SUBCATEGORY_PARAM } from './Skills.constants';
 import { parseCategories, parseSubCategories, reorderFilterParams } from './Skills.helpers';
 import { SkillFilterBar } from './skillFilterBar';
-import { SkillsGraphView } from './skillsGraphView';
-import { SkillsListView } from './skillsListView';
+import {
+  SkillsGraphView,
+  SkillsListView,
+  SkillsRadarView,
+  SkillsViewContextProvider,
+} from './skillsViews';
 
-type ViewMode = 'list' | 'graph';
+type ViewMode = 'barchart' | 'radar' | 'list';
+
+const renderSkillsView = (viewMode: ViewMode) => {
+  if (viewMode === 'barchart') return <SkillsGraphView />;
+  if (viewMode === 'radar') return <SkillsRadarView />;
+  return <SkillsListView />;
+};
 
 const SkillsContent = () => {
   const experiences = useResumeData();
@@ -77,7 +88,7 @@ const SkillsContent = () => {
     [setSearchParams]
   );
 
-  const [viewMode, setViewMode] = useState<ViewMode>('graph');
+  const [viewMode, setViewMode] = useState<ViewMode>('barchart');
 
   const categories = useMemo(
     () => CATEGORY_ORDER.filter((cat) => skills.some((skill) => skill.category === cat)),
@@ -126,31 +137,26 @@ const SkillsContent = () => {
           aria-label="View mode"
           sx={{ ml: 'auto' }}
         >
-          <ToggleButton value="list" aria-label="List view">
-            <ViewListIcon fontSize="small" sx={{ mr: 0.5 }} />
-            List
+          <ToggleButton value="barchart" aria-label="Graph view">
+            <BarChartIcon fontSize="small" />
           </ToggleButton>
-          <ToggleButton value="graph" aria-label="Graph view">
-            <BarChartIcon fontSize="small" sx={{ mr: 0.5 }} />
-            Graph
+          <ToggleButton value="radar" aria-label="Radar view">
+            <RadarIcon fontSize="small" />
+          </ToggleButton>
+          <ToggleButton value="list" aria-label="List view">
+            <ViewListIcon fontSize="small" />
           </ToggleButton>
         </ToggleButtonGroup>
       </Stack>
-      {viewMode === 'list' ? (
-        <SkillsListView
-          skills={skills}
-          recommendations={recommendations}
-          highlightedSkill={highlightedSkill}
-          selectedCategories={selectedCategories}
-          selectedSubCategories={selectedSubCategories}
-        />
-      ) : (
-        <SkillsGraphView
-          skills={skills}
-          selectedCategories={selectedCategories}
-          selectedSubCategories={selectedSubCategories}
-        />
-      )}
+      <SkillsViewContextProvider
+        skills={skills}
+        recommendations={recommendations}
+        selectedCategories={selectedCategories}
+        selectedSubCategories={selectedSubCategories}
+        highlightedSkill={highlightedSkill}
+      >
+        {renderSkillsView(viewMode)}
+      </SkillsViewContextProvider>
     </>
   );
 };

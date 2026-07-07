@@ -39,10 +39,12 @@ describe('computeShadeColour', () => {
     expect(a.bg).toBe(b.bg);
   });
 
-  test('passes the computed bg to getContrastText', () => {
-    computeShadeColour('#3B6D11', 1, mockGetContrastText);
+  test('passes the computed background to getContrastText', () => {
+    const result = computeShadeColour('#3B6D11', 1, mockGetContrastText);
+
     expect(mockGetContrastText).toHaveBeenCalledTimes(1);
-    expect(typeof mockGetContrastText.mock.calls[0][0]).toBe('string');
+    expect(mockGetContrastText).toHaveBeenCalledWith(result.bg);
+    expect(result.textColour).toBe('#ffffff');
   });
 
   test('always returns the same result for the same inputs', () => {

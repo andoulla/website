@@ -52,11 +52,12 @@ describe('skillShadeIndex', () => {
     expect(skillShadeIndex('Mentoring')).toBe(skillShadeIndex('Mentoring'));
   });
 
-  test('different skills can produce different indices', () => {
-    const indices = ['React', 'TypeScript', 'Jest', 'Playwright', 'Sass', 'Webpack'].map(
-      skillShadeIndex
-    );
+  test('returns the exact index for a known skill name', () => {
+    // 'React' char codes sum to 495 (82+101+97+99+116); 495 % 6 = 3.
+    expect(skillShadeIndex('React')).toBe(3);
+  });
 
-    expect(new Set(indices).size).toBeGreaterThan(1);
+  test('returns 0 for an empty skill name', () => {
+    expect(skillShadeIndex('')).toBe(0);
   });
 });
