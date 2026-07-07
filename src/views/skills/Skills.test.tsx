@@ -52,11 +52,26 @@ describe('Skills', () => {
       expect(screen.getByText('Team Leadership')).toBeVisible();
       expect(screen.getByRole('button', { name: 'List view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Graph view' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Radar view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Graph view' })).toHaveAttribute(
         'aria-pressed',
         'true'
       );
       expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('shows the radar view placeholder when selected', async () => {
+      const user = userEvent.setup();
+      let screen!: ReturnType<typeof render>;
+
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Radar view' }));
+
+      expect(screen.getByRole('alert')).toBeVisible();
     });
 
     test('shows the filter bar in list view as well as graph view', async () => {
