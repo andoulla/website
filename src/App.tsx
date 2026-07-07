@@ -7,7 +7,6 @@ import { ResumeDataProvider } from './context/resumeData';
 import { Resume } from './views/resume';
 import { Skills } from './views/skills';
 
-// TODO: Add animation on scroll on resume
 // TODO: investigate light options for DB to switch jsons out
 // TODO: update content to ensure correct mapping of skills to categories and subcategories
 // TODO: build page for articles
