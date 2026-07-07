@@ -1,5 +1,10 @@
 # Website
 
+[![CI](https://github.com/andoulla/website/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/andoulla/website/actions/workflows/ci.yml)
+[![Lighthouse CI](https://github.com/andoulla/website/actions/workflows/lighthouse.yml/badge.svg?branch=main)](https://github.com/andoulla/website/actions/workflows/lighthouse.yml)
+[![License: PolyForm Noncommercial](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE)
+![Last commit](https://img.shields.io/github/last-commit/andoulla/website)
+
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
@@ -7,8 +12,6 @@
 ![Jest](https://img.shields.io/badge/tested_with-Jest-C21325?logo=jest&logoColor=white)
 ![ESLint](https://img.shields.io/badge/ESLint-enabled-4B32C3?logo=eslint&logoColor=white)
 ![Prettier](https://img.shields.io/badge/code_style-Prettier-F7B93E?logo=prettier&logoColor=black)
-![License: PolyForm Noncommercial](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)
-![Last commit](https://img.shields.io/github/last-commit/andoulla/website)
 
 A minimal React + TypeScript web app with strict mode, ESLint, Prettier, and Jest + React Testing Library.
 
@@ -30,10 +33,19 @@ Data is loaded asynchronously via React 19's `use()` hook under `Suspense` — t
 - `yarn build` — create production build
 - `yarn preview` — preview production build locally
 - `yarn test` — run Jest tests (includes jest-axe accessibility checks)
+- `yarn test:coverage` — run Jest tests with coverage report
 - `yarn lint` — run ESLint
 - `yarn lint:fix` — fix lintable issues
 - `yarn format` — format code with Prettier
+- `yarn format:check` — check formatting without writing changes
 - `yarn typecheck` — run TypeScript type checking
+
+## CI/CD
+
+- **[CI](.github/workflows/ci.yml)** — lint, format check, typecheck, test (with coverage), build. Runs on every PR to `main` and on push to `main`. Coverage output is uploaded as a workflow artifact and summarised in the job summary.
+- **[Lighthouse CI](.github/workflows/lighthouse.yml)** — builds the app, serves it locally, and audits Performance, Accessibility, Best Practices, and SEO. Results are uploaded as a workflow artifact and to temporary public storage; it's informational and does not block merges.
+
+There's no live coverage-percentage or Lighthouse-score badge above — both would require an external publishing service (e.g. Codecov for coverage, Lighthouse CI Server for score badges), which needs an account and a repo secret to stay accurate. The CI and Lighthouse badges above reflect pass/fail status only; full reports are available as artifacts on each workflow run.
 
 ## Performance notes
 

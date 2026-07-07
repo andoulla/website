@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Lint, format, typecheck, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Format check
+        run: yarn format:check
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: Test with coverage
+        run: yarn test:coverage
+
+      - name: Write coverage summary
+        if: always()
+        run: |
+          if [ -f coverage/coverage-summary.json ]; then
+            node -e "
+              const { total } = require('./coverage/coverage-summary.json');
+              const row = (label, key) => \`| \${label} | \${total[key].pct}% | \${total[key].covered}/\${total[key].total} |\`;
+              console.log('### Coverage summary');
+              console.log('| Metric | % | Covered/Total |');
+              console.log('| --- | --- | --- |');
+              console.log(row('Statements', 'statements'));
+              console.log(row('Branches', 'branches'));
+              console.log(row('Functions', 'functions'));
+              console.log(row('Lines', 'lines'));
+            " >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Build
+        run: yarn build

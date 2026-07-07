@@ -4,6 +4,7 @@ module.exports = {
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '<rootDir>/.claude/worktrees/'],
   modulePathIgnorePatterns: ['<rootDir>/.claude/worktrees/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
+  coverageReporters: ['text', 'text-summary', 'json-summary', 'lcov', 'html'],
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
