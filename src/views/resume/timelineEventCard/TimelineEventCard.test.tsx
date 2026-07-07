@@ -150,11 +150,8 @@ describe('TimelineEventCard', () => {
       level: 4,
       name: 'Responsibilities',
     });
-    const responsibilitiesSection = responsibilitiesHeading.closest('section');
-
-    if (responsibilitiesSection === null) {
-      throw new Error('Expected the Responsibilities heading to sit inside a <section>');
-    }
+    // Section always wraps its heading in a <section>, so this is never null.
+    const responsibilitiesSection = responsibilitiesHeading.closest('section')!;
 
     const items = within(responsibilitiesSection).getAllByRole('listitem');
 

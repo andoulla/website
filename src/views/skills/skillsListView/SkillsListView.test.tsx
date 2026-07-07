@@ -46,7 +46,7 @@ const renderListView = (props: Partial<SkillsListViewProps> = {}) =>
 
 describe('SkillsListView', () => {
   describe('render and grouping', () => {
-    test('renders a list item for each skill with name and years', () => {
+    test('renders a list item for each skill with name and years', async () => {
       const screen = renderListView();
 
       expect(screen.getByText('React')).toBeVisible();
@@ -55,6 +55,7 @@ describe('SkillsListView', () => {
       expect(screen.getByText('est. 3 years')).toBeVisible();
       expect(screen.getByText('Mentoring')).toBeVisible();
       expect(screen.getByText('est. 2 years')).toBeVisible();
+      expect(await axe(screen.container)).toHaveNoViolations();
     });
 
     test('renders "year" (singular) when a skill has exactly 1 year', () => {
@@ -147,6 +148,7 @@ describe('SkillsListView', () => {
 
       await user.click(screen.getByText('Mentoring'));
       expect(screen.getByText('Excellent mentor.')).toBeVisible();
+      expect(await axe(screen.container)).toHaveNoViolations();
     });
 
     test('shows empty state in popover when no recommendations match', async () => {
@@ -159,10 +161,11 @@ describe('SkillsListView', () => {
   });
 
   describe('highlight and scroll', () => {
-    test('applies a highlight to the skill matching highlightedSkill', () => {
+    test('applies a highlight to the skill matching highlightedSkill', async () => {
       const screen = renderListView({ highlightedSkill: 'React' });
 
       expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
+      expect(await axe(screen.container)).toHaveNoViolations();
     });
 
     test('scrolls the highlighted skill into view', () => {
@@ -183,29 +186,6 @@ describe('SkillsListView', () => {
       expect(scrollIntoViewSpy).not.toHaveBeenCalled();
 
       scrollIntoViewSpy.mockRestore();
-    });
-  });
-
-  describe('accessibility', () => {
-    test('has no axe violations', async () => {
-      const screen = renderListView();
-
-      expect(await axe(screen.container)).toHaveNoViolations();
-    });
-
-    test('has no axe violations with a highlighted skill', async () => {
-      const screen = renderListView({ highlightedSkill: 'React' });
-
-      expect(await axe(screen.container)).toHaveNoViolations();
-    });
-
-    test('has no axe violations with the popover open and recommendations shown', async () => {
-      const user = userEvent.setup();
-      const screen = renderListView();
-
-      await user.click(screen.getByText('Mentoring'));
-
-      expect(await axe(screen.container)).toHaveNoViolations();
     });
   });
 });

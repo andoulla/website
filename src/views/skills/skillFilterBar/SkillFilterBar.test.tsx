@@ -6,10 +6,6 @@ import { CATEGORY_ORDER, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory
 
 import { SkillFilterBar, type SkillFilterBarProps } from './SkillFilterBar';
 
-const ALL_LABEL = 'Filter skills by category and subcategory, currently: All';
-const FILTERS_1_LABEL = 'Filter skills by category and subcategory, currently: Filters (1)';
-const FILTERS_2_LABEL = 'Filter skills by category and subcategory, currently: Filters (2)';
-
 const renderFilterBar = (props: Partial<SkillFilterBarProps> = {}) =>
   render(
     <SkillFilterBar
@@ -25,10 +21,15 @@ const renderFilterBar = (props: Partial<SkillFilterBarProps> = {}) =>
 
 describe('SkillFilterBar', () => {
   describe('trigger label', () => {
-    test('renders a trigger button showing "All" when no filters are active', () => {
+    test('renders a trigger button showing "All" when no filters are active', async () => {
       const screen = renderFilterBar();
 
-      expect(screen.getByRole('button', { name: ALL_LABEL })).toBeVisible();
+      expect(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: All',
+        })
+      ).toBeVisible();
+      expect(await axe(screen.container)).toHaveNoViolations();
     });
 
     test('renders a trigger button showing the active filter count', () => {
@@ -37,7 +38,11 @@ describe('SkillFilterBar', () => {
         selectedSubCategories: ['testing'],
       });
 
-      expect(screen.getByRole('button', { name: FILTERS_2_LABEL })).toBeVisible();
+      expect(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: Filters (2)',
+        })
+      ).toBeVisible();
     });
   });
 
@@ -46,7 +51,11 @@ describe('SkillFilterBar', () => {
       const user = userEvent.setup();
       const screen = renderFilterBar();
 
-      await user.click(screen.getByRole('button', { name: ALL_LABEL }));
+      await user.click(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: All',
+        })
+      );
 
       expect(
         screen.getByRole('menuitemcheckbox', { name: 'Engineering', checked: false })
@@ -58,6 +67,7 @@ describe('SkillFilterBar', () => {
         screen.getByRole('menuitemcheckbox', { name: 'Soft Skills', checked: false })
       ).toBeVisible();
       expect(screen.getByRole('menuitemcheckbox', { name: 'Other', checked: false })).toBeVisible();
+      expect(await axe(screen.container)).toHaveNoViolations();
     });
 
     test('calls onCategoriesChange adding the category when an unselected category is clicked', async () => {
@@ -65,7 +75,11 @@ describe('SkillFilterBar', () => {
       const onCategoriesChange = jest.fn();
       const screen = renderFilterBar({ onCategoriesChange });
 
-      await user.click(screen.getByRole('button', { name: ALL_LABEL }));
+      await user.click(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: All',
+        })
+      );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
       expect(onCategoriesChange).toHaveBeenCalledWith(['engineering']);
     });
@@ -78,7 +92,11 @@ describe('SkillFilterBar', () => {
         onCategoriesChange,
       });
 
-      await user.click(screen.getByRole('button', { name: FILTERS_2_LABEL }));
+      await user.click(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: Filters (2)',
+        })
+      );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
       expect(onCategoriesChange).toHaveBeenCalledWith(['managerial']);
     });
@@ -92,7 +110,11 @@ describe('SkillFilterBar', () => {
         onSubCategoriesChange,
       });
 
-      await user.click(screen.getByRole('button', { name: FILTERS_2_LABEL }));
+      await user.click(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: Filters (2)',
+        })
+      );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
       expect(onSubCategoriesChange).toHaveBeenCalledWith([]);
     });
@@ -103,7 +125,11 @@ describe('SkillFilterBar', () => {
       const user = userEvent.setup();
       const screen = renderFilterBar();
 
-      await user.click(screen.getByRole('button', { name: ALL_LABEL }));
+      await user.click(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: All',
+        })
+      );
 
       expect(screen.getByText('Frontend Development')).toBeVisible();
       expect(screen.getByText('Testing')).toBeVisible();
@@ -123,7 +149,11 @@ describe('SkillFilterBar', () => {
       const user = userEvent.setup();
       const screen = renderFilterBar({ selectedCategories: ['engineering'] });
 
-      await user.click(screen.getByRole('button', { name: FILTERS_1_LABEL }));
+      await user.click(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+        })
+      );
 
       expect(screen.getByText('Frontend Development')).toBeVisible();
       expect(screen.getByText('Testing')).toBeVisible();
@@ -137,7 +167,11 @@ describe('SkillFilterBar', () => {
       const onSubCategoriesChange = jest.fn();
       const screen = renderFilterBar({ onCategoriesChange, onSubCategoriesChange });
 
-      await user.click(screen.getByRole('button', { name: ALL_LABEL }));
+      await user.click(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: All',
+        })
+      );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
       expect(onSubCategoriesChange).toHaveBeenCalledWith(['testing']);
       expect(onCategoriesChange).not.toHaveBeenCalled();
@@ -151,26 +185,13 @@ describe('SkillFilterBar', () => {
         onSubCategoriesChange,
       });
 
-      await user.click(screen.getByRole('button', { name: FILTERS_1_LABEL }));
+      await user.click(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+        })
+      );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
       expect(onSubCategoriesChange).toHaveBeenCalledWith([]);
-    });
-  });
-
-  describe('accessibility', () => {
-    test('has no axe violations when closed', async () => {
-      const screen = renderFilterBar();
-
-      expect(await axe(screen.container)).toHaveNoViolations();
-    });
-
-    test('has no axe violations when open', async () => {
-      const user = userEvent.setup();
-      const screen = renderFilterBar();
-
-      await user.click(screen.getByRole('button', { name: ALL_LABEL }));
-
-      expect(await axe(screen.container)).toHaveNoViolations();
     });
   });
 });

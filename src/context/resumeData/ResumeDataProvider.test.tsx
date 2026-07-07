@@ -12,8 +12,8 @@ jest.mock('@/utils/loadExperiences');
 const mockLoadExperiences = jest.mocked(loadExperiences);
 
 function ExperiencesConsumer() {
-  const experiences = useResumeData();
-  return <p>{experiences[0].companyName}</p>;
+  const [firstExperience] = useResumeData();
+  return <p>{firstExperience.companyName}</p>;
 }
 
 interface ErrorBoundaryState {

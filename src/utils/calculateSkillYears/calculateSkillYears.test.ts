@@ -1,4 +1,3 @@
-import { jobs } from '@/data/jobs';
 import { Skill, TimelineEvent } from '@/testing';
 
 import { calculateSkillYears } from './calculateSkillYears';
@@ -219,12 +218,24 @@ describe('calculateSkillYears', () => {
   });
 
   describe('defaults', () => {
-    test('uses the default skills dataset and current date when not provided', () => {
-      const result = calculateSkillYears(jobs);
+    test('uses the current date when the today parameter is not provided', () => {
+      const start = new Date();
 
-      expect(result.length).toBeGreaterThan(0);
-      expect(typeof result[0].skill).toBe('string');
-      expect(result[0].years).toBeGreaterThan(0);
+      start.setFullYear(start.getFullYear() - 2);
+
+      const result = calculateSkillYears(
+        [
+          new TimelineEvent()
+            .id('j1')
+            .startDate(start.toISOString().slice(0, 10))
+            .endDate(null)
+            .mock(),
+        ],
+        [new Skill().name('React').jobIds(['j1']).mock()]
+      );
+      const react = result.find((s) => s.skill === 'React');
+
+      expect(react?.years).toBeCloseTo(2, 0);
     });
   });
 });
