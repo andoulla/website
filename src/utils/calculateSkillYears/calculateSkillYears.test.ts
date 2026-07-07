@@ -1,3 +1,4 @@
+import { jobs } from '@/data/jobs';
 import { Skill, TimelineEvent } from '@/testing';
 
 import { calculateSkillYears } from './calculateSkillYears';
@@ -62,6 +63,17 @@ describe('calculateSkillYears', () => {
     expect(result).toHaveLength(0);
   });
 
+  test('accumulates only the matched job IDs when a skill has some unmatched job IDs', () => {
+    const result = calculateSkillYears(
+      [new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock()],
+      [new Skill().name('React').jobIds(['j1', 'unknown-id']).mock()],
+      TODAY
+    );
+    const react = result.find((s) => s.skill === 'React');
+
+    expect(react?.years).toBeCloseTo(2, 0);
+  });
+
   test('sorts engineering before managerial, then soft-skills, then other', () => {
     const job = new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock();
     const result = calculateSkillYears(
@@ -70,6 +82,7 @@ describe('calculateSkillYears', () => {
         new Skill().name('React').jobIds(['j1']).mock(),
         new Skill().name('Team Leadership').jobIds(['j1']).category('managerial').mock(),
         new Skill().name('Mentoring').jobIds(['j1']).category('soft-skills').mock(),
+        new Skill().name('Unclassified Skill').jobIds(['j1']).category('other').mock(),
       ],
       TODAY
     );
@@ -77,9 +90,30 @@ describe('calculateSkillYears', () => {
     const engIdx = categories.indexOf('engineering');
     const manIdx = categories.indexOf('managerial');
     const softIdx = categories.indexOf('soft-skills');
+    const otherIdx = categories.indexOf('other');
 
     expect(engIdx).toBeLessThan(manIdx);
     expect(manIdx).toBeLessThan(softIdx);
+    expect(softIdx).toBeLessThan(otherIdx);
+  });
+
+  test('rounds years to one decimal place at a rounding boundary', () => {
+    const result = calculateSkillYears(
+      [new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2021-01-19').mock()],
+      [new Skill().name('React').jobIds(['j1']).mock()],
+      TODAY
+    );
+    const react = result.find((s) => s.skill === 'React');
+
+    expect(react?.years).toBe(1.1);
+  });
+
+  test('uses the default skills dataset and current date when not provided', () => {
+    const result = calculateSkillYears(jobs);
+
+    expect(result.length).toBeGreaterThan(0);
+    expect(typeof result[0].skill).toBe('string');
+    expect(result[0].years).toBeGreaterThan(0);
   });
 
   test('sorts by years descending within the same category', () => {
@@ -112,24 +146,22 @@ describe('calculateSkillYears', () => {
     expect(react?.colour).toBe('primary');
   });
 
-  test('passes through jobIds and recommendationIds from the skill definition', () => {
+  test('passes through skill metadata fields unchanged: jobIds, recommendationIds, subCategory', () => {
     const result = calculateSkillYears(
       [new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock()],
-      [new Skill().name('React').jobIds(['j1']).recommendationIds(['rec-1']).mock()],
+      [
+        new Skill()
+          .name('React Testing Library')
+          .jobIds(['j1'])
+          .recommendationIds(['rec-1'])
+          .subCategory('testing')
+          .mock(),
+      ],
       TODAY
     );
 
     expect(result[0].jobIds).toEqual(['j1']);
     expect(result[0].recommendationIds).toEqual(['rec-1']);
-  });
-
-  test('passes through subCategory from the skill definition', () => {
-    const result = calculateSkillYears(
-      [new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock()],
-      [new Skill().name('React Testing Library').subCategory('testing').jobIds(['j1']).mock()],
-      TODAY
-    );
-
     expect(result[0].subCategory).toBe('testing');
   });
 
