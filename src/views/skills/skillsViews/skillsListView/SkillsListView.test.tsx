@@ -4,7 +4,10 @@ import { axe } from 'jest-axe';
 
 import { Recommendation, SkillSummary } from '@/testing';
 
-import { SkillsListView, type SkillsListViewProps } from './SkillsListView';
+import { SkillsViewContextProvider } from '../SkillsViewContext';
+import type { SkillsViewContextValue } from '../SkillsViewContext.type';
+
+import { SkillsListView } from './SkillsListView';
 
 const SKILLS = [
   new SkillSummary().years(4).mock(),
@@ -33,15 +36,17 @@ const RECOMMENDATIONS = [
     .mock(),
 ];
 
-const renderListView = (props: Partial<SkillsListViewProps> = {}) =>
+const renderListView = (overrides: Partial<SkillsViewContextValue> = {}) =>
   render(
-    <SkillsListView
+    <SkillsViewContextProvider
       skills={SKILLS}
       recommendations={RECOMMENDATIONS}
       selectedCategories={[]}
       selectedSubCategories={[]}
-      {...props}
-    />
+      {...overrides}
+    >
+      <SkillsListView />
+    </SkillsViewContextProvider>
   );
 
 describe('SkillsListView', () => {

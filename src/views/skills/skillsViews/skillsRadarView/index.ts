@@ -1,0 +1,1 @@
+export { SkillsRadarView } from './SkillsRadarView';

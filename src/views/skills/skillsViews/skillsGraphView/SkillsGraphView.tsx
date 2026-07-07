@@ -1,23 +1,15 @@
 import { useMemo } from 'react';
 import Alert from '@mui/material/Alert';
 
-import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
-import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
+
+import { useSkillsViewContext } from '../SkillsViewContext';
 
 import { SkillsBarChart } from './skillsBarChart';
 
-export interface SkillsGraphViewProps {
-  skills: SkillSummary[];
-  selectedCategories: SkillCategory[];
-  selectedSubCategories: SkillSubCategory[];
-}
+export const SkillsGraphView = () => {
+  const { skills, selectedCategories, selectedSubCategories } = useSkillsViewContext();
 
-export const SkillsGraphView = ({
-  skills,
-  selectedCategories,
-  selectedSubCategories,
-}: SkillsGraphViewProps) => {
   const filteredSkills = useMemo(
     () =>
       filterSkillsByCategory(skills, selectedCategories, selectedSubCategories).sort(

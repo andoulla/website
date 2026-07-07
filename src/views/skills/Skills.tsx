@@ -1,6 +1,7 @@
 import { Suspense, useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import RadarIcon from '@mui/icons-material/Radar';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
@@ -17,10 +18,14 @@ import { CATEGORY_ORDER, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory
 import { CATEGORY_PARAM, SUBCATEGORY_PARAM } from './Skills.constants';
 import { parseCategories, parseSubCategories, reorderFilterParams } from './Skills.helpers';
 import { SkillFilterBar } from './skillFilterBar';
-import { SkillsGraphView } from './skillsGraphView';
-import { SkillsListView } from './skillsListView';
+import {
+  SkillsGraphView,
+  SkillsListView,
+  SkillsRadarView,
+  SkillsViewContextProvider,
+} from './skillsViews';
 
-type ViewMode = 'list' | 'graph';
+type ViewMode = 'list' | 'graph' | 'radar';
 
 const SkillsContent = () => {
   const experiences = useResumeData();
@@ -134,23 +139,27 @@ const SkillsContent = () => {
             <BarChartIcon fontSize="small" sx={{ mr: 0.5 }} />
             Graph
           </ToggleButton>
+          <ToggleButton value="radar" aria-label="Radar view">
+            <RadarIcon fontSize="small" sx={{ mr: 0.5 }} />
+            Radar
+          </ToggleButton>
         </ToggleButtonGroup>
       </Stack>
-      {viewMode === 'list' ? (
-        <SkillsListView
-          skills={skills}
-          recommendations={recommendations}
-          highlightedSkill={highlightedSkill}
-          selectedCategories={selectedCategories}
-          selectedSubCategories={selectedSubCategories}
-        />
-      ) : (
-        <SkillsGraphView
-          skills={skills}
-          selectedCategories={selectedCategories}
-          selectedSubCategories={selectedSubCategories}
-        />
-      )}
+      <SkillsViewContextProvider
+        skills={skills}
+        recommendations={recommendations}
+        selectedCategories={selectedCategories}
+        selectedSubCategories={selectedSubCategories}
+        highlightedSkill={highlightedSkill}
+      >
+        {viewMode === 'list' ? (
+          <SkillsListView />
+        ) : viewMode === 'graph' ? (
+          <SkillsGraphView />
+        ) : (
+          <SkillsRadarView />
+        )}
+      </SkillsViewContextProvider>
     </>
   );
 };

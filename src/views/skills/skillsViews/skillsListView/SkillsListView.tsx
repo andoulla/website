@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography';
 
 import { Section } from '@/components/section';
 import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
-import type { Recommendation } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 import { formatDate } from '@/utils/formatDate';
@@ -20,16 +19,10 @@ import {
   SUBCATEGORY_LABELS,
 } from '@/utils/skillCategory';
 
+import { useSkillsViewContext } from '../SkillsViewContext';
+
 import { skillElementId } from './SkillsListView.helpers';
 import { SkillItemsList } from './skillItemsList';
-
-export interface SkillsListViewProps {
-  skills: SkillSummary[];
-  recommendations: Recommendation[];
-  highlightedSkill?: string;
-  selectedCategories: SkillCategory[];
-  selectedSubCategories: SkillSubCategory[];
-}
 
 interface PopoverState {
   anchor: HTMLElement;
@@ -41,13 +34,9 @@ interface SubCategoryGroup {
   skills: SkillSummary[];
 }
 
-export const SkillsListView = ({
-  skills,
-  recommendations,
-  highlightedSkill,
-  selectedCategories,
-  selectedSubCategories,
-}: SkillsListViewProps) => {
+export const SkillsListView = () => {
+  const { skills, recommendations, highlightedSkill, selectedCategories, selectedSubCategories } =
+    useSkillsViewContext();
   const [popover, setPopover] = useState<PopoverState | null>(null);
 
   useEffect(() => {
