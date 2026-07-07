@@ -132,16 +132,13 @@ const SkillsContent = () => {
           sx={{ ml: 'auto' }}
         >
           <ToggleButton value="list" aria-label="List view">
-            <ViewListIcon fontSize="small" sx={{ mr: 0.5 }} />
-            List
+            <ViewListIcon fontSize="small" />
           </ToggleButton>
           <ToggleButton value="graph" aria-label="Graph view">
-            <BarChartIcon fontSize="small" sx={{ mr: 0.5 }} />
-            Graph
+            <BarChartIcon fontSize="small" />
           </ToggleButton>
           <ToggleButton value="radar" aria-label="Radar view">
-            <RadarIcon fontSize="small" sx={{ mr: 0.5 }} />
-            Radar
+            <RadarIcon fontSize="small" />
           </ToggleButton>
         </ToggleButtonGroup>
       </Stack>

@@ -12,8 +12,8 @@ export const SkillsGraphView = () => {
 
   const filteredSkills = useMemo(
     () =>
-      filterSkillsByCategory(skills, selectedCategories, selectedSubCategories).sort(
-        (a, b) => b.years - a.years
+      filterSkillsByCategory(skills, selectedCategories, selectedSubCategories).sort((a, b) =>
+        a.skill.localeCompare(b.skill)
       ),
     [skills, selectedCategories, selectedSubCategories]
   );
