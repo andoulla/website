@@ -16,97 +16,108 @@ function renderNavBar() {
 }
 
 describe('NavBar', () => {
-  test('renders Home and Skills links inside a navigation landmark', () => {
-    const screen = renderNavBar();
+  describe('navigation links', () => {
+    test('renders Home and Skills links inside a navigation landmark', () => {
+      const screen = renderNavBar();
 
-    expect(screen.getByRole('navigation')).toBeVisible();
+      expect(screen.getByRole('navigation')).toBeVisible();
 
-    const homeLink = screen.getByRole('link', { name: 'Home' });
+      const homeLink = screen.getByRole('link', { name: 'Home' });
 
-    expect(homeLink).toBeVisible();
-    expect(homeLink).toHaveAttribute('href', '/');
+      expect(homeLink).toBeVisible();
+      expect(homeLink).toHaveAttribute('href', '/');
 
-    const skillsLink = screen.getByRole('link', { name: 'Skills' });
+      const skillsLink = screen.getByRole('link', { name: 'Skills' });
 
-    expect(skillsLink).toBeVisible();
-    expect(skillsLink).toHaveAttribute('href', '/skills');
+      expect(skillsLink).toBeVisible();
+      expect(skillsLink).toHaveAttribute('href', '/skills');
+    });
   });
 
-  test('renders a theme toggle button defaulting to green', () => {
-    const screen = renderNavBar();
+  describe('theme toggle', () => {
+    test('renders a theme toggle button defaulting to green', () => {
+      const screen = renderNavBar();
 
-    expect(screen.getByRole('button', { name: 'Switch to purple theme' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Switch to purple theme' })).toBeVisible();
+    });
+
+    test('toggle button label updates to green after switching to purple', () => {
+      const screen = renderNavBar();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
+
+      expect(screen.getByRole('button', { name: 'Switch to green theme' })).toBeVisible();
+    });
+
+    test('toggle button cycles back to purple after two clicks', () => {
+      const screen = renderNavBar();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Switch to green theme' }));
+
+      expect(screen.getByRole('button', { name: 'Switch to purple theme' })).toBeVisible();
+    });
   });
 
-  test('toggle button label updates to green after switching to purple', () => {
-    const screen = renderNavBar();
+  describe('mode toggle', () => {
+    test('renders Light and Dark buttons with Light selected by default', () => {
+      const screen = renderNavBar();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
+      expect(screen.getByRole('button', { name: 'Light' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Dark' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Light' })).toHaveAttribute('aria-pressed', 'true');
+      expect(screen.getByRole('button', { name: 'Dark' })).toHaveAttribute('aria-pressed', 'false');
+    });
 
-    expect(screen.getByRole('button', { name: 'Switch to green theme' })).toBeVisible();
+    test('clicking Dark selects dark mode', () => {
+      const screen = renderNavBar();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
+
+      expect(screen.getByRole('button', { name: 'Dark' })).toHaveAttribute('aria-pressed', 'true');
+      expect(screen.getByRole('button', { name: 'Light' })).toHaveAttribute(
+        'aria-pressed',
+        'false'
+      );
+    });
+
+    test('clicking Light after Dark returns to light mode', () => {
+      const screen = renderNavBar();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Light' }));
+
+      expect(screen.getByRole('button', { name: 'Light' })).toHaveAttribute('aria-pressed', 'true');
+    });
   });
 
-  test('toggle button cycles back to purple after two clicks', () => {
-    const screen = renderNavBar();
+  describe('accessibility', () => {
+    test('has no axe violations with green light theme', async () => {
+      const screen = renderNavBar();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Switch to green theme' }));
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
 
-    expect(screen.getByRole('button', { name: 'Switch to purple theme' })).toBeVisible();
-  });
+    test('has no axe violations with purple light theme', async () => {
+      const screen = renderNavBar();
 
-  test('renders Light and Dark buttons with Light selected by default', () => {
-    const screen = renderNavBar();
+      fireEvent.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
 
-    expect(screen.getByRole('button', { name: 'Light' })).toBeVisible();
-    expect(screen.getByRole('button', { name: 'Dark' })).toBeVisible();
-    expect(screen.getByRole('button', { name: 'Light' })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('button', { name: 'Dark' })).toHaveAttribute('aria-pressed', 'false');
-  });
+    test('has no axe violations with green dark theme', async () => {
+      const screen = renderNavBar();
 
-  test('clicking Dark selects dark mode', () => {
-    const screen = renderNavBar();
+      fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
+    test('has no axe violations with purple dark theme', async () => {
+      const screen = renderNavBar();
 
-    expect(screen.getByRole('button', { name: 'Dark' })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('button', { name: 'Light' })).toHaveAttribute('aria-pressed', 'false');
-  });
-
-  test('clicking Light after Dark returns to light mode', () => {
-    const screen = renderNavBar();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Light' }));
-
-    expect(screen.getByRole('button', { name: 'Light' })).toHaveAttribute('aria-pressed', 'true');
-  });
-
-  test('has no axe violations with green light theme', async () => {
-    const screen = renderNavBar();
-
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations with purple light theme', async () => {
-    const screen = renderNavBar();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations with green dark theme', async () => {
-    const screen = renderNavBar();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations with purple dark theme', async () => {
-    const screen = renderNavBar();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
-    expect(await axe(screen.container)).toHaveNoViolations();
+      fireEvent.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Dark' }));
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
   });
 });

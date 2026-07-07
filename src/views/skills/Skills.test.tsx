@@ -43,221 +43,231 @@ function renderWithProvider(
 }
 
 describe('Skills', () => {
-  test('renders the page heading', async () => {
-    let screen!: ReturnType<typeof render>;
+  describe('rendering', () => {
+    test('renders the page heading', async () => {
+      let screen!: ReturnType<typeof render>;
 
-    await act(async () => {
-      screen = renderWithProvider();
-      await Promise.resolve();
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
+
+      expect(screen.getByRole('heading', { level: 1, name: 'Skills' })).toBeVisible();
     });
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Skills' })).toBeVisible();
-  });
+    test('renders skill list items after data loads', async () => {
+      let screen!: ReturnType<typeof render>;
 
-  test('renders skill list items after data loads', async () => {
-    let screen!: ReturnType<typeof render>;
-
-    await act(async () => {
-      screen = renderWithProvider();
-      await Promise.resolve();
-    });
-    expect(screen.getByText('Team Leadership')).toBeVisible();
-  });
-
-  test('renders the List/Graph toggle after data loads', async () => {
-    let screen!: ReturnType<typeof render>;
-
-    await act(async () => {
-      screen = renderWithProvider();
-      await Promise.resolve();
-    });
-    expect(screen.getByRole('button', { name: 'List view' })).toBeVisible();
-    expect(screen.getByRole('button', { name: 'Graph view' })).toBeVisible();
-  });
-
-  test('defaults to the graph view on load', async () => {
-    let screen!: ReturnType<typeof render>;
-
-    await act(async () => {
-      screen = renderWithProvider();
-      await Promise.resolve();
-    });
-    expect(screen.getByRole('button', { name: 'Graph view' })).toHaveAttribute(
-      'aria-pressed',
-      'true'
-    );
-  });
-
-  test('shows the filter bar in list view as well as graph view', async () => {
-    const user = userEvent.setup();
-    let screen!: ReturnType<typeof render>;
-
-    await act(async () => {
-      screen = renderWithProvider();
-      await Promise.resolve();
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
+      expect(screen.getByText('Team Leadership')).toBeVisible();
     });
 
-    await user.click(screen.getByRole('button', { name: 'List view' }));
+    test('renders the List/Graph toggle after data loads', async () => {
+      let screen!: ReturnType<typeof render>;
 
-    expect(screen.getByRole('button', { name: ALL_LABEL })).toBeVisible();
-  });
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
+      expect(screen.getByRole('button', { name: 'List view' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Graph view' })).toBeVisible();
+    });
 
-  test('initializes the category filter from the URL query param', async () => {
-    let screen!: ReturnType<typeof render>;
+    test('defaults to the graph view on load', async () => {
+      let screen!: ReturnType<typeof render>;
 
-    await act(async () => {
-      screen = renderWithProvider(
-        () => Promise.resolve(EXPERIENCES),
-        ['/skills?category=managerial']
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
+      expect(screen.getByRole('button', { name: 'Graph view' })).toHaveAttribute(
+        'aria-pressed',
+        'true'
       );
-      await Promise.resolve();
     });
 
-    expect(screen.getByRole('button', { name: FILTERS_1_LABEL })).toBeVisible();
+    test('shows the filter bar in list view as well as graph view', async () => {
+      const user = userEvent.setup();
+      let screen!: ReturnType<typeof render>;
+
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
+
+      await user.click(screen.getByRole('button', { name: 'List view' }));
+
+      expect(screen.getByRole('button', { name: ALL_LABEL })).toBeVisible();
+    });
   });
 
-  test('reflects a category filter selection as a URL query param', async () => {
-    const user = userEvent.setup();
-    let screen!: ReturnType<typeof render>;
+  describe('category filter URL sync', () => {
+    test('initializes the category filter from the URL query param', async () => {
+      let screen!: ReturnType<typeof render>;
 
-    await act(async () => {
-      screen = renderWithProvider();
-      await Promise.resolve();
+      await act(async () => {
+        screen = renderWithProvider(
+          () => Promise.resolve(EXPERIENCES),
+          ['/skills?category=managerial']
+        );
+        await Promise.resolve();
+      });
+
+      expect(screen.getByRole('button', { name: FILTERS_1_LABEL })).toBeVisible();
     });
 
-    await user.click(screen.getByRole('button', { name: ALL_LABEL }));
-    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Managerial' }));
+    test('reflects a category filter selection as a URL query param', async () => {
+      const user = userEvent.setup();
+      let screen!: ReturnType<typeof render>;
 
-    expect(screen.getByText('search:category=managerial')).toBeVisible();
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
+
+      await user.click(screen.getByRole('button', { name: ALL_LABEL }));
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Managerial' }));
+
+      expect(screen.getByText('search:category=managerial')).toBeVisible();
+    });
+
+    test('removes the category query param when the filter is cleared', async () => {
+      const user = userEvent.setup();
+      let screen!: ReturnType<typeof render>;
+
+      await act(async () => {
+        screen = renderWithProvider(
+          () => Promise.resolve(EXPERIENCES),
+          ['/skills?category=managerial']
+        );
+        await Promise.resolve();
+      });
+
+      await user.click(screen.getByRole('button', { name: FILTERS_1_LABEL }));
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Managerial' }));
+
+      expect(screen.getByText('search:')).toBeVisible();
+    });
   });
 
-  test('removes the category query param when the filter is cleared', async () => {
-    const user = userEvent.setup();
-    let screen!: ReturnType<typeof render>;
+  describe('subcategory filter URL sync', () => {
+    test('initializes the subcategory filter from the URL query param', async () => {
+      let screen!: ReturnType<typeof render>;
 
-    await act(async () => {
-      screen = renderWithProvider(
-        () => Promise.resolve(EXPERIENCES),
-        ['/skills?category=managerial']
-      );
-      await Promise.resolve();
+      await act(async () => {
+        screen = renderWithProvider(
+          () => Promise.resolve(EXPERIENCES),
+          ['/skills?subCategory=testing']
+        );
+        await Promise.resolve();
+      });
+
+      expect(screen.getByRole('button', { name: FILTERS_1_LABEL })).toBeVisible();
     });
 
-    await user.click(screen.getByRole('button', { name: FILTERS_1_LABEL }));
-    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Managerial' }));
+    test('reflects a subcategory filter selection as a URL query param', async () => {
+      const user = userEvent.setup();
+      let screen!: ReturnType<typeof render>;
 
-    expect(screen.getByText('search:')).toBeVisible();
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
+
+      await user.click(screen.getByRole('button', { name: ALL_LABEL }));
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
+
+      expect(screen.getByText('search:subCategory=testing')).toBeVisible();
+    });
+
+    test('removes the subcategory query param when the filter is cleared', async () => {
+      const user = userEvent.setup();
+      let screen!: ReturnType<typeof render>;
+
+      await act(async () => {
+        screen = renderWithProvider(
+          () => Promise.resolve(EXPERIENCES),
+          ['/skills?subCategory=testing']
+        );
+        await Promise.resolve();
+      });
+
+      await user.click(screen.getByRole('button', { name: FILTERS_1_LABEL }));
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
+
+      expect(screen.getByText('search:')).toBeVisible();
+    });
   });
 
-  test('keeps category and subcategory query params independent of each other', async () => {
-    let screen!: ReturnType<typeof render>;
+  describe('combined filters', () => {
+    test('keeps category and subcategory query params independent of each other', async () => {
+      let screen!: ReturnType<typeof render>;
 
-    await act(async () => {
-      screen = renderWithProvider(
-        () => Promise.resolve(EXPERIENCES),
-        ['/skills?category=engineering&subCategory=testing']
-      );
-      await Promise.resolve();
+      await act(async () => {
+        screen = renderWithProvider(
+          () => Promise.resolve(EXPERIENCES),
+          ['/skills?category=engineering&subCategory=testing']
+        );
+        await Promise.resolve();
+      });
+
+      expect(screen.getByText('search:category=engineering&subCategory=testing')).toBeVisible();
+      expect(screen.getByRole('button', { name: FILTERS_2_LABEL })).toBeVisible();
     });
-
-    expect(screen.getByText('search:category=engineering&subCategory=testing')).toBeVisible();
-    expect(screen.getByRole('button', { name: FILTERS_2_LABEL })).toBeVisible();
   });
 
-  test('initializes the subcategory filter from the URL query param', async () => {
-    let screen!: ReturnType<typeof render>;
+  describe('accessibility', () => {
+    test('has no axe violations on initial render', async () => {
+      let screen!: ReturnType<typeof render>;
 
-    await act(async () => {
-      screen = renderWithProvider(
-        () => Promise.resolve(EXPERIENCES),
-        ['/skills?subCategory=testing']
-      );
-      await Promise.resolve();
+      await act(async () => {
+        screen = renderWithProvider(neverResolve);
+        await Promise.resolve();
+      });
+
+      expect(await axe(screen.container)).toHaveNoViolations();
     });
 
-    expect(screen.getByRole('button', { name: FILTERS_1_LABEL })).toBeVisible();
-  });
+    test('has no axe violations in the loaded graph view', async () => {
+      let screen!: ReturnType<typeof render>;
 
-  test('reflects a subcategory filter selection as a URL query param', async () => {
-    const user = userEvent.setup();
-    let screen!: ReturnType<typeof render>;
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
 
-    await act(async () => {
-      screen = renderWithProvider();
-      await Promise.resolve();
+      expect(await axe(screen.container)).toHaveNoViolations();
     });
 
-    await user.click(screen.getByRole('button', { name: ALL_LABEL }));
-    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
+    test('has no axe violations in the loaded list view', async () => {
+      const user = userEvent.setup();
+      let screen!: ReturnType<typeof render>;
 
-    expect(screen.getByText('search:subCategory=testing')).toBeVisible();
-  });
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
 
-  test('removes the subcategory query param when the filter is cleared', async () => {
-    const user = userEvent.setup();
-    let screen!: ReturnType<typeof render>;
+      await user.click(screen.getByRole('button', { name: 'List view' }));
 
-    await act(async () => {
-      screen = renderWithProvider(
-        () => Promise.resolve(EXPERIENCES),
-        ['/skills?subCategory=testing']
-      );
-      await Promise.resolve();
+      expect(await axe(screen.container)).toHaveNoViolations();
     });
 
-    await user.click(screen.getByRole('button', { name: FILTERS_1_LABEL }));
-    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
+    test('has no axe violations with the filter menu open', async () => {
+      const user = userEvent.setup();
+      let screen!: ReturnType<typeof render>;
 
-    expect(screen.getByText('search:')).toBeVisible();
-  });
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
 
-  test('has no axe violations on initial render', async () => {
-    let screen!: ReturnType<typeof render>;
+      await user.click(screen.getByRole('button', { name: ALL_LABEL }));
 
-    await act(async () => {
-      screen = renderWithProvider(neverResolve);
-      await Promise.resolve();
+      expect(await axe(screen.container)).toHaveNoViolations();
     });
-
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations in the loaded graph view', async () => {
-    let screen!: ReturnType<typeof render>;
-
-    await act(async () => {
-      screen = renderWithProvider();
-      await Promise.resolve();
-    });
-
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations in the loaded list view', async () => {
-    const user = userEvent.setup();
-    let screen!: ReturnType<typeof render>;
-
-    await act(async () => {
-      screen = renderWithProvider();
-      await Promise.resolve();
-    });
-
-    await user.click(screen.getByRole('button', { name: 'List view' }));
-
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations with the filter menu open', async () => {
-    const user = userEvent.setup();
-    let screen!: ReturnType<typeof render>;
-
-    await act(async () => {
-      screen = renderWithProvider();
-      await Promise.resolve();
-    });
-
-    await user.click(screen.getByRole('button', { name: ALL_LABEL }));
-
-    expect(await axe(screen.container)).toHaveNoViolations();
   });
 });
