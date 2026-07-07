@@ -25,7 +25,13 @@ import {
   SkillsViewContextProvider,
 } from './skillsViews';
 
-type ViewMode = 'list' | 'graph' | 'radar';
+type ViewMode = 'graph' | 'radar' | 'list';
+
+const renderSkillsView = (viewMode: ViewMode) => {
+  if (viewMode === 'graph') return <SkillsGraphView />;
+  if (viewMode === 'radar') return <SkillsRadarView />;
+  return <SkillsListView />;
+};
 
 const SkillsContent = () => {
   const experiences = useResumeData();
@@ -131,14 +137,14 @@ const SkillsContent = () => {
           aria-label="View mode"
           sx={{ ml: 'auto' }}
         >
-          <ToggleButton value="list" aria-label="List view">
-            <ViewListIcon fontSize="small" />
-          </ToggleButton>
           <ToggleButton value="graph" aria-label="Graph view">
             <BarChartIcon fontSize="small" />
           </ToggleButton>
           <ToggleButton value="radar" aria-label="Radar view">
             <RadarIcon fontSize="small" />
+          </ToggleButton>
+          <ToggleButton value="list" aria-label="List view">
+            <ViewListIcon fontSize="small" />
           </ToggleButton>
         </ToggleButtonGroup>
       </Stack>
@@ -149,13 +155,7 @@ const SkillsContent = () => {
         selectedSubCategories={selectedSubCategories}
         highlightedSkill={highlightedSkill}
       >
-        {viewMode === 'list' ? (
-          <SkillsListView />
-        ) : viewMode === 'graph' ? (
-          <SkillsGraphView />
-        ) : (
-          <SkillsRadarView />
-        )}
+        {renderSkillsView(viewMode)}
       </SkillsViewContextProvider>
     </>
   );
