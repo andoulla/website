@@ -68,6 +68,19 @@ describe('SkillsGraphView', () => {
     expect(screen.queryByText('Team Leadership')).not.toBeInTheDocument();
   });
 
+  test('shows the empty-filter message from SkillsBarChart, not the no-data Alert, when filters exclude every skill', () => {
+    const screen = render(
+      <SkillsGraphView
+        skills={SKILLS}
+        selectedCategories={['managerial']}
+        selectedSubCategories={['frontend-development']}
+      />
+    );
+
+    expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
   test('shows the no-data Alert when skills array is empty', () => {
     const screen = render(
       <SkillsGraphView skills={[]} selectedCategories={[]} selectedSubCategories={[]} />
