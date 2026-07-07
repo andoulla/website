@@ -6,13 +6,16 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { BulletList } from '@/components/bulletList';
 import { Section } from '@/components/section';
 import { TagList } from '@/components/tagList';
 import type { TimelineEventWithRecommendations } from '@/types';
 
+import { getCardMotionSx } from './TimelineEventCard.helpers';
 import { RecommendationText } from './recommendationText';
+import { useInView } from './useInView';
 
 export interface TimelineEventCardProps {
   experience: TimelineEventWithRecommendations;
@@ -46,6 +49,8 @@ const formatDuration = (startDate: string, endDate: string | null): string => {
 export const TimelineEventCard = memo(({ experience }: TimelineEventCardProps) => {
   const navigate = useNavigate();
   const duration = formatDuration(experience.startDate, experience.endDate);
+  const { ref, isInView } = useInView<HTMLDivElement>();
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
 
   const handleSkillClick = useCallback(
     (skill: string) => {
@@ -55,7 +60,7 @@ export const TimelineEventCard = memo(({ experience }: TimelineEventCardProps) =
   );
 
   return (
-    <Card elevation={0}>
+    <Card ref={ref} elevation={0} sx={getCardMotionSx(isInView, prefersReducedMotion)}>
       <CardHeader
         title={experience.companyName}
         // Render the company name as a real h3 heading (visually sized h6) so it sits
