@@ -20,6 +20,12 @@ A minimal React + TypeScript web app run in strict mode across the whole toolcha
 - After changes, walk the user through them one at a time: ask them to check a single change,
   wait for confirmation or feedback, then move to the next — don't dump the full list at once.
 
+## Planning
+
+Plans must carry enough detail (exact file paths, relevant existing code/line numbers, function
+signatures) that implementing them doesn't require re-scanning the files already read while
+planning — a plan is a handoff to the implementation step, not a pointer back to redo the search.
+
 ## Routes
 
 | Path      | View     | Notes                                                              |
