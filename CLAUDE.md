@@ -15,12 +15,10 @@ A minimal React + TypeScript web app run in strict mode across the whole toolcha
 
 ## Verifying changes
 
-Do NOT run any verification commands (typecheck, lint, tests) — the user runs them all. This also
-means: don't start the dev server, open the app in a browser, or take screenshots to verify UI
-changes yourself. Instead, once changes are made, walk the user through verifying each distinct
-change one by one, interactively — ask them to check a single change, wait for their confirmation
-(or feedback), then move on to the next one, rather than dumping a full list of changes to verify
-all at once.
+- Never run typecheck, lint, tests, the dev server, or a browser/screenshot yourself — the user
+  runs all verification.
+- After changes, walk the user through them one at a time: ask them to check a single change,
+  wait for confirmation or feedback, then move to the next — don't dump the full list at once.
 
 ## Routes
 
@@ -66,22 +64,12 @@ Skills have **no dedicated data file** — `calculateSkillYears(experiences)` de
 
 ### Nesting convention
 
-A component/util folder that owns a child used _only_ by itself nests that child directly by name (no intermediate `components/` wrapper) rather than placing it next to it. This keeps ownership obvious and sidesteps sibling-folder imports (see [code-style.md](.claude/rules/code-style.md)) — a child folder can always reach up to its parent, but nothing outside the parent reaches sideways into the child. This applies uniformly, including under `views/*` — e.g. `views/skills/skillFilterBar/`, not `views/skills/components/skillFilterBar/`.
+A child used only by one owner nests directly under that owner (no intermediate `components/`
+wrapper) rather than sitting beside it — a child can always import from its parent, but nothing
+outside the parent may reach into the child (enforced by `no-sibling-folder-imports`; naming/file
+conventions in [code-style.md](.claude/rules/code-style.md)). Applies uniformly under `views/*`
+too: `views/skills/skillFilterBar/`, not `views/skills/components/skillFilterBar/`.
 
-Folder names are camelCase and match the PascalCase component/function they contain; each folder gets an `index.ts` barrel export. A folder may also carry a `Name.types.ts` for types shared across files in that folder, `Name.constants.ts`, and `Name.helpers.ts` for local-only utilities. Once a helper is needed by more than one folder, move it out of `Name.helpers.ts` and into `src/utils/` instead of importing it across folders, dropping the `.helpers` suffix on the move (e.g. `Tag.helpers.ts` → `src/utils/tag/tag.ts`). Example, `src/components/tagList/`:
-
-```
-tagList/
-├── TagList.tsx
-├── TagList.test.tsx
-├── index.ts
-└── tag/
-    ├── Tag.tsx
-    ├── Tag.test.tsx
-    ├── Tag.types.ts
-    ├── Tag.constants.ts
-    ├── Tag.helpers.ts
-    └── index.ts
-```
-
-`TagList.tsx` imports `Tag` from `./tag` (child); nothing outside `tagList/` imports `Tag` directly. The same pattern repeats for utils, e.g. `src/utils/loadExperiences/joinJobsWithRecommendations/`.
+Worked examples: [src/components/tagList/](src/components/tagList/) (component nesting),
+[src/utils/loadExperiences/joinJobsWithRecommendations/](src/utils/loadExperiences/joinJobsWithRecommendations/)
+(util nesting).
