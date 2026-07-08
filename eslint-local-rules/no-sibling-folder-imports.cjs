@@ -43,6 +43,25 @@ function findSrcRoot(dir) {
   }
 }
 
+// KNOWN GAP (as of the Skills radar chart work, 2026-07-08): this function only allows a true
+// ancestor/descendant relationship (below) or a strictly-lower top-level layer (LAYER_RANK below).
+// It has no notion of "a shared leaf folder deliberately placed under a common ancestor within the
+// same top-level directory" — e.g. `src/views/skills/categoryLegend/` is meant to be importable by
+// both `src/views/skills/skillsViews/skillsGraphView/skillsBarChart/` and
+// `src/views/skills/skillsViews/skillsRadarView/skillsRadarChart/`, but neither of those is an
+// ancestor of `categoryLegend/` (they're cousins under `views/skills/`), so this currently reports
+// a warning for that legitimate case. `code-style.md` already documents this as the intended
+// pattern (see its "lift to a common ancestor" bullet) — the rule just doesn't enforce it yet.
+//
+// To fix: add a case that allows `importDir` when its *parent* directory is an ancestor of
+// `currentDir` (i.e. `importDir`'s parent equals some directory on the path from `srcRoot` down to
+// `currentDir`) — this covers "shared folder nested directly under a common ancestor". Do NOT just
+// allow any import whose target's parent is an ancestor of the importer without further
+// restriction: that would also permit genuinely bad cousin imports, e.g.
+// `skillsGraphView` reaching directly into `skillsListView`'s internals, because
+// `skillsListView`'s parent (`skillsViews/`) is also an ancestor of `skillsGraphView`. The two
+// cases need to be told apart — e.g. by only allowing it when `importDir` is a *leaf* (no further
+// nested view/chart subfolders of its own) — before loosening this.
 function isAllowed(currentDir, importDir, srcRoot) {
   const sep = path.sep;
   const curr = currentDir.endsWith(sep) ? currentDir : currentDir + sep;
