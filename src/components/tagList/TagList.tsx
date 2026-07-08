@@ -1,23 +1,24 @@
-import { memo } from 'react';
+import type { ChipProps } from '@mui/material/Chip';
 import Box from '@mui/material/Box';
-
-import { skillColour, skillShadeIndex } from '@/utils/skillColour';
+import { memo } from 'react';
 
 import { Tag } from './tag';
 
 export interface TagListProps {
   items: string[];
   onItemClick?: (item: string) => void;
+  getColour?: (item: string) => ChipProps['color'];
+  getShadeIndex?: (item: string) => number;
 }
 
-export const TagList = memo(({ items, onItemClick }: TagListProps) => {
+export const TagList = memo(({ items, onItemClick, getColour, getShadeIndex }: TagListProps) => {
   return (
     <Box component="ul" sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, p: 0, m: 0 }}>
       {items.map((item) => (
         <Box key={item} component="li" sx={{ listStyle: 'none' }}>
           <Tag
-            colour={skillColour(item)}
-            shadeIndex={skillShadeIndex(item)}
+            colour={getColour?.(item)}
+            shadeIndex={getShadeIndex?.(item)}
             onClick={
               onItemClick !== undefined
                 ? () => {
