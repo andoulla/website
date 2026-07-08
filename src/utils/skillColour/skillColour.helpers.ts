@@ -2,15 +2,20 @@ import type { Theme } from '@mui/material/styles';
 
 import { skills } from '@/data/skills';
 
-import { CATEGORY_COLOUR_MAP } from './skillColour.constants';
-import type { SkillCategory, SkillColour } from './skillColour.types';
+import { CATEGORY_COLOUR_MAP, CUSTOM_COLOUR_HEX } from './skillColour.constants';
+import type { CustomSkillColour, SkillCategory, SkillColour } from './skillColour.types';
+
+export const isCustomSkillColour = (colour: SkillColour): colour is CustomSkillColour =>
+  colour in CUSTOM_COLOUR_HEX;
 
 const SKILL_CATEGORY_MAP: Record<string, SkillCategory> = Object.fromEntries(
   skills.map((skill) => [skill.name, skill.category])
 );
 
+// 'tooling' is the fallback for a skill name absent from the master list — arbitrary but
+// deliberately the most catch-all-ish of the 5 categories.
 export const skillCategory = (skill: string): SkillCategory => {
-  return SKILL_CATEGORY_MAP[skill] ?? 'other';
+  return SKILL_CATEGORY_MAP[skill] ?? 'tooling';
 };
 
 export const skillColour = (skill: string): SkillColour => {
@@ -27,6 +32,7 @@ export const skillShadeIndex = (skill: string): number => {
 
 // Resolves a SkillColour key to its palette hex, or grey if unrecognised.
 export const resolveSkillColourMain = (colour: SkillColour, theme: Theme): string => {
+  if (isCustomSkillColour(colour)) return CUSTOM_COLOUR_HEX[colour];
   if (colour === 'default') return theme.palette.grey[400];
   const entry = theme.palette[colour as keyof typeof theme.palette];
   if (entry !== null && typeof entry === 'object' && 'main' in entry) {

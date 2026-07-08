@@ -2,7 +2,7 @@ import type { Theme } from '@mui/material/styles';
 
 import { SkillSummary } from '@/testing';
 import { computeShadeColour } from '@/utils/computeShadeColour';
-import { skillShadeIndex } from '@/utils/skillColour';
+import { CUSTOM_COLOUR_HEX, skillShadeIndex } from '@/utils/skillColour';
 
 import { dotColour } from './SkillItemsList.helpers';
 
@@ -38,6 +38,19 @@ describe('dotColour', () => {
 
     const expected = computeShadeColour(
       PRIMARY_MAIN,
+      skillShadeIndex(skill.skill),
+      theme.palette.getContrastText
+    );
+
+    expect(dotColour(skill, theme)).toBe(expected.bg);
+  });
+
+  test('returns a shaded background colour for a custom (non-palette) skill colour', () => {
+    const skill = new SkillSummary().skill('Team Leadership').colour('brown').mock();
+    const theme = createTheme();
+
+    const expected = computeShadeColour(
+      CUSTOM_COLOUR_HEX.brown,
       skillShadeIndex(skill.skill),
       theme.palette.getContrastText
     );

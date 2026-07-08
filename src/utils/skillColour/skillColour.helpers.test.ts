@@ -1,5 +1,6 @@
 import type { Theme } from '@mui/material/styles';
 
+import { CUSTOM_COLOUR_HEX } from './skillColour.constants';
 import {
   resolveSkillColourMain,
   skillCategory,
@@ -8,24 +9,24 @@ import {
 } from './skillColour.helpers';
 
 describe('skillColour', () => {
-  test('engineering skills map to primary', () => {
-    expect(skillColour('React')).toBe('primary');
-    expect(skillColour('TypeScript')).toBe('primary');
+  test('engineering skills map to teal', () => {
+    expect(skillColour('React')).toBe('teal');
+    expect(skillColour('TypeScript')).toBe('teal');
   });
 
-  test('managerial skills map to secondary', () => {
-    expect(skillColour('Team Leadership')).toBe('secondary');
-    expect(skillColour('Roadmap Planning')).toBe('secondary');
+  test('leadership & delivery skills map to brown', () => {
+    expect(skillColour('Team Leadership')).toBe('brown');
+    expect(skillColour('Roadmap Planning')).toBe('brown');
   });
 
-  test('soft skills map to success', () => {
-    expect(skillColour('Mentoring')).toBe('success');
-    expect(skillColour('Team Onboarding')).toBe('success');
+  test('people & stakeholders skills map to gold', () => {
+    expect(skillColour('Mentoring')).toBe('gold');
+    expect(skillColour('Team Onboarding')).toBe('gold');
   });
 
-  test('unknown skills map to info', () => {
-    expect(skillColour('Rust')).toBe('info');
-    expect(skillColour('Cobol')).toBe('info');
+  test('unknown skills map to plum (the tooling fallback)', () => {
+    expect(skillColour('Rust')).toBe('plum');
+    expect(skillColour('Cobol')).toBe('plum');
   });
 
   test('always returns the same colour for the same skill', () => {
@@ -37,12 +38,12 @@ describe('skillColour', () => {
 describe('skillCategory', () => {
   test('returns the correct category for known skills', () => {
     expect(skillCategory('React')).toBe('engineering');
-    expect(skillCategory('Team Leadership')).toBe('managerial');
-    expect(skillCategory('Mentoring')).toBe('soft-skills');
+    expect(skillCategory('Team Leadership')).toBe('leadership-delivery');
+    expect(skillCategory('Mentoring')).toBe('people-stakeholders');
   });
 
-  test('returns other for unknown skills', () => {
-    expect(skillCategory('Rust')).toBe('other');
+  test('returns tooling for unknown skills', () => {
+    expect(skillCategory('Rust')).toBe('tooling');
   });
 });
 
@@ -91,5 +92,9 @@ describe('resolveSkillColourMain', () => {
 
   test('returns grey when the palette has no entry for the colour', () => {
     expect(resolveSkillColourMain('secondary', createTheme())).toBe(GREY_400);
+  });
+
+  test('returns the fixed hex for a custom colour, bypassing the theme palette', () => {
+    expect(resolveSkillColourMain('teal', createTheme())).toBe(CUSTOM_COLOUR_HEX.teal);
   });
 });
