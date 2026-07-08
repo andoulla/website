@@ -1,0 +1,62 @@
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import { memo } from 'react';
+
+import { TagList } from '@/components/tagList';
+import type { Article } from '@/types';
+import { formatDate } from '@/utils/formatDate';
+
+export interface ArticleTileProps {
+  article: Article;
+}
+
+const lineClampSx = (lines: number) => ({
+  display: '-webkit-box',
+  WebkitLineClamp: lines,
+  WebkitBoxOrient: 'vertical' as const,
+  overflow: 'hidden',
+});
+
+const getTagColour = () => 'primary' as const;
+
+export const ArticleTile = memo(({ article }: ArticleTileProps) => {
+  return (
+    <Card
+      variant="outlined"
+      sx={{
+        height: '100%',
+        minHeight: 320,
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        '&:hover': { transform: 'translateY(-4px)', boxShadow: 4 },
+      }}
+    >
+      <CardActionArea
+        component="a"
+        href={article.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{ height: '100%', alignItems: 'stretch' }}
+      >
+        <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <Typography variant="h6" component="h2" sx={lineClampSx(2)}>
+            {article.title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 1 }}>
+            {formatDate(article.publishedDate)}
+          </Typography>
+          <Typography variant="body2" sx={lineClampSx(3)}>
+            {article.excerpt}
+          </Typography>
+          <Box sx={{ mt: 'auto', pt: 2 }}>
+            <TagList items={article.tags} getColour={getTagColour} variant="outlined" />
+          </Box>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+  );
+});
+
+ArticleTile.displayName = 'ArticleTile';
