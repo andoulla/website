@@ -98,9 +98,14 @@ const CategoryPatternDef = ({ category, colour, markColour }: CategoryPatternDef
 interface SkillsBarChartProps {
   skills: SkillSummary[];
   searchTerm?: string;
+  showPatterns?: boolean;
 }
 
-export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
+export const SkillsBarChart = ({
+  skills,
+  searchTerm,
+  showPatterns = true,
+}: SkillsBarChartProps) => {
   const theme = useTheme();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
@@ -159,16 +164,18 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
             axisLine={false}
           />
           <Tooltip content={SkillBarTooltip} cursor={{ fill: theme.palette.action.hover }} />
-          <defs>
-            {legendEntries.map(({ cat, colour, markColour }) => (
-              <CategoryPatternDef
-                key={cat}
-                category={cat}
-                colour={colour}
-                markColour={markColour}
-              />
-            ))}
-          </defs>
+          {showPatterns && (
+            <defs>
+              {legendEntries.map(({ cat, colour, markColour }) => (
+                <CategoryPatternDef
+                  key={cat}
+                  category={cat}
+                  colour={colour}
+                  markColour={markColour}
+                />
+              ))}
+            </defs>
+          )}
           <Bar
             dataKey="years"
             radius={[0, 4, 4, 0]}
@@ -186,10 +193,11 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
             {skills.map((skill, i) => {
               const isMatch = isBarMatch(skill, searchTerm);
               const isHovered = i === hoverIndex && isMatch;
+              const colour = getPaletteMain(CATEGORY_COLOUR_MAP[skill.category], theme);
               return (
                 <Cell
                   key={skill.skill}
-                  fill={`url(#${getCategoryPatternId(skill.category)})`}
+                  fill={showPatterns ? `url(#${getCategoryPatternId(skill.category)})` : colour}
                   style={{
                     opacity: isMatch ? 1 : 0.35,
                     filter: isHovered ? 'brightness(1.25)' : 'none',
@@ -222,7 +230,9 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
                 width: 10,
                 height: 10,
                 borderRadius: '2px',
-                background: getCategoryPatternBackground(cat, colour, markColour),
+                background: showPatterns
+                  ? getCategoryPatternBackground(cat, colour, markColour)
+                  : colour,
                 flexShrink: 0,
               }}
             />

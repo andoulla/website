@@ -9,7 +9,11 @@ import { useSkillsViewContext } from '../SkillsViewContext';
 
 import { SkillsBarChart } from './skillsBarChart';
 
-export const SkillsGraphView = () => {
+export interface SkillsGraphViewProps {
+  showPatterns?: boolean;
+}
+
+export const SkillsGraphView = ({ showPatterns = true }: SkillsGraphViewProps) => {
   const { skills, selectedCategories, selectedSubCategories, searchTerm } = useSkillsViewContext();
 
   const filteredSkills = useMemo(() => {
@@ -27,5 +31,7 @@ export const SkillsGraphView = () => {
     return <Alert severity="info">No skill data available.</Alert>;
   }
 
-  return <SkillsBarChart skills={filteredSkills} searchTerm={searchTerm} />;
+  return (
+    <SkillsBarChart skills={filteredSkills} searchTerm={searchTerm} showPatterns={showPatterns} />
+  );
 };

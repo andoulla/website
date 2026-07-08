@@ -3,7 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import RadarIcon from '@mui/icons-material/Radar';
 import ViewListIcon from '@mui/icons-material/ViewList';
+import Checkbox from '@mui/material/Checkbox';
 import CircularProgress from '@mui/material/CircularProgress';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -35,8 +37,8 @@ import {
 
 type ViewMode = 'barchart' | 'radar' | 'list';
 
-const renderSkillsView = (viewMode: ViewMode) => {
-  if (viewMode === 'barchart') return <SkillsGraphView />;
+const renderSkillsView = (viewMode: ViewMode, showPatterns: boolean) => {
+  if (viewMode === 'barchart') return <SkillsGraphView showPatterns={showPatterns} />;
   if (viewMode === 'radar') return <SkillsRadarView />;
   return <SkillsListView />;
 };
@@ -142,6 +144,7 @@ const SkillsContent = () => {
       : undefined;
 
   const [viewMode, setViewMode] = useState<ViewMode>('barchart');
+  const [showPatterns, setShowPatterns] = useState(false);
 
   const categories = useMemo(
     () => CATEGORY_ORDER.filter((cat) => skills.some((skill) => skill.category === cat)),
@@ -181,26 +184,41 @@ const SkillsContent = () => {
           onCategoriesChange={setSelectedCategories}
           onSubCategoriesChange={setSelectedSubCategories}
         />
-        <ToggleButtonGroup
-          value={viewMode}
-          exclusive
-          onChange={(_e, next: ViewMode | null) => {
-            if (next !== null) setViewMode(next);
-          }}
-          size="small"
-          aria-label="View mode"
-          sx={{ ml: 'auto' }}
-        >
-          <ToggleButton value="barchart" aria-label="Graph view">
-            <BarChartIcon fontSize="small" />
-          </ToggleButton>
-          <ToggleButton value="radar" aria-label="Radar view">
-            <RadarIcon fontSize="small" />
-          </ToggleButton>
-          <ToggleButton value="list" aria-label="List view">
-            <ViewListIcon fontSize="small" />
-          </ToggleButton>
-        </ToggleButtonGroup>
+        <Stack direction="row" sx={{ alignItems: 'center', ml: 'auto' }}>
+          {viewMode === 'barchart' && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={showPatterns}
+                  onChange={(_e, checked) => {
+                    setShowPatterns(checked);
+                  }}
+                  size="small"
+                />
+              }
+              label="Patterns"
+            />
+          )}
+          <ToggleButtonGroup
+            value={viewMode}
+            exclusive
+            onChange={(_e, next: ViewMode | null) => {
+              if (next !== null) setViewMode(next);
+            }}
+            size="small"
+            aria-label="View mode"
+          >
+            <ToggleButton value="barchart" aria-label="Graph view">
+              <BarChartIcon fontSize="small" />
+            </ToggleButton>
+            <ToggleButton value="radar" aria-label="Radar view">
+              <RadarIcon fontSize="small" />
+            </ToggleButton>
+            <ToggleButton value="list" aria-label="List view">
+              <ViewListIcon fontSize="small" />
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Stack>
       </Stack>
       <SkillsViewContextProvider
         skills={skills}
@@ -210,7 +228,7 @@ const SkillsContent = () => {
         highlightedSkill={highlightedSkill}
         searchTerm={searchTerm}
       >
-        {renderSkillsView(viewMode)}
+        {renderSkillsView(viewMode, showPatterns)}
       </SkillsViewContextProvider>
     </>
   );
