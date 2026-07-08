@@ -99,11 +99,20 @@
     "recommendationIds": []
   },
   {
-    "name": "Git/GitHub",
+    "name": "Git",
     "category": "engineering",
     "subCategory": "tooling",
     "type": "tech",
-    "synonyms": ["Git", "GitHub", "Source Control", "Repository"],
+    "synonyms": ["Source Control"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "elsevier-2016-08", "capco-2012-12"],
+    "recommendationIds": []
+  },
+  {
+    "name": "GitHub",
+    "category": "engineering",
+    "subCategory": "tooling",
+    "type": "tech",
+    "synonyms": ["Repository"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
