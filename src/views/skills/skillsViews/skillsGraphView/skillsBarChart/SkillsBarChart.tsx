@@ -6,6 +6,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { Theme } from '@mui/material/styles';
 import { lighten, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
 
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
@@ -47,6 +48,7 @@ export interface SkillsBarChartProps {
 export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
   const theme = useTheme();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
 
   if (skills.length === 0) {
     return (
@@ -101,7 +103,9 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
             dataKey="years"
             radius={[0, 4, 4, 0]}
             barSize={BAR_SIZE}
-            isAnimationActive={false}
+            isAnimationActive={!prefersReducedMotion}
+            animationDuration={400}
+            animationEasing="ease-out"
             onMouseEnter={(_data, index) => {
               setHoverIndex(index);
             }}
