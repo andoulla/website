@@ -1,5 +1,4 @@
 export {
-  isCustomSkillColour,
   resolveSkillColourMain,
   skillCategory,
   skillColour,

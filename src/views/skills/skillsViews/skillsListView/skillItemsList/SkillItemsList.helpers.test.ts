@@ -26,12 +26,6 @@ describe('dotColour', () => {
     expect(dotColour(skill, createTheme())).toBe(GREY_400);
   });
 
-  test('returns the default grey when the palette has no entry for the skill colour', () => {
-    const skill = new SkillSummary().colour('secondary').mock();
-
-    expect(dotColour(skill, createTheme())).toBe(GREY_400);
-  });
-
   test('returns a shaded background colour for a skill colour present on the palette', () => {
     const skill = new SkillSummary().skill('React').colour('primary').mock();
     const theme = createTheme();

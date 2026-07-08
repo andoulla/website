@@ -5,7 +5,7 @@ import { skills } from '@/data/skills';
 import { CATEGORY_COLOUR_MAP, CUSTOM_COLOUR_HEX } from './skillColour.constants';
 import type { CustomSkillColour, SkillCategory, SkillColour } from './skillColour.types';
 
-export const isCustomSkillColour = (colour: SkillColour): colour is CustomSkillColour =>
+const isCustomSkillColour = (colour: SkillColour): colour is CustomSkillColour =>
   colour in CUSTOM_COLOUR_HEX;
 
 const SKILL_CATEGORY_MAP: Record<string, SkillCategory> = Object.fromEntries(
@@ -30,13 +30,8 @@ export const skillShadeIndex = (skill: string): number => {
   return charSum % SHADE_COUNT;
 };
 
-// Grey is the fallback for an unrecognised colour.
 export const resolveSkillColourMain = (colour: SkillColour, theme: Theme): string => {
   if (isCustomSkillColour(colour)) return CUSTOM_COLOUR_HEX[colour];
   if (colour === 'default') return theme.palette.grey[400];
-  const entry = theme.palette[colour as keyof typeof theme.palette];
-  if (entry !== null && typeof entry === 'object' && 'main' in entry) {
-    return (entry as { main: string }).main;
-  }
-  return theme.palette.grey[400];
+  return theme.palette[colour].main;
 };

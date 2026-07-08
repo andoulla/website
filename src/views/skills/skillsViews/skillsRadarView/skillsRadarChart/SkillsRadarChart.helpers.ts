@@ -1,6 +1,6 @@
 import type { SkillCategory } from '@/data/skills.types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
-import { isSearchTermEmpty } from '@/utils/isSearchTermEmpty';
+import { hasSearchTerm } from '@/utils/hasSearchTerm';
 import { CATEGORY_LABELS } from '@/utils/skillCategory';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 
@@ -19,9 +19,8 @@ export const aggregateSkillsByCategory = (
     const avgYears =
       categorySkills.length > 0 ? Math.round((totalYears / categorySkills.length) * 10) / 10 : 0;
     const isMatch =
-      isSearchTermEmpty(searchTerm) ||
-      (searchTerm !== undefined &&
-        categorySkills.some((skill) => skillMatchesSearch(skill, searchTerm)));
+      !hasSearchTerm(searchTerm) ||
+      categorySkills.some((skill) => skillMatchesSearch(skill, searchTerm));
 
     return {
       category,

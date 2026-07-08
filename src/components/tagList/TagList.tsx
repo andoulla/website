@@ -4,7 +4,7 @@ import { memo } from 'react';
 
 import { Tag } from './tag';
 
-export interface TagListProps {
+interface TagListProps {
   items: string[];
   onItemClick?: (item: string) => void;
   getColour?: (item: string) => ChipProps['color'];

@@ -6,7 +6,7 @@ import type { SkillCategory } from '@/data/skills.types';
 import { CATEGORY_LABELS } from '@/utils/skillCategory';
 import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';
 
-export interface CategoryLegendProps {
+interface CategoryLegendProps {
   categories: SkillCategory[];
 }
 

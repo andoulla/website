@@ -90,10 +90,6 @@ describe('resolveSkillColourMain', () => {
     expect(resolveSkillColourMain('primary', createTheme())).toBe(PRIMARY_MAIN);
   });
 
-  test('returns grey when the palette has no entry for the colour', () => {
-    expect(resolveSkillColourMain('secondary', createTheme())).toBe(GREY_400);
-  });
-
   test('returns the fixed hex for a custom colour, bypassing the theme palette', () => {
     expect(resolveSkillColourMain('teal', createTheme())).toBe(CUSTOM_COLOUR_HEX.teal);
   });
