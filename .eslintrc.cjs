@@ -79,6 +79,7 @@ module.exports = {
     '@typescript-eslint/no-misused-promises': 'error',
     '@typescript-eslint/consistent-type-imports': 'error',
     'local/no-sibling-folder-imports': 'warn',
+    'import/no-cycle': ['error', { maxDepth: Infinity, ignoreExternal: true }],
     'import/order': [
       'error',
       {
