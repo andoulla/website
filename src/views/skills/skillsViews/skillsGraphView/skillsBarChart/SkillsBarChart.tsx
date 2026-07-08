@@ -5,17 +5,23 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { Theme } from '@mui/material/styles';
-import { lighten, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
 
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
+import type { SkillCategory } from '@/data/skills.types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/utils/skillCategory';
 import { CATEGORY_COLOUR_MAP } from '@/utils/skillColour';
 import type { SkillColour } from '@/utils/skillColour';
 
-import { isBarMatch } from './SkillsBarChart.helpers';
+import {
+  CATEGORY_PATTERN_KIND,
+  getCategoryPatternBackground,
+  getCategoryPatternId,
+  isBarMatch,
+} from './SkillsBarChart.helpers';
 
 const BAR_HEIGHT = 36;
 const BAR_SIZE = 14;
@@ -40,7 +46,56 @@ const SkillBarTooltip = ({ active, payload }: TooltipContentProps) => {
   return <SkillTooltipContent skill={skill} />;
 };
 
-export interface SkillsBarChartProps {
+interface CategoryPatternDefProps {
+  category: SkillCategory;
+  colour: string;
+  markColour: string;
+}
+
+// SVG <pattern> for a category's bar fill — mirrors getCategoryPatternBackground's CSS look.
+// Rendered inside <defs>, which Recharts passes straight through into the chart's <svg>.
+const CategoryPatternDef = ({ category, colour, markColour }: CategoryPatternDefProps) => {
+  const id = getCategoryPatternId(category);
+  switch (CATEGORY_PATTERN_KIND[category]) {
+    case 'diagonal':
+      return (
+        <pattern
+          id={id}
+          patternUnits="userSpaceOnUse"
+          width={8}
+          height={8}
+          patternTransform="rotate(45)"
+        >
+          <rect width={8} height={8} fill={colour} />
+          <line x1={2} y1={0} x2={2} y2={8} stroke={markColour} strokeWidth={2} />
+        </pattern>
+      );
+    case 'vertical':
+      return (
+        <pattern id={id} patternUnits="userSpaceOnUse" width={8} height={8}>
+          <rect width={8} height={8} fill={colour} />
+          <line x1={4} y1={0} x2={4} y2={8} stroke={markColour} strokeWidth={2} />
+        </pattern>
+      );
+    case 'crosshatch':
+      return (
+        <pattern id={id} patternUnits="userSpaceOnUse" width={8} height={8}>
+          <rect width={8} height={8} fill={colour} />
+          <line x1={0} y1={0} x2={8} y2={8} stroke={markColour} strokeWidth={1.5} />
+          <line x1={8} y1={0} x2={0} y2={8} stroke={markColour} strokeWidth={1.5} />
+        </pattern>
+      );
+    case 'dots':
+      return (
+        <pattern id={id} patternUnits="userSpaceOnUse" width={6} height={6}>
+          <rect width={6} height={6} fill={colour} />
+          <circle cx={3} cy={3} r={1.5} fill={markColour} />
+        </pattern>
+      );
+  }
+};
+
+interface SkillsBarChartProps {
   skills: SkillSummary[];
   searchTerm?: string;
 }
@@ -60,14 +115,19 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
 
   const chartHeight = Math.max(MIN_HEIGHT, skills.length * BAR_HEIGHT + CHART_PADDING);
 
-  // Legend: one entry per category present, in fixed display order.
+  // Legend: one entry per category present, in fixed display order. markColour is the pattern's
+  // ink colour — high-contrast against the category colour so the texture reads at swatch size.
   const legendEntries = CATEGORY_ORDER.filter((cat) =>
     skills.some((skill) => skill.category === cat)
-  ).map((cat) => ({
-    cat,
-    colour: CATEGORY_COLOUR_MAP[cat],
-    label: CATEGORY_LABELS[cat],
-  }));
+  ).map((cat) => {
+    const colour = getPaletteMain(CATEGORY_COLOUR_MAP[cat], theme);
+    return {
+      cat,
+      colour,
+      markColour: theme.palette.getContrastText(colour),
+      label: CATEGORY_LABELS[cat],
+    };
+  });
 
   // Y-axis width: longer skill names need more space, capped for mobile.
   const maxLabelLength = Math.max(...skills.map((skill) => skill.skill.length));
@@ -99,6 +159,16 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
             axisLine={false}
           />
           <Tooltip content={SkillBarTooltip} cursor={{ fill: theme.palette.action.hover }} />
+          <defs>
+            {legendEntries.map(({ cat, colour, markColour }) => (
+              <CategoryPatternDef
+                key={cat}
+                category={cat}
+                colour={colour}
+                markColour={markColour}
+              />
+            ))}
+          </defs>
           <Bar
             dataKey="years"
             radius={[0, 4, 4, 0]}
@@ -114,16 +184,16 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
             }}
           >
             {skills.map((skill, i) => {
-              const fill = getPaletteMain(skill.colour, theme);
               const isMatch = isBarMatch(skill, searchTerm);
-              const shouldLighten = i === hoverIndex && isMatch;
+              const isHovered = i === hoverIndex && isMatch;
               return (
                 <Cell
                   key={skill.skill}
-                  fill={shouldLighten ? lighten(fill, 0.25) : fill}
+                  fill={`url(#${getCategoryPatternId(skill.category)})`}
                   style={{
                     opacity: isMatch ? 1 : 0.35,
-                    transition: 'fill 0.15s ease, opacity 0.2s ease',
+                    filter: isHovered ? 'brightness(1.25)' : 'none',
+                    transition: 'filter 0.15s ease, opacity 0.2s ease',
                     cursor: 'pointer',
                   }}
                 />
@@ -133,7 +203,7 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
         </BarChart>
       </ResponsiveContainer>
 
-      {/* Legend — styled like a figure caption: muted text, dots vertically centred with labels */}
+      {/* Legend — styled like a figure caption: muted text, pattern swatches vertically centred with labels */}
       <Box
         aria-hidden="true"
         sx={{
@@ -145,16 +215,15 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
           pt: 1,
         }}
       >
-        {legendEntries.map(({ cat, colour, label }) => (
+        {legendEntries.map(({ cat, colour, markColour, label }) => (
           <Box key={cat} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Box
               sx={{
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                bgcolor: getPaletteMain(colour, theme),
+                width: 10,
+                height: 10,
+                borderRadius: '2px',
+                background: getCategoryPatternBackground(cat, colour, markColour),
                 flexShrink: 0,
-                opacity: 0.7,
               }}
             />
             <Typography variant="caption" color="text.secondary">
