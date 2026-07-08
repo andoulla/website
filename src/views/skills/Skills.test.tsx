@@ -40,7 +40,7 @@ function renderWithProvider(
 
 describe('Skills', () => {
   describe('rendering', () => {
-    test('renders the page heading, skill list, and defaults to the graph view', async () => {
+    test('renders the page heading and defaults to the radar view', async () => {
       let screen!: ReturnType<typeof render>;
 
       await act(async () => {
@@ -49,29 +49,15 @@ describe('Skills', () => {
       });
 
       expect(screen.getByRole('heading', { level: 1, name: 'Skills' })).toBeVisible();
-      expect(screen.getByText('Team Leadership')).toBeVisible();
+      expect(screen.getByRole('cell', { name: 'Managerial' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'List view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Graph view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Radar view' })).toBeVisible();
-      expect(screen.getByRole('button', { name: 'Graph view' })).toHaveAttribute(
+      expect(screen.getByRole('button', { name: 'Radar view' })).toHaveAttribute(
         'aria-pressed',
         'true'
       );
       expect(await axe(screen.container)).toHaveNoViolations();
-    });
-
-    test('shows the radar view placeholder when selected', async () => {
-      const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider();
-        await Promise.resolve();
-      });
-
-      await user.click(screen.getByRole('button', { name: 'Radar view' }));
-
-      expect(screen.getByRole('alert')).toBeVisible();
     });
 
     test('shows the filter bar in list view as well as graph view', async () => {
@@ -254,6 +240,50 @@ describe('Skills', () => {
       });
 
       await user.click(screen.getByRole('button', { name: 'Clear search' }));
+
+      expect(screen.getByText('search:')).toBeVisible();
+    });
+  });
+
+  describe('view mode URL sync', () => {
+    test('honours an explicit ?view= param over the default', async () => {
+      let screen!: ReturnType<typeof render>;
+
+      await act(async () => {
+        screen = renderWithProvider(() => Promise.resolve(EXPERIENCES), ['/skills?view=barchart']);
+        await Promise.resolve();
+      });
+
+      expect(screen.getByRole('button', { name: 'Graph view' })).toHaveAttribute(
+        'aria-pressed',
+        'true'
+      );
+    });
+
+    test('reflects a view toggle as a URL query param', async () => {
+      const user = userEvent.setup();
+      let screen!: ReturnType<typeof render>;
+
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
+
+      await user.click(screen.getByRole('button', { name: 'List view' }));
+
+      expect(screen.getByText('search:view=list')).toBeVisible();
+    });
+
+    test('omits the view query param when toggling to the default radar view', async () => {
+      const user = userEvent.setup();
+      let screen!: ReturnType<typeof render>;
+
+      await act(async () => {
+        screen = renderWithProvider(() => Promise.resolve(EXPERIENCES), ['/skills?view=list']);
+        await Promise.resolve();
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Radar view' }));
 
       expect(screen.getByText('search:')).toBeVisible();
     });

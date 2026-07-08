@@ -34,16 +34,38 @@ const renderRadarView = (overrides: Partial<SkillsViewContextValue> = {}) =>
   );
 
 describe('SkillsRadarView', () => {
-  test('shows a placeholder message with the filtered skill count', () => {
+  test('renders category totals for the unfiltered skill set', () => {
     const screen = renderRadarView();
 
-    expect(screen.getByText('Radar view coming soon (2 skills).')).toBeVisible();
+    expect(screen.getByRole('cell', { name: 'Engineering' }).closest('tr')?.textContent).toBe(
+      'Engineering41'
+    );
+    expect(screen.getByRole('cell', { name: 'Managerial' }).closest('tr')?.textContent).toBe(
+      'Managerial21'
+    );
   });
 
-  test('reflects the active category filter in the placeholder count', () => {
+  test('keeps a filtered-out category present at 0, rather than removing its axis', () => {
     const screen = renderRadarView({ selectedCategories: ['managerial'] });
 
-    expect(screen.getByText('Radar view coming soon (1 skills).')).toBeVisible();
+    expect(screen.getByRole('cell', { name: 'Engineering' }).closest('tr')?.textContent).toBe(
+      'Engineering00'
+    );
+    expect(screen.getByRole('cell', { name: 'Managerial' }).closest('tr')?.textContent).toBe(
+      'Managerial21'
+    );
+  });
+
+  test('shows "no skill data" when there are no skills at all', () => {
+    const screen = renderRadarView({ skills: [] });
+
+    expect(screen.getByText('No skill data available.')).toBeVisible();
+  });
+
+  test('shows "no skills match" when a filter excludes every skill', () => {
+    const screen = renderRadarView({ selectedSubCategories: ['testing'] });
+
+    expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
   });
 
   test('has no axe violations', async () => {

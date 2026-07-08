@@ -1,6 +1,7 @@
 import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 
-import { CATEGORY_PARAM, SUBCATEGORY_PARAM } from './Skills.constants';
+import { CATEGORY_PARAM, SUBCATEGORY_PARAM, VIEW_PARAM } from './Skills.constants';
+import type { ViewMode } from './Skills.types';
 
 // Reads the comma-separated `category` URL param into a typed list.
 export const parseCategories = (raw: string | null): SkillCategory[] =>
@@ -13,19 +14,27 @@ export const parseSubCategories = (raw: string | null): SkillSubCategory[] =>
 // Reads the `search` URL param, defaulting to an empty string when absent.
 export const parseSearch = (raw: string | null): string => raw ?? '';
 
-// Keeps `category` ahead of `subCategory` in the URL regardless of which was set most recently.
+const VIEW_MODES: ViewMode[] = ['barchart', 'radar', 'list'];
+
+// Validates the raw `view` param against known ViewModes; null when absent or unrecognised.
+export const parseViewMode = (raw: string | null): ViewMode | null =>
+  VIEW_MODES.includes(raw as ViewMode) ? (raw as ViewMode) : null;
+
+// Keeps `view` ahead of `category` ahead of `subCategory` in the URL, regardless of set order.
 export const reorderFilterParams = (params: URLSearchParams): URLSearchParams => {
   const ordered = new URLSearchParams();
 
-  // Set category and subCategory first, in that fixed order, when present.
-  for (const key of [CATEGORY_PARAM, SUBCATEGORY_PARAM]) {
+  // Set view, category, and subCategory first, in that fixed order, when present.
+  for (const key of [VIEW_PARAM, CATEGORY_PARAM, SUBCATEGORY_PARAM]) {
     const value = params.get(key);
     if (value !== null) ordered.set(key, value);
   }
 
   // Carry over any other params (e.g. `skill`) after them, in their original order.
   for (const [key, value] of params) {
-    if (key !== CATEGORY_PARAM && key !== SUBCATEGORY_PARAM) ordered.set(key, value);
+    if (key !== VIEW_PARAM && key !== CATEGORY_PARAM && key !== SUBCATEGORY_PARAM) {
+      ordered.set(key, value);
+    }
   }
 
   return ordered;

@@ -17,13 +17,15 @@ import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 import { CATEGORY_ORDER, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 
-import { CATEGORY_PARAM, SEARCH_PARAM, SUBCATEGORY_PARAM } from './Skills.constants';
+import { CATEGORY_PARAM, SEARCH_PARAM, SUBCATEGORY_PARAM, VIEW_PARAM } from './Skills.constants';
 import {
   parseCategories,
   parseSearch,
   parseSubCategories,
+  parseViewMode,
   reorderFilterParams,
 } from './Skills.helpers';
+import type { ViewMode } from './Skills.types';
 import { SkillFilterBar } from './skillFilterBar';
 import { SkillSearchBar } from './skillSearchBar';
 import {
@@ -32,8 +34,6 @@ import {
   SkillsRadarView,
   SkillsViewContextProvider,
 } from './skillsViews';
-
-type ViewMode = 'barchart' | 'radar' | 'list';
 
 const renderSkillsView = (viewMode: ViewMode) => {
   if (viewMode === 'barchart') return <SkillsGraphView />;
@@ -141,7 +141,29 @@ const SkillsContent = () => {
       ? `${hiddenMatchCount} match${hiddenMatchCount === 1 ? '' : 'es'} hidden by filters`
       : undefined;
 
-  const [viewMode, setViewMode] = useState<ViewMode>('barchart');
+  const [viewMode, setViewModeState] = useState<ViewMode>(
+    () => parseViewMode(searchParams.get(VIEW_PARAM)) ?? 'radar'
+  );
+
+  const setViewMode = useCallback(
+    (next: ViewMode) => {
+      setViewModeState(next);
+      setSearchParams(
+        (prev) => {
+          const params = new URLSearchParams(prev);
+          // 'radar' is the default now, so it's the value that's omitted from the URL.
+          if (next === 'radar') {
+            params.delete(VIEW_PARAM);
+          } else {
+            params.set(VIEW_PARAM, next);
+          }
+          return reorderFilterParams(params);
+        },
+        { replace: true }
+      );
+    },
+    [setSearchParams]
+  );
 
   const categories = useMemo(
     () => CATEGORY_ORDER.filter((cat) => skills.some((skill) => skill.category === cat)),

@@ -2,6 +2,7 @@ import {
   parseCategories,
   parseSearch,
   parseSubCategories,
+  parseViewMode,
   reorderFilterParams,
 } from './Skills.helpers';
 
@@ -71,6 +72,22 @@ describe('parseSearch', () => {
   });
 });
 
+describe('parseViewMode', () => {
+  test('returns null when the param is null', () => {
+    expect(parseViewMode(null)).toBeNull();
+  });
+
+  test('returns null for an unrecognised value', () => {
+    expect(parseViewMode('grid')).toBeNull();
+  });
+
+  test('returns each recognised view mode', () => {
+    expect(parseViewMode('barchart')).toBe('barchart');
+    expect(parseViewMode('radar')).toBe('radar');
+    expect(parseViewMode('list')).toBe('list');
+  });
+});
+
 describe('reorderFilterParams', () => {
   test('moves category ahead of subCategory when subCategory was set first', () => {
     const params = new URLSearchParams('subCategory=testing&category=engineering');
@@ -80,7 +97,15 @@ describe('reorderFilterParams', () => {
     expect(result.toString()).toBe('category=engineering&subCategory=testing');
   });
 
-  test('leaves other params in place after category and subCategory', () => {
+  test('puts view ahead of category and subCategory', () => {
+    const params = new URLSearchParams('subCategory=testing&category=engineering&view=list');
+
+    const result = reorderFilterParams(params);
+
+    expect(result.toString()).toBe('view=list&category=engineering&subCategory=testing');
+  });
+
+  test('leaves other params in place after view, category, and subCategory', () => {
     const params = new URLSearchParams('skill=React&subCategory=testing&category=engineering');
 
     const result = reorderFilterParams(params);
@@ -88,7 +113,7 @@ describe('reorderFilterParams', () => {
     expect(result.toString()).toBe('category=engineering&subCategory=testing&skill=React');
   });
 
-  test('omits category or subCategory when not present', () => {
+  test('omits view, category, or subCategory when not present', () => {
     const params = new URLSearchParams('skill=React&subCategory=testing');
 
     const result = reorderFilterParams(params);
