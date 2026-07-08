@@ -124,6 +124,7 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
                   style={{
                     opacity: isMatch ? 1 : 0.35,
                     transition: 'fill 0.15s ease, opacity 0.2s ease',
+                    cursor: 'pointer',
                   }}
                 />
               );
