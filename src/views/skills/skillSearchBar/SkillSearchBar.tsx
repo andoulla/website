@@ -38,9 +38,14 @@ export const SkillSearchBar = ({ value, onChange, hint }: SkillSearchBarProps) =
       helperText={hint !== undefined ? <span aria-live="polite">{hint}</span> : undefined}
       sx={{ width: { xs: '100%', sm: 220 } }}
       slotProps={{
-        htmlInput: { 'aria-label': 'Search skills by name' },
+        htmlInput: { 'aria-label': 'Search skills by name', sx: { py: '6px' } },
         // MUI calls the icon/button placed inside the input's edges "adornments"
-        input: { startAdornment: searchIcon, endAdornment: clearButton },
+        input: {
+          startAdornment: searchIcon,
+          endAdornment: clearButton,
+          // Match the ~36px height and divider-coloured border of the toggle group / filter button.
+          sx: { height: 36, '& fieldset': { borderColor: 'divider' } },
+        },
       }}
     />
   );
