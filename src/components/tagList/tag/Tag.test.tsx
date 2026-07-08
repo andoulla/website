@@ -45,6 +45,16 @@ describe('Tag', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
+  test('renders as an outlined chip when variant is "outlined"', () => {
+    const screen = render(
+      <Tag colour="secondary" variant="outlined">
+        React
+      </Tag>
+    );
+
+    expect(screen.getByText('React').closest('.MuiChip-root')).toHaveClass('MuiChip-outlined');
+  });
+
   test('calls onClick when the tag is clicked', async () => {
     const user = userEvent.setup();
     const onClick = jest.fn();

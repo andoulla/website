@@ -74,4 +74,10 @@ describe('TagList', () => {
     expect(getShadeIndex).toHaveBeenCalledWith('React');
     expect(getShadeIndex).toHaveBeenCalledWith('TypeScript');
   });
+
+  test('passes the variant prop through to each tag', () => {
+    const screen = render(<TagList items={['React']} variant="outlined" />);
+
+    expect(screen.getByText('React').closest('.MuiChip-root')).toHaveClass('MuiChip-outlined');
+  });
 });
