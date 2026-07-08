@@ -1,6 +1,6 @@
 import contactData from './contact.json';
 
-export interface Contact {
+interface Contact {
   email: string;
   linkedIn: string;
   github: string;
