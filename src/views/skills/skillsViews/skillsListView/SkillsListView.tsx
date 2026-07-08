@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import LinkedIn from '@mui/icons-material/LinkedIn';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -6,7 +6,6 @@ import Link from '@mui/material/Link';
 import Popover from '@mui/material/Popover';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { Section } from '@/components/section';
 import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
@@ -20,13 +19,11 @@ import {
   SUBCATEGORY_LABELS,
 } from '@/utils/skillCategory';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
-import { sortMatchesFirst } from '@/utils/sortMatchesFirst';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
 
 import { skillElementId } from './SkillsListView.helpers';
 import { SkillItemsList } from './skillItemsList';
-import { useFlipReorder } from './useFlipReorder';
 
 interface PopoverState {
   anchor: HTMLElement;
@@ -37,15 +34,6 @@ interface SubCategoryGroup {
   subCategory: SkillSubCategory;
   skills: SkillSummary[];
 }
-
-// A category/sub-category section, wrapped so it can slide into its new spot (via
-// useFlipReorder) when a search reorders it above or below its siblings.
-const AnimatedGroup = ({ children }: { children: ReactNode }) => {
-  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
-  const flipRef = useFlipReorder<HTMLDivElement>(prefersReducedMotion);
-
-  return <Box ref={flipRef}>{children}</Box>;
-};
 
 export const SkillsListView = () => {
   const {
@@ -69,16 +57,25 @@ export const SkillsListView = () => {
     [skills, selectedCategories, selectedSubCategories]
   );
 
+  // A non-empty search term hides everything but the matches, rather than just accenting them.
+  const searchedSkills = useMemo(
+    () =>
+      searchTerm === undefined || searchTerm.trim() === ''
+        ? filteredSkills
+        : filteredSkills.filter((skill) => skillMatchesSearch(skill, searchTerm)),
+    [filteredSkills, searchTerm]
+  );
+
   const byCategory = useMemo(
     () =>
       CATEGORY_ORDER.reduce<Record<SkillCategory, SkillSummary[]>>(
         (acc, cat) => {
-          acc[cat] = filteredSkills.filter((skill) => skill.category === cat);
+          acc[cat] = searchedSkills.filter((skill) => skill.category === cat);
           return acc;
         },
         { engineering: [], managerial: [], 'soft-skills': [], other: [] }
       ),
-    [filteredSkills]
+    [searchedSkills]
   );
 
   const subGroupsByCategory = useMemo(
@@ -98,29 +95,9 @@ export const SkillsListView = () => {
     [byCategory]
   );
 
-  // Categories/sub-categories containing a search match float to the top, so the match never
-  // ends up buried under sections the user isn't searching for.
-  const orderedCategories = useMemo(
-    () =>
-      sortMatchesFirst(
-        CATEGORY_ORDER.filter((cat) => byCategory[cat].length > 0),
-        (cat) => byCategory[cat].some((skill) => skillMatchesSearch(skill, searchTerm))
-      ),
-    [byCategory, searchTerm]
-  );
-
-  const orderedSubGroupsByCategory = useMemo(
-    () =>
-      CATEGORY_ORDER.reduce<Record<SkillCategory, SubCategoryGroup[]>>(
-        (acc, cat) => {
-          acc[cat] = sortMatchesFirst(subGroupsByCategory[cat], (group) =>
-            group.skills.some((skill) => skillMatchesSearch(skill, searchTerm))
-          );
-          return acc;
-        },
-        { engineering: [], managerial: [], 'soft-skills': [], other: [] }
-      ),
-    [subGroupsByCategory, searchTerm]
+  const nonEmptyCategories = useMemo(
+    () => CATEGORY_ORDER.filter((cat) => byCategory[cat].length > 0),
+    [byCategory]
   );
 
   const linkedRecs = useMemo(
@@ -140,34 +117,32 @@ export const SkillsListView = () => {
   return (
     <>
       <Stack spacing={2}>
-        {orderedCategories.map((cat) => (
-          <AnimatedGroup key={cat}>
-            <Section title={CATEGORY_LABELS[cat]}>
-              {orderedSubGroupsByCategory[cat].length > 1 ? (
-                <Stack spacing={1.5}>
-                  {orderedSubGroupsByCategory[cat].map((group) => (
-                    <AnimatedGroup key={group.subCategory}>
-                      <Section title={SUBCATEGORY_LABELS[group.subCategory]} titleLevel={3}>
-                        <SkillItemsList
-                          skills={group.skills}
-                          highlightedSkill={highlightedSkill}
-                          searchTerm={searchTerm}
-                          onItemClick={handleItemClick}
-                        />
-                      </Section>
-                    </AnimatedGroup>
-                  ))}
-                </Stack>
-              ) : (
-                <SkillItemsList
-                  skills={byCategory[cat]}
-                  highlightedSkill={highlightedSkill}
-                  searchTerm={searchTerm}
-                  onItemClick={handleItemClick}
-                />
-              )}
-            </Section>
-          </AnimatedGroup>
+        {nonEmptyCategories.map((cat) => (
+          <Section key={cat} title={CATEGORY_LABELS[cat]}>
+            {subGroupsByCategory[cat].length > 1 ? (
+              <Stack spacing={1.5}>
+                {subGroupsByCategory[cat].map((group) => (
+                  <Section
+                    key={group.subCategory}
+                    title={SUBCATEGORY_LABELS[group.subCategory]}
+                    titleLevel={3}
+                  >
+                    <SkillItemsList
+                      skills={group.skills}
+                      highlightedSkill={highlightedSkill}
+                      onItemClick={handleItemClick}
+                    />
+                  </Section>
+                ))}
+              </Stack>
+            ) : (
+              <SkillItemsList
+                skills={byCategory[cat]}
+                highlightedSkill={highlightedSkill}
+                onItemClick={handleItemClick}
+              />
+            )}
+          </Section>
         ))}
       </Stack>
 

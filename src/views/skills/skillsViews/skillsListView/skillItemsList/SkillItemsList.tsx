@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -8,47 +7,30 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type { Theme } from '@mui/material/styles';
 import { alpha, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
-import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
-import { sortMatchesFirst } from '@/utils/sortMatchesFirst';
 
 import { skillElementId } from '../SkillsListView.helpers';
-import { useFlipReorder } from '../useFlipReorder';
 
 import { dotColour } from './SkillItemsList.helpers';
 
 export interface SkillItemsListProps {
   skills: SkillSummary[];
   highlightedSkill?: string;
-  searchTerm?: string;
   onItemClick: (anchor: HTMLElement, skill: SkillSummary) => void;
 }
 
 interface SkillListItemProps {
   skill: SkillSummary;
   isHighlighted: boolean;
-  isSearchMatch: boolean;
   theme: Theme;
   onItemClick: (anchor: HTMLElement, skill: SkillSummary) => void;
 }
 
-// Its own component (not inlined in the .map below) so each row gets its own useFlipReorder
-// instance — the FLIP slide-into-place animation needs one ref/measurement pair per skill.
-const SkillListItem = ({
-  skill,
-  isHighlighted,
-  isSearchMatch,
-  theme,
-  onItemClick,
-}: SkillListItemProps) => {
-  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
-  const flipRef = useFlipReorder<HTMLLIElement>(prefersReducedMotion);
-
+const SkillListItem = ({ skill, isHighlighted, theme, onItemClick }: SkillListItemProps) => {
   return (
-    <ListItem ref={flipRef} disablePadding>
+    <ListItem disablePadding>
       <Tooltip
         title={<SkillTooltipContent skill={skill} />}
         slotProps={{
@@ -62,12 +44,9 @@ const SkillListItem = ({
           }}
           sx={{
             borderRadius: 1,
-            transition: 'background-color 0.4s ease, box-shadow 0.4s ease',
+            transition: 'background-color 0.4s ease',
             ...(isHighlighted && {
               bgcolor: alpha(theme.palette.primary.main, 0.12),
-            }),
-            ...(isSearchMatch && {
-              boxShadow: `inset 0 0 0 1.5px ${theme.palette.primary.main}`,
             }),
           }}
         >
@@ -91,32 +70,16 @@ const SkillListItem = ({
   );
 };
 
-export const SkillItemsList = ({
-  skills,
-  highlightedSkill,
-  searchTerm,
-  onItemClick,
-}: SkillItemsListProps) => {
+export const SkillItemsList = ({ skills, highlightedSkill, onItemClick }: SkillItemsListProps) => {
   const theme = useTheme();
-
-  // Search matches float to the top of their group so a match is never buried below the fold.
-  const orderedSkills = useMemo(
-    () =>
-      sortMatchesFirst(
-        skills,
-        (skill) => searchTerm !== undefined && skillMatchesSearch(skill, searchTerm)
-      ),
-    [skills, searchTerm]
-  );
 
   return (
     <List disablePadding dense>
-      {orderedSkills.map((skill) => (
+      {skills.map((skill) => (
         <SkillListItem
           key={skill.skill}
           skill={skill}
           isHighlighted={skill.skill === highlightedSkill}
-          isSearchMatch={searchTerm !== undefined && skillMatchesSearch(skill, searchTerm)}
           theme={theme}
           onItemClick={onItemClick}
         />

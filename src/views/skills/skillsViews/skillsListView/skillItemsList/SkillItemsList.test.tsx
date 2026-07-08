@@ -53,39 +53,13 @@ describe('SkillItemsList', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('applies a search-match accent border to a skill matching the search term', async () => {
+  test('applies a highlight background to the skill matching highlightedSkill', () => {
     const screen = render(
-      <SkillItemsList skills={SKILLS} searchTerm="rea" onItemClick={jest.fn()} />
+      <SkillItemsList skills={SKILLS} highlightedSkill="React" onItemClick={jest.fn()} />
     );
 
     expect(screen.getByRole('button', { name: 'React est. 4 years' })).toHaveStyle({
-      boxShadow: `inset 0 0 0 1.5px ${theme.palette.primary.main}`,
+      backgroundColor: alpha(theme.palette.primary.main, 0.12),
     });
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('does not apply the search-match accent to a skill not matching the search term', () => {
-    const screen = render(
-      <SkillItemsList skills={SKILLS} searchTerm="rea" onItemClick={jest.fn()} />
-    );
-
-    expect(screen.getByRole('button', { name: 'Docker est. 1 year' })).not.toHaveStyle({
-      boxShadow: `inset 0 0 0 1.5px ${theme.palette.primary.main}`,
-    });
-  });
-
-  test('applies both the highlight background and the search-match accent when a skill is both', () => {
-    const screen = render(
-      <SkillItemsList
-        skills={SKILLS}
-        highlightedSkill="React"
-        searchTerm="rea"
-        onItemClick={jest.fn()}
-      />
-    );
-    const button = screen.getByRole('button', { name: 'React est. 4 years' });
-
-    expect(button).toHaveStyle({ backgroundColor: alpha(theme.palette.primary.main, 0.12) });
-    expect(button).toHaveStyle({ boxShadow: `inset 0 0 0 1.5px ${theme.palette.primary.main}` });
   });
 });

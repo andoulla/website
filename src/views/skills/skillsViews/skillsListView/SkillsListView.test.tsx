@@ -139,11 +139,20 @@ describe('SkillsListView', () => {
   });
 
   describe('search', () => {
-    test('passes the search term through to a search-matching skill', async () => {
+    test('hides skills that do not match the search term', async () => {
       const screen = renderListView({ searchTerm: 'rea' });
 
       expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
+      expect(screen.queryByText('Team Leadership')).not.toBeInTheDocument();
+      expect(screen.queryByText('Mentoring')).not.toBeInTheDocument();
       expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('does not render a section for a category with no matches after search', () => {
+      const screen = renderListView({ searchTerm: 'rea' });
+
+      expect(screen.queryByText('Managerial')).not.toBeInTheDocument();
+      expect(screen.queryByText('Soft Skills')).not.toBeInTheDocument();
     });
   });
 
