@@ -1,0 +1,1 @@
+export { isSearchTermEmpty } from './isSearchTermEmpty';

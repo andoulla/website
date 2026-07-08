@@ -77,6 +77,10 @@ describe('parseViewMode', () => {
     expect(parseViewMode(null)).toBeNull();
   });
 
+  test('returns null when the param is undefined', () => {
+    expect(parseViewMode(undefined)).toBeNull();
+  });
+
   test('returns null for an unrecognised value', () => {
     expect(parseViewMode('grid')).toBeNull();
   });

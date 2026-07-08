@@ -5,13 +5,12 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
 import type { SkillSummary } from '@/utils/calculateSkillYears';
+import { formatYears } from '@/utils/formatYears';
 import { SUBCATEGORY_LABELS } from '@/utils/skillCategory';
 
 export interface SkillTooltipContentProps {
   skill: SkillSummary;
 }
-
-const formatYears = (years: number): string => `${years} year${years === 1 ? '' : 's'}`;
 
 export const SkillTooltipContent = ({ skill }: SkillTooltipContentProps) => {
   const theme = useTheme();

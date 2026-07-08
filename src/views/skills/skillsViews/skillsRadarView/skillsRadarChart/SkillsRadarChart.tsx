@@ -18,16 +18,14 @@ import { visuallyHidden } from '@mui/utils';
 
 import type { SkillCategory } from '@/data/skills.types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
+import { formatYears } from '@/utils/formatYears';
 import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';
-
-import { CategoryLegend } from '../../../categoryLegend';
+import { CategoryLegend } from '@/views/skills/categoryLegend';
 
 import { aggregateSkillsByCategory } from './SkillsRadarChart.helpers';
 import type { CategoryRadarPoint } from './SkillsRadarChart.types';
 
 const CHART_HEIGHT = 320;
-
-const formatYears = (years: number): string => `${years} year${years === 1 ? '' : 's'}`;
 
 // Bridges Recharts tooltip payload → a small category summary card.
 const CategoryTooltip = ({ active, payload }: TooltipContentProps) => {

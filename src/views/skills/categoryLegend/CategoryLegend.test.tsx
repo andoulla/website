@@ -12,4 +12,10 @@ describe('CategoryLegend', () => {
     expect(screen.queryByText('Soft Skills')).not.toBeInTheDocument();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
+
+  test('renders nothing when no categories are passed', () => {
+    const screen = render(<CategoryLegend categories={[]} />);
+
+    expect(screen.container).toBeEmptyDOMElement();
+  });
 });

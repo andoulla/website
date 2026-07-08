@@ -11,7 +11,7 @@ const SKILLS = [
 ];
 
 describe('SkillsRadarChart', () => {
-  test('renders the accessible table with a row per category plus a header', () => {
+  test('renders the accessible table with a row per category plus a header', async () => {
     const screen = render(
       <SkillsRadarChart
         skills={SKILLS}
@@ -23,6 +23,7 @@ describe('SkillsRadarChart', () => {
     expect(screen.getAllByRole('row')).toHaveLength(5);
     expect(screen.getByRole('cell', { name: 'Engineering' })).toBeVisible();
     expect(screen.getByRole('cell', { name: 'Managerial' })).toBeVisible();
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('keeps a filtered-out category at 0 years and 0 skills', () => {
@@ -54,14 +55,6 @@ describe('SkillsRadarChart', () => {
     const screen = render(<SkillsRadarChart skills={[]} categories={['engineering']} />);
 
     expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations with skills', async () => {
-    const screen = render(
-      <SkillsRadarChart skills={SKILLS} categories={['engineering', 'soft-skills']} />
-    );
-
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

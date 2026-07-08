@@ -12,8 +12,7 @@ import { SkillTooltipContent } from '@/components/skillTooltipContent';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/utils/skillCategory';
 import { resolveSkillColourMain } from '@/utils/skillColour';
-
-import { CategoryLegend } from '../../../categoryLegend';
+import { CategoryLegend } from '@/views/skills/categoryLegend';
 
 import { isBarMatch } from './SkillsBarChart.helpers';
 

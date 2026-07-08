@@ -1,6 +1,6 @@
 import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 
-import { CATEGORY_PARAM, SUBCATEGORY_PARAM, VIEW_PARAM } from './Skills.constants';
+import { CATEGORY_PARAM, SUBCATEGORY_PARAM, VIEW_MODES, VIEW_PARAM } from './Skills.constants';
 import type { ViewMode } from './Skills.types';
 
 // Reads the comma-separated `category` URL param into a typed list.
@@ -14,10 +14,8 @@ export const parseSubCategories = (raw: string | null): SkillSubCategory[] =>
 // Reads the `search` URL param, defaulting to an empty string when absent.
 export const parseSearch = (raw: string | null): string => raw ?? '';
 
-const VIEW_MODES: ViewMode[] = ['barchart', 'radar', 'list'];
-
 // Validates the raw `view` param against known ViewModes; null when absent or unrecognised.
-export const parseViewMode = (raw: string | null): ViewMode | null =>
+export const parseViewMode = (raw: string | null | undefined): ViewMode | null =>
   VIEW_MODES.includes(raw as ViewMode) ? (raw as ViewMode) : null;
 
 // Keeps `view` ahead of `category` ahead of `subCategory` in the URL, regardless of set order.

@@ -1,7 +1,8 @@
 import type { SkillCategory } from '@/data/skills.types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
+import { isSearchTermEmpty } from '@/utils/isSearchTermEmpty';
 import { CATEGORY_LABELS } from '@/utils/skillCategory';
-import { isSearchTermEmpty, skillMatchesSearch } from '@/utils/skillMatchesSearch';
+import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 
 import type { CategoryRadarPoint } from './SkillsRadarChart.types';
 

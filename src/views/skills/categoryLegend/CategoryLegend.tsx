@@ -14,6 +14,8 @@ export interface CategoryLegendProps {
 export const CategoryLegend = ({ categories }: CategoryLegendProps) => {
   const theme = useTheme();
 
+  if (categories.length === 0) return null;
+
   return (
     <Box
       aria-hidden="true"
