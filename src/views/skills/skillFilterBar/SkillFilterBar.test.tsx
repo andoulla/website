@@ -61,12 +61,17 @@ describe('SkillFilterBar', () => {
         screen.getByRole('menuitemcheckbox', { name: 'Engineering', checked: false })
       ).toBeVisible();
       expect(
-        screen.getByRole('menuitemcheckbox', { name: 'Managerial', checked: false })
+        screen.getByRole('menuitemcheckbox', { name: 'Quality & Performance', checked: false })
       ).toBeVisible();
       expect(
-        screen.getByRole('menuitemcheckbox', { name: 'Soft Skills', checked: false })
+        screen.getByRole('menuitemcheckbox', { name: 'Tooling', checked: false })
       ).toBeVisible();
-      expect(screen.getByRole('menuitemcheckbox', { name: 'Other', checked: false })).toBeVisible();
+      expect(
+        screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery', checked: false })
+      ).toBeVisible();
+      expect(
+        screen.getByRole('menuitemcheckbox', { name: 'People & Stakeholders', checked: false })
+      ).toBeVisible();
       expect(await axe(screen.container)).toHaveNoViolations();
     });
 
@@ -88,7 +93,7 @@ describe('SkillFilterBar', () => {
       const user = userEvent.setup();
       const onCategoriesChange = jest.fn();
       const screen = renderFilterBar({
-        selectedCategories: ['engineering', 'managerial'],
+        selectedCategories: ['engineering', 'leadership-delivery'],
         onCategoriesChange,
       });
 
@@ -98,7 +103,7 @@ describe('SkillFilterBar', () => {
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
-      expect(onCategoriesChange).toHaveBeenCalledWith(['managerial']);
+      expect(onCategoriesChange).toHaveBeenCalledWith(['leadership-delivery']);
     });
 
     test('prunes selected subcategories that belong to a category being deselected', async () => {
@@ -106,7 +111,7 @@ describe('SkillFilterBar', () => {
       const onSubCategoriesChange = jest.fn();
       const screen = renderFilterBar({
         selectedCategories: ['engineering'],
-        selectedSubCategories: ['testing'],
+        selectedSubCategories: ['styling'],
         onSubCategoriesChange,
       });
 
@@ -135,7 +140,7 @@ describe('SkillFilterBar', () => {
       expect(screen.getByText('Testing')).toBeVisible();
       expect(screen.getByText('Styling & UI')).toBeVisible();
       expect(screen.getByText('Design System')).toBeVisible();
-      expect(screen.getByText('Tooling')).toBeVisible();
+      expect(screen.getByText('Dev Tools')).toBeVisible();
       expect(screen.getByText('Collaboration Tools')).toBeVisible();
       expect(screen.getByText('Accessibility')).toBeVisible();
       expect(screen.getByText('Performance')).toBeVisible();
@@ -156,7 +161,7 @@ describe('SkillFilterBar', () => {
       );
 
       expect(screen.getByText('Frontend Development')).toBeVisible();
-      expect(screen.getByText('Testing')).toBeVisible();
+      expect(screen.getByText('Styling & UI')).toBeVisible();
       expect(screen.queryByText('Leadership')).not.toBeInTheDocument();
       expect(screen.queryByText('Mentoring')).not.toBeInTheDocument();
     });

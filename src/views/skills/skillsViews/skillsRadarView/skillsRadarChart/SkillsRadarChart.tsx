@@ -25,7 +25,7 @@ import { CategoryLegend } from '@/views/skills/categoryLegend';
 import { aggregateSkillsByCategory } from './SkillsRadarChart.helpers';
 import type { CategoryRadarPoint } from './SkillsRadarChart.types';
 
-const CHART_HEIGHT = 320;
+const CHART_HEIGHT = 440;
 
 // Bridges Recharts tooltip payload → a small category summary card.
 const CategoryTooltip = ({ active, payload }: TooltipContentProps) => {
@@ -35,7 +35,7 @@ const CategoryTooltip = ({ active, payload }: TooltipContentProps) => {
     <Paper elevation={3} sx={{ p: 1.5, maxWidth: 220 }}>
       <Typography variant="subtitle2">{point.label}</Typography>
       <Typography variant="body2" color="text.secondary">
-        {`${formatYears(point.years)} across ${point.skillCount} skill${point.skillCount === 1 ? '' : 's'}`}
+        {`${formatYears(point.avgYears)} avg across ${point.skillCount} skill${point.skillCount === 1 ? '' : 's'}`}
       </Typography>
     </Paper>
   );
@@ -61,7 +61,7 @@ export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadar
 
   const radarData = aggregateSkillsByCategory(categories, skills, searchTerm);
   // Floor of 1 avoids a zero-width domain when every category is 0.
-  const maxYears = Math.max(...radarData.map((point) => point.years), 1);
+  const maxYears = Math.max(...radarData.map((point) => point.avgYears), 1);
 
   // Per-vertex colour substitutes for Cell/isBarMatch — one polygon can't be dimmed per axis.
   const renderDot = ({ cx, cy, payload }: DotItemDotProps) => {
@@ -81,7 +81,7 @@ export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadar
   return (
     <Stack spacing={1}>
       <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-        <RadarChart data={radarData}>
+        <RadarChart data={radarData} outerRadius="90%">
           <PolarGrid stroke={theme.palette.divider} />
           <PolarAngleAxis
             dataKey="label"
@@ -94,7 +94,7 @@ export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadar
           />
           <Tooltip content={CategoryTooltip} />
           <Radar
-            dataKey="years"
+            dataKey="avgYears"
             stroke={theme.palette.primary.main}
             fill={theme.palette.primary.main}
             fillOpacity={0.25}
@@ -109,11 +109,11 @@ export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadar
 
       {/* Visually hidden table — accessible text alternative for screen readers */}
       <Box component="table" sx={visuallyHidden} aria-label="Skill category totals table">
-        <caption>Total years of experience by category</caption>
+        <caption>Average years of experience per skill, by category</caption>
         <thead>
           <tr>
             <th scope="col">Category</th>
-            <th scope="col">Years</th>
+            <th scope="col">Avg Years</th>
             <th scope="col">Skills</th>
           </tr>
         </thead>
@@ -121,7 +121,7 @@ export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadar
           {radarData.map((point) => (
             <tr key={point.category}>
               <td>{point.label}</td>
-              <td>{point.years}</td>
+              <td>{point.avgYears}</td>
               <td>{point.skillCount}</td>
             </tr>
           ))}

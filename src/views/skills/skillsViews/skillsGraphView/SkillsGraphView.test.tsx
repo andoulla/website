@@ -13,7 +13,7 @@ const SKILLS = [
   new SkillSummary()
     .skill('Team Leadership')
     .years(2)
-    .category('managerial')
+    .category('leadership-delivery')
     .subCategory('leadership')
     .colour('secondary')
     .mock(),
@@ -60,7 +60,7 @@ describe('SkillsGraphView', () => {
 
   test('combines category and subcategory filters', () => {
     const screen = renderGraphView({
-      selectedCategories: ['managerial'],
+      selectedCategories: ['leadership-delivery'],
       selectedSubCategories: ['frontend-development'],
     });
 
@@ -76,7 +76,7 @@ describe('SkillsGraphView', () => {
 
   test('shows the empty-filter message from SkillsBarChart, not the no-data Alert, when filters exclude every skill', () => {
     const screen = renderGraphView({
-      selectedCategories: ['managerial'],
+      selectedCategories: ['leadership-delivery'],
       selectedSubCategories: ['frontend-development'],
     });
 

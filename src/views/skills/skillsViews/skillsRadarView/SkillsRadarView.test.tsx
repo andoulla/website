@@ -13,7 +13,7 @@ const SKILLS = [
   new SkillSummary()
     .skill('Team Leadership')
     .years(2)
-    .category('managerial')
+    .category('leadership-delivery')
     .subCategory('leadership')
     .colour('secondary')
     .mock(),
@@ -40,20 +40,20 @@ describe('SkillsRadarView', () => {
     expect(screen.getByRole('cell', { name: 'Engineering' }).closest('tr')?.textContent).toBe(
       'Engineering41'
     );
-    expect(screen.getByRole('cell', { name: 'Managerial' }).closest('tr')?.textContent).toBe(
-      'Managerial21'
-    );
+    expect(
+      screen.getByRole('cell', { name: 'Leadership & Delivery' }).closest('tr')?.textContent
+    ).toBe('Leadership & Delivery21');
   });
 
   test('keeps a filtered-out category present at 0, rather than removing its axis', () => {
-    const screen = renderRadarView({ selectedCategories: ['managerial'] });
+    const screen = renderRadarView({ selectedCategories: ['leadership-delivery'] });
 
     expect(screen.getByRole('cell', { name: 'Engineering' }).closest('tr')?.textContent).toBe(
       'Engineering00'
     );
-    expect(screen.getByRole('cell', { name: 'Managerial' }).closest('tr')?.textContent).toBe(
-      'Managerial21'
-    );
+    expect(
+      screen.getByRole('cell', { name: 'Leadership & Delivery' }).closest('tr')?.textContent
+    ).toBe('Leadership & Delivery21');
   });
 
   test('shows "no skill data" when there are no skills at all', () => {

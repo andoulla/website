@@ -37,7 +37,7 @@
   },
   {
     "name": "React Testing Library",
-    "category": "engineering",
+    "category": "quality-performance",
     "subCategory": "testing",
     "type": "tech",
     "synonyms": ["RTL"],
@@ -46,7 +46,7 @@
   },
   {
     "name": "Jest",
-    "category": "engineering",
+    "category": "quality-performance",
     "subCategory": "testing",
     "type": "tech",
     "synonyms": [],
@@ -55,7 +55,7 @@
   },
   {
     "name": "Playwright",
-    "category": "engineering",
+    "category": "quality-performance",
     "subCategory": "testing",
     "type": "tech",
     "synonyms": [],
@@ -64,7 +64,7 @@
   },
   {
     "name": "Cypress",
-    "category": "engineering",
+    "category": "quality-performance",
     "subCategory": "testing",
     "type": "tech",
     "synonyms": [],
@@ -100,7 +100,7 @@
   },
   {
     "name": "Git/GitHub",
-    "category": "engineering",
+    "category": "tooling",
     "subCategory": "tooling",
     "type": "tech",
     "synonyms": ["Git", "GitHub", "Source Control", "Repository"],
@@ -109,7 +109,7 @@
   },
   {
     "name": "Yarn",
-    "category": "engineering",
+    "category": "tooling",
     "subCategory": "tooling",
     "type": "tech",
     "synonyms": [],
@@ -118,7 +118,7 @@
   },
   {
     "name": "ESLint",
-    "category": "engineering",
+    "category": "tooling",
     "subCategory": "tooling",
     "type": "tech",
     "synonyms": ["ES Lint"],
@@ -127,7 +127,7 @@
   },
   {
     "name": "Prettier",
-    "category": "engineering",
+    "category": "tooling",
     "subCategory": "tooling",
     "type": "tech",
     "synonyms": [],
@@ -136,7 +136,7 @@
   },
   {
     "name": "Sentry",
-    "category": "engineering",
+    "category": "tooling",
     "subCategory": "tooling",
     "type": "tech",
     "synonyms": [],
@@ -145,7 +145,7 @@
   },
   {
     "name": "Jira",
-    "category": "engineering",
+    "category": "tooling",
     "subCategory": "collaboration-tools",
     "type": "tech",
     "synonyms": ["JIRA"],
@@ -154,7 +154,7 @@
   },
   {
     "name": "Notion",
-    "category": "engineering",
+    "category": "tooling",
     "subCategory": "collaboration-tools",
     "type": "tech",
     "synonyms": [],
@@ -172,7 +172,7 @@
   },
   {
     "name": "Enzyme",
-    "category": "engineering",
+    "category": "quality-performance",
     "subCategory": "testing",
     "type": "tech",
     "synonyms": [],
@@ -199,7 +199,7 @@
   },
   {
     "name": "GitLab",
-    "category": "engineering",
+    "category": "tooling",
     "subCategory": "tooling",
     "type": "tech",
     "synonyms": [],
@@ -208,7 +208,7 @@
   },
   {
     "name": "Npm",
-    "category": "engineering",
+    "category": "tooling",
     "subCategory": "tooling",
     "type": "tech",
     "synonyms": ["NPM", "Node Package Manager"],
@@ -217,7 +217,7 @@
   },
   {
     "name": "Webpack",
-    "category": "engineering",
+    "category": "tooling",
     "subCategory": "tooling",
     "type": "tech",
     "synonyms": [],
@@ -226,7 +226,7 @@
   },
   {
     "name": "Confluence",
-    "category": "engineering",
+    "category": "tooling",
     "subCategory": "collaboration-tools",
     "type": "tech",
     "synonyms": [],
@@ -235,7 +235,7 @@
   },
   {
     "name": "Kibana",
-    "category": "engineering",
+    "category": "tooling",
     "subCategory": "tooling",
     "type": "tech",
     "synonyms": [],
@@ -244,7 +244,7 @@
   },
   {
     "name": "Accessibility",
-    "category": "engineering",
+    "category": "quality-performance",
     "subCategory": "accessibility",
     "type": "skill",
     "synonyms": ["a11y", "A11Y"],
@@ -262,7 +262,7 @@
   },
   {
     "name": "Testing Strategy",
-    "category": "engineering",
+    "category": "quality-performance",
     "subCategory": "testing",
     "type": "skill",
     "synonyms": [],
@@ -271,7 +271,7 @@
   },
   {
     "name": "Performance Optimisation",
-    "category": "engineering",
+    "category": "quality-performance",
     "subCategory": "performance",
     "type": "skill",
     "synonyms": ["Performance Optimization", "Perf"],
@@ -280,7 +280,7 @@
   },
   {
     "name": "Team Leadership",
-    "category": "managerial",
+    "category": "leadership-delivery",
     "subCategory": "leadership",
     "type": "skill",
     "synonyms": [],
@@ -296,7 +296,7 @@
   },
   {
     "name": "Technical Direction",
-    "category": "managerial",
+    "category": "leadership-delivery",
     "subCategory": "leadership",
     "type": "skill",
     "synonyms": [],
@@ -310,7 +310,7 @@
   },
   {
     "name": "Cross-functional Delivery",
-    "category": "managerial",
+    "category": "leadership-delivery",
     "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": [],
@@ -324,7 +324,7 @@
   },
   {
     "name": "Stakeholder Management",
-    "category": "managerial",
+    "category": "people-stakeholders",
     "subCategory": "stakeholder-management",
     "type": "skill",
     "synonyms": [],
@@ -333,7 +333,7 @@
   },
   {
     "name": "Roadmap Planning",
-    "category": "managerial",
+    "category": "leadership-delivery",
     "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": [],
@@ -342,7 +342,7 @@
   },
   {
     "name": "Release Management",
-    "category": "managerial",
+    "category": "leadership-delivery",
     "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": [],
@@ -351,7 +351,7 @@
   },
   {
     "name": "Project Planning",
-    "category": "managerial",
+    "category": "leadership-delivery",
     "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": [],
@@ -360,7 +360,7 @@
   },
   {
     "name": "Estimation & Planning",
-    "category": "managerial",
+    "category": "leadership-delivery",
     "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": [],
@@ -369,7 +369,7 @@
   },
   {
     "name": "Team Operations",
-    "category": "managerial",
+    "category": "leadership-delivery",
     "subCategory": "leadership",
     "type": "skill",
     "synonyms": [],
@@ -378,7 +378,7 @@
   },
   {
     "name": "Recruitment",
-    "category": "managerial",
+    "category": "leadership-delivery",
     "subCategory": "leadership",
     "type": "skill",
     "synonyms": [],
@@ -387,7 +387,7 @@
   },
   {
     "name": "Stakeholder Communication",
-    "category": "managerial",
+    "category": "people-stakeholders",
     "subCategory": "stakeholder-management",
     "type": "skill",
     "synonyms": [],
@@ -396,7 +396,7 @@
   },
   {
     "name": "Agile Delivery",
-    "category": "managerial",
+    "category": "leadership-delivery",
     "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": [],
@@ -405,7 +405,7 @@
   },
   {
     "name": "Mentoring",
-    "category": "soft-skills",
+    "category": "people-stakeholders",
     "subCategory": "mentoring",
     "type": "skill",
     "synonyms": [],
@@ -421,7 +421,7 @@
   },
   {
     "name": "Team Onboarding",
-    "category": "soft-skills",
+    "category": "people-stakeholders",
     "subCategory": "mentoring",
     "type": "skill",
     "synonyms": [],

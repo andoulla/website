@@ -14,13 +14,13 @@ const SKILLS = [
   new SkillSummary()
     .skill('Team Leadership')
     .years(3)
-    .category('managerial')
+    .category('leadership-delivery')
     .colour('secondary')
     .mock(),
   new SkillSummary()
     .skill('Mentoring')
     .years(2)
-    .category('soft-skills')
+    .category('people-stakeholders')
     .colour('success')
     .recommendationIds(['rec-1'])
     .mock(),
@@ -75,25 +75,25 @@ describe('SkillsListView', () => {
       const screen = renderListView();
 
       expect(screen.getByText('Engineering')).toBeVisible();
-      expect(screen.getByText('Managerial')).toBeVisible();
-      expect(screen.getByText('Soft Skills')).toBeVisible();
+      expect(screen.getByText('Leadership & Delivery')).toBeVisible();
+      expect(screen.getByText('People & Stakeholders')).toBeVisible();
     });
 
     test('does not render a section for a category with no skills', () => {
       const screen = renderListView();
 
-      expect(screen.queryByText('Other')).not.toBeInTheDocument();
+      expect(screen.queryByText('Tooling')).not.toBeInTheDocument();
     });
 
     test('groups skills into sub-category headings when a category has more than one sub-category present', () => {
       const skills = [
         new SkillSummary().skill('React').subCategory('frontend-development').mock(),
-        new SkillSummary().skill('Jest').subCategory('testing').mock(),
+        new SkillSummary().skill('CSS-in-JS').subCategory('styling').mock(),
       ];
       const screen = renderListView({ skills, recommendations: [] });
 
       expect(screen.getByText('Frontend Development')).toBeVisible();
-      expect(screen.getByText('Testing')).toBeVisible();
+      expect(screen.getByText('Styling & UI')).toBeVisible();
     });
 
     test('does not render a sub-category heading when a category has only one sub-category present', () => {
@@ -109,17 +109,17 @@ describe('SkillsListView', () => {
 
   describe('filtering', () => {
     test('hides skills outside the selected categories', () => {
-      const screen = renderListView({ selectedCategories: ['managerial'] });
+      const screen = renderListView({ selectedCategories: ['leadership-delivery'] });
 
       expect(screen.getByText('Team Leadership')).toBeVisible();
       expect(screen.queryByText('React')).not.toBeInTheDocument();
     });
 
     test('does not render a section for a category with no matching skills after filtering', () => {
-      const screen = renderListView({ selectedCategories: ['managerial'] });
+      const screen = renderListView({ selectedCategories: ['leadership-delivery'] });
 
       expect(screen.queryByText('Engineering')).not.toBeInTheDocument();
-      expect(screen.queryByText('Soft Skills')).not.toBeInTheDocument();
+      expect(screen.queryByText('People & Stakeholders')).not.toBeInTheDocument();
     });
 
     test('hides skills outside the selected subcategories', () => {
@@ -151,8 +151,8 @@ describe('SkillsListView', () => {
     test('does not render a section for a category with no matches after search', () => {
       const screen = renderListView({ searchTerm: 'rea' });
 
-      expect(screen.queryByText('Managerial')).not.toBeInTheDocument();
-      expect(screen.queryByText('Soft Skills')).not.toBeInTheDocument();
+      expect(screen.queryByText('Leadership & Delivery')).not.toBeInTheDocument();
+      expect(screen.queryByText('People & Stakeholders')).not.toBeInTheDocument();
     });
   });
 

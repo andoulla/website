@@ -73,7 +73,13 @@ export const SkillsListView = () => {
           acc[cat] = searchedSkills.filter((skill) => skill.category === cat);
           return acc;
         },
-        { engineering: [], managerial: [], 'soft-skills': [], other: [] }
+        {
+          engineering: [],
+          'quality-performance': [],
+          tooling: [],
+          'leadership-delivery': [],
+          'people-stakeholders': [],
+        }
       ),
     [searchedSkills]
   );
@@ -90,7 +96,13 @@ export const SkillsListView = () => {
             .filter((group) => group.skills.length > 0);
           return acc;
         },
-        { engineering: [], managerial: [], 'soft-skills': [], other: [] }
+        {
+          engineering: [],
+          'quality-performance': [],
+          tooling: [],
+          'leadership-delivery': [],
+          'people-stakeholders': [],
+        }
       ),
     [byCategory]
   );

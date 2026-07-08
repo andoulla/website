@@ -1,6 +1,11 @@
 export type SkillType = 'tech' | 'skill';
 
-export type SkillCategory = 'engineering' | 'managerial' | 'soft-skills' | 'other';
+export type SkillCategory =
+  | 'engineering'
+  | 'quality-performance'
+  | 'tooling'
+  | 'leadership-delivery'
+  | 'people-stakeholders';
 
 export type SkillSubCategory =
   | 'frontend-development'

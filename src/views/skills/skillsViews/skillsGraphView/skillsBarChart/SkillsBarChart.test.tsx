@@ -10,7 +10,7 @@ const SKILLS = [
   new SkillSummary()
     .skill('Mentoring')
     .years(2)
-    .category('soft-skills')
+    .category('people-stakeholders')
     .colour('success')
     .companyYears([{ name: 'Globex', years: 2 }])
     .mock(),
@@ -31,14 +31,14 @@ describe('SkillsBarChart', () => {
 
     // Each label appears twice: once in the legend and once in the accessible table
     expect(screen.getAllByText('Engineering')).toHaveLength(2);
-    expect(screen.getAllByText('Soft Skills')).toHaveLength(2);
+    expect(screen.getAllByText('People & Stakeholders')).toHaveLength(2);
   });
 
   test('does not render a legend entry for absent categories', () => {
     const screen = render(<SkillsBarChart skills={SKILLS} />);
 
-    expect(screen.queryByText('Managerial')).not.toBeInTheDocument();
-    expect(screen.queryByText('Other')).not.toBeInTheDocument();
+    expect(screen.queryByText('Quality & Performance')).not.toBeInTheDocument();
+    expect(screen.queryByText('Tooling')).not.toBeInTheDocument();
   });
 
   test('shows empty state message when skills array is empty', () => {

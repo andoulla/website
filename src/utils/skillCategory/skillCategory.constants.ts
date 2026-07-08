@@ -2,16 +2,18 @@ import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 
 export const CATEGORY_LABELS: Record<SkillCategory, string> = {
   engineering: 'Engineering',
-  managerial: 'Managerial',
-  'soft-skills': 'Soft Skills',
-  other: 'Other',
+  'quality-performance': 'Quality & Performance',
+  tooling: 'Tooling',
+  'leadership-delivery': 'Leadership & Delivery',
+  'people-stakeholders': 'People & Stakeholders',
 };
 
 export const CATEGORY_ORDER: SkillCategory[] = [
   'engineering',
-  'managerial',
-  'soft-skills',
-  'other',
+  'quality-performance',
+  'tooling',
+  'leadership-delivery',
+  'people-stakeholders',
 ];
 
 export const SUBCATEGORY_LABELS: Record<SkillSubCategory, string> = {
@@ -19,7 +21,7 @@ export const SUBCATEGORY_LABELS: Record<SkillSubCategory, string> = {
   testing: 'Testing',
   styling: 'Styling & UI',
   'design-system': 'Design System',
-  tooling: 'Tooling',
+  tooling: 'Dev Tools',
   'collaboration-tools': 'Collaboration Tools',
   accessibility: 'Accessibility',
   performance: 'Performance',
@@ -30,17 +32,9 @@ export const SUBCATEGORY_LABELS: Record<SkillSubCategory, string> = {
 };
 
 export const SUBCATEGORIES_BY_CATEGORY: Record<SkillCategory, SkillSubCategory[]> = {
-  engineering: [
-    'frontend-development',
-    'testing',
-    'styling',
-    'design-system',
-    'tooling',
-    'collaboration-tools',
-    'accessibility',
-    'performance',
-  ],
-  managerial: ['leadership', 'delivery-planning', 'stakeholder-management'],
-  'soft-skills': ['mentoring'],
-  other: [],
+  engineering: ['frontend-development', 'styling', 'design-system'],
+  'quality-performance': ['testing', 'accessibility', 'performance'],
+  tooling: ['tooling', 'collaboration-tools'],
+  'leadership-delivery': ['leadership', 'delivery-planning'],
+  'people-stakeholders': ['mentoring', 'stakeholder-management'],
 };

@@ -7,48 +7,51 @@ import { SkillsRadarChart } from './SkillsRadarChart';
 
 const SKILLS = [
   new SkillSummary().skill('React').years(4).category('engineering').mock(),
-  new SkillSummary().skill('Mentoring').years(2).category('soft-skills').colour('success').mock(),
+  new SkillSummary()
+    .skill('Mentoring')
+    .years(2)
+    .category('people-stakeholders')
+    .colour('success')
+    .mock(),
 ];
+
+const ALL_CATEGORIES = [
+  'engineering',
+  'quality-performance',
+  'tooling',
+  'leadership-delivery',
+  'people-stakeholders',
+] as const;
 
 describe('SkillsRadarChart', () => {
   test('renders the accessible table with a row per category plus a header', async () => {
-    const screen = render(
-      <SkillsRadarChart
-        skills={SKILLS}
-        categories={['engineering', 'managerial', 'soft-skills', 'other']}
-      />
-    );
+    const screen = render(<SkillsRadarChart skills={SKILLS} categories={[...ALL_CATEGORIES]} />);
 
-    // thead row + 4 category rows = 5
-    expect(screen.getAllByRole('row')).toHaveLength(5);
+    // thead row + 5 category rows = 6
+    expect(screen.getAllByRole('row')).toHaveLength(6);
     expect(screen.getByRole('cell', { name: 'Engineering' })).toBeVisible();
-    expect(screen.getByRole('cell', { name: 'Managerial' })).toBeVisible();
+    expect(screen.getByRole('cell', { name: 'Tooling' })).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('keeps a filtered-out category at 0 years and 0 skills', () => {
     const screen = render(
-      <SkillsRadarChart skills={SKILLS} categories={['engineering', 'managerial']} />
+      <SkillsRadarChart skills={SKILLS} categories={['engineering', 'tooling']} />
     );
 
-    const managerialRow = screen.getByRole('cell', { name: 'Managerial' }).closest('tr');
+    const toolingRow = screen.getByRole('cell', { name: 'Tooling' }).closest('tr');
 
-    expect(managerialRow).not.toBeNull();
-    expect(managerialRow?.textContent).toBe('Managerial00');
+    expect(toolingRow).not.toBeNull();
+    expect(toolingRow?.textContent).toBe('Tooling00');
   });
 
   test('renders a legend entry for every category passed in, not just present ones', () => {
-    const screen = render(
-      <SkillsRadarChart
-        skills={SKILLS}
-        categories={['engineering', 'managerial', 'soft-skills', 'other']}
-      />
-    );
+    const screen = render(<SkillsRadarChart skills={SKILLS} categories={[...ALL_CATEGORIES]} />);
 
     // Each label appears twice: once in the legend and once in the accessible table.
     expect(screen.getAllByText('Engineering')).toHaveLength(2);
-    expect(screen.getAllByText('Managerial')).toHaveLength(2);
-    expect(screen.getAllByText('Other')).toHaveLength(2);
+    expect(screen.getAllByText('Tooling')).toHaveLength(2);
+    expect(screen.getAllByText('People & Stakeholders')).toHaveLength(2);
   });
 
   test('shows empty state message when skills array is empty', async () => {

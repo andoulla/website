@@ -26,9 +26,9 @@ describe('parseCategories', () => {
   });
 
   test('splits multiple comma-separated categories', () => {
-    const result = parseCategories('engineering,managerial');
+    const result = parseCategories('engineering,leadership-delivery');
 
-    expect(result).toEqual(['engineering', 'managerial']);
+    expect(result).toEqual(['engineering', 'leadership-delivery']);
   });
 });
 

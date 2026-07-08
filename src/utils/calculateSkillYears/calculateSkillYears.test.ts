@@ -89,27 +89,34 @@ describe('calculateSkillYears', () => {
   });
 
   describe('sorting', () => {
-    test('sorts engineering before managerial, then soft-skills, then other', () => {
+    test('sorts engineering, then quality & performance, then tooling, then leadership & delivery, then people & stakeholders', () => {
       const job = new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock();
       const result = calculateSkillYears(
         [job],
         [
           new Skill().name('React').jobIds(['j1']).mock(),
-          new Skill().name('Team Leadership').jobIds(['j1']).category('managerial').mock(),
-          new Skill().name('Mentoring').jobIds(['j1']).category('soft-skills').mock(),
-          new Skill().name('Unclassified Skill').jobIds(['j1']).category('other').mock(),
+          new Skill()
+            .name('Testing Strategy')
+            .jobIds(['j1'])
+            .category('quality-performance')
+            .mock(),
+          new Skill().name('Git/GitHub').jobIds(['j1']).category('tooling').mock(),
+          new Skill().name('Team Leadership').jobIds(['j1']).category('leadership-delivery').mock(),
+          new Skill().name('Mentoring').jobIds(['j1']).category('people-stakeholders').mock(),
         ],
         TODAY
       );
       const categories = result.map((s) => s.category);
       const engIdx = categories.indexOf('engineering');
-      const manIdx = categories.indexOf('managerial');
-      const softIdx = categories.indexOf('soft-skills');
-      const otherIdx = categories.indexOf('other');
+      const qpIdx = categories.indexOf('quality-performance');
+      const toolingIdx = categories.indexOf('tooling');
+      const ldIdx = categories.indexOf('leadership-delivery');
+      const psIdx = categories.indexOf('people-stakeholders');
 
-      expect(engIdx).toBeLessThan(manIdx);
-      expect(manIdx).toBeLessThan(softIdx);
-      expect(softIdx).toBeLessThan(otherIdx);
+      expect(engIdx).toBeLessThan(qpIdx);
+      expect(qpIdx).toBeLessThan(toolingIdx);
+      expect(toolingIdx).toBeLessThan(ldIdx);
+      expect(ldIdx).toBeLessThan(psIdx);
     });
 
     test('sorts by years descending within the same category', () => {
@@ -141,7 +148,7 @@ describe('calculateSkillYears', () => {
       const react = result.find((s) => s.skill === 'React');
 
       expect(react?.category).toBe('engineering');
-      expect(react?.colour).toBe('primary');
+      expect(react?.colour).toBe('teal');
     });
 
     test('passes through skill metadata fields unchanged: jobIds, recommendationIds, subCategory', () => {

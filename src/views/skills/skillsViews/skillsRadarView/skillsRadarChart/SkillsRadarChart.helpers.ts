@@ -6,7 +6,8 @@ import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 
 import type { CategoryRadarPoint } from './SkillsRadarChart.types';
 
-// One point per category, even at 0 skills — keeps all 4 axes; filtered-out categories total 0.
+// One point per category, even at 0 skills — keeps all 5 axes stable under filters.
+// Averaged, not summed: skills overlap in time, so summing inflates past a real career length.
 export const aggregateSkillsByCategory = (
   categories: SkillCategory[],
   skills: SkillSummary[],
@@ -15,7 +16,8 @@ export const aggregateSkillsByCategory = (
   categories.map((category) => {
     const categorySkills = skills.filter((skill) => skill.category === category);
     const totalYears = categorySkills.reduce((total, skill) => total + skill.years, 0);
-    const years = Math.round(totalYears * 10) / 10;
+    const avgYears =
+      categorySkills.length > 0 ? Math.round((totalYears / categorySkills.length) * 10) / 10 : 0;
     // No search term = match by default.
     const isMatch =
       isSearchTermEmpty(searchTerm) ||
@@ -25,7 +27,7 @@ export const aggregateSkillsByCategory = (
     return {
       category,
       label: CATEGORY_LABELS[category],
-      years,
+      avgYears,
       skillCount: categorySkills.length,
       isMatch,
     };

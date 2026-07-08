@@ -9,10 +9,10 @@ const SKILLS: SkillSummaryData[] = [
     .category('engineering')
     .subCategory('frontend-development')
     .mock(),
-  new SkillSummary().skill('Jest').category('engineering').subCategory('testing').mock(),
+  new SkillSummary().skill('Jest').category('quality-performance').subCategory('testing').mock(),
   new SkillSummary()
     .skill('Team Leadership')
-    .category('managerial')
+    .category('leadership-delivery')
     .subCategory('leadership')
     .mock(),
 ];
@@ -25,7 +25,7 @@ describe('filterSkillsByCategory', () => {
   });
 
   test('filters by category only', () => {
-    const result = filterSkillsByCategory(SKILLS, ['managerial'], []);
+    const result = filterSkillsByCategory(SKILLS, ['leadership-delivery'], []);
 
     expect(result.map((s) => s.skill)).toEqual(['Team Leadership']);
   });
@@ -37,13 +37,13 @@ describe('filterSkillsByCategory', () => {
   });
 
   test('filters by category and subcategory combined using AND semantics', () => {
-    const result = filterSkillsByCategory(SKILLS, ['engineering'], ['testing']);
+    const result = filterSkillsByCategory(SKILLS, ['quality-performance'], ['testing']);
 
     expect(result.map((s) => s.skill)).toEqual(['Jest']);
   });
 
   test('returns an empty array when nothing matches', () => {
-    const result = filterSkillsByCategory(SKILLS, ['managerial'], ['testing']);
+    const result = filterSkillsByCategory(SKILLS, ['leadership-delivery'], ['testing']);
 
     expect(result).toEqual([]);
   });

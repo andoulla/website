@@ -49,7 +49,7 @@ describe('Skills', () => {
       });
 
       expect(screen.getByRole('heading', { level: 1, name: 'Skills' })).toBeVisible();
-      expect(screen.getByRole('cell', { name: 'Managerial' })).toBeVisible();
+      expect(screen.getByRole('cell', { name: 'Leadership & Delivery' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'List view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Graph view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Radar view' })).toBeVisible();
@@ -87,7 +87,7 @@ describe('Skills', () => {
       await act(async () => {
         screen = renderWithProvider(
           () => Promise.resolve(EXPERIENCES),
-          ['/skills?category=managerial']
+          ['/skills?category=leadership-delivery']
         );
         await Promise.resolve();
       });
@@ -115,9 +115,9 @@ describe('Skills', () => {
       );
       expect(await axe(screen.container)).toHaveNoViolations();
 
-      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Managerial' }));
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
 
-      expect(screen.getByText('search:category=managerial')).toBeVisible();
+      expect(screen.getByText('search:category=leadership-delivery')).toBeVisible();
     });
 
     test('removes the category query param when the filter is cleared', async () => {
@@ -127,7 +127,7 @@ describe('Skills', () => {
       await act(async () => {
         screen = renderWithProvider(
           () => Promise.resolve(EXPERIENCES),
-          ['/skills?category=managerial']
+          ['/skills?category=leadership-delivery']
         );
         await Promise.resolve();
       });
@@ -137,7 +137,7 @@ describe('Skills', () => {
           name: 'Filter skills by category and subcategory, currently: Filters (1)',
         })
       );
-      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Managerial' }));
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
 
       expect(screen.getByText('search:')).toBeVisible();
     });
@@ -305,7 +305,7 @@ describe('Skills', () => {
           name: 'Filter skills by category and subcategory, currently: All',
         })
       );
-      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Managerial' }));
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
 
       expect(screen.getByText('3 matches hidden by filters')).toBeVisible();
     });
@@ -325,7 +325,7 @@ describe('Skills', () => {
           name: 'Filter skills by category and subcategory, currently: All',
         })
       );
-      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Managerial' }));
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
 
       expect(screen.getByText('1 match hidden by filters')).toBeVisible();
     });
