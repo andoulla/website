@@ -18,7 +18,7 @@ function renderNavBar() {
 
 describe('NavBar', () => {
   describe('navigation links', () => {
-    test('renders Home and Skills links inside a navigation landmark', () => {
+    test('renders Home, Skills, and Articles links inside a navigation landmark', () => {
       const screen = renderNavBar();
 
       expect(screen.getByRole('navigation')).toBeVisible();
@@ -32,6 +32,11 @@ describe('NavBar', () => {
 
       expect(skillsLink).toBeVisible();
       expect(skillsLink).toHaveAttribute('href', '/skills');
+
+      const articlesLink = screen.getByRole('link', { name: 'Articles' });
+
+      expect(articlesLink).toBeVisible();
+      expect(articlesLink).toHaveAttribute('href', '/articles');
     });
   });
 

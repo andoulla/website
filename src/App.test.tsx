@@ -37,6 +37,11 @@ describe('App', () => {
     expect(skillsLink).toBeVisible();
     expect(skillsLink).toHaveAttribute('href', '/skills');
 
+    const articlesLink = screen.getByRole('link', { name: 'Articles' });
+
+    expect(articlesLink).toBeVisible();
+    expect(articlesLink).toHaveAttribute('href', '/articles');
+
     expect(screen.getByRole('heading', { name: 'Mariandi Stylianou' })).toBeVisible();
     expect(screen.getByText('Nimbus Analytics')).toBeVisible();
   });
