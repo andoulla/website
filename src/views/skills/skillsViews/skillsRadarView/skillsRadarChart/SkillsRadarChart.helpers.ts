@@ -18,7 +18,6 @@ export const aggregateSkillsByCategory = (
     const totalYears = categorySkills.reduce((total, skill) => total + skill.years, 0);
     const avgYears =
       categorySkills.length > 0 ? Math.round((totalYears / categorySkills.length) * 10) / 10 : 0;
-    // No search term = match by default.
     const isMatch =
       isSearchTermEmpty(searchTerm) ||
       (searchTerm !== undefined &&

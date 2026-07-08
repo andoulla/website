@@ -30,7 +30,7 @@ export const skillShadeIndex = (skill: string): number => {
   return charSum % SHADE_COUNT;
 };
 
-// Resolves a SkillColour key to its palette hex, or grey if unrecognised.
+// Grey is the fallback for an unrecognised colour.
 export const resolveSkillColourMain = (colour: SkillColour, theme: Theme): string => {
   if (isCustomSkillColour(colour)) return CUSTOM_COLOUR_HEX[colour];
   if (colour === 'default') return theme.palette.grey[400];

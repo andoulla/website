@@ -10,7 +10,6 @@ export interface CategoryLegendProps {
   categories: SkillCategory[];
 }
 
-// One coloured dot + label per category, in the order given.
 export const CategoryLegend = ({ categories }: CategoryLegendProps) => {
   const theme = useTheme();
 
