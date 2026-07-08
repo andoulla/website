@@ -63,6 +63,9 @@ export const NavBar = () => {
           <NavLink to="/skills" style={navLinkStyle}>
             Skills
           </NavLink>
+          <NavLink to="/articles" style={navLinkStyle}>
+            Articles
+          </NavLink>
         </Stack>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifySelf: 'end' }}>
           <IconButton

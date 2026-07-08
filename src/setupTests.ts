@@ -6,6 +6,13 @@ import 'jest-axe/extend-expect';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
+// jsdom does not implement fetch, and Jest's sandboxed context can't reach Node's own
+// global fetch either — stub it so jest.spyOn(global, 'fetch') has something to attach to.
+// Tests that touch network code always mock this; nothing depends on a real implementation.
+global.fetch = (): Promise<Response> => {
+  throw new Error('global.fetch is not implemented in tests — mock it with jest.spyOn.');
+};
+
 global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}

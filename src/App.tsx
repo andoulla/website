@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { NavBar } from './components/navBar';
 import { ThemeContextProvider } from './context/theme';
 import { ResumeDataProvider } from './context/resumeData';
+import { Articles } from './views/articles';
 import { Resume } from './views/resume';
 import { Skills } from './views/skills';
 
@@ -24,6 +25,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Resume />} />
             <Route path="/skills" element={<Skills />} />
+            <Route path="/articles" element={<Articles />} />
           </Routes>
         </BrowserRouter>
       </ResumeDataProvider>

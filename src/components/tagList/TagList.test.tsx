@@ -50,4 +50,34 @@ describe('TagList', () => {
 
     expect(screen.getByText('React')).toBeVisible();
   });
+
+  test('renders plain tags when no getColour/getShadeIndex is passed', () => {
+    const screen = render(<TagList items={['React']} />);
+
+    expect(screen.getByText('React')).toBeVisible();
+  });
+
+  test('calls getColour and getShadeIndex with each item when passed', () => {
+    const getColour = jest.fn().mockReturnValue('primary');
+    const getShadeIndex = jest.fn().mockReturnValue(2);
+
+    render(
+      <TagList
+        items={['React', 'TypeScript']}
+        getColour={getColour}
+        getShadeIndex={getShadeIndex}
+      />
+    );
+
+    expect(getColour).toHaveBeenCalledWith('React');
+    expect(getColour).toHaveBeenCalledWith('TypeScript');
+    expect(getShadeIndex).toHaveBeenCalledWith('React');
+    expect(getShadeIndex).toHaveBeenCalledWith('TypeScript');
+  });
+
+  test('passes the variant prop through to each tag', () => {
+    const screen = render(<TagList items={['React']} variant="outlined" />);
+
+    expect(screen.getByText('React').closest('.MuiChip-root')).toHaveClass('MuiChip-outlined');
+  });
 });
