@@ -1,3 +1,5 @@
+import type { Theme } from '@mui/material/styles';
+
 import { skills } from '@/data/skills';
 
 import { CATEGORY_COLOUR_MAP } from './skillColour.constants';
@@ -21,4 +23,14 @@ const SHADE_COUNT = 6;
 export const skillShadeIndex = (skill: string): number => {
   const charSum = [...skill].reduce((sum, char) => sum + char.charCodeAt(0), 0);
   return charSum % SHADE_COUNT;
+};
+
+// Resolves a SkillColour key to its palette hex, or grey if unrecognised.
+export const resolveSkillColourMain = (colour: SkillColour, theme: Theme): string => {
+  if (colour === 'default') return theme.palette.grey[400];
+  const entry = theme.palette[colour as keyof typeof theme.palette];
+  if (entry !== null && typeof entry === 'object' && 'main' in entry) {
+    return (entry as { main: string }).main;
+  }
+  return theme.palette.grey[400];
 };

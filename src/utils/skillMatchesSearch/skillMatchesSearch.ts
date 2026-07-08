@@ -11,3 +11,7 @@ export const skillMatchesSearch = (skill: SkillSummary, term: string): boolean =
 
   return skill.synonyms.some((synonym) => normaliseSearchTerm(synonym).includes(normalisedTerm));
 };
+
+// True when there's no term to search by.
+export const isSearchTermEmpty = (searchTerm?: string): boolean =>
+  searchTerm === undefined || searchTerm.trim() === '';

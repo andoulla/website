@@ -1,6 +1,6 @@
 import { SkillSummary } from '@/testing';
 
-import { skillMatchesSearch } from './skillMatchesSearch';
+import { isSearchTermEmpty, skillMatchesSearch } from './skillMatchesSearch';
 
 const REACT = new SkillSummary().skill('React').synonyms(['ReactJS', 'React.js']).mock();
 const JAVASCRIPT = new SkillSummary().skill('JavaScript').synonyms(['JS', 'ECMAScript']).mock();
@@ -33,5 +33,23 @@ describe('skillMatchesSearch', () => {
 
   test('matches a two-character term', () => {
     expect(skillMatchesSearch(JAVASCRIPT, 'js')).toBe(true);
+  });
+});
+
+describe('isSearchTermEmpty', () => {
+  test('returns true when the term is undefined', () => {
+    expect(isSearchTermEmpty(undefined)).toBe(true);
+  });
+
+  test('returns true when the term is an empty string', () => {
+    expect(isSearchTermEmpty('')).toBe(true);
+  });
+
+  test('returns true when the term is only whitespace', () => {
+    expect(isSearchTermEmpty('   ')).toBe(true);
+  });
+
+  test('returns false when a real term is provided', () => {
+    expect(isSearchTermEmpty('react')).toBe(false);
   });
 });

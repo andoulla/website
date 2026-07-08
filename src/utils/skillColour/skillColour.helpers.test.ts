@@ -1,4 +1,11 @@
-import { skillCategory, skillColour, skillShadeIndex } from './skillColour.helpers';
+import type { Theme } from '@mui/material/styles';
+
+import {
+  resolveSkillColourMain,
+  skillCategory,
+  skillColour,
+  skillShadeIndex,
+} from './skillColour.helpers';
 
 describe('skillColour', () => {
   test('engineering skills map to primary', () => {
@@ -59,5 +66,30 @@ describe('skillShadeIndex', () => {
 
   test('returns 0 for an empty skill name', () => {
     expect(skillShadeIndex('')).toBe(0);
+  });
+});
+
+describe('resolveSkillColourMain', () => {
+  const GREY_400 = '#bdbdbd';
+  const PRIMARY_MAIN = '#3B6D11';
+
+  const createTheme = (): Theme =>
+    ({
+      palette: {
+        grey: { 400: GREY_400 },
+        primary: { main: PRIMARY_MAIN },
+      },
+    }) as unknown as Theme;
+
+  test('returns grey for the default colour', () => {
+    expect(resolveSkillColourMain('default', createTheme())).toBe(GREY_400);
+  });
+
+  test('returns the palette main for a recognised colour', () => {
+    expect(resolveSkillColourMain('primary', createTheme())).toBe(PRIMARY_MAIN);
+  });
+
+  test('returns grey when the palette has no entry for the colour', () => {
+    expect(resolveSkillColourMain('secondary', createTheme())).toBe(GREY_400);
   });
 });

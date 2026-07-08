@@ -1,1 +1,1 @@
-export { skillMatchesSearch } from './skillMatchesSearch';
+export { isSearchTermEmpty, skillMatchesSearch } from './skillMatchesSearch';

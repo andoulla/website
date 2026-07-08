@@ -2,19 +2,20 @@ import type { Theme } from '@mui/material/styles';
 
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { computeShadeColour } from '@/utils/computeShadeColour';
-import { skillShadeIndex } from '@/utils/skillColour';
+import { resolveSkillColourMain, skillShadeIndex } from '@/utils/skillColour';
 
 export const dotColour = (skill: SkillSummary, theme: Theme): string => {
-  const { colour } = skill; // the MUI palette key stored on the skill, e.g. 'primary'
-  if (colour === 'default') return theme.palette.grey[400]; // no colour assigned — plain grey
-  const paletteEntry = theme.palette[colour as keyof typeof theme.palette]; // look up that palette entry
+  const { colour } = skill;
+  // Grey fallback returns flat, unshaded — shading only applies to a real palette colour.
+  if (colour === 'default') return theme.palette.grey[400];
+  const paletteEntry = theme.palette[colour as keyof typeof theme.palette];
   if (paletteEntry === null || typeof paletteEntry !== 'object' || !('main' in paletteEntry)) {
-    return theme.palette.grey[400]; // not a colour object — fall back to grey
+    return theme.palette.grey[400];
   }
   const { bg } = computeShadeColour(
-    (paletteEntry as { main: string }).main, // base colour to shade from
-    skillShadeIndex(skill.skill), // deterministic shade index derived from the skill name
+    resolveSkillColourMain(colour, theme),
+    skillShadeIndex(skill.skill),
     theme.palette.getContrastText
   );
-  return bg; // the shaded background colour for this skill's dot
+  return bg;
 };
