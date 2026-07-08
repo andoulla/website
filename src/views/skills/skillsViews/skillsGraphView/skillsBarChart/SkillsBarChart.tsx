@@ -4,7 +4,6 @@ import type { TooltipContentProps } from 'recharts';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import type { Theme } from '@mui/material/styles';
 import { lighten, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
@@ -12,8 +11,9 @@ import { visuallyHidden } from '@mui/utils';
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/utils/skillCategory';
-import { CATEGORY_COLOUR_MAP } from '@/utils/skillColour';
-import type { SkillColour } from '@/utils/skillColour';
+import { resolveSkillColourMain } from '@/utils/skillColour';
+
+import { CategoryLegend } from '../../../categoryLegend';
 
 import { isBarMatch } from './SkillsBarChart.helpers';
 
@@ -21,17 +21,6 @@ const BAR_HEIGHT = 36;
 const BAR_SIZE = 14;
 const CHART_PADDING = 64;
 const MIN_HEIGHT = 200;
-
-// Safely resolves a SkillColour key to the palette's .main hex value.
-// Mirrors the dotColour() pattern in SkillsListView.
-const getPaletteMain = (colour: SkillColour, theme: Theme): string => {
-  if (colour === 'default') return theme.palette.grey[400];
-  const entry = theme.palette[colour as keyof typeof theme.palette];
-  if (entry !== null && typeof entry === 'object' && 'main' in entry) {
-    return (entry as { main: string }).main;
-  }
-  return theme.palette.grey[400];
-};
 
 // Bridges Recharts tooltip payload → SkillTooltipContent props.
 const SkillBarTooltip = ({ active, payload }: TooltipContentProps) => {
@@ -60,14 +49,10 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
 
   const chartHeight = Math.max(MIN_HEIGHT, skills.length * BAR_HEIGHT + CHART_PADDING);
 
-  // Legend: one entry per category present, in fixed display order.
-  const legendEntries = CATEGORY_ORDER.filter((cat) =>
+  // Categories present, in fixed display order.
+  const presentCategories = CATEGORY_ORDER.filter((cat) =>
     skills.some((skill) => skill.category === cat)
-  ).map((cat) => ({
-    cat,
-    colour: CATEGORY_COLOUR_MAP[cat],
-    label: CATEGORY_LABELS[cat],
-  }));
+  );
 
   // Y-axis width: longer skill names need more space, capped for mobile.
   const maxLabelLength = Math.max(...skills.map((skill) => skill.skill.length));
@@ -114,7 +99,7 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
             }}
           >
             {skills.map((skill, i) => {
-              const fill = getPaletteMain(skill.colour, theme);
+              const fill = resolveSkillColourMain(skill.colour, theme);
               const isMatch = isBarMatch(skill, searchTerm);
               const shouldLighten = i === hoverIndex && isMatch;
               return (
@@ -132,36 +117,7 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
         </BarChart>
       </ResponsiveContainer>
 
-      {/* Legend — styled like a figure caption: muted text, dots vertically centred with labels */}
-      <Box
-        aria-hidden="true"
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          rowGap: 1.5,
-          columnGap: 3,
-          pt: 1,
-        }}
-      >
-        {legendEntries.map(({ cat, colour, label }) => (
-          <Box key={cat} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box
-              sx={{
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                bgcolor: getPaletteMain(colour, theme),
-                flexShrink: 0,
-                opacity: 0.7,
-              }}
-            />
-            <Typography variant="caption" color="text.secondary">
-              {label}
-            </Typography>
-          </Box>
-        ))}
-      </Box>
+      <CategoryLegend categories={presentCategories} />
 
       {/* Visually hidden table — accessible text alternative for screen readers */}
       <Box component="table" sx={visuallyHidden} aria-label="Skills data table">
