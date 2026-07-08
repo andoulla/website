@@ -9,10 +9,11 @@ export interface TagProps {
   children: ReactNode;
   colour?: ChipProps['color'];
   shadeIndex?: number;
+  variant?: ChipProps['variant'];
   onClick?: () => void;
 }
 
-export const Tag = memo(({ children, colour, shadeIndex, onClick }: TagProps) => {
+export const Tag = memo(({ children, colour, shadeIndex, variant, onClick }: TagProps) => {
   const theme = useTheme();
 
   if (shadeIndex !== undefined && colour !== undefined && colour !== 'default') {
@@ -34,7 +35,7 @@ export const Tag = memo(({ children, colour, shadeIndex, onClick }: TagProps) =>
     }
   }
 
-  return <Chip label={children} color={colour} size="small" onClick={onClick} />;
+  return <Chip label={children} color={colour} variant={variant} size="small" onClick={onClick} />;
 });
 
 Tag.displayName = 'Tag';

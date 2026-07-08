@@ -13,6 +13,7 @@ import { BulletList } from '@/components/bulletList';
 import { Section } from '@/components/section';
 import { TagList } from '@/components/tagList';
 import type { TimelineEventWithRecommendations } from '@/types';
+import { skillColour, skillShadeIndex } from '@/utils/skillColour';
 
 import { getCardMotionSx } from './TimelineEventCard.helpers';
 import { RecommendationText } from './recommendationText';
@@ -96,7 +97,12 @@ export const TimelineEventCard = memo(({ experience }: TimelineEventCardProps) =
         </Section>
         <Divider sx={{ my: 2 }} />
         <Section title="Key Skills" titleLevel={4}>
-          <TagList items={experience.skills} onItemClick={handleSkillClick} />
+          <TagList
+            items={experience.skills}
+            onItemClick={handleSkillClick}
+            getColour={skillColour}
+            getShadeIndex={skillShadeIndex}
+          />
         </Section>
         {experience.recommendations.length > 0 && (
           <>

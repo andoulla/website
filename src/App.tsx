@@ -4,12 +4,12 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { NavBar } from './components/navBar';
 import { ThemeContextProvider } from './context/theme';
 import { ResumeDataProvider } from './context/resumeData';
+import { Articles } from './views/articles';
 import { Resume } from './views/resume';
 import { Skills } from './views/skills';
 
 // TODO: investigate light options for DB to switch jsons out
 // TODO: update content to ensure correct mapping of skills to categories and subcategories
-// TODO: build page for articles
 // TODO: add education (by default in time line view, filter out url based)
 // TODO: add rest of the work history and add the 3 views (full time line, eng. mng/lead role/ snr eng role ) with button to hide eduation on the other 2
 // TODO: check lighthouse metrics
@@ -26,6 +26,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Resume />} />
             <Route path="/skills" element={<Skills />} />
+            <Route path="/articles" element={<Articles />} />
           </Routes>
         </BrowserRouter>
       </ResumeDataProvider>
