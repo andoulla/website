@@ -15,40 +15,40 @@ function ThemeDisplay() {
 }
 
 describe('ThemeContextProvider', () => {
-  test('provides green theme in light mode by default', () => {
+  test('provides purple theme in light mode by default', () => {
     const screen = render(
       <ThemeContextProvider>
         <ThemeDisplay />
       </ThemeContextProvider>
     );
 
-    expect(screen.getByText('green')).toBeVisible();
+    expect(screen.getByText('purple')).toBeVisible();
     expect(screen.getByText('light')).toBeVisible();
   });
 
-  test('toggles theme to purple on first click', () => {
+  test('toggles theme to green on first click', () => {
     const screen = render(
       <ThemeContextProvider>
         <ThemeDisplay />
       </ThemeContextProvider>
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'toggle theme' }));
-
-    expect(screen.getByText('purple')).toBeVisible();
-  });
-
-  test('toggles theme back to green on second click', () => {
-    const screen = render(
-      <ThemeContextProvider>
-        <ThemeDisplay />
-      </ThemeContextProvider>
-    );
-
-    fireEvent.click(screen.getByRole('button', { name: 'toggle theme' }));
     fireEvent.click(screen.getByRole('button', { name: 'toggle theme' }));
 
     expect(screen.getByText('green')).toBeVisible();
+  });
+
+  test('toggles theme back to purple on second click', () => {
+    const screen = render(
+      <ThemeContextProvider>
+        <ThemeDisplay />
+      </ThemeContextProvider>
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'toggle theme' }));
+    fireEvent.click(screen.getByRole('button', { name: 'toggle theme' }));
+
+    expect(screen.getByText('purple')).toBeVisible();
   });
 
   test('toggles to dark mode', () => {

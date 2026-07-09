@@ -1,32 +1,34 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
 import { baseTokens, darkTokens, lightTokens } from './tokens';
 
 export const createPurpleTheme = (mode: 'light' | 'dark') => {
   const tokens = mode === 'light' ? lightTokens : darkTokens;
-  return createTheme({
-    typography: baseTokens.typography,
-    palette: {
-      mode,
-      primary: {
-        light: '#DC6FDB',
-        main: '#A300A3',
-        dark: '#7A007A',
-        contrastText: '#ffffff',
+  return responsiveFontSizes(
+    createTheme({
+      typography: baseTokens.typography,
+      palette: {
+        mode,
+        primary: {
+          light: '#E9C7E3',
+          main: '#702963',
+          dark: '#4A1240',
+          contrastText: '#ffffff',
+        },
+        secondary: {
+          light: '#E3D3DD',
+          main: '#7A5A73',
+          dark: '#3A1F35',
+          contrastText: '#ffffff',
+        },
+        background: tokens.background,
+        text: {
+          ...tokens.text,
+          secondary: mode === 'light' ? '#7A5A73' : '#D9A8CE',
+        },
+        divider: mode === 'light' ? '#E3D3DD' : '#3A2438',
+        action: { focus: mode === 'light' ? '#F8ECF4' : '#3D1F38' },
       },
-      secondary: {
-        light: '#DDD6DD',
-        main: '#6B5F6B',
-        dark: '#2A222A',
-        contrastText: '#ffffff',
-      },
-      background: tokens.background,
-      text: {
-        ...tokens.text,
-        secondary: mode === 'light' ? '#6B5F6B' : '#b07ab0',
-      },
-      divider: mode === 'light' ? '#DDD6DD' : '#33203a',
-      action: { focus: mode === 'light' ? '#FCE6FC' : '#2e1030' },
-    },
-  });
+    })
+  );
 };
