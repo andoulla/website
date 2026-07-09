@@ -15,6 +15,7 @@ import { Skills } from './views/skills';
 // TODO: check lighthouse metrics
 // TODO: ATS optimisation
 // TODO: link category-level filtering from Resume (currently only individual skill chips link out, via ?skill=)
+// TODO: add hidden tech stack for elsevier and capco
 
 const App = () => {
   return (

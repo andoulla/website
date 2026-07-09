@@ -10,4 +10,4 @@
 - Prefer `const` arrow functions over `function` declarations (`export const Foo = () => { ... }`). If a `function` declaration is required (e.g. generators, hoisting), add a comment above it explaining why.
 - In loops and array methods (`map`, `filter`, `reduce`, `forEach`, `for...of`, etc.), name the callback parameter with the singular of the collection, not its first initial: `skills.filter(skill => ...)`, not `skills.filter(s => ...)`.
 - Avoid nested ternaries (a ternary whose branch is itself a ternary), including in JSX. Prefer an explicit conditional instead: a small function with `if`/`return` statements (e.g. `renderView(mode)`), or a `switch`, computed above the `return` and referenced by name in JSX.
-- Don't `export` a type/interface/const until another file actually imports it (a barrel re-export only counts once something outside the folder imports through it) — this includes component `Props` types.
+- Don't `export` a type/interface/const until another file actually imports it, including component `Props` types. A barrel re-export only counts once something outside the folder imports through it.

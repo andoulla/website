@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { memo, type ReactNode } from 'react';
 
 import { computeShadeColour } from '@/utils/computeShadeColour';
+import { resolveSkillColourMain } from '@/utils/skillColour';
 
 export interface TagProps {
   children: ReactNode;
@@ -17,22 +18,19 @@ export const Tag = memo(({ children, colour, shadeIndex, variant, onClick }: Tag
   const theme = useTheme();
 
   if (shadeIndex !== undefined && colour !== undefined && colour !== 'default') {
-    const paletteEntry = theme.palette[colour as keyof typeof theme.palette];
-    if (paletteEntry !== null && typeof paletteEntry === 'object' && 'main' in paletteEntry) {
-      const { bg, textColour } = computeShadeColour(
-        (paletteEntry as { main: string }).main,
-        shadeIndex,
-        theme.palette.getContrastText
-      );
-      return (
-        <Chip
-          size="small"
-          label={children}
-          sx={{ bgcolor: bg, color: textColour }}
-          onClick={onClick}
-        />
-      );
-    }
+    const { bg, textColour } = computeShadeColour(
+      resolveSkillColourMain(colour, theme),
+      shadeIndex,
+      theme.palette.getContrastText
+    );
+    return (
+      <Chip
+        size="small"
+        label={children}
+        sx={{ bgcolor: bg, color: textColour }}
+        onClick={onClick}
+      />
+    );
   }
 
   return <Chip label={children} color={colour} variant={variant} size="small" onClick={onClick} />;

@@ -9,7 +9,7 @@ import { TagList } from '@/components/tagList';
 import type { Article } from '@/types';
 import { formatDate } from '@/utils/formatDate';
 
-export interface ArticleTileProps {
+interface ArticleTileProps {
   article: Article;
 }
 

@@ -1,4 +1,4 @@
-export interface RssFeedItem {
+interface RssFeedItem {
   guid?: string;
   link: string;
   title: string;

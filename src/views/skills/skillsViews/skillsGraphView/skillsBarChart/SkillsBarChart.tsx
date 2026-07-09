@@ -4,17 +4,22 @@ import type { TooltipContentProps } from 'recharts';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { lighten, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
 
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
+import type { SkillCategory } from '@/data/skills.types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/utils/skillCategory';
-import { resolveSkillColourMain } from '@/utils/skillColour';
-import { CategoryLegend } from '@/views/skills/categoryLegend';
+import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';
 
-import { isBarMatch } from './SkillsBarChart.helpers';
+import {
+  CATEGORY_PATTERN_KIND,
+  getCategoryPatternBackground,
+  getCategoryPatternId,
+  isBarMatch,
+} from './SkillsBarChart.helpers';
 
 const BAR_HEIGHT = 36;
 const BAR_SIZE = 14;
@@ -28,12 +33,74 @@ const SkillBarTooltip = ({ active, payload }: TooltipContentProps) => {
   return <SkillTooltipContent skill={skill} />;
 };
 
+interface CategoryPatternDefProps {
+  category: SkillCategory;
+  colour: string;
+  markColour: string;
+}
+
+// SVG <pattern> for a category's bar fill — mirrors getCategoryPatternBackground's CSS look.
+// Rendered inside <defs>, which Recharts passes straight through into the chart's <svg>.
+const CategoryPatternDef = ({ category, colour, markColour }: CategoryPatternDefProps) => {
+  const id = getCategoryPatternId(category);
+  switch (CATEGORY_PATTERN_KIND[category]) {
+    case 'diagonal':
+      return (
+        <pattern
+          id={id}
+          patternUnits="userSpaceOnUse"
+          width={8}
+          height={8}
+          patternTransform="rotate(45)"
+        >
+          <rect width={8} height={8} fill={colour} />
+          <line x1={2} y1={0} x2={2} y2={8} stroke={markColour} strokeWidth={2} />
+        </pattern>
+      );
+    case 'vertical':
+      return (
+        <pattern id={id} patternUnits="userSpaceOnUse" width={8} height={8}>
+          <rect width={8} height={8} fill={colour} />
+          <line x1={4} y1={0} x2={4} y2={8} stroke={markColour} strokeWidth={2} />
+        </pattern>
+      );
+    case 'crosshatch':
+      return (
+        <pattern id={id} patternUnits="userSpaceOnUse" width={8} height={8}>
+          <rect width={8} height={8} fill={colour} />
+          <line x1={0} y1={0} x2={8} y2={8} stroke={markColour} strokeWidth={1.5} />
+          <line x1={8} y1={0} x2={0} y2={8} stroke={markColour} strokeWidth={1.5} />
+        </pattern>
+      );
+    case 'dots':
+      return (
+        <pattern id={id} patternUnits="userSpaceOnUse" width={6} height={6}>
+          <rect width={6} height={6} fill={colour} />
+          <circle cx={3} cy={3} r={1.5} fill={markColour} />
+        </pattern>
+      );
+    case 'grid':
+      return (
+        <pattern id={id} patternUnits="userSpaceOnUse" width={8} height={8}>
+          <rect width={8} height={8} fill={colour} />
+          <line x1={0} y1={4} x2={8} y2={4} stroke={markColour} strokeWidth={1.5} />
+          <line x1={4} y1={0} x2={4} y2={8} stroke={markColour} strokeWidth={1.5} />
+        </pattern>
+      );
+  }
+};
+
 interface SkillsBarChartProps {
   skills: SkillSummary[];
   searchTerm?: string;
+  showPatterns?: boolean;
 }
 
-export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
+export const SkillsBarChart = ({
+  skills,
+  searchTerm,
+  showPatterns = true,
+}: SkillsBarChartProps) => {
   const theme = useTheme();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
@@ -48,10 +115,19 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
 
   const chartHeight = Math.max(MIN_HEIGHT, skills.length * BAR_HEIGHT + CHART_PADDING);
 
-  // Categories present, in fixed display order.
-  const presentCategories = CATEGORY_ORDER.filter((cat) =>
+  // Legend: one entry per category present, in fixed display order. markColour is the pattern's
+  // ink colour — high-contrast against the category colour so the texture reads at swatch size.
+  const legendEntries = CATEGORY_ORDER.filter((cat) =>
     skills.some((skill) => skill.category === cat)
-  );
+  ).map((cat) => {
+    const colour = resolveSkillColourMain(CATEGORY_COLOUR_MAP[cat], theme);
+    return {
+      cat,
+      colour,
+      markColour: theme.palette.getContrastText(colour),
+      label: CATEGORY_LABELS[cat],
+    };
+  });
 
   // Y-axis width: longer skill names need more space, capped for mobile.
   const maxLabelLength = Math.max(...skills.map((skill) => skill.skill.length));
@@ -83,6 +159,18 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
             axisLine={false}
           />
           <Tooltip content={SkillBarTooltip} cursor={{ fill: theme.palette.action.hover }} />
+          {showPatterns && (
+            <defs>
+              {legendEntries.map(({ cat, colour, markColour }) => (
+                <CategoryPatternDef
+                  key={cat}
+                  category={cat}
+                  colour={colour}
+                  markColour={markColour}
+                />
+              ))}
+            </defs>
+          )}
           <Bar
             dataKey="years"
             radius={[0, 4, 4, 0]}
@@ -98,16 +186,18 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
             }}
           >
             {skills.map((skill, i) => {
-              const fill = resolveSkillColourMain(skill.colour, theme);
               const isMatch = isBarMatch(skill, searchTerm);
-              const shouldLighten = i === hoverIndex && isMatch;
+              const isHovered = i === hoverIndex && isMatch;
+              const colour = resolveSkillColourMain(skill.colour, theme);
               return (
                 <Cell
                   key={skill.skill}
-                  fill={shouldLighten ? lighten(fill, 0.25) : fill}
+                  fill={showPatterns ? `url(#${getCategoryPatternId(skill.category)})` : colour}
                   style={{
                     opacity: isMatch ? 1 : 0.35,
-                    transition: 'fill 0.15s ease, opacity 0.2s ease',
+                    filter: isHovered ? 'brightness(1.25)' : 'none',
+                    transition: 'filter 0.15s ease, opacity 0.2s ease',
+                    cursor: 'pointer',
                   }}
                 />
               );
@@ -116,7 +206,37 @@ export const SkillsBarChart = ({ skills, searchTerm }: SkillsBarChartProps) => {
         </BarChart>
       </ResponsiveContainer>
 
-      <CategoryLegend categories={presentCategories} />
+      {/* Legend — styled like a figure caption: muted text, pattern swatches vertically centred with labels */}
+      <Box
+        aria-hidden="true"
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          rowGap: 1.5,
+          columnGap: 3,
+          pt: 1,
+        }}
+      >
+        {legendEntries.map(({ cat, colour, markColour, label }) => (
+          <Box key={cat} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box
+              sx={{
+                width: 10,
+                height: 10,
+                borderRadius: '2px',
+                background: showPatterns
+                  ? getCategoryPatternBackground(cat, colour, markColour)
+                  : colour,
+                flexShrink: 0,
+              }}
+            />
+            <Typography variant="caption" color="text.secondary">
+              {label}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
 
       {/* Visually hidden table — accessible text alternative for screen readers */}
       <Box component="table" sx={visuallyHidden} aria-label="Skills data table">

@@ -34,6 +34,14 @@ describe('SkillsBarChart', () => {
     expect(screen.getAllByText('People & Stakeholders')).toHaveLength(2);
   });
 
+  test('renders legend entries when showPatterns is false', async () => {
+    const screen = render(<SkillsBarChart skills={SKILLS} showPatterns={false} />);
+
+    expect(screen.getAllByText('Engineering')).toHaveLength(2);
+    expect(screen.getAllByText('People & Stakeholders')).toHaveLength(2);
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
   test('does not render a legend entry for absent categories', () => {
     const screen = render(<SkillsBarChart skills={SKILLS} />);
 

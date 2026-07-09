@@ -80,6 +80,52 @@ describe('Skills', () => {
     });
   });
 
+  describe('pattern toggle', () => {
+    test('shows an unchecked patterns checkbox by default in graph view', async () => {
+      const user = userEvent.setup();
+      let screen!: ReturnType<typeof render>;
+
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Graph view' }));
+
+      expect(screen.getByRole('checkbox', { name: 'Patterns' })).not.toBeChecked();
+    });
+
+    test('hides the patterns checkbox outside graph view', async () => {
+      const user = userEvent.setup();
+      let screen!: ReturnType<typeof render>;
+
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
+
+      await user.click(screen.getByRole('button', { name: 'List view' }));
+
+      expect(screen.queryByRole('checkbox', { name: 'Patterns' })).not.toBeInTheDocument();
+    });
+
+    test('checking the patterns checkbox updates its checked state', async () => {
+      const user = userEvent.setup();
+      let screen!: ReturnType<typeof render>;
+
+      await act(async () => {
+        screen = renderWithProvider();
+        await Promise.resolve();
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Graph view' }));
+      await user.click(screen.getByRole('checkbox', { name: 'Patterns' }));
+
+      expect(screen.getByRole('checkbox', { name: 'Patterns' })).toBeChecked();
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
+  });
+
   describe('category filter URL sync', () => {
     test('initializes the category filter from the URL query param', async () => {
       let screen!: ReturnType<typeof render>;
