@@ -4,7 +4,7 @@ import { axe } from 'jest-axe';
 import { ContactDetails } from './ContactDetails';
 
 describe('ContactDetails', () => {
-  test('renders email, LinkedIn, and GitHub contact links', () => {
+  test('renders email, LinkedIn, GitHub, and Medium contact links', () => {
     const screen = render(<ContactDetails />);
 
     const emailLink = screen.getByRole('link', { name: 'm.a.stylianou@hotmail.com' });
@@ -23,6 +23,12 @@ describe('ContactDetails', () => {
     expect(githubLink).toBeVisible();
     expect(githubLink).toHaveAttribute('target', '_blank');
     expect(githubLink).toHaveAttribute('rel', 'noopener noreferrer');
+
+    const mediumLink = screen.getByRole('link', { name: 'Medium' });
+
+    expect(mediumLink).toBeVisible();
+    expect(mediumLink).toHaveAttribute('target', '_blank');
+    expect(mediumLink).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
   test('has no axe violations', async () => {

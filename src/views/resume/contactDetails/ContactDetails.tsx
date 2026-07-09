@@ -1,3 +1,4 @@
+import Article from '@mui/icons-material/Article';
 import Email from '@mui/icons-material/Email';
 import GitHub from '@mui/icons-material/GitHub';
 import LinkedIn from '@mui/icons-material/LinkedIn';
@@ -32,6 +33,16 @@ export const ContactDetails = () => {
       >
         <GitHub aria-hidden="true" fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
         GitHub
+      </Link>
+      <Link
+        href={contact.medium}
+        target="_blank"
+        rel="noopener noreferrer"
+        underline="hover"
+        color="primary"
+      >
+        <Article aria-hidden="true" fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
+        Medium
       </Link>
     </Stack>
   );
