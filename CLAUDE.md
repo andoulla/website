@@ -36,21 +36,21 @@ A minimal React + TypeScript web app run in strict mode across the whole toolcha
 ## Data flow
 
 ```
-src/data/jobs.json + recommendations.json
-  → loadExperiences()      (dynamic import, joins data, 600 ms artificial delay)
+src/data/careerHistory.json + recommendations.json
+  → loadCareerHistory()    (dynamic import, joins data, 600 ms artificial delay)
   → ResumeDataProvider     (holds a stable Promise via useState lazy init)
-  → useResumeData()        (React 19 use() — must sit under a Suspense boundary)
+  → useCareerHistory()     (React 19 use() — must sit under a Suspense boundary)
   → Resume / Skills views
 ```
 
-Skills have **no dedicated data file** — `calculateSkillYears(experiences)` derives them from `WorkExperience.skills` and `WorkExperience.techStack` at render time.
+Skills have **no dedicated data file** — `calculateSkillYears(experiences)` derives them from `TimelineEvent.skills` and `TimelineEvent.techStack` at render time.
 
 ## Contexts
 
-| Provider               | Hook                | Exposes                                                       |
-| ---------------------- | ------------------- | ------------------------------------------------------------- |
-| `ResumeDataProvider`   | `useResumeData()`   | `WorkExperienceWithRecommendations[]` — suspends until loaded |
-| `ThemeContextProvider` | `useThemeContext()` | `{ themeName, toggleTheme, isDarkMode, toggleDarkMode }`      |
+| Provider               | Hook                 | Exposes                                                      |
+| ---------------------- | -------------------- | ------------------------------------------------------------ |
+| `ResumeDataProvider`   | `useCareerHistory()` | `TimelineEventWithRecommendations[]` — suspends until loaded |
+| `ThemeContextProvider` | `useThemeContext()`  | `{ themeName, toggleTheme, isDarkMode, toggleDarkMode }`     |
 
 ## Directory layout
 
@@ -59,14 +59,14 @@ Skills have **no dedicated data file** — `calculateSkillYears(experiences)` de
   - [src/views/resume/](src/views/resume/) — sub-components: ContactDetails, TimelineEventCard, TimelineEventSkeleton
   - [src/views/skills/](src/views/skills/) — sub-components: SkillsListView, SkillsGraphView
 - [src/context/](src/context/) — React context providers (resumeData, theme)
-- [src/data/](src/data/) — JSON fixtures + typed `.ts` wrappers (jobs, recommendations, contact)
-- [src/types/](src/types/) — shared TypeScript types (WorkExperience, Recommendation, WorkExperienceWithRecommendations)
+- [src/data/](src/data/) — JSON fixtures + typed `.ts` wrappers (careerHistory, recommendations, contact)
+- [src/types/](src/types/) — shared TypeScript types (TimelineEvent, Recommendation, TimelineEventWithRecommendations)
 - [src/themes/](src/themes/) — MUI theme factories (green, purple) and design tokens
 - [src/utils/](src/utils/) — pure utility functions
-  - `calculateSkillYears` — derives `SkillSummary[]` from `WorkExperience[]`
+  - `calculateSkillYears` — derives `SkillSummary[]` from `TimelineEvent[]`
   - `skillColour` — maps skill name → MUI colour + category (`engineering` | `managerial` | `soft-skills` | `other`)
   - `computeShadeColour` — shade interpolation helper used by skillColour
-  - `loadExperiences` — async loader used by ResumeDataProvider, joins jobs + recommendations into `WorkExperienceWithRecommendations[]` via its `joinJobsWithRecommendations` sub-util
+  - `loadCareerHistory` — async loader used by ResumeDataProvider, joins career history + recommendations into `TimelineEventWithRecommendations[]` via its `joinCareerHistoryWithRecommendations` sub-util
 
 ### Nesting convention
 
@@ -78,5 +78,5 @@ Skills have **no dedicated data file** — `calculateSkillYears(experiences)` de
 - Applies uniformly under `views/*`: `views/skills/skillFilterBar/`, not
   `views/skills/components/skillFilterBar/`.
 - Worked examples: [src/components/tagList/](src/components/tagList/) (component nesting),
-  [src/utils/loadExperiences/joinJobsWithRecommendations/](src/utils/loadExperiences/joinJobsWithRecommendations/)
+  [src/utils/loadCareerHistory/joinCareerHistoryWithRecommendations/](src/utils/loadCareerHistory/joinCareerHistoryWithRecommendations/)
   (util nesting).

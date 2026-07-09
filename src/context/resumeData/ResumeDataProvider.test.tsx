@@ -3,17 +3,17 @@ import { Component, Suspense } from 'react';
 import type { ReactNode } from 'react';
 
 import { TimelineEvent } from '@/testing';
-import { loadExperiences } from '@/utils/loadExperiences';
+import { loadCareerHistory } from '@/utils/loadCareerHistory';
 
-import { ResumeDataProvider, useResumeData } from './ResumeDataProvider';
+import { ResumeDataProvider, useCareerHistory } from './ResumeDataProvider';
 
-jest.mock('@/utils/loadExperiences');
+jest.mock('@/utils/loadCareerHistory');
 
-const mockLoadExperiences = jest.mocked(loadExperiences);
+const mockLoadCareerHistory = jest.mocked(loadCareerHistory);
 
-function ExperiencesConsumer() {
-  const [firstExperience] = useResumeData();
-  return <p>{firstExperience.companyName}</p>;
+function CareerHistoryConsumer() {
+  const [firstEvent] = useCareerHistory();
+  return <p>{firstEvent.companyName}</p>;
 }
 
 interface ErrorBoundaryState {
@@ -36,7 +36,7 @@ class TestErrorBoundary extends Component<{ children: ReactNode }, ErrorBoundary
 }
 
 describe('ResumeDataProvider', () => {
-  test('exposes the loaded experiences to consumers via the context', async () => {
+  test('exposes the loaded career history to consumers via the context', async () => {
     let screen!: ReturnType<typeof render>;
 
     await act(async () => {
@@ -47,7 +47,7 @@ describe('ResumeDataProvider', () => {
           }
         >
           <Suspense fallback={<p>Loading</p>}>
-            <ExperiencesConsumer />
+            <CareerHistoryConsumer />
           </Suspense>
         </ResumeDataProvider>
       );
@@ -61,7 +61,7 @@ describe('ResumeDataProvider', () => {
     const screen = render(
       <ResumeDataProvider loader={() => new Promise(() => {})}>
         <Suspense fallback={<p>Loading</p>}>
-          <ExperiencesConsumer />
+          <CareerHistoryConsumer />
         </Suspense>
       </ResumeDataProvider>
     );
@@ -74,7 +74,7 @@ describe('ResumeDataProvider', () => {
       <TestErrorBoundary>
         <ResumeDataProvider loader={() => Promise.reject(new Error('failed to load'))}>
           <Suspense fallback={<p>Loading</p>}>
-            <ExperiencesConsumer />
+            <CareerHistoryConsumer />
           </Suspense>
         </ResumeDataProvider>
       </TestErrorBoundary>
@@ -83,8 +83,8 @@ describe('ResumeDataProvider', () => {
     expect(await screen.findByText('Error: failed to load')).toBeVisible();
   });
 
-  test('uses the default loadExperiences loader when no loader prop is provided', async () => {
-    mockLoadExperiences.mockResolvedValue([new TimelineEvent().companyName('Default Co').mock()]);
+  test('uses the default loadCareerHistory loader when no loader prop is provided', async () => {
+    mockLoadCareerHistory.mockResolvedValue([new TimelineEvent().companyName('Default Co').mock()]);
 
     let screen!: ReturnType<typeof render>;
 
@@ -92,7 +92,7 @@ describe('ResumeDataProvider', () => {
       screen = render(
         <ResumeDataProvider>
           <Suspense fallback={<p>Loading</p>}>
-            <ExperiencesConsumer />
+            <CareerHistoryConsumer />
           </Suspense>
         </ResumeDataProvider>
       );
@@ -100,6 +100,6 @@ describe('ResumeDataProvider', () => {
     });
 
     expect(screen.getByText('Default Co')).toBeVisible();
-    expect(mockLoadExperiences).toHaveBeenCalled();
+    expect(mockLoadCareerHistory).toHaveBeenCalled();
   });
 });

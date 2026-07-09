@@ -68,5 +68,31 @@
       "Led a team of 8–10 developers across London and Bratislava, managing planning, releases, stakeholder communication, onboarding and delivery, while remaining hands-on technically."
     ],
     "title": "Senior Developer / Innovation Architect"
+  },
+  {
+    "id": "city-st-georges-university-of-london-2011-09",
+    "type": "education",
+    "companyName": "City St George's, University of London",
+    "location": "London",
+    "startDate": "2011-09-01",
+    "endDate": "2012-09-01",
+    "responsibilities": [
+      "Grade: Distinction",
+      "Dissertation: Introducing creativity into programming: Can a software implementation of creativity techniques improve programming outcomes?"
+    ],
+    "title": "Master of Science (MSc), Software Engineering"
+  },
+  {
+    "id": "university-of-east-anglia-2007-09",
+    "type": "education",
+    "companyName": "University of East Anglia",
+    "location": "Norwich",
+    "startDate": "2007-09-01",
+    "endDate": "2009-07-01",
+    "responsibilities": [
+      "Activities and societies: DanceSport UEA, International Society",
+      "Dissertation: Texture classification for marshes from aerial photographs"
+    ],
+    "title": "Bachelor of Science (BSc), Computer Science"
   }
 ]

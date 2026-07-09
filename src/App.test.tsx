@@ -6,8 +6,8 @@ import { TimelineEvent } from './testing';
 
 // Stub the deferred loader so the home route renders its data instantly in tests.
 // (ts-jest hoists jest.mock above the imports above.)
-jest.mock('./utils/loadExperiences', () => ({
-  loadExperiences: () =>
+jest.mock('./utils/loadCareerHistory', () => ({
+  loadCareerHistory: () =>
     Promise.resolve([
       new TimelineEvent()
         .id('job-1')
@@ -44,15 +44,7 @@ describe('App', () => {
 
     expect(screen.getByRole('heading', { name: 'Mariandi Stylianou' })).toBeVisible();
     expect(screen.getByText('Nimbus Analytics')).toBeVisible();
-  });
 
-  test('has no axe violations on the home route', async () => {
-    let screen!: ReturnType<typeof render>;
-
-    await act(async () => {
-      screen = render(<App />);
-      await Promise.resolve();
-    });
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });
