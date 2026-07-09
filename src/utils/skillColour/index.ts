@@ -1,6 +1,7 @@
 export {
   isCustomSkillColour,
   resolveSkillColourMain,
+  skillCategory,
   skillColour,
   skillShadeIndex,
 } from './skillColour.helpers';

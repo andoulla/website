@@ -1,9 +1,27 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
+import type { SkillCategory } from '@/data/skills.types';
+import { CATEGORY_ORDER } from '@/utils/skillCategory';
+import { skillCategory } from '@/utils/skillColour';
+
 import { CARD_FADE_DURATION_MS, CARD_FADE_TRANSLATE_Y } from './TimelineEventCard.constants';
 
 export const recommendationElementId = (id: string): string =>
   `recommendation-${encodeURIComponent(id)}`;
+
+interface SkillCategoryGroup {
+  category: SkillCategory;
+  skills: string[];
+}
+
+export const groupSkillsByCategory = (skills: string[]): SkillCategoryGroup[] =>
+  CATEGORY_ORDER.map((category) => ({
+    category,
+    skills: skills.filter((skill) => skillCategory(skill) === category),
+  }))
+    .filter((group) => group.skills.length > 0)
+    // Stable sort: ties keep CATEGORY_ORDER as the tiebreaker.
+    .sort((groupA, groupB) => groupB.skills.length - groupA.skills.length);
 
 export const getCardMotionSx = (
   isInView: boolean,

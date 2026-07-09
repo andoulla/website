@@ -1,4 +1,8 @@
-import { getCardMotionSx, recommendationElementId } from './TimelineEventCard.helpers';
+import {
+  getCardMotionSx,
+  groupSkillsByCategory,
+  recommendationElementId,
+} from './TimelineEventCard.helpers';
 
 describe('recommendationElementId', () => {
   test('prefixes the recommendation id', () => {
@@ -27,5 +31,43 @@ describe('getCardMotionSx', () => {
     const sx = getCardMotionSx(false, true);
 
     expect(sx).toEqual({ opacity: 1 });
+  });
+});
+
+describe('groupSkillsByCategory', () => {
+  test('orders categories by skill count, most skills first', () => {
+    const groups = groupSkillsByCategory(['Team Leadership', 'React', 'TypeScript', 'Git']);
+
+    expect(groups).toEqual([
+      { category: 'engineering', skills: ['React', 'TypeScript'] },
+      { category: 'tooling', skills: ['Git'] },
+      { category: 'leadership-delivery', skills: ['Team Leadership'] },
+    ]);
+  });
+
+  test('breaks ties between equally-sized categories using CATEGORY_ORDER', () => {
+    const groups = groupSkillsByCategory(['Team Leadership', 'React', 'Git']);
+
+    expect(groups).toEqual([
+      { category: 'engineering', skills: ['React'] },
+      { category: 'tooling', skills: ['Git'] },
+      { category: 'leadership-delivery', skills: ['Team Leadership'] },
+    ]);
+  });
+
+  test('omits categories with no matching skills', () => {
+    const groups = groupSkillsByCategory(['React']);
+
+    expect(groups).toEqual([{ category: 'engineering', skills: ['React'] }]);
+  });
+
+  test('returns an empty array for no skills', () => {
+    expect(groupSkillsByCategory([])).toEqual([]);
+  });
+
+  test('falls back to the tooling category for an unrecognised skill name', () => {
+    const groups = groupSkillsByCategory(['Some Made Up Skill']);
+
+    expect(groups).toEqual([{ category: 'tooling', skills: ['Some Made Up Skill'] }]);
   });
 });

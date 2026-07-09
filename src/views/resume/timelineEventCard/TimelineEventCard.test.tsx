@@ -44,6 +44,19 @@ describe('TimelineEventCard', () => {
     expect(screen.getByText('TypeScript')).toBeVisible();
   });
 
+  test('groups skills by category, omitting categories with no matching skills', () => {
+    const screen = render(
+      <TimelineEventCard experience={{ ...experience, skills: ['React', 'Team Leadership'] }} />,
+      { wrapper: MemoryRouter }
+    );
+
+    expect(screen.getByText('Engineering:')).toBeVisible();
+    expect(screen.getByText('React')).toBeVisible();
+    expect(screen.getByText('Leadership & Delivery:')).toBeVisible();
+    expect(screen.getByText('Team Leadership')).toBeVisible();
+    expect(screen.queryByText('Tooling:')).not.toBeInTheDocument();
+  });
+
   test('places the company and its sections correctly in the heading hierarchy', () => {
     const screen = render(<TimelineEventCard experience={experience} />, {
       wrapper: MemoryRouter,

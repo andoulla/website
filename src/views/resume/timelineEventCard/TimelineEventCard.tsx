@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -6,7 +6,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
-import { useTheme } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -14,9 +14,14 @@ import { BulletList } from '@/components/bulletList';
 import { Section } from '@/components/section';
 import { TagList } from '@/components/tagList';
 import type { TimelineEventWithRecommendations } from '@/types';
+import { CATEGORY_LABELS } from '@/utils/skillCategory';
 import { skillColour, skillShadeIndex } from '@/utils/skillColour';
 
-import { getCardMotionSx, recommendationElementId } from './TimelineEventCard.helpers';
+import {
+  getCardMotionSx,
+  groupSkillsByCategory,
+  recommendationElementId,
+} from './TimelineEventCard.helpers';
 import { RecommendationText } from './recommendationText';
 import { useInView } from './useInView';
 
@@ -108,6 +113,8 @@ export const TimelineEventCard = ({
     void navigate(`/skills?skill=${experience.skills.map(encodeURIComponent).join(',')}`);
   }, [navigate, experience.skills]);
 
+  const skillGroups = useMemo(() => groupSkillsByCategory(experience.skills), [experience.skills]);
+
   return (
     <Card
       ref={setCardNode}
@@ -150,12 +157,32 @@ export const TimelineEventCard = ({
         </Section>
         <Divider sx={{ my: 2 }} />
         <Section title="Key Skills" titleLevel={4}>
-          <TagList
-            items={experience.skills}
-            onItemClick={handleSkillClick}
-            getColour={skillColour}
-            getShadeIndex={skillShadeIndex}
-          />
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+            {skillGroups.map((group) => (
+              <Box
+                key={group.category}
+                sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
+              >
+                <Typography
+                  variant="caption"
+                  component="span"
+                  sx={{
+                    fontWeight: 'medium',
+                    flexShrink: 0,
+                    color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
+                  }}
+                >
+                  {`${CATEGORY_LABELS[group.category]}:`}
+                </Typography>
+                <TagList
+                  items={group.skills}
+                  onItemClick={handleSkillClick}
+                  getColour={skillColour}
+                  getShadeIndex={skillShadeIndex}
+                />
+              </Box>
+            ))}
+          </Box>
           {experience.skills.length > 0 && (
             <Button size="small" onClick={handleViewAllSkillsClick} sx={{ mt: 1.5 }}>
               View all skills from this role
