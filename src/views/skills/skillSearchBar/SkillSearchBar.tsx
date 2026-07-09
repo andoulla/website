@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 
-export interface SkillSearchBarProps {
+interface SkillSearchBarProps {
   value: string;
   onChange: (value: string) => void;
   hint?: string;

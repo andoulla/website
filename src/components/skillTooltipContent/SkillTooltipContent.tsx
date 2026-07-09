@@ -8,7 +8,7 @@ import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { formatYears } from '@/utils/formatYears';
 import { SUBCATEGORY_LABELS } from '@/utils/skillCategory';
 
-export interface SkillTooltipContentProps {
+interface SkillTooltipContentProps {
   skill: SkillSummary;
 }
 

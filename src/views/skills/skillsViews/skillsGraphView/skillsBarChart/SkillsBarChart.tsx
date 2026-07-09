@@ -28,7 +28,7 @@ const SkillBarTooltip = ({ active, payload }: TooltipContentProps) => {
   return <SkillTooltipContent skill={skill} />;
 };
 
-export interface SkillsBarChartProps {
+interface SkillsBarChartProps {
   skills: SkillSummary[];
   searchTerm?: string;
 }
