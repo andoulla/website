@@ -78,7 +78,7 @@ describe('TimelineEventCard', () => {
     ).toBeVisible();
   });
 
-  test('renders recommendations when present', () => {
+  test('renders recommendations when present', async () => {
     const screen = render(
       <TimelineEventCard experience={{ ...experience, recommendations: [recommendationItem] }} />,
       { wrapper: MemoryRouter }
@@ -86,30 +86,15 @@ describe('TimelineEventCard', () => {
 
     expect(screen.getByText('Recommendations')).toBeVisible();
     expect(screen.getByText('P.S. · Engineering Manager · 12 Jun 2023')).toBeVisible();
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('omits the Recommendations section when there are none', () => {
+  test('omits the Recommendations section when there are none', async () => {
     const screen = render(<TimelineEventCard experience={experience} />, {
       wrapper: MemoryRouter,
     });
 
     expect(screen.queryByText('Recommendations')).not.toBeInTheDocument();
-  });
-
-  test('has no axe violations without recommendations', async () => {
-    const screen = render(<TimelineEventCard experience={experience} />, {
-      wrapper: MemoryRouter,
-    });
-
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations with recommendations', async () => {
-    const screen = render(
-      <TimelineEventCard experience={{ ...experience, recommendations: [recommendationItem] }} />,
-      { wrapper: MemoryRouter }
-    );
-
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
