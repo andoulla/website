@@ -1,4 +1,4 @@
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 
 import type { SkillCategory } from '@/data/skills.types';
 import type { TimelineEvent } from '@/types';
@@ -30,10 +30,7 @@ export const groupSkillsByCategory = (skills: string[]): SkillCategoryGroup[] =>
     // Stable sort: ties keep CATEGORY_ORDER as the tiebreaker.
     .sort((groupA, groupB) => groupB.skills.length - groupA.skills.length);
 
-export const getCardMotionSx = (
-  isInView: boolean,
-  prefersReducedMotion: boolean
-): SxProps<Theme> => {
+export const getCardMotionSx = (isInView: boolean, prefersReducedMotion: boolean) => {
   // Reduced motion: stay fully visible with no transform/transition, so scrolling
   // never causes a position snap.
   if (prefersReducedMotion) return { opacity: 1 };
