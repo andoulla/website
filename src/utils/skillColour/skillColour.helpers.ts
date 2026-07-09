@@ -5,7 +5,7 @@ import { skills } from '@/data/skills';
 import { CATEGORY_COLOUR_MAP, CUSTOM_COLOUR_HEX } from './skillColour.constants';
 import type { CustomSkillColour, SkillCategory, SkillColour } from './skillColour.types';
 
-const isCustomSkillColour = (colour: SkillColour): colour is CustomSkillColour =>
+export const isCustomSkillColour = (colour: SkillColour): colour is CustomSkillColour =>
   colour in CUSTOM_COLOUR_HEX;
 
 const SKILL_CATEGORY_MAP: Record<string, SkillCategory> = Object.fromEntries(

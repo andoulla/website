@@ -4,11 +4,12 @@ import { useTheme } from '@mui/material/styles';
 import { memo, type ReactNode } from 'react';
 
 import { computeShadeColour } from '@/utils/computeShadeColour';
-import { resolveSkillColourMain } from '@/utils/skillColour';
+import { isCustomSkillColour, resolveSkillColourMain } from '@/utils/skillColour';
+import type { SkillColour } from '@/utils/skillColour';
 
 export interface TagProps {
   children: ReactNode;
-  colour?: ChipProps['color'];
+  colour?: SkillColour;
   shadeIndex?: number;
   variant?: ChipProps['variant'];
   onClick?: () => void;
@@ -28,6 +29,21 @@ export const Tag = memo(({ children, colour, shadeIndex, variant, onClick }: Tag
         size="small"
         label={children}
         sx={{ bgcolor: bg, color: textColour }}
+        onClick={onClick}
+      />
+    );
+  }
+
+  // Custom hex colours (e.g. skill-category colours) aren't real MUI palette keys, so they can't
+  // go through Chip's `color` prop — resolve to a flat background instead.
+  if (colour !== undefined && isCustomSkillColour(colour)) {
+    const resolved = resolveSkillColourMain(colour, theme);
+    return (
+      <Chip
+        size="small"
+        label={children}
+        variant={variant}
+        sx={{ bgcolor: resolved, color: theme.palette.getContrastText(resolved) }}
         onClick={onClick}
       />
     );

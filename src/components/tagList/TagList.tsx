@@ -2,12 +2,14 @@ import type { ChipProps } from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 import { memo } from 'react';
 
+import type { SkillColour } from '@/utils/skillColour';
+
 import { Tag } from './tag';
 
 interface TagListProps {
   items: string[];
   onItemClick?: (item: string) => void;
-  getColour?: (item: string) => ChipProps['color'];
+  getColour?: (item: string) => SkillColour | undefined;
   getShadeIndex?: (item: string) => number;
   variant?: ChipProps['variant'];
 }
