@@ -10,6 +10,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
 ![MUI](https://img.shields.io/badge/MUI-9-007FFF?logo=mui&logoColor=white)
+![Recharts](https://img.shields.io/badge/Recharts-3-22B5BF)
 ![Jest](https://img.shields.io/badge/tested_with-Jest-C21325?logo=jest&logoColor=white)
 ![ESLint](https://img.shields.io/badge/ESLint-enabled-4B32C3?logo=eslint&logoColor=white)
 ![Prettier](https://img.shields.io/badge/code_style-Prettier-F7B93E?logo=prettier&logoColor=black)
@@ -20,8 +21,9 @@ This is a personal project I'm using to explore Claude's models and features, wi
 
 ## Pages
 
-- **Resume** (`/`) — chronological timeline of work experience with inline recommendations; shows a skeleton while data loads
-- **Skills** (`/skills`) — list and graph views of skills derived from the work experience data, colour-coded by category; supports deep-linking to a specific skill via `?skill=<name>`
+- **Resume** (`/`) — chronological timeline of work and education history with inline recommendations; education entries are visually distinguished (institution logo or a School icon); shows a skeleton while data loads
+- **Skills** (`/skills`) — colour-coded by category, with three views (list, bar chart, radar) built on Recharts; supports search, category/sub-category filtering, and deep-linking to a specific skill via `?skill=<name>`. Each skill's category, sub-category, and search synonyms come from a master list (`src/data/skills.json`); a skill's years of experience are computed by summing the durations of the jobs it's linked to there, and a skill missing from the list falls back to the "tooling" category colour
+- **Articles** (`/articles`) — fetches and renders posts from a Medium RSS feed
 
 The nav bar also exposes a dark mode toggle and a theme switcher (green / purple).
 
@@ -59,10 +61,32 @@ The coverage badge and reports need a one-time setup that can't be done from the
 
 Until that's done, the upload step no-ops safely (`fail_ci_if_error: false`) rather than failing CI.
 
-## Performance notes
+## Features & interactions
 
-Fixed a handful of unnecessary re-render sources (no React Compiler is enabled, so memoization is manual):
+**Nav bar**
 
-- Memoized `ThemeContextProvider`'s context value and toggle callbacks
-- Memoized derived skill/recommendation computations in the Skills views
-- Stabilized list-item click callbacks and added `React.memo` to `Tag`, `TagList`, `TimelineEventCard`, and `RecommendationText`
+- Toggle the colour theme (green / purple) via the palette icon button
+- Toggle light/dark mode via the Light/Dark buttons
+- Navigate between Home, Skills, and Articles
+
+**Resume**
+
+- Click a "Key Skills" chip on a card to jump to that skill on the Skills page, highlighted
+- Click "View this role's skills on the graph" to jump to the Skills page with all of that role's skills highlighted
+- Click a recommendation's LinkedIn icon to open the original recommendation
+- Deep-link into a card via `?skill=<name>` or `?recommendation=<id>` — it auto-scrolls into view and gets a highlighted outline
+- Education entries show an institution logo (or a School icon) and a "Description" label instead of "Responsibilities"
+
+**Skills**
+
+- Switch between list, bar chart, and radar views (persisted in `?view=`)
+- Hover a skill (bar, list row, or radar category vertex) for a tooltip — name, subcategory, years, per-company breakdown, and links back to that skill on the Resume or to its first recommendation
+- Toggle "Patterns" (bar chart view) to fill bars with colour-blind-safe textures instead of solid colour
+- Filter by category and sub-category via the Filters dropdown (multi-select checkboxes)
+- Search skills by name; a hint reports matches hidden by active filters
+- Copy the current URL (view, filters, search, highlighted skill) via the copy-link button
+- Deep-link to a skill via `?skill=<name>`
+
+**Articles**
+
+- Browse posts pulled live from a Medium RSS feed
