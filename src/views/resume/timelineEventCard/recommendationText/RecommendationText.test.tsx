@@ -19,7 +19,7 @@ describe('RecommendationText', () => {
 
     expect(screen.getByText('"Great work."')).toBeVisible();
     expect(screen.getByText('P.S.')).toBeVisible();
-    expect(screen.getByText('P.S., Engineering Manager · 15 Jan 2022')).toBeVisible();
+    expect(screen.getByText('P.S. · Engineering Manager · 15 Jan 2022')).toBeVisible();
 
     const link = screen.getByRole('link', { name: 'View full recommendation on LinkedIn' });
 

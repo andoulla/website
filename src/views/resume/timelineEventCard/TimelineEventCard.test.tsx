@@ -85,7 +85,7 @@ describe('TimelineEventCard', () => {
     );
 
     expect(screen.getByText('Recommendations')).toBeVisible();
-    expect(screen.getByText('P.S., Engineering Manager · 12 Jun 2023')).toBeVisible();
+    expect(screen.getByText('P.S. · Engineering Manager · 12 Jun 2023')).toBeVisible();
   });
 
   test('omits the Recommendations section when there are none', () => {

@@ -1,14 +1,12 @@
-import LinkedIn from '@mui/icons-material/LinkedIn';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import { lighten } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
+import { RecommendationByline } from '@/components/recommendationByline';
 import type { Recommendation } from '@/types';
-import { formatDate } from '@/utils/formatDate';
 
 export interface RecommendationTextProps {
   recommendation: Recommendation;
@@ -38,20 +36,7 @@ export const RecommendationText = ({ recommendation }: RecommendationTextProps) 
           >
             {recommendation.authorInitials}
           </Avatar>
-          <Typography variant="caption" color="text.secondary">
-            {recommendation.authorInitials}, {recommendation.authorRole.jobTitle}
-            <Link
-              href={recommendation.recommendationUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="View full recommendation on LinkedIn"
-              sx={{ ml: 0.5 }}
-            >
-              <LinkedIn fontSize="inherit" sx={{ verticalAlign: 'middle' }} />
-            </Link>
-            {' · '}
-            {formatDate(recommendation.postedDate)}
-          </Typography>
+          <RecommendationByline recommendation={recommendation} />
         </Stack>
         <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
           {`"${recommendation.text}"`}
