@@ -5,7 +5,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import type { Theme } from '@mui/material/styles';
 import { alpha, useTheme } from '@mui/material/styles';
 
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
@@ -24,11 +23,12 @@ export interface SkillItemsListProps {
 interface SkillListItemProps {
   skill: SkillSummary;
   isHighlighted: boolean;
-  theme: Theme;
   onItemClick: (anchor: HTMLElement, skill: SkillSummary) => void;
 }
 
-const SkillListItem = ({ skill, isHighlighted, theme, onItemClick }: SkillListItemProps) => {
+const SkillListItem = ({ skill, isHighlighted, onItemClick }: SkillListItemProps) => {
+  const theme = useTheme();
+
   return (
     <ListItem disablePadding>
       <Tooltip
@@ -71,8 +71,6 @@ const SkillListItem = ({ skill, isHighlighted, theme, onItemClick }: SkillListIt
 };
 
 export const SkillItemsList = ({ skills, highlightedSkill, onItemClick }: SkillItemsListProps) => {
-  const theme = useTheme();
-
   return (
     <List disablePadding dense>
       {skills.map((skill) => (
@@ -80,7 +78,6 @@ export const SkillItemsList = ({ skills, highlightedSkill, onItemClick }: SkillI
           key={skill.skill}
           skill={skill}
           isHighlighted={skill.skill === highlightedSkill}
-          theme={theme}
           onItemClick={onItemClick}
         />
       ))}
