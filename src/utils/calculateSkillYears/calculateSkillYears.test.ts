@@ -18,7 +18,7 @@ describe('calculateSkillYears', () => {
       expect(result[0].skill).toBe('React');
     });
 
-    test('excludes skills whose job IDs do not match any experience', () => {
+    test('excludes skills whose job IDs do not match any career history entry', () => {
       const result = calculateSkillYears(
         [new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2022-01-01').mock()],
         [new Skill().name('React').jobIds(['unknown-id']).mock()],

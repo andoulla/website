@@ -12,7 +12,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 
 import { PageContainer } from '@/components/pageContainer';
-import { useResumeData } from '@/context/resumeData';
+import { useCareerHistory } from '@/context/resumeData';
 import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
@@ -52,8 +52,8 @@ const renderSkillsView = (viewMode: ViewMode, showPatterns: boolean) => {
 };
 
 const SkillsContent = () => {
-  const experiences = useResumeData();
-  const skills = useMemo(() => calculateSkillYears(experiences), [experiences]);
+  const careerHistory = useCareerHistory();
+  const skills = useMemo(() => calculateSkillYears(careerHistory), [careerHistory]);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const highlightedSkills = useMemo(

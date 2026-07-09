@@ -8,7 +8,7 @@ import { TimelineEvent } from '@/testing';
 
 import { Skills } from './Skills';
 
-const EXPERIENCES = [
+const CAREER_HISTORY = [
   new TimelineEvent()
     .id('atom-learning-2021-01')
     .companyName('Acme')
@@ -17,7 +17,7 @@ const EXPERIENCES = [
     .mock(),
 ];
 
-const neverResolve = () => new Promise<typeof EXPERIENCES>(() => undefined);
+const neverResolve = () => new Promise<typeof CAREER_HISTORY>(() => undefined);
 
 const SearchParamsDisplay = () => {
   const [searchParams] = useSearchParams();
@@ -25,7 +25,7 @@ const SearchParamsDisplay = () => {
 };
 
 function renderWithProvider(
-  loader = () => Promise.resolve(EXPERIENCES),
+  loader = () => Promise.resolve(CAREER_HISTORY),
   initialEntries = ['/skills']
 ) {
   return render(
@@ -132,7 +132,7 @@ describe('Skills', () => {
 
       await act(async () => {
         screen = renderWithProvider(
-          () => Promise.resolve(EXPERIENCES),
+          () => Promise.resolve(CAREER_HISTORY),
           ['/skills?category=leadership-delivery']
         );
         await Promise.resolve();
@@ -172,7 +172,7 @@ describe('Skills', () => {
 
       await act(async () => {
         screen = renderWithProvider(
-          () => Promise.resolve(EXPERIENCES),
+          () => Promise.resolve(CAREER_HISTORY),
           ['/skills?category=leadership-delivery']
         );
         await Promise.resolve();
@@ -195,7 +195,7 @@ describe('Skills', () => {
 
       await act(async () => {
         screen = renderWithProvider(
-          () => Promise.resolve(EXPERIENCES),
+          () => Promise.resolve(CAREER_HISTORY),
           ['/skills?subCategory=testing']
         );
         await Promise.resolve();
@@ -233,7 +233,7 @@ describe('Skills', () => {
 
       await act(async () => {
         screen = renderWithProvider(
-          () => Promise.resolve(EXPERIENCES),
+          () => Promise.resolve(CAREER_HISTORY),
           ['/skills?subCategory=testing']
         );
         await Promise.resolve();
@@ -255,7 +255,10 @@ describe('Skills', () => {
       let screen!: ReturnType<typeof render>;
 
       await act(async () => {
-        screen = renderWithProvider(() => Promise.resolve(EXPERIENCES), ['/skills?search=react']);
+        screen = renderWithProvider(
+          () => Promise.resolve(CAREER_HISTORY),
+          ['/skills?search=react']
+        );
         await Promise.resolve();
       });
 
@@ -281,7 +284,10 @@ describe('Skills', () => {
       let screen!: ReturnType<typeof render>;
 
       await act(async () => {
-        screen = renderWithProvider(() => Promise.resolve(EXPERIENCES), ['/skills?search=react']);
+        screen = renderWithProvider(
+          () => Promise.resolve(CAREER_HISTORY),
+          ['/skills?search=react']
+        );
         await Promise.resolve();
       });
 
@@ -296,7 +302,10 @@ describe('Skills', () => {
       let screen!: ReturnType<typeof render>;
 
       await act(async () => {
-        screen = renderWithProvider(() => Promise.resolve(EXPERIENCES), ['/skills?view=barchart']);
+        screen = renderWithProvider(
+          () => Promise.resolve(CAREER_HISTORY),
+          ['/skills?view=barchart']
+        );
         await Promise.resolve();
       });
 
@@ -325,7 +334,7 @@ describe('Skills', () => {
       let screen!: ReturnType<typeof render>;
 
       await act(async () => {
-        screen = renderWithProvider(() => Promise.resolve(EXPERIENCES), ['/skills?view=list']);
+        screen = renderWithProvider(() => Promise.resolve(CAREER_HISTORY), ['/skills?view=list']);
         await Promise.resolve();
       });
 
@@ -397,7 +406,7 @@ describe('Skills', () => {
 
       await act(async () => {
         screen = renderWithProvider(
-          () => Promise.resolve(EXPERIENCES),
+          () => Promise.resolve(CAREER_HISTORY),
           ['/skills?category=engineering&subCategory=testing']
         );
         await Promise.resolve();

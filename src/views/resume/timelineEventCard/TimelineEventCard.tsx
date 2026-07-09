@@ -21,12 +21,13 @@ import {
   getCardMotionSx,
   groupSkillsByCategory,
   recommendationElementId,
+  RESPONSIBILITIES_LABEL_BY_TYPE,
 } from './TimelineEventCard.helpers';
 import { RecommendationText } from './recommendationText';
 import { useInView } from './useInView';
 
 export interface TimelineEventCardProps {
-  experience: TimelineEventWithRecommendations;
+  event: TimelineEventWithRecommendations;
   highlightedSkill?: string;
   highlightedRecommendationId?: string;
   autoScrollToHighlight?: boolean;
@@ -61,14 +62,14 @@ const formatDuration = (startDate: string, endDate: string | null): string => {
 };
 
 export const TimelineEventCard = ({
-  experience,
+  event,
   highlightedSkill,
   highlightedRecommendationId,
   autoScrollToHighlight,
   startInView,
 }: TimelineEventCardProps) => {
   const navigate = useNavigate();
-  const duration = formatDuration(experience.startDate, experience.endDate);
+  const duration = formatDuration(event.startDate, event.endDate);
   const theme = useTheme();
   // Mobile cards run nearly the full viewport height, so the default threshold would need a
   // long scroll before triggering; a lower threshold starts the fade as soon as the card peeks in.
@@ -80,11 +81,11 @@ export const TimelineEventCard = ({
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const hasHighlightedRecommendation =
     highlightedRecommendationId !== undefined &&
-    experience.recommendations.some(
+    event.recommendations.some(
       (recommendation) => recommendation.id === highlightedRecommendationId
     );
   const isMatch =
-    (highlightedSkill !== undefined && experience.skills.includes(highlightedSkill)) ||
+    (highlightedSkill !== undefined && event.skills.includes(highlightedSkill)) ||
     hasHighlightedRecommendation;
 
   const cardNodeRef = useRef<HTMLDivElement | null>(null);
@@ -117,10 +118,10 @@ export const TimelineEventCard = ({
   );
 
   const handleViewAllSkillsClick = useCallback(() => {
-    void navigate(`/skills?skill=${experience.skills.map(encodeURIComponent).join(',')}`);
-  }, [navigate, experience.skills]);
+    void navigate(`/skills?skill=${event.skills.map(encodeURIComponent).join(',')}`);
+  }, [navigate, event.skills]);
 
-  const skillGroups = useMemo(() => groupSkillsByCategory(experience.skills), [experience.skills]);
+  const skillGroups = useMemo(() => groupSkillsByCategory(event.skills), [event.skills]);
 
   return (
     <Card
@@ -135,68 +136,70 @@ export const TimelineEventCard = ({
       ]}
     >
       <CardHeader
-        title={experience.companyName}
+        title={event.companyName}
         // Render the company name as a real h3 heading (visually sized h6) so it sits
         // correctly under the h2 "Work Experience" section in the heading hierarchy.
         slotProps={{
           title: { variant: 'h6', component: 'h3' },
           subheader: { variant: 'body2' },
         }}
-        subheader={`${experience.title} · ${experience.location} · ${duration}`}
+        subheader={`${event.title} · ${event.location} · ${duration}`}
       />
       <CardContent>
-        {experience.techStack.length > 0 && (
+        {event.techStack.length > 0 && (
           <>
             <Section title="Tech Stack" titleLevel={4}>
               <Typography variant="body2" color="text.secondary">
-                {experience.techStack.join(', ')}
+                {event.techStack.join(', ')}
               </Typography>
             </Section>
             <Divider sx={{ my: 2 }} />
           </>
         )}
-        <Section title="Responsibilities" titleLevel={4}>
-          {experience.responsibilities.length === 1 ? (
-            <Typography variant="body2">{experience.responsibilities[0]}</Typography>
+        <Section title={RESPONSIBILITIES_LABEL_BY_TYPE[event.type]} titleLevel={4}>
+          {event.responsibilities.length === 1 ? (
+            <Typography variant="body2">{event.responsibilities[0]}</Typography>
           ) : (
-            <BulletList items={experience.responsibilities} />
+            <BulletList items={event.responsibilities} />
           )}
         </Section>
-        <Divider sx={{ my: 2 }} />
-        <Section title="Key Skills" titleLevel={4}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-            {skillGroups.map((group) => (
-              <Box
-                key={group.category}
-                sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
-              >
-                <Typography
-                  variant="caption"
-                  component="span"
-                  sx={{
-                    fontWeight: 'medium',
-                    flexShrink: 0,
-                    color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
-                  }}
-                >
-                  {`${CATEGORY_LABELS[group.category]}:`}
-                </Typography>
-                <TagList
-                  items={group.skills}
-                  onItemClick={handleSkillClick}
-                  getColour={skillColour}
-                  getShadeIndex={skillShadeIndex}
-                />
+        {event.skills.length > 0 && (
+          <>
+            <Divider sx={{ my: 2 }} />
+            <Section title="Key Skills" titleLevel={4}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                {skillGroups.map((group) => (
+                  <Box
+                    key={group.category}
+                    sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
+                  >
+                    <Typography
+                      variant="caption"
+                      component="span"
+                      sx={{
+                        fontWeight: 'medium',
+                        flexShrink: 0,
+                        color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
+                      }}
+                    >
+                      {`${CATEGORY_LABELS[group.category]}:`}
+                    </Typography>
+                    <TagList
+                      items={group.skills}
+                      onItemClick={handleSkillClick}
+                      getColour={skillColour}
+                      getShadeIndex={skillShadeIndex}
+                    />
+                  </Box>
+                ))}
               </Box>
-            ))}
-          </Box>
-          {experience.skills.length > 0 && (
-            <Button size="small" onClick={handleViewAllSkillsClick} sx={{ mt: 1.5 }}>
-              {"View this role's skills on the graph"}
-            </Button>
-          )}
-        </Section>
-        {experience.recommendations.length > 0 && (
+              <Button size="small" onClick={handleViewAllSkillsClick} sx={{ mt: 1.5 }}>
+                {"View this role's skills on the graph"}
+              </Button>
+            </Section>
+          </>
+        )}
+        {event.recommendations.length > 0 && (
           <>
             <Divider sx={{ my: 2 }} />
             <Section title="Recommendations" titleLevel={4}>
@@ -204,13 +207,11 @@ export const TimelineEventCard = ({
                 sx={{
                   display: 'grid',
                   gridTemplateColumns:
-                    experience.recommendations.length > 1
-                      ? { xs: '1fr', sm: 'repeat(2, 1fr)' }
-                      : '1fr',
+                    event.recommendations.length > 1 ? { xs: '1fr', sm: 'repeat(2, 1fr)' } : '1fr',
                   gap: 1.5,
                 }}
               >
-                {experience.recommendations.map((recommendation) => (
+                {event.recommendations.map((recommendation) => (
                   <RecommendationText
                     key={recommendation.id}
                     recommendation={recommendation}

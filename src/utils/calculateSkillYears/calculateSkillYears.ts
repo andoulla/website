@@ -13,11 +13,11 @@ const durationYears = (startDate: string, endDate: string | null, today: Date): 
 };
 
 export const calculateSkillYears = (
-  experiences: TimelineEvent[],
+  careerHistory: TimelineEvent[],
   allSkills: Skill[] = defaultSkills,
   today: Date = new Date()
 ): SkillSummary[] => {
-  const experienceById = new Map(experiences.map((experience) => [experience.id, experience]));
+  const eventById = new Map(careerHistory.map((event) => [event.id, event]));
 
   const summaries: SkillSummary[] = allSkills
     .filter((skill) => skill.jobIds.length > 0)
@@ -25,11 +25,11 @@ export const calculateSkillYears = (
       const companyYearsMap = new Map<string, number>();
 
       const years = skill.jobIds.reduce((total, jobId) => {
-        const exp = experienceById.get(jobId);
-        if (exp === undefined) return total;
-        const jobYears = durationYears(exp.startDate, exp.endDate, today);
-        const priorYears = companyYearsMap.get(exp.companyName) ?? 0;
-        companyYearsMap.set(exp.companyName, priorYears + jobYears);
+        const event = eventById.get(jobId);
+        if (event === undefined) return total;
+        const jobYears = durationYears(event.startDate, event.endDate, today);
+        const priorYears = companyYearsMap.get(event.companyName) ?? 0;
+        companyYearsMap.set(event.companyName, priorYears + jobYears);
         return total + jobYears;
       }, 0);
 
