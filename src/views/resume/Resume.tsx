@@ -12,36 +12,36 @@ import { useSearchParams } from 'react-router-dom';
 
 import { PageContainer } from '@/components/pageContainer';
 import { Section } from '@/components/section';
-import { useResumeData } from '@/context/resumeData';
+import { useCareerHistory } from '@/context/resumeData';
 
 import { ContactDetails } from './contactDetails';
 import { TimelineEventCard } from './timelineEventCard';
 import { TimelineEventSkeleton } from './timelineEventSkeleton';
-import { pickRandomRoleIcon } from './roleIcons';
+import { pickRandomRoleIcon, RoleIcon } from './roleIcons';
 
-const ExperienceList = () => {
-  const experiences = useResumeData();
+const CareerTimeline = () => {
+  const careerHistory = useCareerHistory();
   const [searchParams] = useSearchParams();
   const highlightedSkill = searchParams.get('skill') ?? undefined;
   const highlightedRecommendationId = searchParams.get('recommendation') ?? undefined;
 
   // Pick a random icon per role once so it stays stable across re-renders.
-  const roleIcons = useMemo(() => experiences.map(() => pickRandomRoleIcon()), [experiences]);
+  const roleIcons = useMemo(() => careerHistory.map(() => pickRandomRoleIcon()), [careerHistory]);
 
   // A recommendation id pins to exactly one job, so it takes priority over the skill match.
   const firstMatchIndex = useMemo(() => {
     if (highlightedRecommendationId !== undefined) {
-      return experiences.findIndex((experience) =>
-        experience.recommendations.some(
+      return careerHistory.findIndex((event) =>
+        event.recommendations.some(
           (recommendation) => recommendation.id === highlightedRecommendationId
         )
       );
     }
     if (highlightedSkill !== undefined) {
-      return experiences.findIndex((experience) => experience.skills.includes(highlightedSkill));
+      return careerHistory.findIndex((event) => event.skills.includes(highlightedSkill));
     }
     return -1;
-  }, [experiences, highlightedSkill, highlightedRecommendationId]);
+  }, [careerHistory, highlightedSkill, highlightedRecommendationId]);
 
   return (
     <Timeline
@@ -59,19 +59,19 @@ const ExperienceList = () => {
           { flex: 0, p: 0 },
       }}
     >
-      {experiences.map((experience, index) => {
-        const RoleIcon = roleIcons[index];
+      {careerHistory.map((event, index) => {
+        const FallbackIcon = roleIcons[index];
         return (
-          <TimelineItem key={experience.id}>
+          <TimelineItem key={event.id}>
             <TimelineSeparator>
               <TimelineDot color="primary">
-                <RoleIcon fontSize="small" />
+                <RoleIcon event={event} fallbackIcon={FallbackIcon} />
               </TimelineDot>
-              {index < experiences.length - 1 && <TimelineConnector />}
+              {index < careerHistory.length - 1 && <TimelineConnector />}
             </TimelineSeparator>
             <TimelineContent sx={{ pr: 0 }}>
               <TimelineEventCard
-                experience={experience}
+                event={event}
                 highlightedSkill={highlightedSkill}
                 highlightedRecommendationId={highlightedRecommendationId}
                 autoScrollToHighlight={index === firstMatchIndex}
@@ -96,7 +96,7 @@ export const Resume = () => {
       </Box>
       <Section title="Work Experience">
         <Suspense fallback={<TimelineEventSkeleton />}>
-          <ExperienceList />
+          <CareerTimeline />
         </Suspense>
       </Section>
     </PageContainer>

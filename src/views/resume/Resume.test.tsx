@@ -8,7 +8,7 @@ import type { TimelineEventWithRecommendations } from '@/types';
 
 import { Resume } from './Resume';
 
-const testExperiences = [
+const testCareerHistory = [
   new TimelineEvent().id('job-1').companyName('Nimbus Analytics').startDate('2022-04-01').mock(),
   new TimelineEvent().id('job-2').companyName('Brightleaf Software').startDate('2022-04-01').mock(),
   new TimelineEvent().id('job-3').companyName('Harborview Digital').startDate('2022-04-01').mock(),
@@ -44,7 +44,7 @@ describe('Resume', () => {
   });
 
   test('renders the name heading and every job once the data resolves', async () => {
-    const screen = await renderResume(() => Promise.resolve(testExperiences));
+    const screen = await renderResume(() => Promise.resolve(testCareerHistory));
 
     expect(screen.getByRole('heading', { level: 1, name: 'Mariandi Stylianou' })).toBeVisible();
     expect(screen.getByText('Nimbus Analytics')).toBeVisible();
@@ -61,14 +61,14 @@ describe('Resume', () => {
   });
 
   test('has no axe violations in the loaded state', async () => {
-    const screen = await renderResume(() => Promise.resolve(testExperiences));
+    const screen = await renderResume(() => Promise.resolve(testCareerHistory));
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('scrolls only the first of several experiences that list the highlighted skill', async () => {
+  test('scrolls only the first of several entries that list the highlighted skill', async () => {
     const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
-    const experiencesWithSharedSkill = [
+    const careerHistoryWithSharedSkill = [
       new TimelineEvent()
         .id('job-1')
         .companyName('Nimbus Analytics')
@@ -84,7 +84,7 @@ describe('Resume', () => {
     ];
 
     await renderResume(
-      () => Promise.resolve(experiencesWithSharedSkill),
+      () => Promise.resolve(careerHistoryWithSharedSkill),
       [{ pathname: '/', search: '?skill=React' }]
     );
 
@@ -96,7 +96,7 @@ describe('Resume', () => {
   test('scrolls to the job containing the highlighted recommendation, taking priority over a skill match', async () => {
     const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
     const targetRecommendation = new Recommendation().id('rec-2').mock();
-    const experiencesWithRecommendation = [
+    const careerHistoryWithRecommendation = [
       new TimelineEvent()
         .id('job-1')
         .companyName('Nimbus Analytics')
@@ -113,7 +113,7 @@ describe('Resume', () => {
     ];
 
     await renderResume(
-      () => Promise.resolve(experiencesWithRecommendation),
+      () => Promise.resolve(careerHistoryWithRecommendation),
       [{ pathname: '/', search: '?skill=React&recommendation=rec-2' }]
     );
 
