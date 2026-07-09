@@ -1,4 +1,14 @@
-import { getCardMotionSx } from './TimelineEventCard.helpers';
+import { getCardMotionSx, recommendationElementId } from './TimelineEventCard.helpers';
+
+describe('recommendationElementId', () => {
+  test('prefixes the recommendation id', () => {
+    expect(recommendationElementId('rec-1')).toBe('recommendation-rec-1');
+  });
+
+  test('URL-encodes special characters in the id', () => {
+    expect(recommendationElementId('rec/1')).toBe('recommendation-rec%2F1');
+  });
+});
 
 describe('getCardMotionSx', () => {
   test('fades and slides up when the card is not in view', () => {

@@ -2,6 +2,9 @@ import type { SxProps, Theme } from '@mui/material/styles';
 
 import { CARD_FADE_DURATION_MS, CARD_FADE_TRANSLATE_Y } from './TimelineEventCard.constants';
 
+export const recommendationElementId = (id: string): string =>
+  `recommendation-${encodeURIComponent(id)}`;
+
 export const getCardMotionSx = (
   isInView: boolean,
   prefersReducedMotion: boolean

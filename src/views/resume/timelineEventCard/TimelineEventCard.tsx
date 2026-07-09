@@ -16,13 +16,14 @@ import { TagList } from '@/components/tagList';
 import type { TimelineEventWithRecommendations } from '@/types';
 import { skillColour, skillShadeIndex } from '@/utils/skillColour';
 
-import { getCardMotionSx } from './TimelineEventCard.helpers';
+import { getCardMotionSx, recommendationElementId } from './TimelineEventCard.helpers';
 import { RecommendationText } from './recommendationText';
 import { useInView } from './useInView';
 
 export interface TimelineEventCardProps {
   experience: TimelineEventWithRecommendations;
   highlightedSkill?: string;
+  highlightedRecommendationId?: string;
   autoScrollToHighlight?: boolean;
 }
 
@@ -54,6 +55,7 @@ const formatDuration = (startDate: string, endDate: string | null): string => {
 export const TimelineEventCard = ({
   experience,
   highlightedSkill,
+  highlightedRecommendationId,
   autoScrollToHighlight,
 }: TimelineEventCardProps) => {
   const navigate = useNavigate();
@@ -64,7 +66,14 @@ export const TimelineEventCard = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { ref, isInView } = useInView<HTMLDivElement>({ threshold: isMobile ? 0.05 : 0.15 });
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
-  const isMatch = highlightedSkill !== undefined && experience.skills.includes(highlightedSkill);
+  const hasHighlightedRecommendation =
+    highlightedRecommendationId !== undefined &&
+    experience.recommendations.some(
+      (recommendation) => recommendation.id === highlightedRecommendationId
+    );
+  const isMatch =
+    (highlightedSkill !== undefined && experience.skills.includes(highlightedSkill)) ||
+    hasHighlightedRecommendation;
 
   const cardNodeRef = useRef<HTMLDivElement | null>(null);
   const setCardNode = useCallback(
@@ -78,8 +87,15 @@ export const TimelineEventCard = ({
 
   useEffect(() => {
     if (autoScrollToHighlight !== true) return;
+    if (highlightedRecommendationId !== undefined) {
+      const recommendationNode = document.getElementById(
+        recommendationElementId(highlightedRecommendationId)
+      );
+      recommendationNode?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
     cardNodeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, [autoScrollToHighlight]);
+  }, [autoScrollToHighlight, highlightedRecommendationId]);
 
   const handleSkillClick = useCallback(
     (skill: string) => {
@@ -161,7 +177,11 @@ export const TimelineEventCard = ({
                 }}
               >
                 {experience.recommendations.map((recommendation) => (
-                  <RecommendationText key={recommendation.id} recommendation={recommendation} />
+                  <RecommendationText
+                    key={recommendation.id}
+                    recommendation={recommendation}
+                    isHighlighted={recommendation.id === highlightedRecommendationId}
+                  />
                 ))}
               </Box>
             </Section>

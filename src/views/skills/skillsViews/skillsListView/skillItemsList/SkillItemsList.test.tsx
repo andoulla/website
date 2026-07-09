@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import { alpha, createTheme } from '@mui/material/styles';
+import { MemoryRouter } from 'react-router-dom';
 
 import { SkillSummary } from '@/testing';
 
@@ -14,9 +15,16 @@ const SKILLS = [
 
 const theme = createTheme();
 
+const renderSkillItemsList = (props: Parameters<typeof SkillItemsList>[0]) =>
+  render(
+    <MemoryRouter>
+      <SkillItemsList {...props} />
+    </MemoryRouter>
+  );
+
 describe('SkillItemsList', () => {
   test('renders each skill with its estimated years', async () => {
-    const screen = render(<SkillItemsList skills={SKILLS} onItemClick={jest.fn()} />);
+    const screen = renderSkillItemsList({ skills: SKILLS });
 
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByText('est. 4 years')).toBeVisible();
@@ -27,36 +35,31 @@ describe('SkillItemsList', () => {
 
   test('shows the company/year breakdown in a tooltip on hover', async () => {
     const user = userEvent.setup();
-    const screen = render(<SkillItemsList skills={SKILLS} onItemClick={jest.fn()} />);
+    const screen = renderSkillItemsList({ skills: SKILLS });
 
     await user.hover(screen.getByText('React'));
 
     expect(await screen.findByText('Acme Corp · 1 year')).toBeVisible();
   });
 
-  test('calls onItemClick with the clicked button and skill', async () => {
+  test('shows the tooltip on keyboard focus, for parity with hover', async () => {
     const user = userEvent.setup();
-    const onItemClick = jest.fn();
-    const screen = render(<SkillItemsList skills={SKILLS} onItemClick={onItemClick} />);
+    const screen = renderSkillItemsList({ skills: SKILLS });
 
-    await user.click(screen.getByText('React'));
+    await user.tab();
 
-    expect(onItemClick).toHaveBeenCalledWith(expect.any(HTMLElement), SKILLS[0]);
+    expect(await screen.findByText('Acme Corp · 1 year')).toBeVisible();
   });
 
   test('exposes the skill name and years as the accessible name for its button', async () => {
-    const screen = render(
-      <SkillItemsList skills={SKILLS} highlightedSkills={['React']} onItemClick={jest.fn()} />
-    );
+    const screen = renderSkillItemsList({ skills: SKILLS, highlightedSkills: ['React'] });
 
     expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('applies a highlight background to the skill matching highlightedSkills', () => {
-    const screen = render(
-      <SkillItemsList skills={SKILLS} highlightedSkills={['React']} onItemClick={jest.fn()} />
-    );
+    const screen = renderSkillItemsList({ skills: SKILLS, highlightedSkills: ['React'] });
 
     expect(screen.getByRole('button', { name: 'React est. 4 years' })).toHaveStyle({
       backgroundColor: alpha(theme.palette.primary.main, 0.12),
@@ -64,13 +67,10 @@ describe('SkillItemsList', () => {
   });
 
   test('applies a highlight background to every skill matching multiple highlightedSkills', () => {
-    const screen = render(
-      <SkillItemsList
-        skills={SKILLS}
-        highlightedSkills={['React', 'Docker']}
-        onItemClick={jest.fn()}
-      />
-    );
+    const screen = renderSkillItemsList({
+      skills: SKILLS,
+      highlightedSkills: ['React', 'Docker'],
+    });
 
     expect(screen.getByRole('button', { name: 'React est. 4 years' })).toHaveStyle({
       backgroundColor: alpha(theme.palette.primary.main, 0.12),

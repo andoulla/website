@@ -5,22 +5,34 @@ import Stack from '@mui/material/Stack';
 import { lighten } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-import { RecommendationByline } from '@/components/recommendationByline';
 import type { Recommendation } from '@/types';
+
+import { recommendationElementId } from '../TimelineEventCard.helpers';
+
+import { RecommendationByline } from './recommendationByline';
 
 export interface RecommendationTextProps {
   recommendation: Recommendation;
+  isHighlighted?: boolean;
 }
 
-export const RecommendationText = ({ recommendation }: RecommendationTextProps) => {
+export const RecommendationText = ({
+  recommendation,
+  isHighlighted = false,
+}: RecommendationTextProps) => {
   const color = 'primary';
   return (
     <Card
+      id={recommendationElementId(recommendation.id)}
       variant="outlined"
       sx={(theme) => ({
         borderColor: lighten(theme.palette[color].main, 0.4),
         borderLeftWidth: 4,
         backgroundColor: `color-mix(in srgb, ${theme.palette[color].main} 8%, ${theme.palette.background.paper})`,
+        ...(isHighlighted && {
+          outline: `2px solid ${theme.palette[color].main}`,
+          outlineOffset: 2,
+        }),
       })}
     >
       <CardContent>

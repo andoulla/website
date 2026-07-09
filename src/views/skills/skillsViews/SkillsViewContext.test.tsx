@@ -1,26 +1,18 @@
 import { render } from '@testing-library/react';
 
-import { Recommendation, SkillSummary } from '@/testing';
+import { SkillSummary } from '@/testing';
 
 import { SkillsViewContextProvider, useSkillsViewContext } from './SkillsViewContext';
 
 const SKILLS = [new SkillSummary().skill('React').years(4).mock()];
-const RECOMMENDATIONS = [new Recommendation().authorInitials('A.B.').mock()];
 
 const SkillsViewDisplay = () => {
-  const {
-    skills,
-    recommendations,
-    selectedCategories,
-    selectedSubCategories,
-    highlightedSkills,
-    searchTerm,
-  } = useSkillsViewContext();
+  const { skills, selectedCategories, selectedSubCategories, highlightedSkills, searchTerm } =
+    useSkillsViewContext();
 
   return (
     <>
       <span>{`skills:${skills.map((skill) => skill.skill).join(',')}`}</span>
-      <span>{`recommendations:${recommendations.length}`}</span>
       <span>{`categories:${selectedCategories.join(',') || 'none'}`}</span>
       <span>{`subCategories:${selectedSubCategories.join(',') || 'none'}`}</span>
       <span>{`highlighted:${highlightedSkills.join(',') || 'none'}`}</span>
@@ -34,7 +26,6 @@ describe('SkillsViewContext', () => {
     const screen = render(
       <SkillsViewContextProvider
         skills={SKILLS}
-        recommendations={RECOMMENDATIONS}
         selectedCategories={['engineering']}
         selectedSubCategories={['frontend-development']}
         highlightedSkills={['React']}
@@ -45,7 +36,6 @@ describe('SkillsViewContext', () => {
     );
 
     expect(screen.getByText('skills:React')).toBeVisible();
-    expect(screen.getByText('recommendations:1')).toBeVisible();
     expect(screen.getByText('categories:engineering')).toBeVisible();
     expect(screen.getByText('subCategories:frontend-development')).toBeVisible();
     expect(screen.getByText('highlighted:React')).toBeVisible();
@@ -56,7 +46,6 @@ describe('SkillsViewContext', () => {
     const screen = render(
       <SkillsViewContextProvider
         skills={SKILLS}
-        recommendations={RECOMMENDATIONS}
         selectedCategories={[]}
         selectedSubCategories={[]}
         searchTerm=""

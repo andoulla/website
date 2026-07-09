@@ -20,7 +20,6 @@ export const useSkillsViewContext = (): SkillsViewContextValue => {
 export const SkillsViewContextProvider = ({
   children,
   skills,
-  recommendations,
   selectedCategories,
   selectedSubCategories,
   highlightedSkills = [],
@@ -35,7 +34,6 @@ export const SkillsViewContextProvider = ({
     () => ({
       skills,
       filteredSkills,
-      recommendations,
       selectedCategories,
       selectedSubCategories,
       highlightedSkills,
@@ -44,7 +42,6 @@ export const SkillsViewContextProvider = ({
     [
       skills,
       filteredSkills,
-      recommendations,
       selectedCategories,
       selectedSubCategories,
       highlightedSkills,

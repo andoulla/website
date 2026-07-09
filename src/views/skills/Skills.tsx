@@ -54,10 +54,6 @@ const renderSkillsView = (viewMode: ViewMode, showPatterns: boolean) => {
 const SkillsContent = () => {
   const experiences = useResumeData();
   const skills = useMemo(() => calculateSkillYears(experiences), [experiences]);
-  const recommendations = useMemo(
-    () => experiences.flatMap((experience) => experience.recommendations),
-    [experiences]
-  );
 
   const [searchParams, setSearchParams] = useSearchParams();
   const highlightedSkills = useMemo(
@@ -257,7 +253,6 @@ const SkillsContent = () => {
       </Stack>
       <SkillsViewContextProvider
         skills={skills}
-        recommendations={recommendations}
         selectedCategories={selectedCategories}
         selectedSubCategories={selectedSubCategories}
         highlightedSkills={highlightedSkills}

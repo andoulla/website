@@ -1,9 +1,8 @@
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
-import { Recommendation, SkillSummary } from '@/testing';
+import { SkillSummary } from '@/testing';
 
 import { SkillsViewContextProvider } from '../SkillsViewContext';
 import type { SkillsViewContextValue } from '../SkillsViewContext.type';
@@ -27,22 +26,11 @@ const SKILLS = [
     .mock(),
 ];
 
-const RECOMMENDATIONS = [
-  new Recommendation()
-    .authorInitials('A.B.')
-    .authorRole({ jobTitle: 'Engineer' })
-    .text('Excellent mentor.')
-    .postedDate('2026-01-01')
-    .recommendationUrl('https://www.linkedin.com/in/example/details/recommendations/')
-    .mock(),
-];
-
 const renderListView = (overrides: Partial<SkillsViewContextValue> = {}) =>
   render(
     <MemoryRouter>
       <SkillsViewContextProvider
         skills={SKILLS}
-        recommendations={RECOMMENDATIONS}
         selectedCategories={[]}
         selectedSubCategories={[]}
         searchTerm=""
@@ -69,7 +57,7 @@ describe('SkillsListView', () => {
 
     test('renders "year" (singular) when a skill has exactly 1 year', () => {
       const skills = [new SkillSummary().skill('Docker').years(1).mock()];
-      const screen = renderListView({ skills, recommendations: [] });
+      const screen = renderListView({ skills });
 
       expect(screen.getByText('est. 1 year')).toBeVisible();
     });
@@ -93,7 +81,7 @@ describe('SkillsListView', () => {
         new SkillSummary().skill('React').subCategory('frontend-development').mock(),
         new SkillSummary().skill('CSS-in-JS').subCategory('styling').mock(),
       ];
-      const screen = renderListView({ skills, recommendations: [] });
+      const screen = renderListView({ skills });
 
       expect(screen.getByText('Frontend Development')).toBeVisible();
       expect(screen.getByText('Styling & UI')).toBeVisible();
@@ -104,7 +92,7 @@ describe('SkillsListView', () => {
         new SkillSummary().skill('React').subCategory('frontend-development').mock(),
         new SkillSummary().skill('TypeScript').subCategory('frontend-development').mock(),
       ];
-      const screen = renderListView({ skills, recommendations: [] });
+      const screen = renderListView({ skills });
 
       expect(screen.queryByText('Frontend Development')).not.toBeInTheDocument();
     });
@@ -132,7 +120,6 @@ describe('SkillsListView', () => {
       ];
       const screen = renderListView({
         skills,
-        recommendations: [],
         selectedSubCategories: ['testing'],
       });
 
@@ -156,60 +143,6 @@ describe('SkillsListView', () => {
 
       expect(screen.queryByText('Leadership & Delivery')).not.toBeInTheDocument();
       expect(screen.queryByText('People & Stakeholders')).not.toBeInTheDocument();
-    });
-  });
-
-  describe('popover', () => {
-    test('shows the company/year breakdown in a tooltip on hover', async () => {
-      const user = userEvent.setup();
-      const screen = renderListView();
-
-      await user.hover(screen.getByText('React'));
-
-      expect(await screen.findByText('Acme Corp · 1 year')).toBeVisible();
-    });
-
-    test('opens a popover with linked recommendations on list item click', async () => {
-      const user = userEvent.setup();
-      const screen = renderListView();
-
-      await user.click(screen.getByText('Mentoring'));
-      expect(screen.getByText('Excellent mentor.')).toBeVisible();
-      expect(await axe(screen.container)).toHaveNoViolations();
-    });
-
-    test('shows empty state in popover when no recommendations match', async () => {
-      const user = userEvent.setup();
-      const screen = renderListView();
-
-      await user.click(screen.getByText('React'));
-      expect(screen.getByText('No recommendations yet.')).toBeVisible();
-    });
-  });
-
-  describe('view on resume link', () => {
-    test('links to the Resume page with the clicked skill', async () => {
-      const user = userEvent.setup();
-      const screen = renderListView();
-
-      await user.click(screen.getByText('React'));
-
-      expect(screen.getByRole('link', { name: 'View on Resume' })).toHaveAttribute(
-        'href',
-        '/?skill=React'
-      );
-    });
-
-    test('URL-encodes a skill name containing a space', async () => {
-      const user = userEvent.setup();
-      const screen = renderListView();
-
-      await user.click(screen.getByText('Team Leadership'));
-
-      expect(screen.getByRole('link', { name: 'View on Resume' })).toHaveAttribute(
-        'href',
-        '/?skill=Team%20Leadership'
-      );
     });
   });
 

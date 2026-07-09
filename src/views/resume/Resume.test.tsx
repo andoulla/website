@@ -3,7 +3,7 @@ import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
 import { ResumeDataProvider } from '@/context/resumeData';
-import { TimelineEvent } from '@/testing';
+import { Recommendation, TimelineEvent } from '@/testing';
 import type { TimelineEventWithRecommendations } from '@/types';
 
 import { Resume } from './Resume';
@@ -89,6 +89,38 @@ describe('Resume', () => {
     );
 
     expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+
+    scrollIntoViewSpy.mockRestore();
+  });
+
+  test('scrolls to the job containing the highlighted recommendation, taking priority over a skill match', async () => {
+    const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+    const targetRecommendation = new Recommendation().id('rec-2').mock();
+    const experiencesWithRecommendation = [
+      new TimelineEvent()
+        .id('job-1')
+        .companyName('Nimbus Analytics')
+        .startDate('2022-04-01')
+        .skills(['React'])
+        .mock(),
+      new TimelineEvent()
+        .id('job-2')
+        .companyName('Brightleaf Software')
+        .startDate('2021-04-01')
+        .skills(['React'])
+        .recommendations([targetRecommendation])
+        .mock(),
+    ];
+
+    await renderResume(
+      () => Promise.resolve(experiencesWithRecommendation),
+      [{ pathname: '/', search: '?skill=React&recommendation=rec-2' }]
+    );
+
+    const recommendationNode = document.getElementById('recommendation-rec-2');
+
+    expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+    expect(scrollIntoViewSpy.mock.instances[0]).toBe(recommendationNode);
 
     scrollIntoViewSpy.mockRestore();
   });

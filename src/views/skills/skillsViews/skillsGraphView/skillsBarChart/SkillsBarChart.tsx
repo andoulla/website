@@ -158,7 +158,13 @@ export const SkillsBarChart = ({
             tickLine={false}
             axisLine={false}
           />
-          <Tooltip content={SkillBarTooltip} cursor={{ fill: theme.palette.action.hover }} />
+          <Tooltip
+            content={SkillBarTooltip}
+            cursor={{ fill: theme.palette.action.hover }}
+            // Recharts defaults the tooltip wrapper to `pointer-events: none` — override it so the
+            // "View on Resume"/recommendation links inside SkillTooltipContent are clickable.
+            wrapperStyle={{ pointerEvents: 'auto' }}
+          />
           {showPatterns && (
             <defs>
               {legendEntries.map(({ cat, colour, markColour }) => (

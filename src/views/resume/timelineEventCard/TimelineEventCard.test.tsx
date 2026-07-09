@@ -205,6 +205,56 @@ describe('TimelineEventCard', () => {
 
       scrollIntoViewSpy.mockRestore();
     });
+
+    test('applies an outline when highlightedRecommendationId matches one of the role recommendations', () => {
+      const screen = render(
+        <TimelineEventCard
+          experience={{ ...experience, recommendations: [recommendationItem] }}
+          highlightedRecommendationId={recommendationItem.id}
+        />,
+        { wrapper: MemoryRouter }
+      );
+
+      expect(screen.getByText('Nimbus Analytics').closest('.MuiCard-root')).toHaveStyle({
+        outlineOffset: '2px',
+      });
+    });
+
+    test('scrolls to the specific recommendation, not the whole card, when autoScrollToHighlight is true', () => {
+      const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+
+      render(
+        <TimelineEventCard
+          experience={{ ...experience, recommendations: [recommendationItem] }}
+          highlightedRecommendationId={recommendationItem.id}
+          autoScrollToHighlight
+        />,
+        { wrapper: MemoryRouter }
+      );
+
+      const recommendationNode = document.getElementById(`recommendation-${recommendationItem.id}`);
+
+      expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+      expect(scrollIntoViewSpy.mock.instances[0]).toBe(recommendationNode);
+
+      scrollIntoViewSpy.mockRestore();
+    });
+
+    test('does not scroll to a recommendation when autoScrollToHighlight is false', () => {
+      const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+
+      render(
+        <TimelineEventCard
+          experience={{ ...experience, recommendations: [recommendationItem] }}
+          highlightedRecommendationId={recommendationItem.id}
+        />,
+        { wrapper: MemoryRouter }
+      );
+
+      expect(scrollIntoViewSpy).not.toHaveBeenCalled();
+
+      scrollIntoViewSpy.mockRestore();
+    });
   });
 
   test('renders multiple responsibilities as a bullet list', () => {

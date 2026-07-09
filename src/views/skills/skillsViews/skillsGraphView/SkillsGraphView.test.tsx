@@ -23,7 +23,6 @@ const renderGraphView = (overrides: Partial<SkillsViewContextValue> = {}) =>
   render(
     <SkillsViewContextProvider
       skills={SKILLS}
-      recommendations={[]}
       selectedCategories={[]}
       selectedSubCategories={[]}
       searchTerm=""

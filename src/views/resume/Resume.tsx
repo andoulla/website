@@ -23,17 +23,25 @@ const ExperienceList = () => {
   const experiences = useResumeData();
   const [searchParams] = useSearchParams();
   const highlightedSkill = searchParams.get('skill') ?? undefined;
+  const highlightedRecommendationId = searchParams.get('recommendation') ?? undefined;
 
   // Pick a random icon per role once so it stays stable across re-renders.
   const roleIcons = useMemo(() => experiences.map(() => pickRandomRoleIcon()), [experiences]);
 
-  const firstMatchIndex = useMemo(
-    () =>
-      highlightedSkill === undefined
-        ? -1
-        : experiences.findIndex((experience) => experience.skills.includes(highlightedSkill)),
-    [experiences, highlightedSkill]
-  );
+  // A recommendation id pins to exactly one job, so it takes priority over the skill match.
+  const firstMatchIndex = useMemo(() => {
+    if (highlightedRecommendationId !== undefined) {
+      return experiences.findIndex((experience) =>
+        experience.recommendations.some(
+          (recommendation) => recommendation.id === highlightedRecommendationId
+        )
+      );
+    }
+    if (highlightedSkill !== undefined) {
+      return experiences.findIndex((experience) => experience.skills.includes(highlightedSkill));
+    }
+    return -1;
+  }, [experiences, highlightedSkill, highlightedRecommendationId]);
 
   return (
     <Timeline
@@ -65,6 +73,7 @@ const ExperienceList = () => {
               <TimelineEventCard
                 experience={experience}
                 highlightedSkill={highlightedSkill}
+                highlightedRecommendationId={highlightedRecommendationId}
                 autoScrollToHighlight={index === firstMatchIndex}
               />
             </TimelineContent>

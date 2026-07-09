@@ -17,32 +17,26 @@ import { dotColour } from './SkillItemsList.helpers';
 export interface SkillItemsListProps {
   skills: SkillSummary[];
   highlightedSkills?: string[];
-  onItemClick: (anchor: HTMLElement, skill: SkillSummary) => void;
 }
 
 interface SkillListItemProps {
   skill: SkillSummary;
   isHighlighted: boolean;
-  onItemClick: (anchor: HTMLElement, skill: SkillSummary) => void;
 }
 
-const SkillListItem = ({ skill, isHighlighted, onItemClick }: SkillListItemProps) => {
+const SkillListItem = ({ skill, isHighlighted }: SkillListItemProps) => {
   const theme = useTheme();
 
   return (
     <ListItem disablePadding>
       <Tooltip
         title={<SkillTooltipContent skill={skill} />}
-        disableFocusListener
         slotProps={{
           tooltip: { sx: { bgcolor: 'transparent', p: 0, maxWidth: 'none' } },
         }}
       >
         <ListItemButton
           id={skillElementId(skill.skill)}
-          onClick={(e) => {
-            onItemClick(e.currentTarget, skill);
-          }}
           sx={{
             borderRadius: 1,
             transition: 'background-color 0.4s ease',
@@ -71,7 +65,7 @@ const SkillListItem = ({ skill, isHighlighted, onItemClick }: SkillListItemProps
   );
 };
 
-export const SkillItemsList = ({ skills, highlightedSkills, onItemClick }: SkillItemsListProps) => {
+export const SkillItemsList = ({ skills, highlightedSkills }: SkillItemsListProps) => {
   return (
     <List disablePadding dense>
       {skills.map((skill) => (
@@ -79,7 +73,6 @@ export const SkillItemsList = ({ skills, highlightedSkills, onItemClick }: Skill
           key={skill.skill}
           skill={skill}
           isHighlighted={(highlightedSkills ?? []).includes(skill.skill)}
-          onItemClick={onItemClick}
         />
       ))}
     </List>

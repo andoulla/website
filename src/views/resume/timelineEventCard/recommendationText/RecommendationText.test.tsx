@@ -35,4 +35,28 @@ describe('RecommendationText', () => {
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
+
+  test('exposes an id matching its recommendation, for deep-link scrolling', () => {
+    const screen = render(<RecommendationText recommendation={recommendation} />);
+
+    expect(document.getElementById('recommendation-rec-1')).toBe(
+      screen.getByText('"Great work."').closest('.MuiCard-root')
+    );
+  });
+
+  test('applies an outline when isHighlighted is true', () => {
+    const screen = render(<RecommendationText recommendation={recommendation} isHighlighted />);
+
+    expect(screen.getByText('"Great work."').closest('.MuiCard-root')).toHaveStyle({
+      outlineOffset: '2px',
+    });
+  });
+
+  test('does not apply an outline by default', () => {
+    const screen = render(<RecommendationText recommendation={recommendation} />);
+
+    expect(screen.getByText('"Great work."').closest('.MuiCard-root')).not.toHaveStyle({
+      outlineOffset: '2px',
+    });
+  });
 });
