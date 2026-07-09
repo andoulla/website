@@ -1,6 +1,7 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -21,6 +22,8 @@ import { useInView } from './useInView';
 
 export interface TimelineEventCardProps {
   experience: TimelineEventWithRecommendations;
+  highlightedSkill?: string;
+  autoScrollToHighlight?: boolean;
 }
 
 const MONTH_NAMES = [
@@ -48,7 +51,11 @@ const formatDuration = (startDate: string, endDate: string | null): string => {
   return `${formatMonthYear(startDate)} – ${end}`;
 };
 
-export const TimelineEventCard = ({ experience }: TimelineEventCardProps) => {
+export const TimelineEventCard = ({
+  experience,
+  highlightedSkill,
+  autoScrollToHighlight,
+}: TimelineEventCardProps) => {
   const navigate = useNavigate();
   const duration = formatDuration(experience.startDate, experience.endDate);
   const theme = useTheme();
@@ -57,6 +64,22 @@ export const TimelineEventCard = ({ experience }: TimelineEventCardProps) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { ref, isInView } = useInView<HTMLDivElement>({ threshold: isMobile ? 0.05 : 0.15 });
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const isMatch = highlightedSkill !== undefined && experience.skills.includes(highlightedSkill);
+
+  const cardNodeRef = useRef<HTMLDivElement | null>(null);
+  const setCardNode = useCallback(
+    (node: HTMLDivElement | null): (() => void) | void => {
+      const cleanup = ref(node);
+      cardNodeRef.current = node;
+      return cleanup;
+    },
+    [ref]
+  );
+
+  useEffect(() => {
+    if (autoScrollToHighlight !== true) return;
+    cardNodeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [autoScrollToHighlight]);
 
   const handleSkillClick = useCallback(
     (skill: string) => {
@@ -65,8 +88,22 @@ export const TimelineEventCard = ({ experience }: TimelineEventCardProps) => {
     [navigate]
   );
 
+  const handleViewAllSkillsClick = useCallback(() => {
+    void navigate(`/skills?skill=${experience.skills.map(encodeURIComponent).join(',')}`);
+  }, [navigate, experience.skills]);
+
   return (
-    <Card ref={ref} elevation={0} sx={getCardMotionSx(isInView, prefersReducedMotion)}>
+    <Card
+      ref={setCardNode}
+      elevation={0}
+      sx={[
+        getCardMotionSx(isInView, prefersReducedMotion),
+        isMatch && {
+          outline: (cardTheme) => `2px solid ${cardTheme.palette.primary.main}`,
+          outlineOffset: 2,
+        },
+      ]}
+    >
       <CardHeader
         title={experience.companyName}
         // Render the company name as a real h3 heading (visually sized h6) so it sits
@@ -103,6 +140,11 @@ export const TimelineEventCard = ({ experience }: TimelineEventCardProps) => {
             getColour={skillColour}
             getShadeIndex={skillShadeIndex}
           />
+          {experience.skills.length > 0 && (
+            <Button size="small" onClick={handleViewAllSkillsClick} sx={{ mt: 1.5 }}>
+              View all skills from this role
+            </Button>
+          )}
         </Section>
         {experience.recommendations.length > 0 && (
           <>

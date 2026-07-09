@@ -23,7 +23,7 @@ export const SkillsViewContextProvider = ({
   recommendations,
   selectedCategories,
   selectedSubCategories,
-  highlightedSkill,
+  highlightedSkills = [],
   searchTerm,
 }: SkillsViewContextProviderProps) => {
   const filteredSkills = useMemo(
@@ -38,7 +38,7 @@ export const SkillsViewContextProvider = ({
       recommendations,
       selectedCategories,
       selectedSubCategories,
-      highlightedSkill,
+      highlightedSkills,
       searchTerm,
     }),
     [
@@ -47,7 +47,7 @@ export const SkillsViewContextProvider = ({
       recommendations,
       selectedCategories,
       selectedSubCategories,
-      highlightedSkill,
+      highlightedSkills,
       searchTerm,
     ]
   );

@@ -8,6 +8,7 @@ import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Suspense, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { PageContainer } from '@/components/pageContainer';
 import { Section } from '@/components/section';
@@ -20,9 +21,19 @@ import { pickRandomRoleIcon } from './roleIcons';
 
 const ExperienceList = () => {
   const experiences = useResumeData();
+  const [searchParams] = useSearchParams();
+  const highlightedSkill = searchParams.get('skill') ?? undefined;
 
   // Pick a random icon per role once so it stays stable across re-renders.
   const roleIcons = useMemo(() => experiences.map(() => pickRandomRoleIcon()), [experiences]);
+
+  const firstMatchIndex = useMemo(
+    () =>
+      highlightedSkill === undefined
+        ? -1
+        : experiences.findIndex((experience) => experience.skills.includes(highlightedSkill)),
+    [experiences, highlightedSkill]
+  );
 
   return (
     <Timeline
@@ -51,7 +62,11 @@ const ExperienceList = () => {
               {index < experiences.length - 1 && <TimelineConnector />}
             </TimelineSeparator>
             <TimelineContent sx={{ pr: 0 }}>
-              <TimelineEventCard experience={experience} />
+              <TimelineEventCard
+                experience={experience}
+                highlightedSkill={highlightedSkill}
+                autoScrollToHighlight={index === firstMatchIndex}
+              />
             </TimelineContent>
           </TimelineItem>
         );

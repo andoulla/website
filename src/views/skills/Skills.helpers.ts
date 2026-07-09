@@ -12,6 +12,10 @@ export const parseCategories = (raw: string | null): SkillCategory[] =>
 export const parseSubCategories = (raw: string | null): SkillSubCategory[] =>
   raw !== null && raw.length > 0 ? raw.split(',').filter(isSkillSubCategory) : [];
 
+// Reads the comma-separated `skill` URL param into a list (no whitelist — skill names aren't a closed enum).
+export const parseSkills = (raw: string | null): string[] =>
+  raw !== null && raw.length > 0 ? raw.split(',') : [];
+
 // Reads the `search` URL param, defaulting to an empty string when absent.
 export const parseSearch = (raw: string | null): string => raw ?? '';
 

@@ -13,7 +13,7 @@ const SkillsViewDisplay = () => {
     recommendations,
     selectedCategories,
     selectedSubCategories,
-    highlightedSkill,
+    highlightedSkills,
     searchTerm,
   } = useSkillsViewContext();
 
@@ -23,7 +23,7 @@ const SkillsViewDisplay = () => {
       <span>{`recommendations:${recommendations.length}`}</span>
       <span>{`categories:${selectedCategories.join(',') || 'none'}`}</span>
       <span>{`subCategories:${selectedSubCategories.join(',') || 'none'}`}</span>
-      <span>{`highlighted:${highlightedSkill ?? 'none'}`}</span>
+      <span>{`highlighted:${highlightedSkills.join(',') || 'none'}`}</span>
       <span>{`search:${searchTerm || 'none'}`}</span>
     </>
   );
@@ -37,7 +37,7 @@ describe('SkillsViewContext', () => {
         recommendations={RECOMMENDATIONS}
         selectedCategories={['engineering']}
         selectedSubCategories={['frontend-development']}
-        highlightedSkill="React"
+        highlightedSkills={['React']}
         searchTerm="rea"
       >
         <SkillsViewDisplay />
@@ -52,7 +52,7 @@ describe('SkillsViewContext', () => {
     expect(screen.getByText('search:rea')).toBeVisible();
   });
 
-  test('omits highlightedSkill when not provided, and defaults searchTerm', () => {
+  test('defaults to an empty list when not provided, and defaults searchTerm', () => {
     const screen = render(
       <SkillsViewContextProvider
         skills={SKILLS}

@@ -19,15 +19,23 @@ import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 import { CATEGORY_ORDER, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 
-import { CATEGORY_PARAM, SEARCH_PARAM, SUBCATEGORY_PARAM, VIEW_PARAM } from './Skills.constants';
+import {
+  CATEGORY_PARAM,
+  SEARCH_PARAM,
+  SKILL_PARAM,
+  SUBCATEGORY_PARAM,
+  VIEW_PARAM,
+} from './Skills.constants';
 import {
   parseCategories,
   parseSearch,
+  parseSkills,
   parseSubCategories,
   parseViewMode,
   reorderFilterParams,
 } from './Skills.helpers';
 import type { ViewMode } from './Skills.types';
+import { CopyLinkButton } from './copyLinkButton';
 import { SkillFilterBar } from './skillFilterBar';
 import { SkillSearchBar } from './skillSearchBar';
 import {
@@ -52,7 +60,10 @@ const SkillsContent = () => {
   );
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const highlightedSkill = searchParams.get('skill') ?? undefined;
+  const highlightedSkills = useMemo(
+    () => parseSkills(searchParams.get(SKILL_PARAM)),
+    [searchParams]
+  );
   const selectedCategories = useMemo(
     () => parseCategories(searchParams.get(CATEGORY_PARAM)),
     [searchParams]
@@ -241,6 +252,7 @@ const SkillsContent = () => {
               <ViewListIcon fontSize="small" />
             </ToggleButton>
           </ToggleButtonGroup>
+          <CopyLinkButton />
         </Stack>
       </Stack>
       <SkillsViewContextProvider
@@ -248,7 +260,7 @@ const SkillsContent = () => {
         recommendations={recommendations}
         selectedCategories={selectedCategories}
         selectedSubCategories={selectedSubCategories}
-        highlightedSkill={highlightedSkill}
+        highlightedSkills={highlightedSkills}
         searchTerm={searchTerm}
       >
         {renderSkillsView(viewMode, showPatterns)}

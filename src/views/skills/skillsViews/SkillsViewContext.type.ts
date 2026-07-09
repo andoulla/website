@@ -10,13 +10,14 @@ export interface SkillsViewContextValue {
   recommendations: Recommendation[];
   selectedCategories: SkillCategory[];
   selectedSubCategories: SkillSubCategory[];
-  highlightedSkill?: string;
+  highlightedSkills: string[];
   searchTerm: string;
 }
 
 export interface SkillsViewContextProviderProps extends Omit<
   SkillsViewContextValue,
-  'filteredSkills'
+  'filteredSkills' | 'highlightedSkills'
 > {
+  highlightedSkills?: string[];
   children: ReactNode;
 }

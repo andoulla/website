@@ -1,6 +1,7 @@
 import {
   parseCategories,
   parseSearch,
+  parseSkills,
   parseSubCategories,
   parseViewMode,
   reorderFilterParams,
@@ -67,6 +68,32 @@ describe('parseSubCategories', () => {
     const result = parseSubCategories('testing,bogus');
 
     expect(result).toEqual(['testing']);
+  });
+});
+
+describe('parseSkills', () => {
+  test('returns an empty array when the param is null', () => {
+    const result = parseSkills(null);
+
+    expect(result).toEqual([]);
+  });
+
+  test('returns an empty array when the param is an empty string', () => {
+    const result = parseSkills('');
+
+    expect(result).toEqual([]);
+  });
+
+  test('splits a single skill', () => {
+    const result = parseSkills('React');
+
+    expect(result).toEqual(['React']);
+  });
+
+  test('splits multiple comma-separated skills', () => {
+    const result = parseSkills('React,TypeScript');
+
+    expect(result).toEqual(['React', 'TypeScript']);
   });
 });
 

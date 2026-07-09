@@ -46,19 +46,36 @@ describe('SkillItemsList', () => {
 
   test('exposes the skill name and years as the accessible name for its button', async () => {
     const screen = render(
-      <SkillItemsList skills={SKILLS} highlightedSkill="React" onItemClick={jest.fn()} />
+      <SkillItemsList skills={SKILLS} highlightedSkills={['React']} onItemClick={jest.fn()} />
     );
 
     expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('applies a highlight background to the skill matching highlightedSkill', () => {
+  test('applies a highlight background to the skill matching highlightedSkills', () => {
     const screen = render(
-      <SkillItemsList skills={SKILLS} highlightedSkill="React" onItemClick={jest.fn()} />
+      <SkillItemsList skills={SKILLS} highlightedSkills={['React']} onItemClick={jest.fn()} />
     );
 
     expect(screen.getByRole('button', { name: 'React est. 4 years' })).toHaveStyle({
+      backgroundColor: alpha(theme.palette.primary.main, 0.12),
+    });
+  });
+
+  test('applies a highlight background to every skill matching multiple highlightedSkills', () => {
+    const screen = render(
+      <SkillItemsList
+        skills={SKILLS}
+        highlightedSkills={['React', 'Docker']}
+        onItemClick={jest.fn()}
+      />
+    );
+
+    expect(screen.getByRole('button', { name: 'React est. 4 years' })).toHaveStyle({
+      backgroundColor: alpha(theme.palette.primary.main, 0.12),
+    });
+    expect(screen.getByRole('button', { name: 'Docker est. 1 year' })).toHaveStyle({
       backgroundColor: alpha(theme.palette.primary.main, 0.12),
     });
   });

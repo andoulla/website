@@ -112,12 +112,99 @@ describe('TimelineEventCard', () => {
     expect(screen.getByText('location:/skills?skill=React')).toBeVisible();
   });
 
+  test('navigates to the skills page with all of the role skills when "View all skills from this role" is clicked', async () => {
+    const user = userEvent.setup();
+    const screen = render(
+      <MemoryRouter>
+        <TimelineEventCard experience={experience} />
+        <LocationDisplay />
+      </MemoryRouter>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'View all skills from this role' }));
+
+    expect(screen.getByText('location:/skills?skill=React,TypeScript')).toBeVisible();
+  });
+
+  test('omits the "View all skills from this role" button when the role has no skills', () => {
+    const screen = render(<TimelineEventCard experience={{ ...experience, skills: [] }} />, {
+      wrapper: MemoryRouter,
+    });
+
+    expect(
+      screen.queryByRole('button', { name: 'View all skills from this role' })
+    ).not.toBeInTheDocument();
+  });
+
   test('omits the Tech Stack section when there is no tech stack', () => {
     const screen = render(<TimelineEventCard experience={{ ...experience, techStack: [] }} />, {
       wrapper: MemoryRouter,
     });
 
     expect(screen.queryByRole('heading', { level: 4, name: 'Tech Stack' })).not.toBeInTheDocument();
+  });
+
+  describe('highlight and scroll', () => {
+    test('applies an outline when highlightedSkill matches one of the role skills', () => {
+      const screen = render(
+        <TimelineEventCard experience={experience} highlightedSkill="React" />,
+        { wrapper: MemoryRouter }
+      );
+
+      expect(screen.getByText('Nimbus Analytics').closest('.MuiCard-root')).toHaveStyle({
+        outlineOffset: '2px',
+      });
+    });
+
+    test('does not apply an outline when highlightedSkill matches none of the role skills', () => {
+      const screen = render(
+        <TimelineEventCard experience={experience} highlightedSkill="Kubernetes" />,
+        { wrapper: MemoryRouter }
+      );
+
+      expect(screen.getByText('Nimbus Analytics').closest('.MuiCard-root')).not.toHaveStyle({
+        outlineOffset: '2px',
+      });
+    });
+
+    test('scrolls into view when autoScrollToHighlight is true', () => {
+      const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+
+      render(
+        <TimelineEventCard
+          experience={experience}
+          highlightedSkill="React"
+          autoScrollToHighlight
+        />,
+        { wrapper: MemoryRouter }
+      );
+
+      expect(scrollIntoViewSpy).toHaveBeenCalledWith({ behavior: 'smooth', block: 'center' });
+
+      scrollIntoViewSpy.mockRestore();
+    });
+
+    test('does not scroll when matching but autoScrollToHighlight is false', () => {
+      const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+
+      render(<TimelineEventCard experience={experience} highlightedSkill="React" />, {
+        wrapper: MemoryRouter,
+      });
+
+      expect(scrollIntoViewSpy).not.toHaveBeenCalled();
+
+      scrollIntoViewSpy.mockRestore();
+    });
+
+    test('does not scroll when there is no highlighted skill', () => {
+      const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+
+      render(<TimelineEventCard experience={experience} />, { wrapper: MemoryRouter });
+
+      expect(scrollIntoViewSpy).not.toHaveBeenCalled();
+
+      scrollIntoViewSpy.mockRestore();
+    });
   });
 
   test('renders multiple responsibilities as a bullet list', () => {

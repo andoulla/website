@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
+import { MemoryRouter } from 'react-router-dom';
 
 import { Recommendation, SkillSummary } from '@/testing';
 
@@ -38,16 +39,18 @@ const RECOMMENDATIONS = [
 
 const renderListView = (overrides: Partial<SkillsViewContextValue> = {}) =>
   render(
-    <SkillsViewContextProvider
-      skills={SKILLS}
-      recommendations={RECOMMENDATIONS}
-      selectedCategories={[]}
-      selectedSubCategories={[]}
-      searchTerm=""
-      {...overrides}
-    >
-      <SkillsListView />
-    </SkillsViewContextProvider>
+    <MemoryRouter>
+      <SkillsViewContextProvider
+        skills={SKILLS}
+        recommendations={RECOMMENDATIONS}
+        selectedCategories={[]}
+        selectedSubCategories={[]}
+        searchTerm=""
+        {...overrides}
+      >
+        <SkillsListView />
+      </SkillsViewContextProvider>
+    </MemoryRouter>
   );
 
 describe('SkillsListView', () => {
@@ -184,20 +187,64 @@ describe('SkillsListView', () => {
     });
   });
 
+  describe('view on resume link', () => {
+    test('links to the Resume page with the clicked skill', async () => {
+      const user = userEvent.setup();
+      const screen = renderListView();
+
+      await user.click(screen.getByText('React'));
+
+      expect(screen.getByRole('link', { name: 'View on Resume' })).toHaveAttribute(
+        'href',
+        '/?skill=React'
+      );
+    });
+
+    test('URL-encodes a skill name containing a space', async () => {
+      const user = userEvent.setup();
+      const screen = renderListView();
+
+      await user.click(screen.getByText('Team Leadership'));
+
+      expect(screen.getByRole('link', { name: 'View on Resume' })).toHaveAttribute(
+        'href',
+        '/?skill=Team%20Leadership'
+      );
+    });
+  });
+
   describe('highlight and scroll', () => {
-    test('applies a highlight to the skill matching highlightedSkill', async () => {
-      const screen = renderListView({ highlightedSkill: 'React' });
+    test('applies a highlight to the skill matching highlightedSkills', async () => {
+      const screen = renderListView({ highlightedSkills: ['React'] });
 
       expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
       expect(await axe(screen.container)).toHaveNoViolations();
     });
 
+    test('applies a highlight to every skill matching multiple highlightedSkills', () => {
+      const screen = renderListView({ highlightedSkills: ['React', 'Mentoring'] });
+
+      expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Mentoring est. 2 years' })).toBeVisible();
+    });
+
     test('scrolls the highlighted skill into view', () => {
       const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
 
-      renderListView({ highlightedSkill: 'React' });
+      renderListView({ highlightedSkills: ['React'] });
 
       expect(scrollIntoViewSpy).toHaveBeenCalledWith({ behavior: 'smooth', block: 'center' });
+
+      scrollIntoViewSpy.mockRestore();
+    });
+
+    test('scrolls to the first of several highlighted skills', () => {
+      const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+
+      const screen = renderListView({ highlightedSkills: ['Team Leadership', 'React'] });
+
+      expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+      expect(screen.getByRole('button', { name: 'Team Leadership est. 3 years' })).toBeVisible();
 
       scrollIntoViewSpy.mockRestore();
     });

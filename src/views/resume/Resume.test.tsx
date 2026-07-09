@@ -14,12 +14,15 @@ const testExperiences = [
   new TimelineEvent().id('job-3').companyName('Harborview Digital').startDate('2022-04-01').mock(),
 ];
 
-async function renderResume(loader: () => Promise<TimelineEventWithRecommendations[]>) {
+async function renderResume(
+  loader: () => Promise<TimelineEventWithRecommendations[]>,
+  initialEntries?: Parameters<typeof MemoryRouter>[0]['initialEntries']
+) {
   let result!: ReturnType<typeof render>;
 
   await act(async () => {
     result = render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={initialEntries}>
         <ResumeDataProvider loader={loader}>
           <Resume />
         </ResumeDataProvider>
@@ -61,5 +64,32 @@ describe('Resume', () => {
     const screen = await renderResume(() => Promise.resolve(testExperiences));
 
     expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('scrolls only the first of several experiences that list the highlighted skill', async () => {
+    const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+    const experiencesWithSharedSkill = [
+      new TimelineEvent()
+        .id('job-1')
+        .companyName('Nimbus Analytics')
+        .startDate('2022-04-01')
+        .skills(['React'])
+        .mock(),
+      new TimelineEvent()
+        .id('job-2')
+        .companyName('Brightleaf Software')
+        .startDate('2021-04-01')
+        .skills(['React'])
+        .mock(),
+    ];
+
+    await renderResume(
+      () => Promise.resolve(experiencesWithSharedSkill),
+      [{ pathname: '/', search: '?skill=React' }]
+    );
+
+    expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+
+    scrollIntoViewSpy.mockRestore();
   });
 });

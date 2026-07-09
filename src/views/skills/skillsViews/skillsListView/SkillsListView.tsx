@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Popover from '@mui/material/Popover';
 import Stack from '@mui/material/Stack';
@@ -33,14 +35,14 @@ interface SubCategoryGroup {
 }
 
 export const SkillsListView = () => {
-  const { filteredSkills, recommendations, highlightedSkill, searchTerm } = useSkillsViewContext();
+  const { filteredSkills, recommendations, highlightedSkills, searchTerm } = useSkillsViewContext();
   const [popover, setPopover] = useState<PopoverState | null>(null);
 
   useEffect(() => {
-    if (highlightedSkill === undefined) return;
-    const el = document.getElementById(skillElementId(highlightedSkill));
+    if (highlightedSkills.length === 0) return;
+    const el = document.getElementById(skillElementId(highlightedSkills[0]));
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, [highlightedSkill]);
+  }, [highlightedSkills]);
 
   // A non-empty search term hides everything but the matches, rather than just accenting them.
   const searchedSkills = useMemo(
@@ -126,7 +128,7 @@ export const SkillsListView = () => {
                   >
                     <SkillItemsList
                       skills={group.skills}
-                      highlightedSkill={highlightedSkill}
+                      highlightedSkills={highlightedSkills}
                       onItemClick={handleItemClick}
                     />
                   </Section>
@@ -135,7 +137,7 @@ export const SkillsListView = () => {
             ) : (
               <SkillItemsList
                 skills={byCategory[cat]}
-                highlightedSkill={highlightedSkill}
+                highlightedSkills={highlightedSkills}
                 onItemClick={handleItemClick}
               />
             )}
@@ -156,6 +158,14 @@ export const SkillsListView = () => {
           <Typography variant="subtitle2" sx={{ mb: 1 }}>
             {popover?.skill.skill}
           </Typography>
+          <Button
+            component={RouterLink}
+            to={`/?skill=${encodeURIComponent(popover?.skill.skill ?? '')}`}
+            size="small"
+            sx={{ mb: 1 }}
+          >
+            View on Resume
+          </Button>
           {linkedRecs.length === 0 ? (
             <Typography variant="body2" color="text.secondary">
               No recommendations yet.
