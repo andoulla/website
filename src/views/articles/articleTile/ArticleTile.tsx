@@ -44,13 +44,13 @@ export const ArticleTile = memo(({ article }: ArticleTileProps) => {
           <Typography variant="h6" component="h2" sx={lineClampSx(2)}>
             {article.title}
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 1 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1, mb: 2 }}>
             {formatDate(article.publishedDate)}
           </Typography>
           <Typography variant="body2" sx={lineClampSx(3)}>
             {article.excerpt}
           </Typography>
-          <Box sx={{ mt: 'auto', pt: 2 }}>
+          <Box sx={{ mt: 'auto', pt: 1.5 }}>
             <TagList items={article.tags} getColour={getTagColour} variant="outlined" />
           </Box>
         </CardContent>
