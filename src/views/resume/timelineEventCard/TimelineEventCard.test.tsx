@@ -125,7 +125,7 @@ describe('TimelineEventCard', () => {
     expect(screen.getByText('location:/skills?skill=React')).toBeVisible();
   });
 
-  test('navigates to the skills page with all of the role skills when "View all skills from this role" is clicked', async () => {
+  test('navigates to the skills page with all of the role skills when "View this role\'s skills on the graph" is clicked', async () => {
     const user = userEvent.setup();
     const screen = render(
       <MemoryRouter>
@@ -134,18 +134,18 @@ describe('TimelineEventCard', () => {
       </MemoryRouter>
     );
 
-    await user.click(screen.getByRole('button', { name: 'View all skills from this role' }));
+    await user.click(screen.getByRole('button', { name: "View this role's skills on the graph" }));
 
     expect(screen.getByText('location:/skills?skill=React,TypeScript')).toBeVisible();
   });
 
-  test('omits the "View all skills from this role" button when the role has no skills', () => {
+  test('omits the "View this role\'s skills on the graph" button when the role has no skills', () => {
     const screen = render(<TimelineEventCard experience={{ ...experience, skills: [] }} />, {
       wrapper: MemoryRouter,
     });
 
     expect(
-      screen.queryByRole('button', { name: 'View all skills from this role' })
+      screen.queryByRole('button', { name: "View this role's skills on the graph" })
     ).not.toBeInTheDocument();
   });
 

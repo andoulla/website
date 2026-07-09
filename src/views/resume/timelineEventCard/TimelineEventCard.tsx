@@ -185,7 +185,7 @@ export const TimelineEventCard = ({
           </Box>
           {experience.skills.length > 0 && (
             <Button size="small" onClick={handleViewAllSkillsClick} sx={{ mt: 1.5 }}>
-              View all skills from this role
+              {"View this role's skills on the graph"}
             </Button>
           )}
         </Section>

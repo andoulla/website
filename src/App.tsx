@@ -14,6 +14,7 @@ import { Skills } from './views/skills';
 // TODO: check lighthouse metrics
 // TODO: ATS optimisation
 // TODO: add hidden tech stack for elsevier and capco
+// TODO: missing coding/programming as a skill
 
 const ResumeDataLayout = () => (
   <ResumeDataProvider>
