@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography';
 import { Section } from '@/components/section';
 import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
-import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 import { formatDate } from '@/utils/formatDate';
 import {
   CATEGORY_LABELS,
@@ -36,14 +35,7 @@ interface SubCategoryGroup {
 }
 
 export const SkillsListView = () => {
-  const {
-    skills,
-    recommendations,
-    highlightedSkill,
-    selectedCategories,
-    selectedSubCategories,
-    searchTerm,
-  } = useSkillsViewContext();
+  const { filteredSkills, recommendations, highlightedSkill, searchTerm } = useSkillsViewContext();
   const [popover, setPopover] = useState<PopoverState | null>(null);
 
   useEffect(() => {
@@ -51,11 +43,6 @@ export const SkillsListView = () => {
     const el = document.getElementById(skillElementId(highlightedSkill));
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [highlightedSkill]);
-
-  const filteredSkills = useMemo(
-    () => filterSkillsByCategory(skills, selectedCategories, selectedSubCategories),
-    [skills, selectedCategories, selectedSubCategories]
-  );
 
   // A non-empty search term hides everything but the matches, rather than just accenting them.
   const searchedSkills = useMemo(

@@ -124,19 +124,19 @@ const SkillsContent = () => {
     [setSearchParams]
   );
 
+  const filteredSkills = useMemo(
+    () => filterSkillsByCategory(skills, selectedCategories, selectedSubCategories),
+    [skills, selectedCategories, selectedSubCategories]
+  );
+
   const hiddenMatchCount = useMemo(() => {
     if (searchTerm.trim() === '') return 0;
     const totalMatches = skills.filter((skill) => skillMatchesSearch(skill, searchTerm)).length;
-    const filteredSkills = filterSkillsByCategory(
-      skills,
-      selectedCategories,
-      selectedSubCategories
-    );
     const visibleMatches = filteredSkills.filter((skill) =>
       skillMatchesSearch(skill, searchTerm)
     ).length;
     return totalMatches - visibleMatches;
-  }, [skills, selectedCategories, selectedSubCategories, searchTerm]);
+  }, [skills, filteredSkills, searchTerm]);
 
   const searchHint =
     hiddenMatchCount > 0

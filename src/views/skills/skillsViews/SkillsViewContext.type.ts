@@ -6,6 +6,7 @@ import type { SkillSummary } from '@/utils/calculateSkillYears';
 
 export interface SkillsViewContextValue {
   skills: SkillSummary[];
+  filteredSkills: SkillSummary[];
   recommendations: Recommendation[];
   selectedCategories: SkillCategory[];
   selectedSubCategories: SkillSubCategory[];
@@ -13,6 +14,9 @@ export interface SkillsViewContextValue {
   searchTerm: string;
 }
 
-export interface SkillsViewContextProviderProps extends SkillsViewContextValue {
+export interface SkillsViewContextProviderProps extends Omit<
+  SkillsViewContextValue,
+  'filteredSkills'
+> {
   children: ReactNode;
 }
