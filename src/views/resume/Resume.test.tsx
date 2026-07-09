@@ -2,7 +2,7 @@ import { act, render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
-import { ResumeDataProvider } from '@/context/resumeData';
+import { CareerDataContextProvider } from '@/context/careerData';
 import { Recommendation, TimelineEvent } from '@/testing';
 import type { TimelineEventWithRecommendations } from '@/types';
 
@@ -23,9 +23,9 @@ async function renderResume(
   await act(async () => {
     result = render(
       <MemoryRouter initialEntries={initialEntries}>
-        <ResumeDataProvider loader={loader}>
+        <CareerDataContextProvider loader={loader}>
           <Resume />
-        </ResumeDataProvider>
+        </CareerDataContextProvider>
       </MemoryRouter>
     );
     await Promise.resolve();

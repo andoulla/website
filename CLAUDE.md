@@ -38,8 +38,8 @@ A minimal React + TypeScript web app run in strict mode across the whole toolcha
 ```
 src/data/careerHistory.json + recommendations.json
   → loadCareerHistory()    (dynamic import, joins data, 600 ms artificial delay)
-  → ResumeDataProvider     (holds a stable Promise via useState lazy init)
-  → useCareerHistory()     (React 19 use() — must sit under a Suspense boundary)
+  → CareerDataContextProvider (holds a stable Promise via useState lazy init)
+  → useCareerDataContext() (React 19 use() — must sit under a Suspense boundary)
   → Resume / Skills views
 ```
 
@@ -47,10 +47,10 @@ Skills have **no dedicated data file** — `calculateSkillYears(experiences)` de
 
 ## Contexts
 
-| Provider               | Hook                 | Exposes                                                      |
-| ---------------------- | -------------------- | ------------------------------------------------------------ |
-| `ResumeDataProvider`   | `useCareerHistory()` | `TimelineEventWithRecommendations[]` — suspends until loaded |
-| `ThemeContextProvider` | `useThemeContext()`  | `{ themeName, toggleTheme, isDarkMode, toggleDarkMode }`     |
+| Provider                    | Hook                     | Exposes                                                      |
+| --------------------------- | ------------------------ | ------------------------------------------------------------ |
+| `CareerDataContextProvider` | `useCareerDataContext()` | `TimelineEventWithRecommendations[]` — suspends until loaded |
+| `ThemeContextProvider`      | `useThemeContext()`      | `{ themeName, toggleTheme, isDarkMode, toggleDarkMode }`     |
 
 ## Directory layout
 
@@ -58,7 +58,7 @@ Skills have **no dedicated data file** — `calculateSkillYears(experiences)` de
 - [src/views/](src/views/) — page-level views; view-specific components nest directly under the owning view (see nesting convention below)
   - [src/views/resume/](src/views/resume/) — sub-components: ContactDetails, TimelineEventCard, TimelineEventSkeleton
   - [src/views/skills/](src/views/skills/) — sub-components: SkillsListView, SkillsGraphView
-- [src/context/](src/context/) — React context providers (resumeData, theme)
+- [src/context/](src/context/) — React context providers (careerData, theme)
 - [src/data/](src/data/) — JSON fixtures + typed `.ts` wrappers (careerHistory, recommendations, contact)
 - [src/types/](src/types/) — shared TypeScript types (TimelineEvent, Recommendation, TimelineEventWithRecommendations)
 - [src/themes/](src/themes/) — MUI theme factories (green, purple) and design tokens
@@ -66,7 +66,7 @@ Skills have **no dedicated data file** — `calculateSkillYears(experiences)` de
   - `calculateSkillYears` — derives `SkillSummary[]` from `TimelineEvent[]`
   - `skillColour` — maps skill name → MUI colour + category (`engineering` | `managerial` | `soft-skills` | `other`)
   - `computeShadeColour` — shade interpolation helper used by skillColour
-  - `loadCareerHistory` — async loader used by ResumeDataProvider, joins career history + recommendations into `TimelineEventWithRecommendations[]` via its `joinCareerHistoryWithRecommendations` sub-util
+  - `loadCareerHistory` — async loader used by CareerDataContextProvider, joins career history + recommendations into `TimelineEventWithRecommendations[]` via its `joinCareerHistoryWithRecommendations` sub-util
 
 ### Nesting convention
 

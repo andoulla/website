@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import { MemoryRouter, useSearchParams } from 'react-router-dom';
 
-import { ResumeDataProvider } from '@/context/resumeData';
+import { CareerDataContextProvider } from '@/context/careerData';
 import { TimelineEvent } from '@/testing';
 
 import { Skills } from './Skills';
@@ -30,10 +30,10 @@ function renderWithProvider(
 ) {
   return render(
     <MemoryRouter initialEntries={initialEntries}>
-      <ResumeDataProvider loader={loader}>
+      <CareerDataContextProvider loader={loader}>
         <Skills />
         <SearchParamsDisplay />
-      </ResumeDataProvider>
+      </CareerDataContextProvider>
     </MemoryRouter>
   );
 }

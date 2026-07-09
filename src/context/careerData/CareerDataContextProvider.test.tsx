@@ -5,14 +5,14 @@ import type { ReactNode } from 'react';
 import { TimelineEvent } from '@/testing';
 import { loadCareerHistory } from '@/utils/loadCareerHistory';
 
-import { ResumeDataProvider, useCareerHistory } from './ResumeDataProvider';
+import { CareerDataContextProvider, useCareerDataContext } from './CareerDataContextProvider';
 
 jest.mock('@/utils/loadCareerHistory');
 
 const mockLoadCareerHistory = jest.mocked(loadCareerHistory);
 
 function CareerHistoryConsumer() {
-  const [firstEvent] = useCareerHistory();
+  const [firstEvent] = useCareerDataContext();
   return <p>{firstEvent.companyName}</p>;
 }
 
@@ -35,13 +35,13 @@ class TestErrorBoundary extends Component<{ children: ReactNode }, ErrorBoundary
   }
 }
 
-describe('ResumeDataProvider', () => {
+describe('CareerDataContextProvider', () => {
   test('exposes the loaded career history to consumers via the context', async () => {
     let screen!: ReturnType<typeof render>;
 
     await act(async () => {
       screen = render(
-        <ResumeDataProvider
+        <CareerDataContextProvider
           loader={() =>
             Promise.resolve([new TimelineEvent().companyName('Nimbus Analytics').mock()])
           }
@@ -49,7 +49,7 @@ describe('ResumeDataProvider', () => {
           <Suspense fallback={<p>Loading</p>}>
             <CareerHistoryConsumer />
           </Suspense>
-        </ResumeDataProvider>
+        </CareerDataContextProvider>
       );
       await Promise.resolve();
     });
@@ -59,11 +59,11 @@ describe('ResumeDataProvider', () => {
 
   test('shows the fallback while the loader promise is still pending', () => {
     const screen = render(
-      <ResumeDataProvider loader={() => new Promise(() => {})}>
+      <CareerDataContextProvider loader={() => new Promise(() => {})}>
         <Suspense fallback={<p>Loading</p>}>
           <CareerHistoryConsumer />
         </Suspense>
-      </ResumeDataProvider>
+      </CareerDataContextProvider>
     );
 
     expect(screen.getByText('Loading')).toBeVisible();
@@ -72,11 +72,11 @@ describe('ResumeDataProvider', () => {
   test('surfaces a rejected loader promise to an error boundary', async () => {
     const screen = render(
       <TestErrorBoundary>
-        <ResumeDataProvider loader={() => Promise.reject(new Error('failed to load'))}>
+        <CareerDataContextProvider loader={() => Promise.reject(new Error('failed to load'))}>
           <Suspense fallback={<p>Loading</p>}>
             <CareerHistoryConsumer />
           </Suspense>
-        </ResumeDataProvider>
+        </CareerDataContextProvider>
       </TestErrorBoundary>
     );
 
@@ -90,11 +90,11 @@ describe('ResumeDataProvider', () => {
 
     await act(async () => {
       screen = render(
-        <ResumeDataProvider>
+        <CareerDataContextProvider>
           <Suspense fallback={<p>Loading</p>}>
             <CareerHistoryConsumer />
           </Suspense>
-        </ResumeDataProvider>
+        </CareerDataContextProvider>
       );
       await Promise.resolve();
     });

@@ -4,7 +4,7 @@ import type { TimelineEventWithRecommendations } from '@/types';
 
 export type CareerHistoryPromise = Promise<TimelineEventWithRecommendations[]>;
 
-export interface ResumeDataProviderProps {
+export interface CareerDataContextProviderProps {
   children: ReactNode;
   /** Overridable so tests can inject a fast, deterministic promise. */
   loader?: () => CareerHistoryPromise;

@@ -3,7 +3,7 @@ import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 
 import { NavBar } from './components/navBar';
 import { ThemeContextProvider } from './context/theme';
-import { ResumeDataProvider } from './context/resumeData';
+import { CareerDataContextProvider } from './context/careerData';
 import { Articles } from './views/articles';
 import { Resume } from './views/resume';
 import { Skills } from './views/skills';
@@ -13,11 +13,10 @@ import { Skills } from './views/skills';
 // TODO: ATS optimisation
 // TODO: add hidden tech stack for elsevier and capco
 // TODO: missing coding/programming as a skill
-// TODO: switch career provider to use .provider patterh
-const ResumeDataLayout = () => (
-  <ResumeDataProvider>
+const CareerDataLayout = () => (
+  <CareerDataContextProvider>
     <Outlet />
-  </ResumeDataProvider>
+  </CareerDataContextProvider>
 );
 
 const App = () => {
@@ -27,7 +26,7 @@ const App = () => {
       <BrowserRouter>
         <NavBar />
         <Routes>
-          <Route element={<ResumeDataLayout />}>
+          <Route element={<CareerDataLayout />}>
             <Route path="/" element={<Resume />} />
             <Route path="/skills" element={<Skills />} />
           </Route>

@@ -12,7 +12,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { PageContainer } from '@/components/pageContainer';
 import { Section } from '@/components/section';
-import { useCareerHistory } from '@/context/resumeData';
+import { useCareerDataContext } from '@/context/careerData';
 
 import { ContactDetails } from './contactDetails';
 import { TimelineEventCard } from './timelineEventCard';
@@ -20,7 +20,7 @@ import { TimelineEventSkeleton } from './timelineEventSkeleton';
 import { pickRandomRoleIcon, RoleIcon } from './roleIcons';
 
 const CareerTimeline = () => {
-  const careerHistory = useCareerHistory();
+  const careerHistory = useCareerDataContext();
   const [searchParams] = useSearchParams();
   const highlightedSkill = searchParams.get('skill') ?? undefined;
   const highlightedRecommendationId = searchParams.get('recommendation') ?? undefined;
