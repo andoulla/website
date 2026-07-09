@@ -1,5 +1,5 @@
 import CssBaseline from '@mui/material/CssBaseline';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 
 import { NavBar } from './components/navBar';
 import { ThemeContextProvider } from './context/theme';
@@ -16,23 +16,27 @@ import { Skills } from './views/skills';
 // TODO: ATS optimisation
 // TODO: link category-level filtering from Resume (currently only individual skill chips link out, via ?skill=)
 // TODO: add hidden tech stack for elsevier and capco
-// TODO: check contrast between pink and dark mode
-// TODO: scope ResumeDataProvider down to Resume+Skills routes only, not app-wide (needs nested routes with <Outlet>)
+
+const ResumeDataLayout = () => (
+  <ResumeDataProvider>
+    <Outlet />
+  </ResumeDataProvider>
+);
 
 const App = () => {
   return (
     <ThemeContextProvider>
       <CssBaseline />
-      <ResumeDataProvider>
-        <BrowserRouter>
-          <NavBar />
-          <Routes>
+      <BrowserRouter>
+        <NavBar />
+        <Routes>
+          <Route element={<ResumeDataLayout />}>
             <Route path="/" element={<Resume />} />
             <Route path="/skills" element={<Skills />} />
-            <Route path="/articles" element={<Articles />} />
-          </Routes>
-        </BrowserRouter>
-      </ResumeDataProvider>
+          </Route>
+          <Route path="/articles" element={<Articles />} />
+        </Routes>
+      </BrowserRouter>
     </ThemeContextProvider>
   );
 };
