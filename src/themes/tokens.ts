@@ -31,6 +31,7 @@ export const lightTokens = {
 } as const;
 
 export const darkTokens = {
-  background: { default: '#0f1117', paper: '#1a1d24' },
+  // Softer than near-black — avoids the harsh/OLED-smear look of a true dark background.
+  background: { default: '#16181d', paper: '#1e2128' },
   text: { primary: '#f1f5f9', disabled: '#64748b' },
 } as const;

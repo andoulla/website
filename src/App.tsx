@@ -14,7 +14,6 @@ import { Skills } from './views/skills';
 // TODO: add rest of the work history and add the 3 views (full time line, eng. mng/lead role/ snr eng role ) with button to hide eduation on the other 2
 // TODO: check lighthouse metrics
 // TODO: ATS optimisation
-// TODO: link category-level filtering from Resume (currently only individual skill chips link out, via ?skill=)
 // TODO: add hidden tech stack for elsevier and capco
 
 const ResumeDataLayout = () => (
