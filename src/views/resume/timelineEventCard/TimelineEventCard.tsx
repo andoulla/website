@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -48,7 +48,7 @@ const formatDuration = (startDate: string, endDate: string | null): string => {
   return `${formatMonthYear(startDate)} – ${end}`;
 };
 
-export const TimelineEventCard = memo(({ experience }: TimelineEventCardProps) => {
+export const TimelineEventCard = ({ experience }: TimelineEventCardProps) => {
   const navigate = useNavigate();
   const duration = formatDuration(experience.startDate, experience.endDate);
   const theme = useTheme();
@@ -128,6 +128,4 @@ export const TimelineEventCard = memo(({ experience }: TimelineEventCardProps) =
       </CardContent>
     </Card>
   );
-});
-
-TimelineEventCard.displayName = 'TimelineEventCard';
+};
