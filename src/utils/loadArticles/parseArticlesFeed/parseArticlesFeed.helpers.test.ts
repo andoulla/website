@@ -1,4 +1,4 @@
-import { stripHtmlToText } from './parseArticlesFeed.helpers';
+import { isRssFeedResponse, stripHtmlToText } from './parseArticlesFeed.helpers';
 
 describe('stripHtmlToText', () => {
   test('strips HTML tags and returns plain text', () => {
@@ -15,5 +15,34 @@ describe('stripHtmlToText', () => {
 
     expect(result).not.toContain('<script>');
     expect((window as unknown as { __pwned?: boolean }).__pwned).toBeUndefined();
+  });
+});
+
+describe('isRssFeedResponse', () => {
+  test('returns true for a valid feed response', () => {
+    const payload = {
+      status: 'ok',
+      items: [{ link: 'https://example.com/post', title: 'Post', pubDate: '2026-01-01 00:00:00' }],
+    };
+
+    expect(isRssFeedResponse(payload)).toBe(true);
+  });
+
+  test('returns false when status is not "ok"', () => {
+    expect(isRssFeedResponse({ status: 'error', items: [] })).toBe(false);
+  });
+
+  test('returns false when items is missing', () => {
+    expect(isRssFeedResponse({ status: 'ok' })).toBe(false);
+  });
+
+  test('returns false when items is not an array', () => {
+    expect(isRssFeedResponse({ status: 'ok', items: 'not-an-array' })).toBe(false);
+  });
+
+  test('returns false when an item is missing a required field', () => {
+    const payload = { status: 'ok', items: [{ title: 'Post', pubDate: '2026-01-01 00:00:00' }] };
+
+    expect(isRssFeedResponse(payload)).toBe(false);
   });
 });

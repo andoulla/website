@@ -29,6 +29,12 @@ describe('parseCategories', () => {
 
     expect(result).toEqual(['engineering', 'managerial']);
   });
+
+  test('drops unrecognised values', () => {
+    const result = parseCategories('engineering,bogus');
+
+    expect(result).toEqual(['engineering']);
+  });
 });
 
 describe('parseSubCategories', () => {
@@ -54,6 +60,12 @@ describe('parseSubCategories', () => {
     const result = parseSubCategories('testing,leadership');
 
     expect(result).toEqual(['testing', 'leadership']);
+  });
+
+  test('drops unrecognised values', () => {
+    const result = parseSubCategories('testing,bogus');
+
+    expect(result).toEqual(['testing']);
   });
 });
 
