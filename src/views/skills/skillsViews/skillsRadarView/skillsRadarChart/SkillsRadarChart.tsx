@@ -47,6 +47,10 @@ export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadar
   const radarData = aggregateSkillsByCategory(categories, skills, searchTerm);
   // Floor of 1 avoids a zero-width domain when every category is 0.
   const maxYears = Math.max(...radarData.map((point) => point.avgYears), 1);
+  // primary.main is tuned for contrast on a light background; against a dark paper background
+  // (e.g. purple theme's dark plum) it reads as too low-contrast, so use the lighter shade instead.
+  const radarColour =
+    theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.main;
 
   // A <Radar> is a single polygon, so unlike SkillsBarChart's per-bar Cell/isBarMatch dimming,
   // a non-matching category can't be dimmed by fading the whole shape — colour each vertex dot
@@ -82,8 +86,8 @@ export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadar
           <Tooltip content={CategoryTooltip} />
           <Radar
             dataKey="avgYears"
-            stroke={theme.palette.primary.main}
-            fill={theme.palette.primary.main}
+            stroke={radarColour}
+            fill={radarColour}
             fillOpacity={0.25}
             isAnimationActive={!prefersReducedMotion}
             animationDuration={400}
