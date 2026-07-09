@@ -9,13 +9,11 @@ import { Resume } from './views/resume';
 import { Skills } from './views/skills';
 
 // TODO: update content to ensure correct mapping of skills to categories and subcategories
-// TODO: add education (by default in time line view, filter out url based)
-// TODO: add rest of the work history and add the 3 views (full time line, eng. mng/lead role/ snr eng role ) with button to hide eduation on the other 2
-// TODO: check lighthouse metrics
+// TODO: add rest of the work history and add the 3 views (full timeline, eng. mng/lead role/ snr eng role ) with button to hide eduation on the other 2
 // TODO: ATS optimisation
 // TODO: add hidden tech stack for elsevier and capco
 // TODO: missing coding/programming as a skill
-
+// TODO: switch career provider to use .provider patterh
 const ResumeDataLayout = () => (
   <ResumeDataProvider>
     <Outlet />
