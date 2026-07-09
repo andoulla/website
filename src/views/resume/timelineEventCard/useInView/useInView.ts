@@ -5,8 +5,8 @@ import type { UseInViewOptions, UseInViewResult } from './useInView.types';
 export const useInView = <T extends Element>(
   options: UseInViewOptions = {}
 ): UseInViewResult<T> => {
-  const { threshold = 0.15, rootMargin = '0px' } = options;
-  const [isInView, setIsInView] = useState(false);
+  const { threshold = 0.15, rootMargin = '0px', initialInView = false } = options;
+  const [isInView, setIsInView] = useState(initialInView);
 
   const ref = useCallback(
     (node: T | null) => {

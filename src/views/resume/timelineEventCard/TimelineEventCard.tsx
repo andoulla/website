@@ -30,6 +30,9 @@ export interface TimelineEventCardProps {
   highlightedSkill?: string;
   highlightedRecommendationId?: string;
   autoScrollToHighlight?: boolean;
+  // The first card is already visible on landing, so it should render in without waiting on the
+  // IntersectionObserver's first callback — only cards below the fold need the scroll-triggered fade.
+  startInView?: boolean;
 }
 
 const MONTH_NAMES = [
@@ -62,6 +65,7 @@ export const TimelineEventCard = ({
   highlightedSkill,
   highlightedRecommendationId,
   autoScrollToHighlight,
+  startInView,
 }: TimelineEventCardProps) => {
   const navigate = useNavigate();
   const duration = formatDuration(experience.startDate, experience.endDate);
@@ -69,7 +73,10 @@ export const TimelineEventCard = ({
   // Mobile cards run nearly the full viewport height, so the default threshold would need a
   // long scroll before triggering; a lower threshold starts the fade as soon as the card peeks in.
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { ref, isInView } = useInView<HTMLDivElement>({ threshold: isMobile ? 0.05 : 0.15 });
+  const { ref, isInView } = useInView<HTMLDivElement>({
+    threshold: isMobile ? 0.05 : 0.15,
+    initialInView: startInView,
+  });
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const hasHighlightedRecommendation =
     highlightedRecommendationId !== undefined &&

@@ -39,6 +39,12 @@ describe('useInView', () => {
     expect(result.current.isInView).toBe(false);
   });
 
+  test('starts in view when initialInView is true', () => {
+    const { result } = renderHook(() => useInView<HTMLDivElement>({ initialInView: true }));
+
+    expect(result.current.isInView).toBe(true);
+  });
+
   test('does not create an observer when the ref is detached', () => {
     const { result } = renderHook(() => useInView<HTMLDivElement>());
 

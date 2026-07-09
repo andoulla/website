@@ -75,6 +75,7 @@ const ExperienceList = () => {
                 highlightedSkill={highlightedSkill}
                 highlightedRecommendationId={highlightedRecommendationId}
                 autoScrollToHighlight={index === firstMatchIndex}
+                startInView={index === 0}
               />
             </TimelineContent>
           </TimelineItem>
