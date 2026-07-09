@@ -21,7 +21,7 @@ export const useThemeContext = (): ThemeContextValue => {
 
 export const ThemeContextProvider = ({
   children,
-  initialTheme = 'green',
+  initialTheme = 'purple',
   initialDarkMode = false,
 }: ThemeContextProviderProps) => {
   const [themeName, setThemeName] = useState<ThemeName>(initialTheme);

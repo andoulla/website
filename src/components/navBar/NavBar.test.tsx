@@ -41,31 +41,31 @@ describe('NavBar', () => {
   });
 
   describe('theme toggle', () => {
-    test('renders a theme toggle button defaulting to green', async () => {
+    test('renders a theme toggle button defaulting to purple', async () => {
       const screen = renderNavBar();
-
-      expect(screen.getByRole('button', { name: 'Switch to purple theme' })).toBeVisible();
-      expect(await axe(screen.container)).toHaveNoViolations();
-    });
-
-    test('toggle button label updates to green after switching to purple', async () => {
-      const user = userEvent.setup();
-      const screen = renderNavBar();
-
-      await user.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
 
       expect(screen.getByRole('button', { name: 'Switch to green theme' })).toBeVisible();
       expect(await axe(screen.container)).toHaveNoViolations();
     });
 
-    test('toggle button cycles back to purple after two clicks', async () => {
+    test('toggle button label updates to purple after switching to green', async () => {
       const user = userEvent.setup();
       const screen = renderNavBar();
 
-      await user.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
       await user.click(screen.getByRole('button', { name: 'Switch to green theme' }));
 
       expect(screen.getByRole('button', { name: 'Switch to purple theme' })).toBeVisible();
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('toggle button cycles back to green after two clicks', async () => {
+      const user = userEvent.setup();
+      const screen = renderNavBar();
+
+      await user.click(screen.getByRole('button', { name: 'Switch to green theme' }));
+      await user.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
+
+      expect(screen.getByRole('button', { name: 'Switch to green theme' })).toBeVisible();
     });
   });
 
@@ -107,7 +107,6 @@ describe('NavBar', () => {
       const user = userEvent.setup();
       const screen = renderNavBar();
 
-      await user.click(screen.getByRole('button', { name: 'Switch to purple theme' }));
       await user.click(screen.getByRole('button', { name: 'Dark' }));
 
       expect(await axe(screen.container)).toHaveNoViolations();
