@@ -4,7 +4,6 @@ import type { TooltipContentProps } from 'recharts';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import type { Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
@@ -12,9 +11,9 @@ import { visuallyHidden } from '@mui/utils';
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
 import type { SkillCategory } from '@/data/skills.types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
+import { getPaletteColourMain } from '@/utils/paletteColourMain';
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/utils/skillCategory';
 import { CATEGORY_COLOUR_MAP } from '@/utils/skillColour';
-import type { SkillColour } from '@/utils/skillColour';
 
 import {
   CATEGORY_PATTERN_KIND,
@@ -27,17 +26,6 @@ const BAR_HEIGHT = 36;
 const BAR_SIZE = 14;
 const CHART_PADDING = 64;
 const MIN_HEIGHT = 200;
-
-// Safely resolves a SkillColour key to the palette's .main hex value.
-// Mirrors the dotColour() pattern in SkillsListView.
-const getPaletteMain = (colour: SkillColour, theme: Theme): string => {
-  if (colour === 'default') return theme.palette.grey[400];
-  const entry = theme.palette[colour as keyof typeof theme.palette];
-  if (entry !== null && typeof entry === 'object' && 'main' in entry) {
-    return (entry as { main: string }).main;
-  }
-  return theme.palette.grey[400];
-};
 
 // Bridges Recharts tooltip payload → SkillTooltipContent props.
 const SkillBarTooltip = ({ active, payload }: TooltipContentProps) => {
@@ -125,7 +113,7 @@ export const SkillsBarChart = ({
   const legendEntries = CATEGORY_ORDER.filter((cat) =>
     skills.some((skill) => skill.category === cat)
   ).map((cat) => {
-    const colour = getPaletteMain(CATEGORY_COLOUR_MAP[cat], theme);
+    const colour = getPaletteColourMain(CATEGORY_COLOUR_MAP[cat], theme);
     return {
       cat,
       colour,
@@ -193,7 +181,7 @@ export const SkillsBarChart = ({
             {skills.map((skill, i) => {
               const isMatch = isBarMatch(skill, searchTerm);
               const isHovered = i === hoverIndex && isMatch;
-              const colour = getPaletteMain(CATEGORY_COLOUR_MAP[skill.category], theme);
+              const colour = getPaletteColourMain(CATEGORY_COLOUR_MAP[skill.category], theme);
               return (
                 <Cell
                   key={skill.skill}
