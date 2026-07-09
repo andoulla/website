@@ -22,9 +22,9 @@ A minimal React + TypeScript web app run in strict mode across the whole toolcha
 
 ## Planning
 
-Plans must carry enough detail (exact file paths, relevant existing code/line numbers, function
-signatures) that implementing them doesn't require re-scanning the files already read while
-planning — a plan is a handoff to the implementation step, not a pointer back to redo the search.
+- Plans must carry enough detail to implement without re-scanning files already read while
+  planning: exact file paths, relevant existing code/line numbers, function signatures.
+- A plan is a handoff to the implementation step, not a pointer back to redo the search.
 
 ## Routes
 
@@ -70,12 +70,13 @@ Skills have **no dedicated data file** — `calculateSkillYears(experiences)` de
 
 ### Nesting convention
 
-A child used only by one owner nests directly under that owner (no intermediate `components/`
-wrapper) rather than sitting beside it — a child can always import from its parent, but nothing
-outside the parent may reach into the child (enforced by `no-sibling-folder-imports`; naming/file
-conventions in [code-style.md](.claude/rules/code-style.md)). Applies uniformly under `views/*`
-too: `views/skills/skillFilterBar/`, not `views/skills/components/skillFilterBar/`.
-
-Worked examples: [src/components/tagList/](src/components/tagList/) (component nesting),
-[src/utils/loadExperiences/joinJobsWithRecommendations/](src/utils/loadExperiences/joinJobsWithRecommendations/)
-(util nesting).
+- A child used only by one owner nests directly under that owner (no intermediate `components/`
+  wrapper), not beside it.
+- A child can always import from its parent; nothing outside the parent may reach into the child.
+  Enforced by ESLint — see [code-style.md](.claude/rules/code-style.md) for the rule details and
+  naming/file conventions.
+- Applies uniformly under `views/*`: `views/skills/skillFilterBar/`, not
+  `views/skills/components/skillFilterBar/`.
+- Worked examples: [src/components/tagList/](src/components/tagList/) (component nesting),
+  [src/utils/loadExperiences/joinJobsWithRecommendations/](src/utils/loadExperiences/joinJobsWithRecommendations/)
+  (util nesting).

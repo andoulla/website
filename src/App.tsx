@@ -16,6 +16,8 @@ import { Skills } from './views/skills';
 // TODO: ATS optimisation
 // TODO: link category-level filtering from Resume (currently only individual skill chips link out, via ?skill=)
 // TODO: add hidden tech stack for elsevier and capco
+// TODO: check contrast between pink and dark mode
+// TODO: scope ResumeDataProvider down to Resume+Skills routes only, not app-wide (needs nested routes with <Outlet>)
 
 const App = () => {
   return (
