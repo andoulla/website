@@ -722,11 +722,12 @@ Branch: `part-2-cleanup-fixes` (off `part-1-correctness-fixes`). One commit per 
 - [x] 13 — Extract `derivePresentCategories` util
 - [x] 14 — `SkillItemsList` reuse `formatYears`
 - [x] 15 — Extract `CategoryColourDot` (circle + square shapes)
-- [ ] 16 — Dedupe `filterSkillsByCategory` computation
-- [ ] 17 — Memoize `SkillsBarChart` derivations
-- [ ] 18 — Memoize `SkillsRadarView`/`SkillsRadarChart` derivations
-- [ ] 19 — `RoleIcons.constants.test.ts` id-existence guard
-- [ ] 20 — Drop 3 remaining unused exports
+- [x] 16 — Dedupe `filterSkillsByCategory` computation
+- [x] 17+18 — Dropped (premature optimization, see below)
+- [x] 19 — `RoleIcon` logo-mapping guard (moved to `RoleIcon.test.tsx`, builder-based)
+- [x] 20 — Drop unused exports (`SectionProps`, `ROLE_ICONS` barrel); kept `matchSkill`
+
+Part 2 complete.
 
 ---
 
@@ -827,23 +828,20 @@ Ranked below Part 1 only because correctness outranks cleanup in the review's ti
 - **Where:** `Skills.tsx:134-137` and `SkillsViewContext.tsx:28-31` — identical call, both memoized individually, but redundant.
 - **Fix:** thread `Skills.tsx`'s `filteredSkills` into `SkillsViewContextProvider` as a prop; drop the internal `useMemo` in `SkillsViewContext.tsx`. Update `SkillsViewContextProviderProps` type to add `filteredSkills: SkillSummary[]`.
 
-### 17. `SkillsBarChart` recomputes unmemoized derivations on every hover
+### 17+18. Dropped — memoizing `SkillsBarChart`/`SkillsRadarView` derivations
 
-- **Where:** `SkillsBarChart.tsx:116-134` (`chartHeight`, `legendEntries`, `maxLabelLength`/`yAxisWidth`)
-- `hoverIndex` changes on every bar hover (187-192) → re-renders → re-runs all three even though `skills`/`theme` are unchanged.
-- **Fix:** wrap each in `useMemo`. Caveat: hooks can't follow the existing early return (`if (skills.length === 0) return ...`, line 108) — move that return _below_ the new `useMemo` calls.
-
-### 18. `SkillsRadarView`/`SkillsRadarChart` unmemoized derivations
-
-- **Where:** `SkillsRadarView.tsx:17-19` (`categories`), `SkillsRadarChart.tsx:47-49` (`radarData`, `maxYears`)
-- Same pattern as #17; `SkillsListView.tsx`'s equivalent is already memoized.
-- **Fix:** `useMemo` each, using #13's shared `derivePresentCategories` for `categories`. Same early-return-ordering caveat as #17.
+- Not implementing. Tiny dataset (tens of skills) → filter/map cost is microseconds, not a real bottleneck.
+- Only argument was consistency with `SkillsListView`'s memoization, not measured perf.
+- `SkillsListView`'s existing memoization is equally unnecessary — not removing it, just not adding more elsewhere.
+- Safe to remove anytime — categories only change via a new deployment, no runtime drift risk either way.
 
 ### 19. `RoleIcon`/`RoleIcons.constants.ts` — three uncoordinated mechanisms decide one icon
 
 - **Where:** `RoleIcon.tsx:14-28` (logo map → education branch → fallback icon), `RoleIcons.constants.ts:11-22`
 - `LOGO_BY_EVENT_ID` keys are hardcoded id strings duplicated from `careerHistory.json` with no compile-time link — a renamed id silently falls through to the generic `School` icon.
-- **Fix:** don't have `data/` import `views/` (backward-layer violation). Instead add a test-level guard: `RoleIcons.constants.test.ts` asserts every `LOGO_BY_EVENT_ID` key exists in `careerHistory` (via `import { careerHistory } from '@/data/careerHistory'` — forward reach, allowed). Catches a rename at test time instead of production.
+- **Fix (revised):** no real-data import in tests (repo convention) — added to `RoleIcon.test.tsx`
+  instead: for every `LOGO_BY_EVENT_ID` key, build a `TimelineEvent` mock with that id, assert the
+  mapped logo renders. Catches a broken lookup, not a real-JSON rename — accepted trade-off.
 
 ### 20. Four unused exports ("don't export until imported externally")
 
