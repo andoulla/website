@@ -29,7 +29,9 @@ Branch: `part-0-code-review-fixes`. One commit per item.
 - [x] 0.3 — Derive category accumulators from `CATEGORY_ORDER`
 - [x] 0.4 — Default `highlightedSkills` prop
 - [x] 0.5 — Data-driven `CategoryPatternDefinition` + new constants file
-- [ ] 0.6+0.7 — `useSkillSearchUrl` hook (single-source searchTerm + generalised URL params)
+- [x] 0.6+0.7 — `useSkillSearchUrl` hook (single-source searchTerm + generalised URL params)
+
+Part 0 complete.
 
 (Finding #8's empty-state + clear-filters button is separate — Part 1, not in this batch unless asked.)
 
@@ -267,59 +269,45 @@ the next (per this repo's CLAUDE.md verification convention — no self-run type
   gradient fns) lives in the new `SkillsBarChart.constants.ts`, imported by both
   `SkillsBarChart.tsx` and `SkillsBarChart.helpers.ts`.
 
-### 0.6 — `Skills.tsx` searchTerm: single source of truth via `flushSync`, gated at 2 characters
+### 0.6 — `Skills.tsx` searchTerm: keep local state, write-through to the URL via the shared hook
 
 - **Where:** `Skills.tsx:108-132` (local `searchTerm` state mirroring the `search` URL param)
-- **Decision:** flushSync approach, chosen over the uncontrolled-input alternative.
-- **Behaviour requested:** typing should still show every character in the box as it's typed
-  (never feels broken), but matching/filtering should only _activate_ once the term reaches 2
-  characters — i.e. the 1st keystroke alone doesn't trigger any filtering/dimming. This lines up
-  exactly with the existing `MIN_TERM_LENGTH = 2` in `skillMatchesSearch.ts` and finding #5's
-  planned fix (making `hasSearchTerm` respect that same threshold) — implementing #5 alongside
-  this gives the "skip the first letter" behaviour for free, no separate mechanism needed.
-- **Fix:**
+- **Superseded design note:** originally tried `flushSync` for a fully URL-derived single
+  source of truth. **Discovered during implementation: react-router only guarantees `flushSync`
+  navigation in Data/Framework router mode** (per its own docs) — this app uses declarative
+  `<BrowserRouter>`, so `flushSync` didn't reliably commit before the next keystroke, causing a
+  real, reproduced test failure (stale search term used in `hiddenMatchCount`). Reverted to local
+  state for this one value.
+- **Fix:** `searchTerm` stays local state (needed for synchronous per-keystroke reactivity —
+  filtering/dimming elsewhere on the page can't wait on a URL round-trip), seeded once from the
+  URL via `useSkillSearchUrl`'s initial value, written through the same hook on every change:
 
   ```ts
-  import { flushSync } from 'react-dom';
-  // ...
-  const searchParamValue = searchParams.get(SEARCH_PARAM);
-  const searchTerm = useMemo(() => parseSearch(searchParamValue), [searchParamValue]);
+  const [initialSearchTerm, setSearchTermUrl] = useSkillSearchUrl(
+    SEARCH_PARAM,
+    parseSearch,
+    (next) => (next !== '' ? next : null)
+  );
+  const [searchTerm, setSearchTermState] = useState(initialSearchTerm);
 
   const setSearchTerm = useCallback(
     (next: string) => {
-      // flushSync: avoids the input resetting when typed faster than a batched update lands.
-      flushSync(() => {
-        setSearchParams(
-          (prev) => {
-            const params = new URLSearchParams(prev);
-            if (next !== '') {
-              params.set(SEARCH_PARAM, next);
-            } else {
-              params.delete(SEARCH_PARAM);
-            }
-            return reorderFilterParams(params);
-          },
-          { replace: true }
-        );
-      });
+      setSearchTermState(next);
+      setSearchTermUrl(next);
     },
-    [setSearchParams]
+    [setSearchTermUrl]
   );
   ```
 
-  - Removes `useState`/`setSearchTermState` entirely — `searchTerm` is now purely derived from
-    `searchParams`, single source of truth.
-  - `flushSync` forces the URL/render update to commit synchronously within the same keystroke's
-    event handler, which is the standard React fix for "controlled input value resets when typed
-    faster than an async state round-trip" — the exact failure mode the old comment described.
-  - Depending on `searchParamValue` (the raw string) rather than the whole `searchParams` object
-    also avoids recomputation on unrelated filter changes — same category of fix as finding #4.
+  - `useState(initialSearchTerm)` only applies on first mount (standard React behaviour), so the
+    URL still seeds the initial value on a deep link, exactly like the original design.
+  - The URL is now a write-only mirror for this one param — not literally single-source, but the
+    only design that's both correct and simple given this app's router mode. The other 4 params
+    (category, subCategory, view, skill) don't have this problem — they change on discrete
+    clicks, not rapid typing, so the plain hook works for them as-is.
   - Combine with finding #5 (`hasSearchTerm` gated on `MIN_SEARCH_TERM_LENGTH`) in the same pass —
-    that's what makes a 1-character term a no-op for filtering/dimming while still displaying in
-    the box and being written to the URL.
-  - **Trade-off to flag:** `flushSync` opts that update out of React's automatic batching —
-    fires a synchronous render on every keystroke instead of a batched one. Negligible at this
-    app's scale (one text input, no other state updates competing in the same tick).
+    that's what makes a 1-character term a no-op for filtering/dimming.
+  - No `flushSync` needed anywhere now — removed from the hook entirely (see 0.7).
 
 ### 0.7 — Generalise the 3 URL-param closures into a `useSkillSearchUrl` hook
 
@@ -333,72 +321,55 @@ the next (per this repo's CLAUDE.md verification convention — no self-run type
   fixes finding #4 (`SkillsListView`'s scroll-to-highlight effect re-firing on unrelated filter
   changes) as a side effect — one hook, two findings closed.
 - **New file:** `src/views/skills/useSkillSearchUrl/` (nested under `views/skills/`, its sole
-  consumer — per the nesting convention):
-  - `useSkillSearchUrl.types.ts`:
-    ```ts
-    export interface UseSkillSearchUrlOptions {
-      flushSync?: boolean;
-    }
-    ```
+  consumer — per the nesting convention). No options param — `flushSync` was dropped entirely
+  (see 0.6's superseded-design note above; it doesn't work in this app's router mode):
   - `useSkillSearchUrl.ts`:
 
     ```ts
     import { useCallback, useMemo } from 'react';
-    import { flushSync } from 'react-dom';
     import { useSearchParams } from 'react-router-dom';
 
     import { reorderFilterParams } from '../Skills.helpers';
 
-    import type { UseSkillSearchUrlOptions } from './useSkillSearchUrl.types';
-
     export const useSkillSearchUrl = <T>(
       key: string,
       parse: (raw: string | null) => T,
-      serialize: (value: T) => string | null,
-      options: UseSkillSearchUrlOptions = {}
+      serialize: (value: T) => string | null
     ): [T, (next: T) => void] => {
       const [searchParams, setSearchParams] = useSearchParams();
       const raw = searchParams.get(key);
-      const value = useMemo(() => parse(raw), [raw]);
+      const value = useMemo(() => parse(raw), [raw, parse]);
 
       const setValue = useCallback(
         (next: T) => {
-          const write = () => {
-            setSearchParams(
-              (prev) => {
-                const params = new URLSearchParams(prev);
-                const nextRaw = serialize(next);
-                if (nextRaw !== null) {
-                  params.set(key, nextRaw);
-                } else {
-                  params.delete(key);
-                }
-                return reorderFilterParams(params);
-              },
-              { replace: true }
-            );
-          };
-
-          if (options.flushSync === true) {
-            // Avoids the input resetting when typed faster than a batched update lands.
-            flushSync(write);
-          } else {
-            write();
-          }
+          setSearchParams(
+            (prev) => {
+              const params = new URLSearchParams(prev);
+              const nextRaw = serialize(next);
+              if (nextRaw !== null) {
+                params.set(key, nextRaw);
+              } else {
+                params.delete(key);
+              }
+              return reorderFilterParams(params);
+            },
+            { replace: true }
+          );
         },
-        [key, serialize, setSearchParams, options.flushSync]
+        [key, serialize, setSearchParams]
       );
 
       return [value, setValue];
     };
     ```
 
-  - `index.ts` — re-export `useSkillSearchUrl`, `UseSkillSearchUrlOptions`.
-  - `useSkillSearchUrl.test.ts` — cover: initial parse from an existing param, write sets/deletes
-    the param via the serialize fn's `null` convention, `flushSync: true` still commits (test via
-    `act`), value reference stability when an unrelated param changes.
+  - `index.ts` — re-export `useSkillSearchUrl`.
+  - `useSkillSearchUrl.test.tsx` (`.tsx` — the router wrapper needs JSX) — cover: initial parse
+    from an existing param, write sets/deletes the param via the serialize fn's `null`
+    convention, value reference stability when an unrelated param changes.
 
-- **`Skills.tsx` usage** (replaces the 5 separate read `useMemo`s and 4 separate write closures):
+- **`Skills.tsx` usage** (replaces the 5 separate read `useMemo`s and 3 separate write closures
+  for category/subCategory/viewMode — `searchTerm` keeps its own local state per 0.6):
 
   ```ts
   const [highlightedSkills] = useSkillSearchUrl(SKILL_PARAM, parseSkills, () => null);
@@ -421,18 +392,10 @@ the next (per this repo's CLAUDE.md verification convention — no self-run type
     (raw) => parseViewMode(raw) ?? 'radar',
     (next) => (next === 'radar' ? null : next)
   );
-
-  const [searchTerm, setSearchTerm] = useSkillSearchUrl(
-    SEARCH_PARAM,
-    parseSearch,
-    (next) => (next !== '' ? next : null),
-    { flushSync: true }
-  );
   ```
 
-  - This subsumes fix 0.6 above — `searchTerm` now goes through the same hook, just with
-    `flushSync: true` passed. Implement 0.6 and 0.7 together as one combined change to
-    `Skills.tsx`, not two separate passes.
+  - Implement 0.6 and 0.7 together as one combined change to `Skills.tsx`, not two separate
+    passes — `searchTerm`'s hook call (0.6) and the other 3 both live in the same component.
   - Drop the standalone `showPatterns` `useState` untouched — it's local UI state, not
     URL-backed, out of scope here.
   - Double check `reorderFilterParams`'s import path after the hook moves under

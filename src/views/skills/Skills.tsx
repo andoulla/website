@@ -1,5 +1,4 @@
 import { Suspense, useCallback, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import RadarIcon from '@mui/icons-material/Radar';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -32,7 +31,6 @@ import {
   parseSkills,
   parseSubCategories,
   parseViewMode,
-  reorderFilterParams,
 } from './Skills.helpers';
 import type { ViewMode } from './Skills.types';
 import { CopyLinkButton } from './copyLinkButton';
@@ -44,6 +42,7 @@ import {
   SkillsRadarView,
   SkillsViewContextProvider,
 } from './skillsViews';
+import { useSkillSearchUrl } from './useSkillSearchUrl';
 
 const renderSkillsView = (viewMode: ViewMode, showPatterns: boolean) => {
   if (viewMode === 'barchart') return <SkillsGraphView showPatterns={showPatterns} />;
@@ -55,80 +54,35 @@ const SkillsContent = () => {
   const careerHistory = useCareerDataContext();
   const skills = useMemo(() => calculateSkillYears(careerHistory), [careerHistory]);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const highlightedSkills = useMemo(
-    () => parseSkills(searchParams.get(SKILL_PARAM)),
-    [searchParams]
-  );
-  const selectedCategories = useMemo(
-    () => parseCategories(searchParams.get(CATEGORY_PARAM)),
-    [searchParams]
-  );
-  const selectedSubCategories = useMemo(
-    () => parseSubCategories(searchParams.get(SUBCATEGORY_PARAM)),
-    [searchParams]
+  const [highlightedSkills] = useSkillSearchUrl(SKILL_PARAM, parseSkills, () => null);
+  // setter unused here — skill param is only ever written by TimelineEventCard's navigate()
+
+  const [selectedCategories, setSelectedCategories] = useSkillSearchUrl(
+    CATEGORY_PARAM,
+    parseCategories,
+    (next) => (next.length > 0 ? next.join(',') : null)
   );
 
-  const setSelectedCategories = useCallback(
-    (next: SkillCategory[]) => {
-      setSearchParams(
-        (prev) => {
-          const params = new URLSearchParams(prev);
-          if (next.length > 0) {
-            params.set(CATEGORY_PARAM, next.join(','));
-          } else {
-            params.delete(CATEGORY_PARAM);
-          }
-          return reorderFilterParams(params);
-        },
-        { replace: true }
-      );
-    },
-    [setSearchParams]
+  const [selectedSubCategories, setSelectedSubCategories] = useSkillSearchUrl(
+    SUBCATEGORY_PARAM,
+    parseSubCategories,
+    (next) => (next.length > 0 ? next.join(',') : null)
   );
 
-  const setSelectedSubCategories = useCallback(
-    (next: SkillSubCategory[]) => {
-      setSearchParams(
-        (prev) => {
-          const params = new URLSearchParams(prev);
-          if (next.length > 0) {
-            params.set(SUBCATEGORY_PARAM, next.join(','));
-          } else {
-            params.delete(SUBCATEGORY_PARAM);
-          }
-          return reorderFilterParams(params);
-        },
-        { replace: true }
-      );
-    },
-    [setSearchParams]
+  // Local state drives live typing (URL round-trip is too slow); URL is a write-only mirror.
+  const [initialSearchTerm, setSearchTermUrl] = useSkillSearchUrl(
+    SEARCH_PARAM,
+    parseSearch,
+    (next) => (next !== '' ? next : null)
   );
-
-  // Held in local state rather than read straight from `searchParams`: the URL update round-trips
-  // through router navigation, and a controlled input driven by that async state drops keystrokes
-  // typed faster than the round-trip (React resets the DOM value back to the stale render).
-  const [searchTerm, setSearchTermState] = useState(() =>
-    parseSearch(searchParams.get(SEARCH_PARAM))
-  );
+  const [searchTerm, setSearchTermState] = useState(initialSearchTerm);
 
   const setSearchTerm = useCallback(
     (next: string) => {
       setSearchTermState(next);
-      setSearchParams(
-        (prev) => {
-          const params = new URLSearchParams(prev);
-          if (next !== '') {
-            params.set(SEARCH_PARAM, next);
-          } else {
-            params.delete(SEARCH_PARAM);
-          }
-          return reorderFilterParams(params);
-        },
-        { replace: true }
-      );
+      setSearchTermUrl(next);
     },
-    [setSearchParams]
+    [setSearchTermUrl]
   );
 
   const filteredSkills = useMemo(
@@ -150,28 +104,11 @@ const SkillsContent = () => {
       ? `${hiddenMatchCount} match${hiddenMatchCount === 1 ? '' : 'es'} hidden by filters`
       : undefined;
 
-  const [viewMode, setViewModeState] = useState<ViewMode>(
-    () => parseViewMode(searchParams.get(VIEW_PARAM)) ?? 'radar'
-  );
-
-  const setViewMode = useCallback(
-    (next: ViewMode) => {
-      setViewModeState(next);
-      setSearchParams(
-        (prev) => {
-          const params = new URLSearchParams(prev);
-          // 'radar' is the default now, so it's the value that's omitted from the URL.
-          if (next === 'radar') {
-            params.delete(VIEW_PARAM);
-          } else {
-            params.set(VIEW_PARAM, next);
-          }
-          return reorderFilterParams(params);
-        },
-        { replace: true }
-      );
-    },
-    [setSearchParams]
+  const [viewMode, setViewMode] = useSkillSearchUrl(
+    VIEW_PARAM,
+    (raw) => parseViewMode(raw) ?? 'radar',
+    // 'radar' is the default now, so it's the value that's omitted from the URL.
+    (next) => (next === 'radar' ? null : next)
   );
 
   const [showPatterns, setShowPatterns] = useState(false);
