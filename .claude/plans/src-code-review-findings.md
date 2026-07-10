@@ -28,7 +28,7 @@ Branch: `part-0-code-review-fixes`. One commit per item.
 - [x] 0.2 — Move `RESPONSIBILITIES_LABEL_BY_TYPE` to constants
 - [x] 0.3 — Derive category accumulators from `CATEGORY_ORDER`
 - [x] 0.4 — Default `highlightedSkills` prop
-- [ ] 0.5 — Data-driven `CategoryPatternDef` + new constants file
+- [x] 0.5 — Data-driven `CategoryPatternDefinition` + new constants file
 - [ ] 0.6+0.7 — `useSkillSearchUrl` hook (single-source searchTerm + generalised URL params)
 
 (Finding #8's empty-state + clear-filters button is separate — Part 1, not in this batch unless asked.)
@@ -97,9 +97,9 @@ the next (per this repo's CLAUDE.md verification convention — no self-run type
   ```
 - One allocation avoided per render instead of one per row; trivial but free.
 
-### 0.5 — Make `CategoryPatternDef` data-driven
+### 0.5 — Make `CategoryPatternDefinition` data-driven
 
-- **Where:** `SkillsBarChart.tsx:36-91` (the `CategoryPatternDef` component's 5-case switch), plus
+- **Where:** `SkillsBarChart.tsx:36-91` (the `CategoryPatternDefinition` component's 5-case switch), plus
   `SkillsBarChart.helpers.ts:12-58` (the `CategoryPatternKind` type, `CATEGORY_PATTERN_TYPE` map,
   and `getCategoryPatternBackground`'s parallel CSS-gradient switch).
 - **Why now:** categories will be changing. Note: a _new category_ alone doesn't require a new
@@ -183,7 +183,7 @@ the next (per this repo's CLAUDE.md verification convention — no self-run type
   };
   ```
 
-- **`SkillsBarChart.tsx`** — `CategoryPatternDef` becomes a fully generic renderer, no switch:
+- **`SkillsBarChart.tsx`** — `CategoryPatternDefinition` becomes a fully generic renderer, no switch:
 
   ```tsx
   import {
@@ -191,7 +191,7 @@ the next (per this repo's CLAUDE.md verification convention — no self-run type
     CATEGORY_PATTERN_SHAPE_DEFINITIONS,
   } from './SkillsBarChart.constants';
 
-  const CategoryPatternDef = ({ category, colour, markColour }: CategoryPatternDefProps) => {
+  const CategoryPatternDef = ({ category, colour, markColour }: CategoryPatternDefinitionProps) => {
     const id = getCategoryPatternId(category);
     const { width, height, patternTransform, lines, circle } =
       CATEGORY_PATTERN_SHAPE_DEFINITIONS[CATEGORY_PATTERN_TYPE[category]];
@@ -862,7 +862,7 @@ Verified-PLAUSIBLE-but-dormant items and unverified single-source candidates. Le
 ### 24. Unverified single-source cleanup candidates (spot-check before acting)
 
 - ~~`Skills.tsx:72-106` URL-param closures~~ → **approved, see Part 0.7** (upgraded to a full `useSkillSearchUrl` hook, not just a write-helper).
-- ~~`SkillsBarChart.tsx:44-91` `CategoryPatternDef`~~ → **approved, see Part 0.5**.
+- ~~`SkillsBarChart.tsx:44-91` `CategoryPatternDefinition`~~ → **approved, see Part 0.5**.
 - ~~`SkillItemsList.tsx:75` default prop~~ → **approved, see Part 0.4**.
 - ~~`SkillsListView.tsx:51,74` hand-listed keys~~ → **approved, see Part 0.3**.
 - ~~`SkillFilterBar.tsx:53` param rename~~ → **approved, see Part 0.1**.
