@@ -14,6 +14,7 @@ import {
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
+import { SkillsEmptyState } from '../skillsEmptyState';
 
 import { createEmptyByCategory, skillElementId } from './SkillsListView.helpers';
 import { SkillItemsList } from './skillItemsList';
@@ -24,7 +25,14 @@ interface SubCategoryGroup {
 }
 
 export const SkillsListView = () => {
-  const { filteredSkills, highlightedSkills, searchTerm } = useSkillsViewContext();
+  const {
+    filteredSkills,
+    highlightedSkills,
+    searchTerm,
+    selectedCategories,
+    selectedSubCategories,
+    onClearFilters,
+  } = useSkillsViewContext();
 
   useEffect(() => {
     if (highlightedSkills.length === 0) return;
@@ -69,6 +77,15 @@ export const SkillsListView = () => {
     () => CATEGORY_ORDER.filter((cat) => byCategory[cat].length > 0),
     [byCategory]
   );
+
+  if (nonEmptyCategories.length === 0) {
+    return (
+      <SkillsEmptyState
+        hasActiveFilters={selectedCategories.length > 0 || selectedSubCategories.length > 0}
+        onClearFilters={onClearFilters}
+      />
+    );
+  }
 
   return (
     <Stack spacing={2}>

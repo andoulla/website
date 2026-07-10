@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -34,6 +35,7 @@ const renderListView = (overrides: Partial<SkillsViewContextValue> = {}) =>
         selectedCategories={[]}
         selectedSubCategories={[]}
         searchTerm=""
+        onClearFilters={jest.fn()}
         {...overrides}
       >
         <SkillsListView />
@@ -151,6 +153,31 @@ describe('SkillsListView', () => {
       expect(screen.getByText('React')).toBeVisible();
       expect(screen.getByText('Team Leadership')).toBeVisible();
       expect(screen.getByText('Mentoring')).toBeVisible();
+    });
+  });
+
+  describe('empty state', () => {
+    test('shows the empty message and a Clear filters button when a category/subcategory filter excludes every skill', async () => {
+      const user = userEvent.setup();
+      const onClearFilters = jest.fn();
+      const screen = renderListView({
+        selectedCategories: ['tooling'],
+        onClearFilters,
+      });
+
+      expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
+
+      await user.click(screen.getByRole('button', { name: 'Clear filters' }));
+
+      expect(onClearFilters).toHaveBeenCalledTimes(1);
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('hides the Clear filters button when the search term alone excludes every skill', () => {
+      const screen = renderListView({ searchTerm: 'nonexistent skill' });
+
+      expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
+      expect(screen.queryByRole('button', { name: 'Clear filters' })).not.toBeInTheDocument();
     });
   });
 

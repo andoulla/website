@@ -95,14 +95,6 @@ export const SkillsBarChart = ({
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
 
-  if (skills.length === 0) {
-    return (
-      <Typography color="text.secondary" sx={{ py: 4, textAlign: 'center' }}>
-        No skills match the selected filter.
-      </Typography>
-    );
-  }
-
   const chartHeight = Math.max(MIN_HEIGHT, skills.length * BAR_HEIGHT + CHART_PADDING);
 
   // Legend: one entry per category present, in fixed display order. markColour is the pattern's

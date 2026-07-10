@@ -53,11 +53,4 @@ describe('SkillsRadarChart', () => {
     expect(screen.getAllByText('Tooling')).toHaveLength(2);
     expect(screen.getAllByText('People & Stakeholders')).toHaveLength(2);
   });
-
-  test('shows empty state message when skills array is empty', async () => {
-    const screen = render(<SkillsRadarChart skills={[]} categories={['engineering']} />);
-
-    expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
 });

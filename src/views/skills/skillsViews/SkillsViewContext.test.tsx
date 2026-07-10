@@ -30,6 +30,7 @@ describe('SkillsViewContext', () => {
         selectedSubCategories={['development']}
         highlightedSkills={['React']}
         searchTerm="rea"
+        onClearFilters={jest.fn()}
       >
         <SkillsViewDisplay />
       </SkillsViewContextProvider>
@@ -49,6 +50,7 @@ describe('SkillsViewContext', () => {
         selectedCategories={[]}
         selectedSubCategories={[]}
         searchTerm=""
+        onClearFilters={jest.fn()}
       >
         <SkillsViewDisplay />
       </SkillsViewContextProvider>

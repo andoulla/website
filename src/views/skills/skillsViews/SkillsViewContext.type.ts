@@ -10,6 +10,7 @@ export interface SkillsViewContextValue {
   selectedSubCategories: SkillSubCategory[];
   highlightedSkills: string[];
   searchTerm: string;
+  onClearFilters: () => void;
 }
 
 export interface SkillsViewContextProviderProps extends Omit<

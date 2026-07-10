@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
 import { SkillSummary } from '@/testing';
@@ -26,6 +27,7 @@ const renderGraphView = (overrides: Partial<SkillsViewContextValue> = {}) =>
       selectedCategories={[]}
       selectedSubCategories={[]}
       searchTerm=""
+      onClearFilters={jest.fn()}
       {...overrides}
     >
       <SkillsGraphView />
@@ -33,11 +35,12 @@ const renderGraphView = (overrides: Partial<SkillsViewContextValue> = {}) =>
   );
 
 describe('SkillsGraphView', () => {
-  test('shows all skills in the accessible table when no filters are active', () => {
+  test('shows all skills in the accessible table when no filters are active', async () => {
     const screen = renderGraphView();
 
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByText('Team Leadership')).toBeVisible();
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('filtering to a category shows only matching skills', () => {
@@ -73,31 +76,28 @@ describe('SkillsGraphView', () => {
     expect(screen.getByText('React')).toBeVisible();
   });
 
-  test('shows the empty-filter message from SkillsBarChart, not the no-data Alert, when filters exclude every skill', () => {
+  test('shows the empty-filter message and a Clear filters button, not the no-data Alert, when filters exclude every skill', async () => {
+    const user = userEvent.setup();
+    const onClearFilters = jest.fn();
     const screen = renderGraphView({
       selectedCategories: ['leadership-delivery'],
       selectedSubCategories: ['development'],
+      onClearFilters,
     });
 
     expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
-  });
 
-  test('shows the no-data Alert when skills array is empty', () => {
-    const screen = renderGraphView({ skills: [] });
+    await user.click(screen.getByRole('button', { name: 'Clear filters' }));
 
-    expect(screen.getByRole('alert')).toBeVisible();
-  });
-
-  test('has no axe violations with data', async () => {
-    const screen = renderGraphView();
-
+    expect(onClearFilters).toHaveBeenCalledTimes(1);
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('has no axe violations with empty data', async () => {
+  test('shows the no-data Alert when skills array is empty', async () => {
     const screen = renderGraphView({ skills: [] });
 
+    expect(screen.getByRole('alert')).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

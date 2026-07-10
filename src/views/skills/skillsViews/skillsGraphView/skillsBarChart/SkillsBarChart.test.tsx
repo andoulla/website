@@ -17,13 +17,14 @@ const SKILLS = [
 ];
 
 describe('SkillsBarChart', () => {
-  test('renders the accessible table with a row per skill plus a header', () => {
+  test('renders the accessible table with a row per skill plus a header', async () => {
     const screen = render(<SkillsBarChart skills={SKILLS} />);
 
     // thead row + 2 data rows = 3
     expect(screen.getAllByRole('row')).toHaveLength(3);
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByText('Mentoring')).toBeVisible();
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('renders legend entries for categories present in skills', () => {
@@ -47,23 +48,5 @@ describe('SkillsBarChart', () => {
 
     expect(screen.queryByText('Quality & Performance')).not.toBeInTheDocument();
     expect(screen.queryByText('Tooling')).not.toBeInTheDocument();
-  });
-
-  test('shows empty state message when skills array is empty', () => {
-    const screen = render(<SkillsBarChart skills={[]} />);
-
-    expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
-  });
-
-  test('has no axe violations with skills', async () => {
-    const screen = render(<SkillsBarChart skills={SKILLS} />);
-
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations when empty', async () => {
-    const screen = render(<SkillsBarChart skills={[]} />);
-
-    expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
 import { SkillSummary } from '@/testing';
@@ -26,6 +27,7 @@ const renderRadarView = (overrides: Partial<SkillsViewContextValue> = {}) =>
       selectedCategories={[]}
       selectedSubCategories={[]}
       searchTerm=""
+      onClearFilters={jest.fn()}
       {...overrides}
     >
       <SkillsRadarView />
@@ -33,7 +35,7 @@ const renderRadarView = (overrides: Partial<SkillsViewContextValue> = {}) =>
   );
 
 describe('SkillsRadarView', () => {
-  test('renders category totals for the unfiltered skill set', () => {
+  test('renders category totals for the unfiltered skill set', async () => {
     const screen = renderRadarView();
 
     expect(screen.getByRole('cell', { name: 'Engineering' }).closest('tr')?.textContent).toBe(
@@ -42,6 +44,7 @@ describe('SkillsRadarView', () => {
     expect(
       screen.getByRole('cell', { name: 'Leadership & Delivery' }).closest('tr')?.textContent
     ).toBe('Leadership & Delivery21');
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('keeps a filtered-out category present at 0, rather than removing its axis', () => {
@@ -61,15 +64,16 @@ describe('SkillsRadarView', () => {
     expect(screen.getByText('No skill data available.')).toBeVisible();
   });
 
-  test('shows "no skills match" when a filter excludes every skill', () => {
-    const screen = renderRadarView({ selectedSubCategories: ['testing'] });
+  test('shows "no skills match" with a Clear filters button when a filter excludes every skill', async () => {
+    const user = userEvent.setup();
+    const onClearFilters = jest.fn();
+    const screen = renderRadarView({ selectedSubCategories: ['testing'], onClearFilters });
 
     expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
-  });
 
-  test('has no axe violations', async () => {
-    const screen = renderRadarView();
+    await user.click(screen.getByRole('button', { name: 'Clear filters' }));
 
+    expect(onClearFilters).toHaveBeenCalledTimes(1);
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

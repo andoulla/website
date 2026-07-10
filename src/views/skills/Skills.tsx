@@ -90,6 +90,11 @@ const SkillsContent = () => {
     [skills, selectedCategories, selectedSubCategories]
   );
 
+  const clearFilters = useCallback(() => {
+    setSelectedCategories([]);
+    setSelectedSubCategories([]);
+  }, [setSelectedCategories, setSelectedSubCategories]);
+
   const hiddenMatchCount = useMemo(() => {
     if (searchTerm.trim() === '') return 0;
     const totalMatches = skills.filter((skill) => skillMatchesSearch(skill, searchTerm)).length;
@@ -194,6 +199,7 @@ const SkillsContent = () => {
         selectedSubCategories={selectedSubCategories}
         highlightedSkills={highlightedSkills}
         searchTerm={searchTerm}
+        onClearFilters={clearFilters}
       >
         {renderSkillsView(viewMode, showPatterns)}
       </SkillsViewContextProvider>

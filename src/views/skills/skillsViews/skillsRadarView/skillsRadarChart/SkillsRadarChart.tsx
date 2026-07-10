@@ -10,7 +10,6 @@ import {
 import type { DotItemDotProps } from 'recharts';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
@@ -35,14 +34,6 @@ interface SkillsRadarChartProps {
 export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadarChartProps) => {
   const theme = useTheme();
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
-
-  if (skills.length === 0) {
-    return (
-      <Typography color="text.secondary" sx={{ py: 4, textAlign: 'center' }}>
-        No skills match the selected filter.
-      </Typography>
-    );
-  }
 
   const radarData = aggregateSkillsByCategory(categories, skills, searchTerm);
   // Floor of 1 avoids a zero-width domain when every category is 0.

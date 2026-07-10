@@ -5,6 +5,7 @@ import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 import { sortMatchesFirst } from '@/utils/sortMatchesFirst';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
+import { SkillsEmptyState } from '../skillsEmptyState';
 
 import { SkillsBarChart } from './skillsBarChart';
 
@@ -13,7 +14,14 @@ export interface SkillsGraphViewProps {
 }
 
 export const SkillsGraphView = ({ showPatterns = true }: SkillsGraphViewProps) => {
-  const { skills, filteredSkills, searchTerm } = useSkillsViewContext();
+  const {
+    skills,
+    filteredSkills,
+    searchTerm,
+    selectedCategories,
+    selectedSubCategories,
+    onClearFilters,
+  } = useSkillsViewContext();
 
   const sortedSkills = useMemo(() => {
     // Copy first — filteredSkills is shared via context, so sorting in place would mutate it.
@@ -24,6 +32,15 @@ export const SkillsGraphView = ({ showPatterns = true }: SkillsGraphViewProps) =
 
   if (skills.length === 0) {
     return <Alert severity="info">No skill data available.</Alert>;
+  }
+
+  if (sortedSkills.length === 0) {
+    return (
+      <SkillsEmptyState
+        hasActiveFilters={selectedCategories.length > 0 || selectedSubCategories.length > 0}
+        onClearFilters={onClearFilters}
+      />
+    );
   }
 
   return (
