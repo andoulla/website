@@ -7,3 +7,8 @@ export const isSkillCategory = (value: string): value is SkillCategory =>
 
 export const isSkillSubCategory = (value: string): value is SkillSubCategory =>
   Object.keys(SUBCATEGORY_LABELS).includes(value);
+
+export const derivePresentCategories = <T extends { category: SkillCategory }>(
+  items: T[]
+): SkillCategory[] =>
+  CATEGORY_ORDER.filter((category) => items.some((item) => item.category === category));

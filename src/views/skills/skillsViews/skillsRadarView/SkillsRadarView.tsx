@@ -1,6 +1,6 @@
 import Alert from '@mui/material/Alert';
 
-import { CATEGORY_ORDER } from '@/utils/skillCategory';
+import { derivePresentCategories } from '@/utils/skillCategory';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
 import { SkillsEmptyState } from '../skillsEmptyState';
@@ -31,9 +31,7 @@ export const SkillsRadarView = () => {
   }
 
   // Unfiltered skills keep the axis set stable across filters.
-  const categories = CATEGORY_ORDER.filter((category) =>
-    skills.some((skill) => skill.category === category)
-  );
+  const categories = derivePresentCategories(skills);
 
   return (
     <SkillsRadarChart skills={filteredSkills} categories={categories} searchTerm={searchTerm} />

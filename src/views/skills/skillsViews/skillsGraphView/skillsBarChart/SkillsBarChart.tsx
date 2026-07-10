@@ -11,7 +11,7 @@ import { visuallyHidden } from '@mui/utils';
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
 import type { SkillCategory } from '@/data/skills.types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
-import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/utils/skillCategory';
+import { CATEGORY_LABELS, derivePresentCategories } from '@/utils/skillCategory';
 import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';
 
 import {
@@ -99,9 +99,7 @@ export const SkillsBarChart = ({
 
   // Legend: one entry per category present, in fixed display order. markColour is the pattern's
   // ink colour — high-contrast against the category colour so the texture reads at swatch size.
-  const legendEntries = CATEGORY_ORDER.filter((cat) =>
-    skills.some((skill) => skill.category === cat)
-  ).map((cat) => {
+  const legendEntries = derivePresentCategories(skills).map((cat) => {
     const colour = resolveSkillColourMain(CATEGORY_COLOUR_MAP[cat], theme);
     return {
       cat,

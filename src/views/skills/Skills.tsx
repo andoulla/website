@@ -15,7 +15,7 @@ import { useCareerDataContext } from '@/context/careerData';
 import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
-import { CATEGORY_ORDER, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory';
+import { derivePresentCategories, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 
 import {
@@ -118,10 +118,7 @@ const SkillsContent = () => {
 
   const [showPatterns, setShowPatterns] = useState(false);
 
-  const categories = useMemo(
-    () => CATEGORY_ORDER.filter((cat) => skills.some((skill) => skill.category === cat)),
-    [skills]
-  );
+  const categories = useMemo(() => derivePresentCategories(skills), [skills]);
 
   const subCategoriesByCategory = useMemo(
     () =>
