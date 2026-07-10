@@ -192,6 +192,7 @@ const SkillsContent = () => {
       </Stack>
       <SkillsViewContextProvider
         skills={skills}
+        filteredSkills={filteredSkills}
         selectedCategories={selectedCategories}
         selectedSubCategories={selectedSubCategories}
         highlightedSkills={highlightedSkills}

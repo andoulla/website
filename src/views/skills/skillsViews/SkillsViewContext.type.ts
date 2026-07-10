@@ -15,7 +15,7 @@ export interface SkillsViewContextValue {
 
 export interface SkillsViewContextProviderProps extends Omit<
   SkillsViewContextValue,
-  'filteredSkills' | 'highlightedSkills'
+  'highlightedSkills'
 > {
   highlightedSkills?: string[];
   children: ReactNode;

@@ -1,7 +1,5 @@
 import { createContext, useContext, useMemo } from 'react';
 
-import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
-
 import type {
   SkillsViewContextProviderProps,
   SkillsViewContextValue,
@@ -20,17 +18,13 @@ export const useSkillsViewContext = (): SkillsViewContextValue => {
 export const SkillsViewContextProvider = ({
   children,
   skills,
+  filteredSkills,
   selectedCategories,
   selectedSubCategories,
   highlightedSkills = [],
   searchTerm,
   onClearFilters,
 }: SkillsViewContextProviderProps) => {
-  const filteredSkills = useMemo(
-    () => filterSkillsByCategory(skills, selectedCategories, selectedSubCategories),
-    [skills, selectedCategories, selectedSubCategories]
-  );
-
   const value = useMemo<SkillsViewContextValue>(
     () => ({
       skills,
