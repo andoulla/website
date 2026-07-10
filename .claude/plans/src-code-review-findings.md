@@ -33,7 +33,21 @@ Branch: `part-0-code-review-fixes`. One commit per item.
 
 Part 0 complete.
 
-(Finding #8's empty-state + clear-filters button is separate — Part 1, not in this batch unless asked.)
+---
+
+## Progress (Part 1 implementation)
+
+Branch: `part-1-correctness-fixes` (off `part-0-code-review-fixes`). One commit per item.
+
+- [ ] 1 — `ErrorBoundary` wired into `App.tsx`
+- [ ] 2 — Orphaned subcategory filter fix
+- [ ] 3 — `loadArticles` cache fix
+- [x] 4 — Superseded by 0.7, already done in Part 0
+- [ ] 5 — `hasSearchTerm`/`skillMatchesSearch` threshold fix
+- [ ] 6+7 — `CopyLinkButton` status-token fix (combined per plan's own note)
+- [ ] 8 — `SkillsListView` empty state + clear-filters button
+- [ ] 9 — `formatDate` calendar validation
+- [ ] 10 — JSON force-cast validation guards
 
 ---
 
