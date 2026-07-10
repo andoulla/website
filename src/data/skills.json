@@ -252,6 +252,15 @@
     "recommendationIds": []
   },
   {
+    "name": "Software Development",
+    "category": "engineering",
+    "subCategory": "frontend-development",
+    "type": "skill",
+    "synonyms": ["Programming", "Coding", "Software Engineering"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
+    "recommendationIds": []
+  },
+  {
     "name": "Accessibility",
     "category": "quality-performance",
     "subCategory": "accessibility",
