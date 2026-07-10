@@ -22,6 +22,7 @@ import { Skills } from './views/skills';
 // TODO: looking into query libs
 // TODO: looking into caching
 // TODo: inline Careerdatalayout and give a funnier message
+// TODO: add counter on recomendations
 const CareerDataLayout = () => (
   <ErrorBoundary
     fallback={() => (

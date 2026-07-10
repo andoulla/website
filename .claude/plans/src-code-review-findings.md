@@ -45,8 +45,8 @@ Branch: `part-1-correctness-fixes` (off `part-0-code-review-fixes`). One commit 
 - [x] 4 — Superseded by 0.7, already done in Part 0
 - [x] 5 — `hasSearchTerm`/`skillMatchesSearch` threshold fix
 - [x] 6+7 — `CopyLinkButton` status-token fix (combined per plan's own note)
-- [ ] 8 — `SkillsListView` empty state + clear-filters button
-- [ ] 9 — `formatDate` calendar validation
+- [x] 8 — `SkillsListView` empty state + clear-filters button
+- [x] 9 — `formatDate` calendar validation
 - [ ] 10 — JSON force-cast validation guards
 
 ---
