@@ -41,20 +41,30 @@ export const SkillFilterBar = ({
 
   const toggleCategory = (category: SkillCategory) => {
     const isSelected = selectedCategories.includes(category);
-    onCategoriesChange(
-      isSelected
-        ? selectedCategories.filter((selectedCategory) => selectedCategory !== category)
-        : [...selectedCategories, category]
-    );
+    const nextCategories = isSelected
+      ? selectedCategories.filter((selectedCategory) => selectedCategory !== category)
+      : [...selectedCategories, category];
+    onCategoriesChange(nextCategories);
 
-    if (isSelected) {
-      const subCategoriesForCategory = subCategoriesByCategory[category] ?? [];
-      const nextSubCategories = selectedSubCategories.filter(
-        (subCategory) => !subCategoriesForCategory.includes(subCategory)
-      );
-      if (nextSubCategories.length !== selectedSubCategories.length) {
-        onSubCategoriesChange(nextSubCategories);
-      }
+    // Subcategories belonging to the category just deselected no longer make sense to keep.
+    const subCategoriesForToggledCategory = subCategoriesByCategory[category] ?? [];
+    // With one or more categories now selected, filterSkillsByCategory ANDs category+subCategory,
+    // so a subcategory belonging to none of them would silently zero out the results.
+    const validSubCategories =
+      nextCategories.length > 0
+        ? new Set(
+            nextCategories.flatMap((nextCategory) => subCategoriesByCategory[nextCategory] ?? [])
+          )
+        : null;
+
+    const nextSubCategories = selectedSubCategories.filter((subCategory) => {
+      if (isSelected && subCategoriesForToggledCategory.includes(subCategory)) return false;
+      if (validSubCategories !== null && !validSubCategories.has(subCategory)) return false;
+      return true;
+    });
+
+    if (nextSubCategories.length !== selectedSubCategories.length) {
+      onSubCategoriesChange(nextSubCategories);
     }
   };
 

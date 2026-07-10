@@ -40,7 +40,7 @@ Part 0 complete.
 Branch: `part-1-correctness-fixes` (off `part-0-code-review-fixes`). One commit per item.
 
 - [x] 1 — `ErrorBoundary` wired into `App.tsx` (+ #11 logging)
-- [ ] 2 — Orphaned subcategory filter fix
+- [x] 2 — Orphaned subcategory filter fix
 - [ ] 3 — `loadArticles` cache fix
 - [x] 4 — Superseded by 0.7, already done in Part 0
 - [ ] 5 — `hasSearchTerm`/`skillMatchesSearch` threshold fix

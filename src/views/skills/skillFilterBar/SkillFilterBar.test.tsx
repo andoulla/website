@@ -123,6 +123,40 @@ describe('SkillFilterBar', () => {
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
       expect(onSubCategoriesChange).toHaveBeenCalledWith([]);
     });
+
+    test('prunes a selected subcategory that belongs to a different category when a new category is selected', async () => {
+      const user = userEvent.setup();
+      const onSubCategoriesChange = jest.fn();
+      const screen = renderFilterBar({
+        selectedSubCategories: ['testing'],
+        onSubCategoriesChange,
+      });
+
+      await user.click(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+        })
+      );
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
+      expect(onSubCategoriesChange).toHaveBeenCalledWith([]);
+    });
+
+    test('keeps a selected subcategory when the category it belongs to is selected', async () => {
+      const user = userEvent.setup();
+      const onSubCategoriesChange = jest.fn();
+      const screen = renderFilterBar({
+        selectedSubCategories: ['testing'],
+        onSubCategoriesChange,
+      });
+
+      await user.click(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+        })
+      );
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Quality & Performance' }));
+      expect(onSubCategoriesChange).not.toHaveBeenCalled();
+    });
   });
 
   describe('subcategory toggling and grouping', () => {
