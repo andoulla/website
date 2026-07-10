@@ -23,7 +23,10 @@ const fetchAndParseArticles = async (): Promise<Article[]> => {
 // Cached at module scope so revisiting /articles in the same session doesn't re-hit
 // rss2json's rate-limited free tier.
 export const loadArticles = (): Promise<Article[]> => {
-  cachedArticles ??= fetchAndParseArticles();
+  cachedArticles ??= fetchAndParseArticles().catch((error: unknown) => {
+    cachedArticles = null;
+    throw error;
+  });
   return cachedArticles;
 };
 

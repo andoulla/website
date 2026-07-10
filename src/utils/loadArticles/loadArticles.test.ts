@@ -68,4 +68,17 @@ describe('loadArticles', () => {
 
     expect(global.fetch).toHaveBeenCalledTimes(1);
   });
+
+  test('retries on the next call instead of replaying a cached rejection', async () => {
+    const fetchSpy = jest.spyOn(global, 'fetch');
+
+    fetchSpy.mockResolvedValueOnce({ ok: false, status: 503 } as Response);
+
+    await expect(loadArticles()).rejects.toThrow('Failed to load articles: 503');
+
+    fetchSpy.mockResolvedValueOnce(okResponse({ status: 'ok', items: [] }));
+
+    await expect(loadArticles()).resolves.toEqual([]);
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+  });
 });
