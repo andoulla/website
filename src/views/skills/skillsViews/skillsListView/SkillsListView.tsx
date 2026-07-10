@@ -14,7 +14,7 @@ import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
 
-import { skillElementId } from './SkillsListView.helpers';
+import { createEmptyByCategory, skillElementId } from './SkillsListView.helpers';
 import { SkillItemsList } from './skillItemsList';
 
 interface SubCategoryGroup {
@@ -42,42 +42,24 @@ export const SkillsListView = () => {
 
   const byCategory = useMemo(
     () =>
-      CATEGORY_ORDER.reduce<Record<SkillCategory, SkillSummary[]>>(
-        (acc, cat) => {
-          acc[cat] = searchedSkills.filter((skill) => skill.category === cat);
-          return acc;
-        },
-        {
-          engineering: [],
-          'quality-performance': [],
-          tooling: [],
-          'leadership-delivery': [],
-          'people-stakeholders': [],
-        }
-      ),
+      CATEGORY_ORDER.reduce<Record<SkillCategory, SkillSummary[]>>((acc, cat) => {
+        acc[cat] = searchedSkills.filter((skill) => skill.category === cat);
+        return acc;
+      }, createEmptyByCategory<SkillSummary>()),
     [searchedSkills]
   );
 
   const subGroupsByCategory = useMemo(
     () =>
-      CATEGORY_ORDER.reduce<Record<SkillCategory, SubCategoryGroup[]>>(
-        (acc, cat) => {
-          acc[cat] = SUBCATEGORIES_BY_CATEGORY[cat]
-            .map((subCategory) => ({
-              subCategory,
-              skills: byCategory[cat].filter((skill) => skill.subCategory === subCategory),
-            }))
-            .filter((group) => group.skills.length > 0);
-          return acc;
-        },
-        {
-          engineering: [],
-          'quality-performance': [],
-          tooling: [],
-          'leadership-delivery': [],
-          'people-stakeholders': [],
-        }
-      ),
+      CATEGORY_ORDER.reduce<Record<SkillCategory, SubCategoryGroup[]>>((acc, cat) => {
+        acc[cat] = SUBCATEGORIES_BY_CATEGORY[cat]
+          .map((subCategory) => ({
+            subCategory,
+            skills: byCategory[cat].filter((skill) => skill.subCategory === subCategory),
+          }))
+          .filter((group) => group.skills.length > 0);
+        return acc;
+      }, createEmptyByCategory<SubCategoryGroup>()),
     [byCategory]
   );
 

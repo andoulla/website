@@ -26,7 +26,7 @@ Branch: `part-0-code-review-fixes`. One commit per item.
 
 - [x] 0.1 — Rename `sub` → `subCategory`
 - [x] 0.2 — Move `RESPONSIBILITIES_LABEL_BY_TYPE` to constants
-- [ ] 0.3 — Derive category accumulators from `CATEGORY_ORDER`
+- [x] 0.3 — Derive category accumulators from `CATEGORY_ORDER`
 - [ ] 0.4 — Default `highlightedSkills` prop
 - [ ] 0.5 — Data-driven `CategoryPatternDef` + new constants file
 - [ ] 0.6+0.7 — `useSkillSearchUrl` hook (single-source searchTerm + generalised URL params)
