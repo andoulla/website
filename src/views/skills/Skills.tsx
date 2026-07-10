@@ -55,7 +55,7 @@ const SkillsContent = () => {
   const skills = useMemo(() => calculateSkillYears(careerHistory), [careerHistory]);
 
   const [highlightedSkills] = useSkillSearchUrl(SKILL_PARAM, parseSkills, () => null);
-  // setter unused here — skill param is only ever written by TimelineEventCard's navigate()
+ 
 
   const [selectedCategories, setSelectedCategories] = useSkillSearchUrl(
     CATEGORY_PARAM,
@@ -107,7 +107,7 @@ const SkillsContent = () => {
   const [viewMode, setViewMode] = useSkillSearchUrl(
     VIEW_PARAM,
     (raw) => parseViewMode(raw) ?? 'radar',
-    // 'radar' is the default now, so it's the value that's omitted from the URL.
+    // 'radar' is the default, so the value is omitted from the URL.
     (next) => (next === 'radar' ? null : next)
   );
 
