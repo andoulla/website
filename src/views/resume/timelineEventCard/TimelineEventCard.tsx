@@ -17,11 +17,11 @@ import type { TimelineEventWithRecommendations } from '@/types';
 import { CATEGORY_LABELS } from '@/utils/skillCategory';
 import { skillColour, skillShadeIndex } from '@/utils/skillColour';
 
+import { RESPONSIBILITIES_LABEL_BY_TYPE } from './TimelineEventCard.constants';
 import {
   getCardMotionSx,
   groupSkillsByCategory,
   recommendationElementId,
-  RESPONSIBILITIES_LABEL_BY_TYPE,
 } from './TimelineEventCard.helpers';
 import { RecommendationText } from './recommendationText';
 import { useInView } from './useInView';
