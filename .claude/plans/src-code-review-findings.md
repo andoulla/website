@@ -24,7 +24,7 @@
 
 Branch: `part-0-code-review-fixes`. One commit per item.
 
-- [ ] 0.1 — Rename `sub` → `subCategory`
+- [x] 0.1 — Rename `sub` → `subCategory`
 - [ ] 0.2 — Move `RESPONSIBILITIES_LABEL_BY_TYPE` to constants
 - [ ] 0.3 — Derive category accumulators from `CATEGORY_ORDER`
 - [ ] 0.4 — Default `highlightedSkills` prop
