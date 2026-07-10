@@ -832,8 +832,8 @@ Ranked below Part 1 only because correctness outranks cleanup in the review's ti
 
 - Not implementing. Tiny dataset (tens of skills) → filter/map cost is microseconds, not a real bottleneck.
 - Only argument was consistency with `SkillsListView`'s memoization, not measured perf.
-- `SkillsListView`'s existing memoization is equally unnecessary — not removing it, just not adding more elsewhere.
-- Safe to remove anytime — categories only change via a new deployment, no runtime drift risk either way.
+- `SkillsListView`'s own memoization was equally unnecessary — removed (categories only change via
+  a new deployment, no runtime drift risk).
 
 ### 19. `RoleIcon`/`RoleIcons.constants.ts` — three uncoordinated mechanisms decide one icon
 
