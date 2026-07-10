@@ -47,7 +47,9 @@ Branch: `part-1-correctness-fixes` (off `part-0-code-review-fixes`). One commit 
 - [x] 6+7 — `CopyLinkButton` status-token fix (combined per plan's own note)
 - [x] 8 — `SkillsListView` empty state + clear-filters button
 - [x] 9 — `formatDate` calendar validation
-- [ ] 10 — JSON force-cast validation guards
+- [x] 10 — JSON force-cast validation guards
+
+Part 1 complete.
 
 ---
 
