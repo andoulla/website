@@ -14,13 +14,14 @@ describe('CategoryColourDot', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('renders a square when shape is "square"', () => {
+  test('renders a square when shape is "square"', async () => {
     const screen = render(<CategoryColourDot shape="square" colour="rgb(1, 2, 3)" />);
 
     expect(screen.container.firstChild).toHaveStyle({ borderRadius: '2px' });
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('uses the background prop over colour when both are given', () => {
+  test('uses the background prop over colour when both are given', async () => {
     const screen = render(
       <CategoryColourDot
         colour="rgb(1, 2, 3)"
@@ -31,5 +32,6 @@ describe('CategoryColourDot', () => {
     expect(screen.container.firstChild).toHaveStyle({
       background: 'repeating-linear-gradient(45deg, red, blue)',
     });
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 });
