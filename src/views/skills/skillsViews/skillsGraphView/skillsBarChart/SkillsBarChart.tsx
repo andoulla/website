@@ -13,6 +13,7 @@ import type { SkillCategory } from '@/data/skills.types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { CATEGORY_LABELS, derivePresentCategories } from '@/utils/skillCategory';
 import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';
+import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
 import {
   CATEGORY_PATTERN_SHAPE_DEFINITIONS,
@@ -206,16 +207,12 @@ export const SkillsBarChart = ({
       >
         {legendEntries.map(({ cat, colour, markColour, label }) => (
           <Box key={cat} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box
-              sx={{
-                width: 10,
-                height: 10,
-                borderRadius: '2px',
-                background: showPatterns
-                  ? getCategoryPatternBackground(cat, colour, markColour)
-                  : colour,
-                flexShrink: 0,
-              }}
+            <CategoryColourDot
+              shape="square"
+              colour={colour}
+              background={
+                showPatterns ? getCategoryPatternBackground(cat, colour, markColour) : undefined
+              }
             />
             <Typography variant="caption" color="text.secondary">
               {label}
