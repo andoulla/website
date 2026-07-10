@@ -3,22 +3,22 @@ import { axe } from 'jest-axe';
 
 import App from './App';
 import { TimelineEvent } from './testing';
+import { loadCareerHistory } from './utils/loadCareerHistory';
 
-// Stub the deferred loader so the home route renders its data instantly in tests.
-// (ts-jest hoists jest.mock above the imports above.)
-jest.mock('./utils/loadCareerHistory', () => ({
-  loadCareerHistory: () =>
-    Promise.resolve([
+jest.mock('./utils/loadCareerHistory');
+
+const mockLoadCareerHistory = jest.mocked(loadCareerHistory);
+
+describe('App', () => {
+  test('renders the nav bar and the resume on the home route', async () => {
+    mockLoadCareerHistory.mockResolvedValue([
       new TimelineEvent()
         .id('job-1')
         .companyName('Nimbus Analytics')
         .startDate('2022-04-01')
         .mock(),
-    ]),
-}));
+    ]);
 
-describe('App', () => {
-  test('renders the nav bar and the resume on the home route', async () => {
     // TODO: remove the usage of !
     let screen!: ReturnType<typeof render>;
 
@@ -46,5 +46,23 @@ describe('App', () => {
     expect(screen.getByText('Nimbus Analytics')).toBeVisible();
 
     expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('renders a fallback with a refresh button when career data fails to load', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    mockLoadCareerHistory.mockRejectedValue(new Error('failed to load'));
+
+    let screen!: ReturnType<typeof render>;
+
+    await act(async () => {
+      screen = render(<App />);
+      await Promise.resolve();
+    });
+
+    expect(screen.getByText('Something went wrong loading this page.')).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Refresh' })).toBeVisible();
+
+    consoleErrorSpy.mockRestore();
   });
 });

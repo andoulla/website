@@ -1,7 +1,14 @@
+import ErrorIcon from '@mui/icons-material/Error';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 
+import { ErrorBoundary } from './components/errorBoundary';
 import { NavBar } from './components/navBar';
+import { PageContainer } from './components/pageContainer';
 import { ThemeContextProvider } from './context/theme';
 import { CareerDataContextProvider } from './context/careerData';
 import { Articles } from './views/articles';
@@ -13,9 +20,23 @@ import { Skills } from './views/skills';
 // TODO: ATS optimisation
 // TODO: add hidden tech stack for elsevier and capco
 const CareerDataLayout = () => (
-  <CareerDataContextProvider>
-    <Outlet />
-  </CareerDataContextProvider>
+  <ErrorBoundary
+    fallback={() => (
+      <PageContainer>
+        <Stack sx={{ py: 8, alignItems: 'center', gap: 1.5 }}>
+          <ErrorIcon color="error" fontSize="large" />
+          <Typography color="text.secondary">Something went wrong loading this page.</Typography>
+          <Button startIcon={<RefreshIcon />} onClick={() => window.location.reload()}>
+            Refresh
+          </Button>
+        </Stack>
+      </PageContainer>
+    )}
+  >
+    <CareerDataContextProvider>
+      <Outlet />
+    </CareerDataContextProvider>
+  </ErrorBoundary>
 );
 
 const App = () => {

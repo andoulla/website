@@ -19,7 +19,9 @@ describe('ErrorBoundary', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('renders the fallback with the caught error after a child throws', async () => {
+  test('renders the fallback and logs the caught error after a child throws', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
     const screen = render(
       <ErrorBoundary fallback={(error) => <p>Error: {error.message}</p>}>
         <ThrowingChild />
@@ -27,6 +29,13 @@ describe('ErrorBoundary', () => {
     );
 
     expect(screen.getByText('Error: boom')).toBeVisible();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'ErrorBoundary caught an error:',
+      expect.objectContaining({ message: 'boom' }),
+      expect.any(String)
+    );
     expect(await axe(screen.container)).toHaveNoViolations();
+
+    consoleErrorSpy.mockRestore();
   });
 });
