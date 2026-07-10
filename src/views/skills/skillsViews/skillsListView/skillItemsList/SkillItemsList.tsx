@@ -9,6 +9,7 @@ import { alpha, useTheme } from '@mui/material/styles';
 
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
+import { formatYears } from '@/utils/formatYears';
 
 import { skillElementId } from '../SkillsListView.helpers';
 
@@ -57,7 +58,7 @@ const SkillListItem = ({ skill, isHighlighted }: SkillListItemProps) => {
           />
           <ListItemText primary={skill.skill} />
           <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-            {`est. ${skill.years} year${skill.years === 1 ? '' : 's'}`}
+            {`est. ${formatYears(skill.years)}`}
           </Typography>
         </ListItemButton>
       </Tooltip>
