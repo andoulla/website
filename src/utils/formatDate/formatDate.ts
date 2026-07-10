@@ -27,5 +27,15 @@ export const formatDate = (isoDate: string | null | undefined): string => {
     return '';
   }
 
+  const date = new Date(`${isoDate}T00:00:00Z`);
+  const isValidCalendarDate =
+    date.getUTCFullYear() === Number(year) &&
+    date.getUTCMonth() === Number(month) - 1 &&
+    date.getUTCDate() === Number(day);
+
+  if (!isValidCalendarDate) {
+    return '';
+  }
+
   return `${Number(day)} ${monthName} ${year}`;
 };
