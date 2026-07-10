@@ -75,7 +75,7 @@ Until that's done, the upload step no-ops safely (`fail_ci_if_error: false`) rat
 - Click "View this role's skills on the graph" to jump to the Skills page with all of that role's skills highlighted
 - Click a recommendation's LinkedIn icon to open the original recommendation
 - Deep-link into a card via `?skill=<name>` or `?recommendation=<id>` — it auto-scrolls into view and gets a highlighted outline
-- Education entries show an institution logo (or a School icon) and a "Description" label instead of "Responsibilities"
+- Education entries show an institution logo (or a School icon)
 
 **Skills**
 
