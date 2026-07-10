@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import { Section } from '@/components/section';
 import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
+import { hasSearchTerm } from '@/utils/hasSearchTerm';
 import {
   CATEGORY_LABELS,
   CATEGORY_ORDER,
@@ -31,10 +32,11 @@ export const SkillsListView = () => {
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [highlightedSkills]);
 
-  // A non-empty search term hides everything but the matches, rather than just accenting them.
+  // A search term at or above the minimum match length hides everything but the matches, rather
+  // than just accenting them.
   const searchedSkills = useMemo(
     () =>
-      searchTerm === undefined || searchTerm.trim() === ''
+      !hasSearchTerm(searchTerm)
         ? filteredSkills
         : filteredSkills.filter((skill) => skillMatchesSearch(skill, searchTerm)),
     [filteredSkills, searchTerm]

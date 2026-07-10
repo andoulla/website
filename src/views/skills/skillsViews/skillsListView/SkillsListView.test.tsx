@@ -144,6 +144,14 @@ describe('SkillsListView', () => {
       expect(screen.queryByText('Leadership & Delivery')).not.toBeInTheDocument();
       expect(screen.queryByText('People & Stakeholders')).not.toBeInTheDocument();
     });
+
+    test('shows every skill for a single-character term, below the minimum match length', () => {
+      const screen = renderListView({ searchTerm: 'r' });
+
+      expect(screen.getByText('React')).toBeVisible();
+      expect(screen.getByText('Team Leadership')).toBeVisible();
+      expect(screen.getByText('Mentoring')).toBeVisible();
+    });
   });
 
   describe('highlight and scroll', () => {

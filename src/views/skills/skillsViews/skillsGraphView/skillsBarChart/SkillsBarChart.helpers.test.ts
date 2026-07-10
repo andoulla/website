@@ -37,10 +37,10 @@ describe('isBarMatch', () => {
     expect(result).toBe(false);
   });
 
-  test('returns false when the search term is below the minimum match length', () => {
+  test('returns true (not yet an active search) when the term is below the minimum match length', () => {
     const result = isBarMatch(new SkillSummary().skill('React').mock(), 'r');
 
-    expect(result).toBe(false);
+    expect(result).toBe(true);
   });
 });
 

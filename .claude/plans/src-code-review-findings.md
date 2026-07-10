@@ -43,7 +43,7 @@ Branch: `part-1-correctness-fixes` (off `part-0-code-review-fixes`). One commit 
 - [x] 2 — Orphaned subcategory filter fix
 - [x] 3 — `loadArticles` cache fix
 - [x] 4 — Superseded by 0.7, already done in Part 0
-- [ ] 5 — `hasSearchTerm`/`skillMatchesSearch` threshold fix
+- [x] 5 — `hasSearchTerm`/`skillMatchesSearch` threshold fix
 - [ ] 6+7 — `CopyLinkButton` status-token fix (combined per plan's own note)
 - [ ] 8 — `SkillsListView` empty state + clear-filters button
 - [ ] 9 — `formatDate` calendar validation

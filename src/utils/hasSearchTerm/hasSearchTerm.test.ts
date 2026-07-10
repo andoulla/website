@@ -16,4 +16,12 @@ describe('hasSearchTerm', () => {
   test('returns true when a real term is provided', () => {
     expect(hasSearchTerm('react')).toBe(true);
   });
+
+  test('returns false for a single-character term, below the minimum match length', () => {
+    expect(hasSearchTerm('r')).toBe(false);
+  });
+
+  test('returns true for a two-character term', () => {
+    expect(hasSearchTerm('js')).toBe(true);
+  });
 });

@@ -21,6 +21,7 @@ import { Skills } from './views/skills';
 // TODO: add hidden tech stack for elsevier and capco
 // TODO: looking into query libs
 // TODO: looking into caching
+// TODo: inline Careerdatalayout and give a funnier message
 const CareerDataLayout = () => (
   <ErrorBoundary
     fallback={() => (
