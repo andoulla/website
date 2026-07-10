@@ -2,38 +2,50 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ErrorIcon from '@mui/icons-material/Error';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 
 const RESET_DELAY_MS = 1500;
 
+type CopyStatus = 'idle' | 'copied' | 'failed';
+
+// A fresh object literal is never reference-equal, so a repeated status still restarts the timer.
+interface CopyState {
+  status: CopyStatus;
+}
+
+const IDLE_STATE: CopyState = { status: 'idle' };
+
+const LABEL_BY_STATUS: Record<CopyStatus, string> = {
+  idle: 'Copy filtered link',
+  copied: 'Link copied',
+  failed: "Couldn't copy link",
+};
+
 export const CopyLinkButton = () => {
   const location = useLocation();
-  const [copied, setCopied] = useState(false);
+  const [state, setState] = useState<CopyState>(IDLE_STATE);
 
   useEffect(() => {
-    if (!copied) return;
-    const timer = setTimeout(() => setCopied(false), RESET_DELAY_MS);
+    if (state.status === 'idle') return;
+    const timer = setTimeout(() => setState(IDLE_STATE), RESET_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [copied]);
+  }, [state]);
 
   const handleClick = () => {
     void navigator.clipboard
       .writeText(`${window.location.origin}${location.pathname}${location.search}`)
-      .then(() => setCopied(true))
-      .catch(() => {
-        // clipboard write can reject (permission denied, insecure context) — fail silently
-      });
+      .then(() => setState({ status: 'copied' }))
+      .catch(() => setState({ status: 'failed' }));
   };
 
   return (
-    <Tooltip title={copied ? 'Copied!' : 'Copy filtered link'}>
-      <IconButton
-        aria-label={copied ? 'Link copied' : 'Copy filtered link'}
-        onClick={handleClick}
-        size="small"
-      >
-        {copied ? <CheckIcon fontSize="small" /> : <ContentCopyIcon fontSize="small" />}
+    <Tooltip title={LABEL_BY_STATUS[state.status]}>
+      <IconButton aria-label={LABEL_BY_STATUS[state.status]} onClick={handleClick} size="small">
+        {state.status === 'idle' && <ContentCopyIcon fontSize="small" />}
+        {state.status === 'copied' && <CheckIcon fontSize="small" />}
+        {state.status === 'failed' && <ErrorIcon fontSize="small" color="error" />}
       </IconButton>
     </Tooltip>
   );

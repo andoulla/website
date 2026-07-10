@@ -44,7 +44,7 @@ Branch: `part-1-correctness-fixes` (off `part-0-code-review-fixes`). One commit 
 - [x] 3 — `loadArticles` cache fix
 - [x] 4 — Superseded by 0.7, already done in Part 0
 - [x] 5 — `hasSearchTerm`/`skillMatchesSearch` threshold fix
-- [ ] 6+7 — `CopyLinkButton` status-token fix (combined per plan's own note)
+- [x] 6+7 — `CopyLinkButton` status-token fix (combined per plan's own note)
 - [ ] 8 — `SkillsListView` empty state + clear-filters button
 - [ ] 9 — `formatDate` calendar validation
 - [ ] 10 — JSON force-cast validation guards
@@ -563,31 +563,39 @@ the next (per this repo's CLAUDE.md verification convention — no self-run type
 
 - **Where:** `CopyLinkButton.tsx:14-18`
 - **Bug:** effect keyed on `[copied]`. Second click while already `copied === true` → `setCopied(true)` is a no-op → effect doesn't re-run → original timer (partway through) still fires early.
-- **Fix:** replace boolean with a token that changes every click:
+- **Fix:** implemented together with #7 below — a plain 3-value status string has the _same_
+  no-op problem as the original boolean (setting `'copied'` again when already `'copied'` is
+  still an `Object.is`-equal no-op). Use an object state instead — a fresh object literal is
+  never reference-equal to the previous one regardless of its contents, so no timestamp/token
+  field is needed, just the object wrapping itself:
 
   ```ts
-  const [copiedAt, setCopiedAt] = useState<number | null>(null);
+  type CopyStatus = 'idle' | 'copied' | 'failed';
+  interface CopyState {
+    status: CopyStatus;
+  }
+  const IDLE_STATE: CopyState = { status: 'idle' };
+
+  const [state, setState] = useState<CopyState>(IDLE_STATE);
 
   useEffect(() => {
-    if (copiedAt === null) return;
-    const timer = setTimeout(() => setCopiedAt(null), RESET_DELAY_MS);
+    if (state.status === 'idle') return;
+    const timer = setTimeout(() => setState(IDLE_STATE), RESET_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [copiedAt]);
+  }, [state]);
 
   const handleClick = () => {
     void navigator.clipboard
       .writeText(`${window.location.origin}${location.pathname}${location.search}`)
-      .then(() => setCopiedAt(Date.now()))
-      .catch(() => {
-        /* see #7 */
-      });
+      .then(() => setState({ status: 'copied' }))
+      .catch(() => setState({ status: 'failed' }));
   };
-
-  const copied = copiedAt !== null;
   ```
 
-- Combine with fix #7 (same status-token approach covers both).
-- **Test:** click → advance partway → click again → advance past _original_ window → "Copied!" still shown.
+- **Test:** avoid fake-timer arithmetic (fights with `advanceTimers: true`'s auto-advance,
+  causing flaky/incorrect firing order) — instead spy on `clearTimeout` and assert it's called
+  again after a second click while already `'copied'`, proving the effect actually re-ran
+  instead of no-op-ing on a repeated status.
 
 ---
 
@@ -595,26 +603,9 @@ the next (per this repo's CLAUDE.md verification convention — no self-run type
 
 - **Where:** `CopyLinkButton.tsx:24-26` (empty `.catch`)
 - **Bug:** no error state, no feedback — user thinks the copy succeeded when it didn't.
-- **Fix:** extend #6's token to a 3-state status:
-
-  ```ts
-  const [status, setStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
-
-  useEffect(() => {
-    if (status === 'idle') return;
-    const timer = setTimeout(() => setStatus('idle'), RESET_DELAY_MS);
-    return () => clearTimeout(timer);
-  }, [status]);
-
-  const handleClick = () => {
-    void navigator.clipboard
-      .writeText(`${window.location.origin}${location.pathname}${location.search}`)
-      .then(() => setStatus('copied'))
-      .catch(() => setStatus('failed'));
-  };
-  ```
-
-- Add a `'failed'` tooltip/icon state (e.g. error icon + "Couldn't copy link").
+- **Fix:** implemented together with #6 above (same `CopyState` object) — `.catch` sets
+  `{ status: 'failed' }` instead of doing nothing.
+- Add a `'failed'` tooltip/icon state (error icon + "Couldn't copy link").
 - **Test:** mock `writeText` to reject → click → assert failed state renders.
 
 ---
