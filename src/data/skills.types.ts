@@ -8,7 +8,7 @@ export type SkillCategory =
   | 'people-stakeholders';
 
 export type SkillSubCategory =
-  | 'frontend-development'
+  | 'development'
   | 'testing'
   | 'styling'
   | 'design-system'

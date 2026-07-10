@@ -27,7 +27,7 @@ describe('SkillsViewContext', () => {
       <SkillsViewContextProvider
         skills={SKILLS}
         selectedCategories={['engineering']}
-        selectedSubCategories={['frontend-development']}
+        selectedSubCategories={['development']}
         highlightedSkills={['React']}
         searchTerm="rea"
       >
@@ -37,7 +37,7 @@ describe('SkillsViewContext', () => {
 
     expect(screen.getByText('skills:React')).toBeVisible();
     expect(screen.getByText('categories:engineering')).toBeVisible();
-    expect(screen.getByText('subCategories:frontend-development')).toBeVisible();
+    expect(screen.getByText('subCategories:development')).toBeVisible();
     expect(screen.getByText('highlighted:React')).toBeVisible();
     expect(screen.getByText('search:rea')).toBeVisible();
   });

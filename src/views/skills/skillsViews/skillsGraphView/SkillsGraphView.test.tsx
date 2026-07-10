@@ -60,7 +60,7 @@ describe('SkillsGraphView', () => {
   test('combines category and subcategory filters', () => {
     const screen = renderGraphView({
       selectedCategories: ['leadership-delivery'],
-      selectedSubCategories: ['frontend-development'],
+      selectedSubCategories: ['development'],
     });
 
     expect(screen.queryByText('React')).not.toBeInTheDocument();
@@ -76,7 +76,7 @@ describe('SkillsGraphView', () => {
   test('shows the empty-filter message from SkillsBarChart, not the no-data Alert, when filters exclude every skill', () => {
     const screen = renderGraphView({
       selectedCategories: ['leadership-delivery'],
-      selectedSubCategories: ['frontend-development'],
+      selectedSubCategories: ['development'],
     });
 
     expect(screen.getByText('No skills match the selected filter.')).toBeVisible();

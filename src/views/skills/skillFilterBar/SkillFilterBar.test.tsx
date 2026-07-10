@@ -136,7 +136,7 @@ describe('SkillFilterBar', () => {
         })
       );
 
-      expect(screen.getByText('Frontend Development')).toBeVisible();
+      expect(screen.getByText('Development')).toBeVisible();
       expect(screen.getByText('Testing')).toBeVisible();
       expect(screen.getByText('Styling & UI')).toBeVisible();
       expect(screen.getByText('Design System')).toBeVisible();
@@ -160,7 +160,7 @@ describe('SkillFilterBar', () => {
         })
       );
 
-      expect(screen.getByText('Frontend Development')).toBeVisible();
+      expect(screen.getByText('Development')).toBeVisible();
       expect(screen.getByText('Styling & UI')).toBeVisible();
       expect(screen.queryByText('Leadership')).not.toBeInTheDocument();
       expect(screen.queryByText('Mentoring')).not.toBeInTheDocument();
