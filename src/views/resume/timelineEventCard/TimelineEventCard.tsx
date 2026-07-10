@@ -14,6 +14,7 @@ import { BulletList } from '@/components/bulletList';
 import { Section } from '@/components/section';
 import { TagList } from '@/components/tagList';
 import type { TimelineEventWithRecommendations } from '@/types';
+import { MONTH_NAMES } from '@/utils/formatDate';
 import { CATEGORY_LABELS } from '@/utils/skillCategory';
 import { skillColour, skillShadeIndex } from '@/utils/skillColour';
 
@@ -35,21 +36,6 @@ export interface TimelineEventCardProps {
   // IntersectionObserver's first callback — only cards below the fold need the scroll-triggered fade.
   startInView?: boolean;
 }
-
-const MONTH_NAMES = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
 
 const formatMonthYear = (isoDate: string): string => {
   const [year, month] = isoDate.split('-');
