@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
 import { Article } from '@/testing';
@@ -29,14 +29,11 @@ describe('Articles', () => {
 
     mockLoadArticles.mockResolvedValue([article]);
 
-    let screen!: ReturnType<typeof render>;
+    const screen = render(<Articles />);
 
-    await act(async () => {
-      screen = render(<Articles />);
-      await Promise.resolve();
-    });
-
-    expect(screen.getByRole('heading', { level: 2, name: 'When I have time…' })).toBeVisible();
+    expect(
+      await screen.findByRole('heading', { level: 2, name: 'When I have time…' })
+    ).toBeVisible();
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
@@ -44,14 +41,9 @@ describe('Articles', () => {
   test('renders an empty state when there are no articles', async () => {
     mockLoadArticles.mockResolvedValue([]);
 
-    let screen!: ReturnType<typeof render>;
+    const screen = render(<Articles />);
 
-    await act(async () => {
-      screen = render(<Articles />);
-      await Promise.resolve();
-    });
-
-    expect(screen.getByText('No articles published yet.')).toBeVisible();
+    expect(await screen.findByText('No articles published yet.')).toBeVisible();
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
@@ -59,15 +51,10 @@ describe('Articles', () => {
   test('renders an error state when the fetch fails', async () => {
     mockLoadArticles.mockRejectedValue(new Error('network down'));
 
-    let screen!: ReturnType<typeof render>;
-
-    await act(async () => {
-      screen = render(<Articles />);
-      await Promise.resolve();
-    });
+    const screen = render(<Articles />);
 
     expect(
-      screen.getByText("Couldn't load articles right now. Please try again later.")
+      await screen.findByText("Couldn't load articles right now. Please try again later.")
     ).toBeVisible();
 
     expect(await axe(screen.container)).toHaveNoViolations();

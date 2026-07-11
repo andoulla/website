@@ -9,7 +9,7 @@ import type { TimelineEventWithRecommendations } from '@/types';
 import { Resume } from './Resume';
 
 const testCareerHistory = [
-  new TimelineEvent().id('job-1').companyName('Nimbus Analytics').startDate('2022-04-01').mock(),
+  new TimelineEvent().id('job-1').companyName('Meridian Dynamics').startDate('2022-04-01').mock(),
   new TimelineEvent().id('job-2').companyName('Brightleaf Software').startDate('2022-04-01').mock(),
   new TimelineEvent().id('job-3').companyName('Harborview Digital').startDate('2022-04-01').mock(),
 ];
@@ -47,7 +47,7 @@ describe('Resume', () => {
     const screen = await renderResume(() => Promise.resolve(testCareerHistory));
 
     expect(screen.getByRole('heading', { level: 1, name: 'Mariandi Stylianou' })).toBeVisible();
-    expect(screen.getByText('Nimbus Analytics')).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
     expect(screen.getByText('Brightleaf Software')).toBeVisible();
     expect(screen.getByText('Harborview Digital')).toBeVisible();
   });
@@ -71,7 +71,7 @@ describe('Resume', () => {
     const careerHistoryWithSharedSkill = [
       new TimelineEvent()
         .id('job-1')
-        .companyName('Nimbus Analytics')
+        .companyName('Meridian Dynamics')
         .startDate('2022-04-01')
         .skills(['React'])
         .mock(),
@@ -99,7 +99,7 @@ describe('Resume', () => {
     const careerHistoryWithRecommendation = [
       new TimelineEvent()
         .id('job-1')
-        .companyName('Nimbus Analytics')
+        .companyName('Meridian Dynamics')
         .startDate('2022-04-01')
         .skills(['React'])
         .mock(),

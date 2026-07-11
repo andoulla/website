@@ -19,8 +19,6 @@ import { Skills } from './views/skills';
 // TODO: add rest of the work history and add the 3 views (full timeline, eng. mng/lead role/ snr eng role ) with button to hide eduation on the other 2
 // TODO: ATS optimisation
 // TODO: add hidden tech stack for elsevier and capco
-// TODO: looking into query libs
-// TODO: looking into caching
 
 const App = () => {
   return (

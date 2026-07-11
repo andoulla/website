@@ -38,15 +38,22 @@ function renderWithProvider(
   );
 }
 
+const renderAndFlush = async (
+  loader?: () => Promise<typeof CAREER_HISTORY>,
+  initialEntries?: string[]
+) =>
+  act(async () => {
+    const result = renderWithProvider(loader, initialEntries);
+
+    await Promise.resolve();
+
+    return result;
+  });
+
 describe('Skills', () => {
   describe('rendering', () => {
     test('renders the page heading and defaults to the radar view', async () => {
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider();
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush();
 
       expect(screen.getByRole('heading', { level: 1, name: 'Skills' })).toBeVisible();
       expect(screen.getByRole('cell', { name: 'Leadership & Delivery' })).toBeVisible();
@@ -62,12 +69,7 @@ describe('Skills', () => {
 
     test('shows the filter bar in list view as well as graph view', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider();
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush();
 
       await user.click(screen.getByRole('button', { name: 'List view' }));
 
@@ -83,12 +85,7 @@ describe('Skills', () => {
   describe('pattern toggle', () => {
     test('shows an unchecked patterns checkbox by default in graph view', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider();
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush();
 
       await user.click(screen.getByRole('button', { name: 'Graph view' }));
 
@@ -97,12 +94,7 @@ describe('Skills', () => {
 
     test('hides the patterns checkbox outside graph view', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider();
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush();
 
       await user.click(screen.getByRole('button', { name: 'List view' }));
 
@@ -111,12 +103,7 @@ describe('Skills', () => {
 
     test('checking the patterns checkbox updates its checked state', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider();
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush();
 
       await user.click(screen.getByRole('button', { name: 'Graph view' }));
       await user.click(screen.getByRole('checkbox', { name: 'Patterns' }));
@@ -128,15 +115,10 @@ describe('Skills', () => {
 
   describe('category filter URL sync', () => {
     test('initializes the category filter from the URL query param', async () => {
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider(
-          () => Promise.resolve(CAREER_HISTORY),
-          ['/skills?category=leadership-delivery']
-        );
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?category=leadership-delivery']
+      );
 
       expect(
         screen.getByRole('button', {
@@ -147,12 +129,7 @@ describe('Skills', () => {
 
     test('reflects a category filter selection as a URL query param', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider();
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush();
 
       await user.click(
         screen.getByRole('button', {
@@ -168,15 +145,10 @@ describe('Skills', () => {
 
     test('removes the category query param when the filter is cleared', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider(
-          () => Promise.resolve(CAREER_HISTORY),
-          ['/skills?category=leadership-delivery']
-        );
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?category=leadership-delivery']
+      );
 
       await user.click(
         screen.getByRole('button', {
@@ -191,15 +163,10 @@ describe('Skills', () => {
 
   describe('subcategory filter URL sync', () => {
     test('initializes the subcategory filter from the URL query param', async () => {
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider(
-          () => Promise.resolve(CAREER_HISTORY),
-          ['/skills?subCategory=testing']
-        );
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?subCategory=testing']
+      );
 
       expect(
         screen.getByRole('button', {
@@ -210,12 +177,7 @@ describe('Skills', () => {
 
     test('reflects a subcategory filter selection as a URL query param', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider();
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush();
 
       await user.click(
         screen.getByRole('button', {
@@ -229,15 +191,10 @@ describe('Skills', () => {
 
     test('removes the subcategory query param when the filter is cleared', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider(
-          () => Promise.resolve(CAREER_HISTORY),
-          ['/skills?subCategory=testing']
-        );
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?subCategory=testing']
+      );
 
       await user.click(
         screen.getByRole('button', {
@@ -252,27 +209,17 @@ describe('Skills', () => {
 
   describe('search filter URL sync', () => {
     test('initializes the search term from the URL query param', async () => {
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider(
-          () => Promise.resolve(CAREER_HISTORY),
-          ['/skills?search=react']
-        );
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?search=react']
+      );
 
       expect(screen.getByRole('textbox', { name: 'Search skills by name' })).toHaveValue('react');
     });
 
     test('reflects a typed search term as a URL query param', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider();
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush();
 
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
 
@@ -281,15 +228,10 @@ describe('Skills', () => {
 
     test('removes the search query param when the search box is cleared', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider(
-          () => Promise.resolve(CAREER_HISTORY),
-          ['/skills?search=react']
-        );
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?search=react']
+      );
 
       await user.click(screen.getByRole('button', { name: 'Clear search' }));
 
@@ -299,15 +241,10 @@ describe('Skills', () => {
 
   describe('view mode URL sync', () => {
     test('honours an explicit ?view= param over the default', async () => {
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider(
-          () => Promise.resolve(CAREER_HISTORY),
-          ['/skills?view=barchart']
-        );
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?view=barchart']
+      );
 
       expect(screen.getByRole('button', { name: 'Graph view' })).toHaveAttribute(
         'aria-pressed',
@@ -317,12 +254,7 @@ describe('Skills', () => {
 
     test('reflects a view toggle as a URL query param', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider();
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush();
 
       await user.click(screen.getByRole('button', { name: 'List view' }));
 
@@ -331,12 +263,10 @@ describe('Skills', () => {
 
     test('omits the view query param when toggling to the default radar view', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider(() => Promise.resolve(CAREER_HISTORY), ['/skills?view=list']);
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?view=list']
+      );
 
       await user.click(screen.getByRole('button', { name: 'Radar view' }));
 
@@ -347,12 +277,7 @@ describe('Skills', () => {
   describe('hidden-match hint', () => {
     test('shows a hidden-match hint when a filter hides skills matching the search term', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider();
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush();
 
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
       await user.click(
@@ -367,12 +292,7 @@ describe('Skills', () => {
 
     test('uses singular wording when exactly one match is hidden by filters', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider();
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush();
 
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'typescript');
       await user.click(
@@ -387,12 +307,7 @@ describe('Skills', () => {
 
     test('does not show a hidden-match hint when no filters hide the search matches', async () => {
       const user = userEvent.setup();
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider();
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush();
 
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
 
@@ -402,15 +317,10 @@ describe('Skills', () => {
 
   describe('combined filters', () => {
     test('keeps category and subcategory query params independent of each other', async () => {
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider(
-          () => Promise.resolve(CAREER_HISTORY),
-          ['/skills?category=engineering&subCategory=testing']
-        );
-        await Promise.resolve();
-      });
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?category=engineering&subCategory=testing']
+      );
 
       expect(screen.getByText('search:category=engineering&subCategory=testing')).toBeVisible();
       expect(
@@ -423,12 +333,7 @@ describe('Skills', () => {
 
   describe('accessibility', () => {
     test('has no axe violations on initial render', async () => {
-      let screen!: ReturnType<typeof render>;
-
-      await act(async () => {
-        screen = renderWithProvider(neverResolve);
-        await Promise.resolve();
-      });
+      const screen = renderWithProvider(neverResolve);
 
       expect(await axe(screen.container)).toHaveNoViolations();
     });

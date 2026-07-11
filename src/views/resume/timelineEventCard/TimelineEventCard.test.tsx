@@ -13,7 +13,7 @@ const LocationDisplay = () => {
 };
 
 const event = new TimelineEvent()
-  .companyName('Nimbus Analytics')
+  .companyName('Meridian Dynamics')
   .title('Staff Frontend Engineer')
   .location('London, UK')
   .startDate('2022-04-01')
@@ -35,7 +35,7 @@ describe('TimelineEventCard', () => {
       wrapper: MemoryRouter,
     });
 
-    expect(screen.getByText('Nimbus Analytics')).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
     expect(
       screen.getByText('Staff Frontend Engineer · London, UK · Apr 2022 – Present')
     ).toBeVisible();
@@ -62,7 +62,7 @@ describe('TimelineEventCard', () => {
       wrapper: MemoryRouter,
     });
 
-    expect(screen.getByRole('heading', { level: 3, name: 'Nimbus Analytics' })).toBeVisible();
+    expect(screen.getByRole('heading', { level: 3, name: 'Meridian Dynamics' })).toBeVisible();
     expect(screen.getByRole('heading', { level: 4, name: 'Tech Stack' })).toBeVisible();
     expect(screen.getByRole('heading', { level: 4, name: 'Responsibilities' })).toBeVisible();
     expect(screen.getByRole('heading', { level: 4, name: 'Key Skills' })).toBeVisible();
@@ -172,7 +172,7 @@ describe('TimelineEventCard', () => {
         wrapper: MemoryRouter,
       });
 
-      expect(screen.getByText('Nimbus Analytics').closest('.MuiCard-root')).toHaveStyle({
+      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
         outlineOffset: '2px',
       });
     });
@@ -182,7 +182,7 @@ describe('TimelineEventCard', () => {
         wrapper: MemoryRouter,
       });
 
-      expect(screen.getByText('Nimbus Analytics').closest('.MuiCard-root')).not.toHaveStyle({
+      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).not.toHaveStyle({
         outlineOffset: '2px',
       });
     });
@@ -230,7 +230,7 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('Nimbus Analytics').closest('.MuiCard-root')).toHaveStyle({
+      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
         outlineOffset: '2px',
       });
     });

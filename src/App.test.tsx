@@ -14,17 +14,17 @@ describe('App', () => {
     mockLoadCareerHistory.mockResolvedValue([
       new TimelineEvent()
         .id('job-1')
-        .companyName('Nimbus Analytics')
+        .companyName('Meridian Dynamics')
         .startDate('2022-04-01')
         .mock(),
     ]);
 
-    // TODO: remove the usage of !
-    let screen!: ReturnType<typeof render>;
+    const screen = await act(async () => {
+      const result = render(<App />);
 
-    await act(async () => {
-      screen = render(<App />);
       await Promise.resolve();
+
+      return result;
     });
 
     const homeLink = screen.getByRole('link', { name: 'Home' });
@@ -43,7 +43,7 @@ describe('App', () => {
     expect(articlesLink).toHaveAttribute('href', '/articles');
 
     expect(screen.getByRole('heading', { name: 'Mariandi Stylianou' })).toBeVisible();
-    expect(screen.getByText('Nimbus Analytics')).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
@@ -53,11 +53,12 @@ describe('App', () => {
 
     mockLoadCareerHistory.mockRejectedValue(new Error('failed to load'));
 
-    let screen!: ReturnType<typeof render>;
+    const screen = await act(async () => {
+      const result = render(<App />);
 
-    await act(async () => {
-      screen = render(<App />);
       await Promise.resolve();
+
+      return result;
     });
 
     expect(screen.getByText('Whoops — my career history just rage-quit. Try again?')).toBeVisible();

@@ -37,13 +37,11 @@ class TestErrorBoundary extends Component<{ children: ReactNode }, ErrorBoundary
 
 describe('CareerDataContextProvider', () => {
   test('exposes the loaded career history to consumers via the context', async () => {
-    let screen!: ReturnType<typeof render>;
-
-    await act(async () => {
-      screen = render(
+    const screen = await act(async () => {
+      const result = render(
         <CareerDataContextProvider
           loader={() =>
-            Promise.resolve([new TimelineEvent().companyName('Nimbus Analytics').mock()])
+            Promise.resolve([new TimelineEvent().companyName('Meridian Dynamics').mock()])
           }
         >
           <Suspense fallback={<p>Loading</p>}>
@@ -51,10 +49,13 @@ describe('CareerDataContextProvider', () => {
           </Suspense>
         </CareerDataContextProvider>
       );
+
       await Promise.resolve();
+
+      return result;
     });
 
-    expect(screen.getByText('Nimbus Analytics')).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
   });
 
   test('shows the fallback while the loader promise is still pending', () => {
@@ -86,17 +87,18 @@ describe('CareerDataContextProvider', () => {
   test('uses the default loadCareerHistory loader when no loader prop is provided', async () => {
     mockLoadCareerHistory.mockResolvedValue([new TimelineEvent().companyName('Default Co').mock()]);
 
-    let screen!: ReturnType<typeof render>;
-
-    await act(async () => {
-      screen = render(
+    const screen = await act(async () => {
+      const result = render(
         <CareerDataContextProvider>
           <Suspense fallback={<p>Loading</p>}>
             <CareerHistoryConsumer />
           </Suspense>
         </CareerDataContextProvider>
       );
+
       await Promise.resolve();
+
+      return result;
     });
 
     expect(screen.getByText('Default Co')).toBeVisible();
