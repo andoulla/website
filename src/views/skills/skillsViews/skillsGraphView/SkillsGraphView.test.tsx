@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
 import { SkillSummary } from '@/testing';
+import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 
 import { SkillsViewContextProvider } from '../SkillsViewContext';
 import type { SkillsViewContextValue } from '../SkillsViewContext.type';
@@ -20,12 +21,17 @@ const SKILLS = [
     .mock(),
 ];
 
-const renderGraphView = (overrides: Partial<SkillsViewContextValue> = {}) =>
-  render(
+const renderGraphView = (overrides: Partial<SkillsViewContextValue> = {}) => {
+  const skills = overrides.skills ?? SKILLS;
+  const selectedCategories = overrides.selectedCategories ?? [];
+  const selectedSubCategories = overrides.selectedSubCategories ?? [];
+
+  return render(
     <SkillsViewContextProvider
-      skills={SKILLS}
-      selectedCategories={[]}
-      selectedSubCategories={[]}
+      skills={skills}
+      filteredSkills={filterSkillsByCategory(skills, selectedCategories, selectedSubCategories)}
+      selectedCategories={selectedCategories}
+      selectedSubCategories={selectedSubCategories}
       searchTerm=""
       onClearFilters={jest.fn()}
       {...overrides}
@@ -33,6 +39,7 @@ const renderGraphView = (overrides: Partial<SkillsViewContextValue> = {}) =>
       <SkillsGraphView />
     </SkillsViewContextProvider>
   );
+};
 
 describe('SkillsGraphView', () => {
   test('shows all skills in the accessible table when no filters are active', async () => {

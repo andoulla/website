@@ -713,6 +713,24 @@ the next (per this repo's CLAUDE.md verification convention — no self-run type
 
 ---
 
+## Progress (Part 2 implementation)
+
+Branch: `part-2-cleanup-fixes` (off `part-1-correctness-fixes`). One commit per item.
+
+- [x] 11 — Already done in Part 1 (folded into fix #1's commit)
+- [x] 12 — Extract shared `MONTH_NAMES` from `TimelineEventCard`
+- [x] 13 — Extract `derivePresentCategories` util
+- [x] 14 — `SkillItemsList` reuse `formatYears`
+- [x] 15 — Extract `CategoryColourDot` (circle + square shapes)
+- [x] 16 — Dedupe `filterSkillsByCategory` computation
+- [x] 17+18 — Dropped (premature optimization, see below)
+- [x] 19 — `RoleIcon` logo-mapping guard (moved to `RoleIcon.test.tsx`, builder-based)
+- [x] 20 — Drop unused exports (`SectionProps`, `ROLE_ICONS` barrel); kept `matchSkill`
+
+Part 2 complete.
+
+---
+
 ## Part 2 — Confirmed cleanup findings
 
 Ranked below Part 1 only because correctness outranks cleanup in the review's tie-break — all CONFIRMED.
@@ -755,46 +773,75 @@ Ranked below Part 1 only because correctness outranks cleanup in the review's ti
 - `SkillTooltipContent.tsx` / `CategoryTooltip.tsx` already use `formatYears`.
 - **Fix:** `` `est. ${formatYears(skill.years)}` `` — check `formatYears`'s exact return shape first (confirm whether "est." needs to stay outside it).
 
-### 15. Colour-dot `sx` duplicated across `SkillItemsList` and `CategoryLegend`
+### 15. Colour-dot `sx` duplicated across `SkillItemsList`, `CategoryLegend` and `SkillsBarChart`
 
-- **Where:** `SkillItemsList.tsx:48-56`, `CategoryLegend.tsx:32-40` (near-identical 8x8 circle, differs only in spacing/opacity)
-- **Fix:** extract `src/views/skills/categoryColourDot/CategoryColourDot.tsx` (lowest common ancestor = `views/skills/`):
+- **Where:** `SkillItemsList.tsx:48-56` (8x8 circle, `mr: 1.5`), `CategoryLegend.tsx:32-41` (8x8 circle,
+  `opacity: 0.7`), `SkillsBarChart.tsx:211-221` (square, `borderRadius: '2px'`, `background` is
+  either a flat colour or `getCategoryPatternBackground(cat, colour, markColour)` — not a solid fill).
+  Resized the square swatch to 8x8 to match the circle (was 10x10) when unifying into one component.
+- **Fix:** extract `src/views/skills/categoryColourDot/CategoryColourDot.tsx` (lowest common ancestor =
+  `views/skills/`). One component, `shape` prop switches radius only (both shapes are 8x8); `background`
+  (full CSS value) overrides `colour` (solid `bgcolor`) when the fill isn't flat:
 
   ```tsx
-  export const CategoryColourDot = ({ colour, sx }: CategoryColourDotProps) => (
+  export interface CategoryColourDotProps {
+    shape?: 'circle' | 'square';
+    colour?: string;
+    background?: string;
+    sx?: Record<string, string | number>;
+  }
+
+  const RADIUS_BY_SHAPE = { circle: '50%', square: '2px' } as const;
+
+  export const CategoryColourDot = ({
+    shape = 'circle',
+    colour,
+    background,
+    sx,
+  }: CategoryColourDotProps) => (
     <Box
-      sx={[
-        { width: 8, height: 8, borderRadius: '50%', bgcolor: colour, flexShrink: 0 },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
+      sx={{
+        width: 8,
+        height: 8,
+        borderRadius: RADIUS_BY_SHAPE[shape],
+        ...(background !== undefined ? { background } : { bgcolor: colour }),
+        flexShrink: 0,
+        ...sx,
+      }}
     />
   );
   ```
 
-- Leave `SkillsBarChart.tsx:229-239`'s legend swatch alone — it's a square, different enough shape.
+  Note: `sx` is deliberately typed as a plain `Record<string, string | number>`, not MUI's
+  `SxProps<Theme>` — passing `SxProps<Theme>` through an sx _array_ (`sx={[base, sx]}`) hit a
+  `no-unsafe-...`/`undefined not assignable` type error from this MUI version's array-element
+  typing (no array support, no falsy entries). Merging via a single plain-object spread instead
+  sidesteps that entirely and is all two real callers need.
+
+- **Call sites, all switch to the shared component:**
+  - `SkillItemsList.tsx:48-56` → `<CategoryColourDot colour={dotColour(skill, theme)} sx={{ mr: 1.5 }} />`
+  - `CategoryLegend.tsx:32-41` → `<CategoryColourDot colour={resolveSkillColourMain(CATEGORY_COLOUR_MAP[category], theme)} sx={{ opacity: 0.7 }} />`
+  - `SkillsBarChart.tsx:211-221` → `<CategoryColourDot shape="square" colour={colour} background={showPatterns ? getCategoryPatternBackground(cat, colour, markColour) : undefined} />`
 
 ### 16. Duplicate `filterSkillsByCategory` computation (Skills.tsx + SkillsViewContext)
 
 - **Where:** `Skills.tsx:134-137` and `SkillsViewContext.tsx:28-31` — identical call, both memoized individually, but redundant.
 - **Fix:** thread `Skills.tsx`'s `filteredSkills` into `SkillsViewContextProvider` as a prop; drop the internal `useMemo` in `SkillsViewContext.tsx`. Update `SkillsViewContextProviderProps` type to add `filteredSkills: SkillSummary[]`.
 
-### 17. `SkillsBarChart` recomputes unmemoized derivations on every hover
+### 17+18. Dropped — memoizing `SkillsBarChart`/`SkillsRadarView` derivations
 
-- **Where:** `SkillsBarChart.tsx:116-134` (`chartHeight`, `legendEntries`, `maxLabelLength`/`yAxisWidth`)
-- `hoverIndex` changes on every bar hover (187-192) → re-renders → re-runs all three even though `skills`/`theme` are unchanged.
-- **Fix:** wrap each in `useMemo`. Caveat: hooks can't follow the existing early return (`if (skills.length === 0) return ...`, line 108) — move that return _below_ the new `useMemo` calls.
-
-### 18. `SkillsRadarView`/`SkillsRadarChart` unmemoized derivations
-
-- **Where:** `SkillsRadarView.tsx:17-19` (`categories`), `SkillsRadarChart.tsx:47-49` (`radarData`, `maxYears`)
-- Same pattern as #17; `SkillsListView.tsx`'s equivalent is already memoized.
-- **Fix:** `useMemo` each, using #13's shared `derivePresentCategories` for `categories`. Same early-return-ordering caveat as #17.
+- Not implementing. Tiny dataset (tens of skills) → filter/map cost is microseconds, not a real bottleneck.
+- Only argument was consistency with `SkillsListView`'s memoization, not measured perf.
+- `SkillsListView`'s own memoization was equally unnecessary — removed (categories only change via
+  a new deployment, no runtime drift risk).
 
 ### 19. `RoleIcon`/`RoleIcons.constants.ts` — three uncoordinated mechanisms decide one icon
 
 - **Where:** `RoleIcon.tsx:14-28` (logo map → education branch → fallback icon), `RoleIcons.constants.ts:11-22`
 - `LOGO_BY_EVENT_ID` keys are hardcoded id strings duplicated from `careerHistory.json` with no compile-time link — a renamed id silently falls through to the generic `School` icon.
-- **Fix:** don't have `data/` import `views/` (backward-layer violation). Instead add a test-level guard: `RoleIcons.constants.test.ts` asserts every `LOGO_BY_EVENT_ID` key exists in `careerHistory` (via `import { careerHistory } from '@/data/careerHistory'` — forward reach, allowed). Catches a rename at test time instead of production.
+- **Fix (revised):** no real-data import in tests (repo convention) — added to `RoleIcon.test.tsx`
+  instead: for every `LOGO_BY_EVENT_ID` key, build a `TimelineEvent` mock with that id, assert the
+  mapped logo renders. Catches a broken lookup, not a real-JSON rename — accepted trade-off.
 
 ### 20. Four unused exports ("don't export until imported externally")
 

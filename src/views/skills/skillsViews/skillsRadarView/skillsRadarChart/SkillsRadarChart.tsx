@@ -17,10 +17,10 @@ import { visuallyHidden } from '@mui/utils';
 import type { SkillCategory } from '@/data/skills.types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';
-import { CategoryLegend } from '@/views/skills/categoryLegend';
 
 import { aggregateSkillsByCategory } from './SkillsRadarChart.helpers';
 import type { CategoryRadarPoint } from './SkillsRadarChart.types';
+import { CategoryLegend } from './categoryLegend';
 import { CategoryTooltip } from './categoryTooltip';
 
 const CHART_HEIGHT = 440;

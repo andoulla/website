@@ -4,6 +4,7 @@ import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
 import { SkillSummary } from '@/testing';
+import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 
 import { SkillsViewContextProvider } from '../SkillsViewContext';
 import type { SkillsViewContextValue } from '../SkillsViewContext.type';
@@ -27,13 +28,18 @@ const SKILLS = [
     .mock(),
 ];
 
-const renderListView = (overrides: Partial<SkillsViewContextValue> = {}) =>
-  render(
+const renderListView = (overrides: Partial<SkillsViewContextValue> = {}) => {
+  const skills = overrides.skills ?? SKILLS;
+  const selectedCategories = overrides.selectedCategories ?? [];
+  const selectedSubCategories = overrides.selectedSubCategories ?? [];
+
+  return render(
     <MemoryRouter>
       <SkillsViewContextProvider
-        skills={SKILLS}
-        selectedCategories={[]}
-        selectedSubCategories={[]}
+        skills={skills}
+        filteredSkills={filterSkillsByCategory(skills, selectedCategories, selectedSubCategories)}
+        selectedCategories={selectedCategories}
+        selectedSubCategories={selectedSubCategories}
         searchTerm=""
         onClearFilters={jest.fn()}
         {...overrides}
@@ -42,6 +48,7 @@ const renderListView = (overrides: Partial<SkillsViewContextValue> = {}) =>
       </SkillsViewContextProvider>
     </MemoryRouter>
   );
+};
 
 describe('SkillsListView', () => {
   describe('render and grouping', () => {

@@ -1,0 +1,1 @@
+export { CategoryColourDot } from './CategoryColourDot';

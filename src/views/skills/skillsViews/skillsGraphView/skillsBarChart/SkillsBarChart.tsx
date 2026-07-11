@@ -11,8 +11,9 @@ import { visuallyHidden } from '@mui/utils';
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
 import type { SkillCategory } from '@/data/skills.types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
-import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/utils/skillCategory';
+import { CATEGORY_LABELS, derivePresentCategories } from '@/utils/skillCategory';
 import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';
+import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
 import {
   CATEGORY_PATTERN_SHAPE_DEFINITIONS,
@@ -99,9 +100,7 @@ export const SkillsBarChart = ({
 
   // Legend: one entry per category present, in fixed display order. markColour is the pattern's
   // ink colour — high-contrast against the category colour so the texture reads at swatch size.
-  const legendEntries = CATEGORY_ORDER.filter((cat) =>
-    skills.some((skill) => skill.category === cat)
-  ).map((cat) => {
+  const legendEntries = derivePresentCategories(skills).map((cat) => {
     const colour = resolveSkillColourMain(CATEGORY_COLOUR_MAP[cat], theme);
     return {
       cat,
@@ -208,16 +207,12 @@ export const SkillsBarChart = ({
       >
         {legendEntries.map(({ cat, colour, markColour, label }) => (
           <Box key={cat} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box
-              sx={{
-                width: 10,
-                height: 10,
-                borderRadius: '2px',
-                background: showPatterns
-                  ? getCategoryPatternBackground(cat, colour, markColour)
-                  : colour,
-                flexShrink: 0,
-              }}
+            <CategoryColourDot
+              shape="square"
+              colour={colour}
+              background={
+                showPatterns ? getCategoryPatternBackground(cat, colour, markColour) : undefined
+              }
             />
             <Typography variant="caption" color="text.secondary">
               {label}

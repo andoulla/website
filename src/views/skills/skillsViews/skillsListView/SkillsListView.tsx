@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import Stack from '@mui/material/Stack';
 
 import { Section } from '@/components/section';
@@ -41,41 +41,29 @@ export const SkillsListView = () => {
   }, [highlightedSkills]);
 
   // Hides non-matches rather than just accenting them.
-  const searchedSkills = useMemo(
-    () =>
-      !hasSearchTerm(searchTerm)
-        ? filteredSkills
-        : filteredSkills.filter((skill) => skillMatchesSearch(skill, searchTerm)),
-    [filteredSkills, searchTerm]
+  const searchedSkills = !hasSearchTerm(searchTerm)
+    ? filteredSkills
+    : filteredSkills.filter((skill) => skillMatchesSearch(skill, searchTerm));
+
+  const byCategory = CATEGORY_ORDER.reduce<Record<SkillCategory, SkillSummary[]>>((acc, cat) => {
+    acc[cat] = searchedSkills.filter((skill) => skill.category === cat);
+    return acc;
+  }, createEmptyByCategory<SkillSummary>());
+
+  const subGroupsByCategory = CATEGORY_ORDER.reduce<Record<SkillCategory, SubCategoryGroup[]>>(
+    (acc, cat) => {
+      acc[cat] = SUBCATEGORIES_BY_CATEGORY[cat]
+        .map((subCategory) => ({
+          subCategory,
+          skills: byCategory[cat].filter((skill) => skill.subCategory === subCategory),
+        }))
+        .filter((group) => group.skills.length > 0);
+      return acc;
+    },
+    createEmptyByCategory<SubCategoryGroup>()
   );
 
-  const byCategory = useMemo(
-    () =>
-      CATEGORY_ORDER.reduce<Record<SkillCategory, SkillSummary[]>>((acc, cat) => {
-        acc[cat] = searchedSkills.filter((skill) => skill.category === cat);
-        return acc;
-      }, createEmptyByCategory<SkillSummary>()),
-    [searchedSkills]
-  );
-
-  const subGroupsByCategory = useMemo(
-    () =>
-      CATEGORY_ORDER.reduce<Record<SkillCategory, SubCategoryGroup[]>>((acc, cat) => {
-        acc[cat] = SUBCATEGORIES_BY_CATEGORY[cat]
-          .map((subCategory) => ({
-            subCategory,
-            skills: byCategory[cat].filter((skill) => skill.subCategory === subCategory),
-          }))
-          .filter((group) => group.skills.length > 0);
-        return acc;
-      }, createEmptyByCategory<SubCategoryGroup>()),
-    [byCategory]
-  );
-
-  const nonEmptyCategories = useMemo(
-    () => CATEGORY_ORDER.filter((cat) => byCategory[cat].length > 0),
-    [byCategory]
-  );
+  const nonEmptyCategories = CATEGORY_ORDER.filter((cat) => byCategory[cat].length > 0);
 
   if (nonEmptyCategories.length === 0) {
     return (

@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import type { ReactNode } from 'react';
 
-export interface SectionProps {
+interface SectionProps {
   title: string;
   titleLevel?: 2 | 3 | 4;
   children: ReactNode;

@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -9,6 +8,8 @@ import { alpha, useTheme } from '@mui/material/styles';
 
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
+import { formatYears } from '@/utils/formatYears';
+import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
 import { skillElementId } from '../SkillsListView.helpers';
 
@@ -45,19 +46,10 @@ const SkillListItem = ({ skill, isHighlighted }: SkillListItemProps) => {
             }),
           }}
         >
-          <Box
-            sx={{
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              bgcolor: dotColour(skill, theme),
-              flexShrink: 0,
-              mr: 1.5,
-            }}
-          />
+          <CategoryColourDot colour={dotColour(skill, theme)} sx={{ mr: 1.5 }} />
           <ListItemText primary={skill.skill} />
           <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-            {`est. ${skill.years} year${skill.years === 1 ? '' : 's'}`}
+            {`est. ${formatYears(skill.years)}`}
           </Typography>
         </ListItemButton>
       </Tooltip>

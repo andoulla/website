@@ -4,6 +4,7 @@ import Business from '@mui/icons-material/Business';
 import { TimelineEvent } from '@/testing';
 
 import { RoleIcon } from './RoleIcon';
+import { LOGO_BY_EVENT_ID } from './RoleIcons.constants';
 
 describe('RoleIcon', () => {
   test('renders the mapped logo image for a known education entry', () => {
@@ -36,5 +37,17 @@ describe('RoleIcon', () => {
 
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
     expect(screen.getByTestId('BusinessIcon')).toBeInTheDocument();
+  });
+
+  test('renders a mapped logo for every LOGO_BY_EVENT_ID key', () => {
+    Object.keys(LOGO_BY_EVENT_ID).forEach((eventId) => {
+      const event = new TimelineEvent().id(eventId).type('education').mock();
+
+      const screen = render(<RoleIcon event={event} fallbackIcon={Business} />);
+
+      expect(screen.getByRole('img')).toBeVisible();
+
+      screen.unmount();
+    });
   });
 });
