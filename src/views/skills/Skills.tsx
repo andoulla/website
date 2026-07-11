@@ -56,7 +56,6 @@ const SkillsContent = () => {
 
   const [highlightedSkills] = useSkillSearchUrl(SKILL_PARAM, parseSkills, () => null);
   // setter unused here — skill param is only ever written by TimelineEventCard's navigate()
-
   const [selectedCategories, setSelectedCategories] = useSkillSearchUrl(
     CATEGORY_PARAM,
     parseCategories,
