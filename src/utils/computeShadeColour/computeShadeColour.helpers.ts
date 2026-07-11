@@ -20,7 +20,7 @@ export const computeShadeColour = (
 ): ShadeColourResult => {
   const len = SHADE_ADJUSTMENTS.length;
   // JS `%` preserves sign, so normalise a negative index into the positive range.
-  const adj = SHADE_ADJUSTMENTS[((shadeIndex % len) + len) % len];
-  const bg = adj >= 0 ? lighten(main, adj) : darken(main, -adj);
+  const adjustment = SHADE_ADJUSTMENTS[((shadeIndex % len) + len) % len];
+  const bg = adjustment >= 0 ? lighten(main, adjustment) : darken(main, -adjustment);
   return { bg, textColour: getContrastText(bg) };
 };

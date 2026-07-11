@@ -49,7 +49,6 @@ const SkillsContent = () => {
   const careerHistory = useCareerDataContext();
   const skills = useMemo(() => calculateSkillYears(careerHistory), [careerHistory]);
 
-  // Repeated `skill` params, not comma-joined — a skill name could contain a comma.
   const [searchParams] = useSearchParams();
   const highlightedSkillsKey = JSON.stringify(searchParams.getAll(SKILL_PARAM));
   const highlightedSkills = useMemo(
@@ -57,7 +56,6 @@ const SkillsContent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on content, not the ref
     [highlightedSkillsKey]
   );
-  // Written only by TimelineEventCard's navigate().
 
   const [selectedCategories, setSelectedCategories] = useSkillSearchUrl(
     CATEGORY_PARAM,

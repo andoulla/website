@@ -5,6 +5,7 @@ import type { RssFeedResponse } from './parseArticlesFeed.types';
 export const stripHtmlToText = (html: string): string =>
   new DOMParser().parseFromString(html, 'text/html').body.textContent ?? '';
 
+// Matches a leading YYYY-MM-DD, the ISO-date prefix RSS feeds use before the time/offset.
 const PUB_DATE_PREFIX_PATTERN = /^\d{4}-\d{2}-\d{2}/;
 
 const isRssFeedItemShape = (value: unknown): boolean =>
