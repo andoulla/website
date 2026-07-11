@@ -39,6 +39,13 @@ describe('computeShadeColour', () => {
     expect(a.bg).toBe(b.bg);
   });
 
+  test('a negative shade index wraps into the positive range instead of producing NaN', () => {
+    const a = computeShadeColour('#3B6D11', -1, mockGetContrastText);
+    const b = computeShadeColour('#3B6D11', 5, mockGetContrastText);
+
+    expect(a.bg).toBe(b.bg);
+  });
+
   test('passes the computed background to getContrastText', () => {
     const result = computeShadeColour('#3B6D11', 1, mockGetContrastText);
 
