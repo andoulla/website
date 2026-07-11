@@ -31,7 +31,7 @@ describe('ErrorBoundary', () => {
     expect(screen.getByText('Error: boom')).toBeVisible();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'ErrorBoundary caught an error:',
-      expect.objectContaining({ message: 'boom' }),
+      'boom',
       expect.any(String)
     );
     expect(await axe(screen.container)).toHaveNoViolations();

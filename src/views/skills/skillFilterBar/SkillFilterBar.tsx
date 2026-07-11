@@ -46,10 +46,9 @@ export const SkillFilterBar = ({
       : [...selectedCategories, category];
     onCategoriesChange(nextCategories);
 
-    // Subcategories belonging to the category just deselected no longer make sense to keep.
+    // Drop subcategories of a just-deselected category.
     const subCategoriesForToggledCategory = subCategoriesByCategory[category] ?? [];
-    // With one or more categories now selected, filterSkillsByCategory ANDs category+subCategory,
-    // so a subcategory belonging to none of them would silently zero out the results.
+    // filterSkillsByCategory ANDs category+subCategory, so drop subcategories not in any selected category.
     const validSubCategories =
       nextCategories.length > 0
         ? new Set(

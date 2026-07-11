@@ -40,8 +40,7 @@ export const SkillsListView = () => {
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [highlightedSkills]);
 
-  // A search term at or above the minimum match length hides everything but the matches, rather
-  // than just accenting them.
+  // Hides non-matches rather than just accenting them.
   const searchedSkills = !hasSearchTerm(searchTerm)
     ? filteredSkills
     : filteredSkills.filter((skill) => skillMatchesSearch(skill, searchTerm));

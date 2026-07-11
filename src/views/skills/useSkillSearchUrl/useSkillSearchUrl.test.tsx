@@ -83,8 +83,8 @@ describe('useSkillSearchUrl', () => {
     const firstValue = result.current.value;
 
     act(() => {
-      result.current.setSearchParams((prev) => {
-        const next = new URLSearchParams(prev);
+      result.current.setSearchParams((previous) => {
+        const next = new URLSearchParams(previous);
 
         next.set('view', 'list');
         return next;

@@ -188,7 +188,7 @@ export const TimelineEventCard = ({
         {event.recommendations.length > 0 && (
           <>
             <Divider sx={{ my: 2 }} />
-            <Section title="Recommendations" titleLevel={4}>
+            <Section title={`Recommendations (${event.recommendations.length})`} titleLevel={4}>
               <Box
                 sx={{
                   display: 'grid',

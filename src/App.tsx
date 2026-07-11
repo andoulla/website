@@ -21,27 +21,6 @@ import { Skills } from './views/skills';
 // TODO: add hidden tech stack for elsevier and capco
 // TODO: looking into query libs
 // TODO: looking into caching
-// TODo: inline Careerdatalayout and give a funnier message
-// TODO: add counter on recomendations
-const CareerDataLayout = () => (
-  <ErrorBoundary
-    fallback={() => (
-      <PageContainer>
-        <Stack sx={{ py: 8, alignItems: 'center', gap: 1.5 }}>
-          <ErrorIcon color="error" fontSize="large" />
-          <Typography color="text.secondary">Something went wrong loading this page.</Typography>
-          <Button startIcon={<RefreshIcon />} onClick={() => window.location.reload()}>
-            Refresh
-          </Button>
-        </Stack>
-      </PageContainer>
-    )}
-  >
-    <CareerDataContextProvider>
-      <Outlet />
-    </CareerDataContextProvider>
-  </ErrorBoundary>
-);
 
 const App = () => {
   return (
@@ -50,7 +29,29 @@ const App = () => {
       <BrowserRouter>
         <NavBar />
         <Routes>
-          <Route element={<CareerDataLayout />}>
+          <Route
+            element={
+              <ErrorBoundary
+                fallback={() => (
+                  <PageContainer>
+                    <Stack sx={{ py: 8, alignItems: 'center', gap: 1.5 }}>
+                      <ErrorIcon color="error" fontSize="large" />
+                      <Typography color="text.secondary">
+                        Whoops — my career history just rage-quit. Try again?
+                      </Typography>
+                      <Button startIcon={<RefreshIcon />} onClick={() => window.location.reload()}>
+                        Refresh
+                      </Button>
+                    </Stack>
+                  </PageContainer>
+                )}
+              >
+                <CareerDataContextProvider>
+                  <Outlet />
+                </CareerDataContextProvider>
+              </ErrorBoundary>
+            }
+          >
             <Route path="/" element={<Resume />} />
             <Route path="/skills" element={<Skills />} />
           </Route>
