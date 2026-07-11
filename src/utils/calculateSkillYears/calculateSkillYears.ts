@@ -15,6 +15,7 @@ const durationYears = (startDate: string, endDate: string | null, today: Date): 
 export const calculateSkillYears = (
   careerHistory: TimelineEvent[],
   allSkills: Skill[] = defaultSkills,
+  // A fresh Date() per call — callers must memoize, or every render re-triggers a new instant.
   today: Date = new Date()
 ): SkillSummary[] => {
   const eventById = new Map(careerHistory.map((event) => [event.id, event]));
