@@ -5,12 +5,15 @@ import type { RssFeedResponse } from './parseArticlesFeed.types';
 export const stripHtmlToText = (html: string): string =>
   new DOMParser().parseFromString(html, 'text/html').body.textContent ?? '';
 
+const PUB_DATE_PREFIX_PATTERN = /^\d{4}-\d{2}-\d{2}/;
+
 const isRssFeedItemShape = (value: unknown): boolean =>
   typeof value === 'object' &&
   value !== null &&
   typeof (value as Record<string, unknown>).link === 'string' &&
   typeof (value as Record<string, unknown>).title === 'string' &&
-  typeof (value as Record<string, unknown>).pubDate === 'string';
+  typeof (value as Record<string, unknown>).pubDate === 'string' &&
+  PUB_DATE_PREFIX_PATTERN.test((value as Record<string, unknown>).pubDate as string);
 
 export const isRssFeedResponse = (payload: unknown): payload is RssFeedResponse =>
   typeof payload === 'object' &&

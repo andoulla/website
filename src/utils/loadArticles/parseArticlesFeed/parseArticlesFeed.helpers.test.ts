@@ -45,4 +45,13 @@ describe('isRssFeedResponse', () => {
 
     expect(isRssFeedResponse(payload)).toBe(false);
   });
+
+  test('returns false when pubDate is not ISO-date-prefixed', () => {
+    const payload = {
+      status: 'ok',
+      items: [{ link: 'https://example.com/post', title: 'Post', pubDate: 'not-a-date' }],
+    };
+
+    expect(isRssFeedResponse(payload)).toBe(false);
+  });
 });
