@@ -597,7 +597,7 @@ the next (per this repo's CLAUDE.md verification convention — no self-run type
 - **Test:** avoid fake-timer arithmetic (fights with `advanceTimers: true`'s auto-advance,
   causing flaky/incorrect firing order) — instead spy on `clearTimeout` and assert it's called
   again after a second click while already `'copied'`, proving the effect actually re-ran
-  instead of no-op-ing on a repeated status.
+  instead of being skipped on a repeated status.
 
 ---
 

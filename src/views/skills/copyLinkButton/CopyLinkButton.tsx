@@ -10,7 +10,7 @@ const RESET_DELAY_MS = 1500;
 
 type CopyStatus = 'idle' | 'copied' | 'failed';
 
-// A fresh object literal is never reference-equal, so a repeated status still restarts the timer.
+// Wrapped in an object so a repeated status is still a new reference — timer always restarts.
 interface CopyState {
   status: CopyStatus;
 }
