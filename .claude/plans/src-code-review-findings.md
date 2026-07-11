@@ -854,6 +854,19 @@ Ranked below Part 1 only because correctness outranks cleanup in the review's ti
 
 ---
 
+## Progress (Part 3 implementation)
+
+Branch: `part-3-latent-fixes` (off `part-2-cleanup-fixes`). One commit per item.
+
+- [x] 21 — Repeated `skill` params instead of comma-joining
+- [x] 22 — `pubDate` ISO-prefix format guard
+- [x] 23 — `computeShadeColour` negative-index normalisation
+- [x] 24 — `calculateSkillYears`'s `today` default: one-line comment
+
+Part 3 complete.
+
+---
+
 ## Part 3 — Lower-confidence / latent items
 
 Verified-PLAUSIBLE-but-dormant items and unverified single-source candidates. Leads to spot-check, not confirmed bugs.
@@ -862,19 +875,21 @@ Verified-PLAUSIBLE-but-dormant items and unverified single-source candidates. Le
 
 - **Where:** `TimelineEventCard.tsx:120-122`, `Skills.helpers.ts:16-17`
 - `encodeURIComponent` + `.join(',')` then `.split(',')` — `URLSearchParams.get()` decodes `%2C` back to a literal comma first, so a skill name with a comma would mis-split. **Checked: no current skill/tech-stack name has a comma** — not live.
-- **Fix (optional):** switch to repeated `skill` params (`?skill=React&skill=TypeScript`) instead of comma-joining. Low priority.
+- **Fix:** switched to repeated `skill` params (`?skill=React&skill=TypeScript`). Also fixed
+  `reorderFilterParams`'s carry-over loop, which used `.set()` (collapses repeated keys to the
+  last one) — now `.append()`.
 
 ### 22. `parseArticlesFeed` assumes `pubDate` is always ISO-prefixed (verified PLAUSIBLE, not live)
 
 - **Where:** `parseArticlesFeed.ts:14`, `parseArticlesFeed.helpers.ts:8-13`
 - `isRssFeedItemShape` only checks `typeof === 'string'`, not format. **Checked: existing test fixtures confirm rss2json's actual format matches today.**
-- **Fix (optional):** add a regex check for the expected prefix shape in `isRssFeedItemShape`. Low priority.
+- **Fix:** added a regex check for the expected ISO-date prefix in `isRssFeedItemShape`.
 
 ### 23. `computeShadeColour` breaks on negative `shadeIndex` (verified PLAUSIBLE, unreachable)
 
 - **Where:** `computeShadeColour.helpers.ts:21`
 - JS `%` preserves sign → `NaN` downstream for negative input. **Checked: only caller (`skillShadeIndex`) always produces non-negative values.** Not reachable today.
-- **Fix (optional):** `((shadeIndex % len) + len) % len` normalisation. Cheap, only worth it for future-proofing.
+- **Fix:** `((shadeIndex % len) + len) % len` normalisation.
 
 ### 24. Unverified single-source cleanup candidates (spot-check before acting)
 
@@ -884,7 +899,7 @@ Verified-PLAUSIBLE-but-dormant items and unverified single-source candidates. Le
 - ~~`SkillsListView.tsx:51,74` hand-listed keys~~ → **approved, see Part 0.3**.
 - ~~`SkillFilterBar.tsx:53` param rename~~ → **approved, see Part 0.1**.
 - ~~`TimelineEventCard.helpers.ts:13` constant placement~~ → **approved, see Part 0.2**.
-- **`calculateSkillYears.ts:18`** — `today: Date = new Date()` default is a footgun for a future caller that skips memoizing it. Current only call site (`Skills.tsx:56`) already wraps in `useMemo` — no live bug, just a one-line comment worth adding. _(still just a lead, not picked up this round)_
+- ~~`calculateSkillYears.ts:18` `today` default~~ → **fixed, see #24 above** (one-line comment added).
 - ~~`Skills.tsx:111` searchTerm dual state~~ → **superseded by Part 0.6** — user decided single-source is worth doing despite the documented keystroke-drop risk; `flushSync` resolves the risk. No longer "no action needed."
 
 ---
