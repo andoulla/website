@@ -78,23 +78,23 @@ describe('SkillsListView', () => {
 
     test('groups skills into sub-category headings when a category has more than one sub-category present', () => {
       const skills = [
-        new SkillSummary().skill('React').subCategory('frontend-development').mock(),
+        new SkillSummary().skill('React').subCategory('development').mock(),
         new SkillSummary().skill('CSS-in-JS').subCategory('styling').mock(),
       ];
       const screen = renderListView({ skills });
 
-      expect(screen.getByText('Frontend Development')).toBeVisible();
+      expect(screen.getByText('Development')).toBeVisible();
       expect(screen.getByText('Styling & UI')).toBeVisible();
     });
 
     test('does not render a sub-category heading when a category has only one sub-category present', () => {
       const skills = [
-        new SkillSummary().skill('React').subCategory('frontend-development').mock(),
-        new SkillSummary().skill('TypeScript').subCategory('frontend-development').mock(),
+        new SkillSummary().skill('React').subCategory('development').mock(),
+        new SkillSummary().skill('TypeScript').subCategory('development').mock(),
       ];
       const screen = renderListView({ skills });
 
-      expect(screen.queryByText('Frontend Development')).not.toBeInTheDocument();
+      expect(screen.queryByText('Development')).not.toBeInTheDocument();
     });
   });
 
@@ -115,7 +115,7 @@ describe('SkillsListView', () => {
 
     test('hides skills outside the selected subcategories', () => {
       const skills = [
-        new SkillSummary().skill('React').subCategory('frontend-development').mock(),
+        new SkillSummary().skill('React').subCategory('development').mock(),
         new SkillSummary().skill('Jest').subCategory('testing').mock(),
       ];
       const screen = renderListView({

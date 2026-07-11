@@ -1,7 +1,6 @@
 import type { Theme } from '@mui/material/styles';
 
 import type { SkillCategory } from '@/data/skills.types';
-import type { TimelineEvent } from '@/types';
 import { CATEGORY_ORDER } from '@/utils/skillCategory';
 import { skillCategory } from '@/utils/skillColour';
 
@@ -9,12 +8,6 @@ import { CARD_FADE_DURATION_MS, CARD_FADE_TRANSLATE_Y } from './TimelineEventCar
 
 export const recommendationElementId = (id: string): string =>
   `recommendation-${encodeURIComponent(id)}`;
-
-export const RESPONSIBILITIES_LABEL_BY_TYPE: Record<TimelineEvent['type'], string> = {
-  work: 'Responsibilities',
-  education: 'Description',
-  other: 'Responsibilities',
-};
 
 interface SkillCategoryGroup {
   category: SkillCategory;

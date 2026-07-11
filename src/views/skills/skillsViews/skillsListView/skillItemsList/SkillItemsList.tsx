@@ -65,14 +65,14 @@ const SkillListItem = ({ skill, isHighlighted }: SkillListItemProps) => {
   );
 };
 
-export const SkillItemsList = ({ skills, highlightedSkills }: SkillItemsListProps) => {
+export const SkillItemsList = ({ skills, highlightedSkills = [] }: SkillItemsListProps) => {
   return (
     <List disablePadding dense>
       {skills.map((skill) => (
         <SkillListItem
           key={skill.skill}
           skill={skill}
-          isHighlighted={(highlightedSkills ?? []).includes(skill.skill)}
+          isHighlighted={highlightedSkills.includes(skill.skill)}
         />
       ))}
     </List>

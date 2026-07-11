@@ -2,7 +2,7 @@
   {
     "name": "React",
     "category": "engineering",
-    "subCategory": "frontend-development",
+    "subCategory": "development",
     "type": "tech",
     "synonyms": ["ReactJS", "React.js"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -11,7 +11,7 @@
   {
     "name": "TypeScript",
     "category": "engineering",
-    "subCategory": "frontend-development",
+    "subCategory": "development",
     "type": "tech",
     "synonyms": ["TS"],
     "jobIds": ["atom-learning-2021-01"],
@@ -20,7 +20,7 @@
   {
     "name": "JavaScript",
     "category": "engineering",
-    "subCategory": "frontend-development",
+    "subCategory": "development",
     "type": "tech",
     "synonyms": ["JS", "ECMAScript"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
@@ -29,7 +29,7 @@
   {
     "name": "React Query",
     "category": "engineering",
-    "subCategory": "frontend-development",
+    "subCategory": "development",
     "type": "tech",
     "synonyms": ["TanStack Query", "RQ"],
     "jobIds": ["atom-learning-2021-01"],
@@ -173,7 +173,7 @@
   {
     "name": "Flow",
     "category": "engineering",
-    "subCategory": "frontend-development",
+    "subCategory": "development",
     "type": "tech",
     "synonyms": ["Flowtype", "Facebook Flow"],
     "jobIds": ["moo-2017-01"],
@@ -249,6 +249,15 @@
     "type": "tech",
     "synonyms": [],
     "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "name": "Software Development",
+    "category": "engineering",
+    "subCategory": "development",
+    "type": "skill",
+    "synonyms": ["Programming", "Coding", "Software Engineering"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {

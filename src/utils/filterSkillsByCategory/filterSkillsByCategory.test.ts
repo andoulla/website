@@ -4,11 +4,7 @@ import type { SkillSummary as SkillSummaryData } from '@/utils/calculateSkillYea
 import { filterSkillsByCategory } from './filterSkillsByCategory';
 
 const SKILLS: SkillSummaryData[] = [
-  new SkillSummary()
-    .skill('React')
-    .category('engineering')
-    .subCategory('frontend-development')
-    .mock(),
+  new SkillSummary().skill('React').category('engineering').subCategory('development').mock(),
   new SkillSummary().skill('Jest').category('quality-performance').subCategory('testing').mock(),
   new SkillSummary()
     .skill('Team Leadership')

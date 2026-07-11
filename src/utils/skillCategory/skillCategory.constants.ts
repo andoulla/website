@@ -17,7 +17,7 @@ export const CATEGORY_ORDER: SkillCategory[] = [
 ];
 
 export const SUBCATEGORY_LABELS: Record<SkillSubCategory, string> = {
-  'frontend-development': 'Frontend Development',
+  development: 'Development',
   testing: 'Testing',
   styling: 'Styling & UI',
   'design-system': 'Design System',
@@ -30,9 +30,9 @@ export const SUBCATEGORY_LABELS: Record<SkillSubCategory, string> = {
   'stakeholder-management': 'Stakeholder Management',
   mentoring: 'Mentoring',
 };
-
+// TODO: reevaluate after tech stack additions for full job history; subcategory can be fe, be, fs
 export const SUBCATEGORIES_BY_CATEGORY: Record<SkillCategory, SkillSubCategory[]> = {
-  engineering: ['frontend-development', 'styling', 'design-system'],
+  engineering: ['development', 'styling', 'design-system'],
   'quality-performance': ['testing', 'accessibility', 'performance'],
   tooling: ['tooling', 'collaboration-tools'],
   'leadership-delivery': ['leadership', 'delivery-planning'],

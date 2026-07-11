@@ -15,7 +15,10 @@ import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/utils/skillCategory';
 import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';
 
 import {
-  CATEGORY_PATTERN_KIND,
+  CATEGORY_PATTERN_SHAPE_DEFINITIONS,
+  CATEGORY_PATTERN_TYPE,
+} from './SkillsBarChart.constants';
+import {
   getCategoryPatternBackground,
   getCategoryPatternId,
   isBarMatch,
@@ -33,7 +36,7 @@ const SkillBarTooltip = ({ active, payload }: TooltipContentProps) => {
   return <SkillTooltipContent skill={skill} />;
 };
 
-interface CategoryPatternDefProps {
+interface CategoryPatternDefinitionProps {
   category: SkillCategory;
   colour: string;
   markColour: string;
@@ -41,53 +44,40 @@ interface CategoryPatternDefProps {
 
 // SVG <pattern> for a category's bar fill — mirrors getCategoryPatternBackground's CSS look.
 // Rendered inside <defs>, which Recharts passes straight through into the chart's <svg>.
-const CategoryPatternDef = ({ category, colour, markColour }: CategoryPatternDefProps) => {
+const CategoryPatternDefinition = ({
+  category,
+  colour,
+  markColour,
+}: CategoryPatternDefinitionProps) => {
   const id = getCategoryPatternId(category);
-  switch (CATEGORY_PATTERN_KIND[category]) {
-    case 'diagonal':
-      return (
-        <pattern
-          id={id}
-          patternUnits="userSpaceOnUse"
-          width={8}
-          height={8}
-          patternTransform="rotate(45)"
-        >
-          <rect width={8} height={8} fill={colour} />
-          <line x1={2} y1={0} x2={2} y2={8} stroke={markColour} strokeWidth={2} />
-        </pattern>
-      );
-    case 'vertical':
-      return (
-        <pattern id={id} patternUnits="userSpaceOnUse" width={8} height={8}>
-          <rect width={8} height={8} fill={colour} />
-          <line x1={4} y1={0} x2={4} y2={8} stroke={markColour} strokeWidth={2} />
-        </pattern>
-      );
-    case 'crosshatch':
-      return (
-        <pattern id={id} patternUnits="userSpaceOnUse" width={8} height={8}>
-          <rect width={8} height={8} fill={colour} />
-          <line x1={0} y1={0} x2={8} y2={8} stroke={markColour} strokeWidth={1.5} />
-          <line x1={8} y1={0} x2={0} y2={8} stroke={markColour} strokeWidth={1.5} />
-        </pattern>
-      );
-    case 'dots':
-      return (
-        <pattern id={id} patternUnits="userSpaceOnUse" width={6} height={6}>
-          <rect width={6} height={6} fill={colour} />
-          <circle cx={3} cy={3} r={1.5} fill={markColour} />
-        </pattern>
-      );
-    case 'grid':
-      return (
-        <pattern id={id} patternUnits="userSpaceOnUse" width={8} height={8}>
-          <rect width={8} height={8} fill={colour} />
-          <line x1={0} y1={4} x2={8} y2={4} stroke={markColour} strokeWidth={1.5} />
-          <line x1={4} y1={0} x2={4} y2={8} stroke={markColour} strokeWidth={1.5} />
-        </pattern>
-      );
-  }
+  const { width, height, patternTransform, lines, circle } =
+    CATEGORY_PATTERN_SHAPE_DEFINITIONS[CATEGORY_PATTERN_TYPE[category]];
+
+  return (
+    <pattern
+      id={id}
+      patternUnits="userSpaceOnUse"
+      width={width}
+      height={height}
+      patternTransform={patternTransform}
+    >
+      <rect width={width} height={height} fill={colour} />
+      {lines.map((line) => (
+        <line
+          key={`${line.x1}-${line.y1}-${line.x2}-${line.y2}`}
+          x1={line.x1}
+          y1={line.y1}
+          x2={line.x2}
+          y2={line.y2}
+          stroke={markColour}
+          strokeWidth={line.strokeWidth}
+        />
+      ))}
+      {circle !== undefined && (
+        <circle cx={circle.cx} cy={circle.cy} r={circle.r} fill={markColour} />
+      )}
+    </pattern>
+  );
 };
 
 interface SkillsBarChartProps {
@@ -168,7 +158,7 @@ export const SkillsBarChart = ({
           {showPatterns && (
             <defs>
               {legendEntries.map(({ cat, colour, markColour }) => (
-                <CategoryPatternDef
+                <CategoryPatternDefinition
                   key={cat}
                   category={cat}
                   colour={colour}
