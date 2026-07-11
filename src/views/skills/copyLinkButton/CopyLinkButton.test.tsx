@@ -82,8 +82,7 @@ describe('CopyLinkButton', () => {
       await Promise.resolve();
     });
 
-    // Proves the reset effect re-ran (cleared the first timer) instead of no-op-ing on a
-    // repeated 'copied' status, which is exactly what left the original bug unfixed.
+    // Proves the reset effect re-ran instead of being skipped on a repeated 'copied' status.
     expect(clearTimeoutSpy).toHaveBeenCalled();
 
     clearTimeoutSpy.mockRestore();

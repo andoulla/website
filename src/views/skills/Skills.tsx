@@ -114,7 +114,7 @@ const SkillsContent = () => {
   const [viewMode, setViewMode] = useSkillSearchUrl(
     VIEW_PARAM,
     (raw) => parseViewMode(raw) ?? 'radar',
-    // 'radar' is the default now, so it's the value that's omitted from the URL.
+    // 'radar' is the default, so it's omitted from the URL.
     (next) => (next === 'radar' ? null : next)
   );
 

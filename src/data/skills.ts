@@ -1,4 +1,4 @@
-import type { Skill, SkillCategory, SkillSubCategory } from './skills.types';
+import type { Skill, SkillCategory, SkillSubCategory, SkillType } from './skills.types';
 import skillsData from './skills.json';
 
 const VALID_CATEGORIES: SkillCategory[] = [
@@ -24,17 +24,30 @@ const VALID_SUBCATEGORIES: SkillSubCategory[] = [
   'mentoring',
 ];
 
-skillsData.forEach((skill) => {
-  if (!(VALID_CATEGORIES as string[]).includes(skill.category)) {
-    throw new Error(
-      `skills.json: unrecognised category "${skill.category}" on skill "${skill.name}"`
-    );
-  }
-  if (!(VALID_SUBCATEGORIES as string[]).includes(skill.subCategory)) {
-    throw new Error(
-      `skills.json: unrecognised subCategory "${skill.subCategory}" on skill "${skill.name}"`
-    );
-  }
-});
+const VALID_TYPES: SkillType[] = ['tech', 'skill'];
 
-export const skills = skillsData as unknown as Skill[];
+const isValidCategory = (category: string): category is SkillCategory =>
+  (VALID_CATEGORIES as string[]).includes(category);
+
+const isValidSubCategory = (subCategory: string): subCategory is SkillSubCategory =>
+  (VALID_SUBCATEGORIES as string[]).includes(subCategory);
+
+const isValidType = (type: string): type is SkillType => (VALID_TYPES as string[]).includes(type);
+
+const toSkill = (skill: (typeof skillsData)[number]): Skill => {
+  const { name, category, subCategory, type, synonyms, jobIds, recommendationIds } = skill;
+
+  if (!isValidCategory(category)) {
+    throw new Error(`skills.json: unrecognised category "${category}" on skill "${name}"`);
+  }
+  if (!isValidSubCategory(subCategory)) {
+    throw new Error(`skills.json: unrecognised subCategory "${subCategory}" on skill "${name}"`);
+  }
+  if (!isValidType(type)) {
+    throw new Error(`skills.json: unrecognised type "${type}" on skill "${name}"`);
+  }
+
+  return { name, category, subCategory, type, synonyms, jobIds, recommendationIds };
+};
+
+export const skills = skillsData.map(toSkill);

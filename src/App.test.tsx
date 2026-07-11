@@ -60,7 +60,7 @@ describe('App', () => {
       await Promise.resolve();
     });
 
-    expect(screen.getByText('Something went wrong loading this page.')).toBeVisible();
+    expect(screen.getByText('Whoops — my career history just rage-quit. Try again?')).toBeVisible();
     expect(screen.getByRole('button', { name: 'Refresh' })).toBeVisible();
 
     consoleErrorSpy.mockRestore();

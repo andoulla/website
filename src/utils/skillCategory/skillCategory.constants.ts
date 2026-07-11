@@ -30,7 +30,7 @@ export const SUBCATEGORY_LABELS: Record<SkillSubCategory, string> = {
   'stakeholder-management': 'Stakeholder Management',
   mentoring: 'Mentoring',
 };
-
+// TODO: reevaluate after tech stack additions for full job history; subcategory can be fe, be, fs
 export const SUBCATEGORIES_BY_CATEGORY: Record<SkillCategory, SkillSubCategory[]> = {
   engineering: ['development', 'styling', 'design-system'],
   'quality-performance': ['testing', 'accessibility', 'performance'],

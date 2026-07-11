@@ -94,7 +94,7 @@ describe('TimelineEventCard', () => {
       { wrapper: MemoryRouter }
     );
 
-    expect(screen.getByText('Recommendations')).toBeVisible();
+    expect(screen.getByText('Recommendations (1)')).toBeVisible();
     expect(screen.getByText('P.S. · Engineering Manager · 12 Jun 2023')).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
