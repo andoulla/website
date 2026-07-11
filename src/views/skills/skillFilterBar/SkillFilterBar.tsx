@@ -50,7 +50,7 @@ export const SkillFilterBar = ({
     if (isSelected) {
       const subCategoriesForCategory = subCategoriesByCategory[category] ?? [];
       const nextSubCategories = selectedSubCategories.filter(
-        (sub) => !subCategoriesForCategory.includes(sub)
+        (subCategory) => !subCategoriesForCategory.includes(subCategory)
       );
       if (nextSubCategories.length !== selectedSubCategories.length) {
         onSubCategoriesChange(nextSubCategories);
