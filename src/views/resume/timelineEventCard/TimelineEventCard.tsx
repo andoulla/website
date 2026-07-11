@@ -104,7 +104,10 @@ export const TimelineEventCard = ({
   );
 
   const handleViewAllSkillsClick = useCallback(() => {
-    void navigate(`/skills?skill=${event.skills.map(encodeURIComponent).join(',')}`);
+    // Repeated params, not comma-joined — a skill name could contain a comma.
+    const params = new URLSearchParams();
+    event.skills.forEach((skill) => params.append('skill', skill));
+    void navigate(`/skills?${params.toString()}`);
   }, [navigate, event.skills]);
 
   const skillGroups = useMemo(() => groupSkillsByCategory(event.skills), [event.skills]);

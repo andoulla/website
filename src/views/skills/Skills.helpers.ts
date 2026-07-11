@@ -12,10 +12,6 @@ export const parseCategories = (raw: string | null): SkillCategory[] =>
 export const parseSubCategories = (raw: string | null): SkillSubCategory[] =>
   raw !== null && raw.length > 0 ? raw.split(',').filter(isSkillSubCategory) : [];
 
-// Reads the comma-separated `skill` URL param into a list (no whitelist — skill names aren't a closed enum).
-export const parseSkills = (raw: string | null): string[] =>
-  raw !== null && raw.length > 0 ? raw.split(',') : [];
-
 // Reads the `search` URL param, defaulting to an empty string when absent.
 export const parseSearch = (raw: string | null): string => raw ?? '';
 
@@ -33,10 +29,11 @@ export const reorderFilterParams = (params: URLSearchParams): URLSearchParams =>
     if (value !== null) ordered.set(key, value);
   }
 
-  // Carry over any other params (e.g. `skill`) after them, in their original order.
+  // Carry over any other params (e.g. repeated `skill` params) after them, in their original
+  // order — append, not set, so repeated same-key entries aren't collapsed to the last one.
   for (const [key, value] of params) {
     if (key !== VIEW_PARAM && key !== CATEGORY_PARAM && key !== SUBCATEGORY_PARAM) {
-      ordered.set(key, value);
+      ordered.append(key, value);
     }
   }
 

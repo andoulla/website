@@ -133,7 +133,7 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByRole('button', { name: "View this role's skills on the graph" }));
 
-    expect(screen.getByText('location:/skills?skill=React,TypeScript')).toBeVisible();
+    expect(screen.getByText('location:/skills?skill=React&skill=TypeScript')).toBeVisible();
   });
 
   test('omits the Key Skills section, including its button, when the role has no skills', () => {

@@ -1,4 +1,5 @@
 import { Suspense, useCallback, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import RadarIcon from '@mui/icons-material/Radar';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -25,13 +26,7 @@ import {
   SUBCATEGORY_PARAM,
   VIEW_PARAM,
 } from './Skills.constants';
-import {
-  parseCategories,
-  parseSearch,
-  parseSkills,
-  parseSubCategories,
-  parseViewMode,
-} from './Skills.helpers';
+import { parseCategories, parseSearch, parseSubCategories, parseViewMode } from './Skills.helpers';
 import type { ViewMode } from './Skills.types';
 import { CopyLinkButton } from './copyLinkButton';
 import { SkillFilterBar } from './skillFilterBar';
@@ -54,8 +49,15 @@ const SkillsContent = () => {
   const careerHistory = useCareerDataContext();
   const skills = useMemo(() => calculateSkillYears(careerHistory), [careerHistory]);
 
-  const [highlightedSkills] = useSkillSearchUrl(SKILL_PARAM, parseSkills, () => null);
-  // setter unused here — skill param is only ever written by TimelineEventCard's navigate()
+  // Repeated `skill` params, not comma-joined — a skill name could contain a comma.
+  const [searchParams] = useSearchParams();
+  const highlightedSkillsKey = JSON.stringify(searchParams.getAll(SKILL_PARAM));
+  const highlightedSkills = useMemo(
+    () => searchParams.getAll(SKILL_PARAM),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on content, not the ref
+    [highlightedSkillsKey]
+  );
+  // Written only by TimelineEventCard's navigate().
 
   const [selectedCategories, setSelectedCategories] = useSkillSearchUrl(
     CATEGORY_PARAM,

@@ -1,7 +1,6 @@
 import {
   parseCategories,
   parseSearch,
-  parseSkills,
   parseSubCategories,
   parseViewMode,
   reorderFilterParams,
@@ -71,32 +70,6 @@ describe('parseSubCategories', () => {
   });
 });
 
-describe('parseSkills', () => {
-  test('returns an empty array when the param is null', () => {
-    const result = parseSkills(null);
-
-    expect(result).toEqual([]);
-  });
-
-  test('returns an empty array when the param is an empty string', () => {
-    const result = parseSkills('');
-
-    expect(result).toEqual([]);
-  });
-
-  test('splits a single skill', () => {
-    const result = parseSkills('React');
-
-    expect(result).toEqual(['React']);
-  });
-
-  test('splits multiple comma-separated skills', () => {
-    const result = parseSkills('React,TypeScript');
-
-    expect(result).toEqual(['React', 'TypeScript']);
-  });
-});
-
 describe('parseSearch', () => {
   test('returns an empty string when the param is null', () => {
     const result = parseSearch(null);
@@ -162,5 +135,13 @@ describe('reorderFilterParams', () => {
     const result = reorderFilterParams(params);
 
     expect(result.toString()).toBe('subCategory=testing&skill=React');
+  });
+
+  test('preserves repeated skill params instead of collapsing to the last one', () => {
+    const params = new URLSearchParams('skill=React&skill=TypeScript&category=engineering');
+
+    const result = reorderFilterParams(params);
+
+    expect(result.toString()).toBe('category=engineering&skill=React&skill=TypeScript');
   });
 });
