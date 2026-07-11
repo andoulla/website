@@ -35,20 +35,19 @@ const isValidSubCategory = (subCategory: string): subCategory is SkillSubCategor
 const isValidType = (type: string): type is SkillType => (VALID_TYPES as string[]).includes(type);
 
 const toSkill = (skill: (typeof skillsData)[number]): Skill => {
-  if (!isValidCategory(skill.category)) {
-    throw new Error(
-      `skills.json: unrecognised category "${skill.category}" on skill "${skill.name}"`
-    );
+  const { name, category, subCategory, type, synonyms, jobIds, recommendationIds } = skill;
+
+  if (!isValidCategory(category)) {
+    throw new Error(`skills.json: unrecognised category "${category}" on skill "${name}"`);
   }
-  if (!isValidSubCategory(skill.subCategory)) {
-    throw new Error(
-      `skills.json: unrecognised subCategory "${skill.subCategory}" on skill "${skill.name}"`
-    );
+  if (!isValidSubCategory(subCategory)) {
+    throw new Error(`skills.json: unrecognised subCategory "${subCategory}" on skill "${name}"`);
   }
-  if (!isValidType(skill.type)) {
-    throw new Error(`skills.json: unrecognised type "${skill.type}" on skill "${skill.name}"`);
+  if (!isValidType(type)) {
+    throw new Error(`skills.json: unrecognised type "${type}" on skill "${name}"`);
   }
-  return skill;
+
+  return { name, category, subCategory, type, synonyms, jobIds, recommendationIds };
 };
 
 export const skills = skillsData.map(toSkill);
