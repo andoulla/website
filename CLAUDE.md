@@ -45,6 +45,18 @@ src/data/careerHistory.json + recommendations.json
 
 Skills have **no dedicated data file** — `calculateSkillYears(experiences)` derives them from `TimelineEvent.skills` and `TimelineEvent.techStack` at render time.
 
+## Skill mappings are frozen
+
+Mappings = `skill.jobIds`, `skill.recommendationIds`, and (once migrated) `responsibility.skillIds`.
+They are authored via the draft-report + semantic-merge flow (`yarn draft:mappings` writes a
+suggestions report to gitignored `scripts/output/` — it NEVER writes to `src/data/`).
+
+- Committed mappings are **frozen**: a remap only (re)maps new or edited bullets/recommendations.
+  Never touch existing mapping arrays unless the user names a specific one to revisit.
+- Ordering is fixed: `skillIds`/`recommendationIds` sorted alphabetically; `jobIds` in
+  careerHistory order. Re-derived identical mappings must produce a zero diff — nothing shuffles.
+- Guarantee after any remap: `git diff` shows only lines for content the user added or changed.
+
 ## Contexts
 
 | Provider                    | Hook                     | Exposes                                                      |

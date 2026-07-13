@@ -17,7 +17,8 @@
     "typecheck": "tsc --noEmit",
     "prepare": "git config core.hooksPath .githooks",
     "import:jobs": "node scripts/markdown-cv-to-jobs.mjs",
-    "import:rec": "node scripts/linkedin-recommendations.mjs"
+    "import:rec": "node scripts/linkedin-recommendations.mjs",
+    "draft:mappings": "node scripts/draft-skill-mappings.mjs"
   },
   "keywords": [],
   "author": "m.a.s",
@@ -46,6 +47,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
+    "@huggingface/transformers": "^4.2.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -63,6 +65,7 @@
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-local": "file:./eslint-local-rules",
     "eslint-plugin-prettier": "^5.5.6",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
@@ -74,7 +77,6 @@
     "prettier": "^3.8.4",
     "ts-jest": "^29.4.11",
     "typescript": "^6.0.3",
-    "vite": "^8.0.16",
-    "eslint-plugin-local": "file:./eslint-local-rules"
+    "vite": "^8.0.16"
   }
 }
