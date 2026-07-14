@@ -6,18 +6,19 @@ Started: 2026-07-13
 
 ## Status
 
-| Branch                           | Steps | Status                                                                                                                                                                                                         |
-| -------------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ~~`feat/00-deep-linking`~~       | 0     | ❌ dropped by user — empty-state rejected; branch deleted                                                                                                                                                      |
-| `feat/01-data-foundations`       | 1–3   | ✅ COMPLETE, pushed `9739f00` — script (`11f6383`), skills migration (`0faf505`, message misleading: user commit swept staged data in; left per user), normalize fix (`76ce13e`), responsibilities (`9739f00`) |
-| `feat/02-tracks-and-context`     | 4–5   | pending                                                                                                                                                                                                        |
-| `feat/03-join-skill-objects`     | 6     | pending                                                                                                                                                                                                        |
-| `feat/04-skills-view-tracks`     | 7     | pending                                                                                                                                                                                                        |
-| `feat/05-resume-tabs`            | 8     | pending                                                                                                                                                                                                        |
-| `feat/06-deeplinks-cleanup-docs` | 9–11  | pending                                                                                                                                                                                                        |
+| Branch                           | Steps | Status                                                                                                           |
+| -------------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------- |
+| ~~`feat/00-deep-linking`~~       | 0     | ❌ dropped by user — empty-state rejected; branch deleted                                                        |
+| `feat/01-data-foundations`       | 1–3   | ✅ MERGED to main 2026-07-14 (fast-forward push, no PR — user request)                                           |
+| `feat/02-tracks-and-context`     | 4–5   | ✅ COMPLETE, pushed `da7e401` — track data (`f9f376c`), track context + App mount (`da7e401`); PR not opened yet |
+| `feat/03-join-skill-objects`     | 6     | pending                                                                                                          |
+| `feat/04-skills-view-tracks`     | 7     | pending                                                                                                          |
+| `feat/05-resume-tabs`            | 8     | pending                                                                                                          |
+| `feat/06-deeplinks-cleanup-docs` | 9–11  | pending                                                                                                          |
 
 ## Decisions log (recent)
 
+- 2026-07-14: feat/01 merged to main by fast-forward push (`git push origin feat/01-data-foundations:main`), no PR — user asked to "merge feat-01 first" then continue.
 - 2026-07-14: Full taxonomy approved with amendments — kept separate: Team Onboarding, Enzyme, Flow, Kibana, Testing Strategy, Error Handling≠Error Monitoring. Canonicals: Estimation & Planning (syn Sprint Planning), Technical Direction (syn Technical Strategy), Roadmap Planning (syn Roadmapping/Project Planning), Documentation (syn Confluence/Notion), Error Monitoring (syn Sentry). Dropped: Software Development, Team Operations.
 - 2026-07-14: unmapped skills (jobIds []) stay in taxonomy but don't render on graphs/bars — NO min-jobIds validation.
 - 2026-07-13: no "No recommendations yet." empty state in tooltip.
@@ -26,12 +27,22 @@ Started: 2026-07-13
 ## Blocked on user
 
 - [ ] Drop `stash@{0}`? (100% redundant now)
-- [ ] Optional: Elsevier/Capco tech stack
-- [ ] Open PR for feat/01 when branch complete: https://github.com/andoulla/website/pull/new/feat/01-data-foundations
+- [ ] Optional: Elsevier/Capco tech stack (its App.tsx TODO was deleted in feat/02 per plan — tracked only here now)
+- [ ] Open PR for feat/02: https://github.com/andoulla/website/pull/new/feat/02-tracks-and-context
 
 ## Next up
 
-`feat/02-tracks-and-context` (branch from feat/01): plan steps 4–5 — `src/types/track.ts`, 3 track JSONs under `src/data/tracks/` (author from the 3 taxonomy md files, referencing skills.json ids; canonical renames: sprint-planning→estimation-planning, technical-strategy→technical-direction, roadmapping→roadmap-planning, confluence→documentation), `src/data/tracks.ts` wrapper + validation + full-covers-all test + category-cap test, `TrackContextProvider` in `src/context/track/`, App.tsx mount + TODO cleanup.
+`feat/03-join-skill-objects` (branch from feat/02): plan step 6 — `feat: join full skill objects into career history`. Join returns `Skill[]` for techStack/skills (split by `type`), integrity throws for unresolvable `skill.jobIds`/`recommendationIds`, `TimelineEventWithRecommendations` type ripple (`techStack: Skill[]; skills: Skill[]`), minimal card shims. Also per plan §1: move `Skill` types from `src/data/skills.types.ts` to `src/types/skill.ts` (delete the data one) — deferred to this branch on purpose.
+
+### feat/02 handoff (what exists now)
+
+- `src/types/track.ts`: exports `TrackId` (`'em' | 'senior-swe' | 'full'`) + `Track`; `TrackCategory`/`TrackSubCategory` interfaces exist but are deliberately UNexported (code-style: no exports until imported) — export them when a consumer needs them.
+- `src/data/tracks/{em,senior-swe,full}.json`: em 71 skills/5 cats, senior-swe 79/5, full 113/7 (covers all of skills.json). Canonical renames applied (estimation-planning, technical-direction, roadmap-planning, documentation; agile-delivery, cross-functional-collaboration, design-patterns absorb their merge sources).
+- `src/data/tracks.ts`: exports `tracks: Track[]` (tab order em, senior-swe, full), `TRACK_IDS`, `isTrackId`. Runtime throws (all doMock-tested in `tracks.test.ts`, 9 tests): unrecognised/duplicate track id, >7 categories (`MAX_TRACK_CATEGORIES` local const — sync with `CATEGORY_COLOUR_PALETTE` when feat/04 creates it), duplicate category/subCategory id per track, unknown skillId, skillId twice per track, full-track-misses-a-skill.
+- `src/context/track/`: `TrackContextProvider` + `useTrackContext` (both exported from the .tsx; barrel `index.ts` exports ONLY the provider so far — add `useTrackContext` to it when feat/03+ consumes it). `TrackContextProvider.constants.ts`: `TRACK_PARAM = 'track'`, `DEFAULT_TRACK_ID = 'full'`. Normalises missing/invalid `?track=` to `?track=full` via replace; `setTrackId` always writes the param. 6 tests.
+- `src/App.tsx`: TrackContextProvider wraps CareerDataContextProvider inside the ErrorBoundary route element (articles route excluded); the 4 TODO comments deleted.
+- `src/testing/Track` builder (default: id `full`, label `Full`, one category `frontend-development` → `core-technologies` → `['react']` matching default Skill id); exported from testing barrel.
+- Suite: 427 tests green at `da7e401` (hook-run).
 
 ### feat/01 chunk 3 — responsibilities (pushed `9739f00`)
 
