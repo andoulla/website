@@ -79,7 +79,8 @@ async function main() {
 
   console.error(`Loading ${MODEL} (${DTYPE})…`);
   const extract = await pipeline('feature-extraction', MODEL, { dtype: DTYPE });
-  const embed = async (texts) => (await extract(texts, { pooling: 'mean', normalise: true })).tolist();
+  // 'normalize' is the transformers.js option name — must keep the library's US spelling.
+  const embed = async (texts) => (await extract(texts, { pooling: 'mean', normalize: true })).tolist();
 
   console.error(
     `Embedding ${skills.length} skills, ${responsibilities.length} responsibilities, ` +
