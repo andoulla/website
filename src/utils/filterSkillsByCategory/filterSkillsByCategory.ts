@@ -1,4 +1,4 @@
-import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
+import type { SkillCategory, SkillSubCategory } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 
 // Narrows `skills` down to the selected categories/subcategories (AND semantics between the two).

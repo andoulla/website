@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 
 import { PageContainer } from '@/components/pageContainer';
 import { useCareerDataContext } from '@/context/careerData';
-import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
+import type { SkillCategory, SkillSubCategory } from '@/types';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 import { derivePresentCategories, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory';

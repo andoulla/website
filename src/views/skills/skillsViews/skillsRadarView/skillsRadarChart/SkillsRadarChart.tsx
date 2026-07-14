@@ -14,7 +14,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
 
-import type { SkillCategory } from '@/data/skills.types';
+import type { SkillCategory } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';
 

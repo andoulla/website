@@ -1,4 +1,4 @@
-import type { SkillCategory } from '@/data/skills.types';
+import type { SkillCategory } from '@/types';
 
 export interface CategoryRadarPoint {
   category: SkillCategory;

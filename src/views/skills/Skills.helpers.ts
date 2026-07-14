@@ -1,4 +1,4 @@
-import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
+import type { SkillCategory, SkillSubCategory } from '@/types';
 import { isSkillCategory, isSkillSubCategory } from '@/utils/skillCategory';
 
 import { CATEGORY_PARAM, SUBCATEGORY_PARAM, VIEW_MODES, VIEW_PARAM } from './Skills.constants';

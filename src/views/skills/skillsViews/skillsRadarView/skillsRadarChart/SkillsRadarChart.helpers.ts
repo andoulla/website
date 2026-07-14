@@ -1,4 +1,4 @@
-import type { SkillCategory } from '@/data/skills.types';
+import type { SkillCategory } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { hasSearchTerm } from '@/utils/hasSearchTerm';
 import { CATEGORY_LABELS } from '@/utils/skillCategory';

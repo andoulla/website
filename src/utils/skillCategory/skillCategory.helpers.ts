@@ -1,4 +1,4 @@
-import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
+import type { SkillCategory, SkillSubCategory } from '@/types';
 
 import { CATEGORY_ORDER, SUBCATEGORY_LABELS } from './skillCategory.constants';
 

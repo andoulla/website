@@ -1,4 +1,4 @@
-import type { SkillCategory } from '@/data/skills.types';
+import type { SkillCategory } from '@/types';
 import { CATEGORY_ORDER } from '@/utils/skillCategory';
 
 export const skillElementId = (name: string): string => `skill-${encodeURIComponent(name)}`;

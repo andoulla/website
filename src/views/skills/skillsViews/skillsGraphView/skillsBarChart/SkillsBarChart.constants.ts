@@ -1,4 +1,4 @@
-import type { SkillCategory } from '@/data/skills.types';
+import type { SkillCategory } from '@/types';
 
 // Textures for colour-blind/low-vision users, layered on top of category colour.
 export type CategoryPatternType = 'diagonal' | 'vertical' | 'crosshatch' | 'dots' | 'grid';

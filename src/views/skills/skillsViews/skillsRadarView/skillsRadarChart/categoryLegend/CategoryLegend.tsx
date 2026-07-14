@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
-import type { SkillCategory } from '@/data/skills.types';
+import type { SkillCategory } from '@/types';
 import { CATEGORY_LABELS } from '@/utils/skillCategory';
 import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';
 import { CategoryColourDot } from '@/views/skills/categoryColourDot';

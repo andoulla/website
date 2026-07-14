@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
+import type { SkillCategory, SkillSubCategory } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 
 export interface SkillsViewContextValue {

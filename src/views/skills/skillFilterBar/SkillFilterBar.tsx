@@ -8,7 +8,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
+import type { SkillCategory, SkillSubCategory } from '@/types';
 import { CATEGORY_LABELS, SUBCATEGORY_LABELS } from '@/utils/skillCategory';
 
 export interface SkillFilterBarProps {

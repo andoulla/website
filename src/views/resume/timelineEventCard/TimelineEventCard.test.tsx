@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
-import { Recommendation, Responsibility, TimelineEvent } from '@/testing';
+import { Recommendation, Responsibility, Skill, TimelineEvent } from '@/testing';
 
 import { TimelineEventCard } from './TimelineEventCard';
 
@@ -11,6 +11,9 @@ const LocationDisplay = () => {
   const location = useLocation();
   return <span>{`location:${location.pathname}${location.search}`}</span>;
 };
+
+const reactSkill = new Skill().id('react').name('React').type('tech').mock();
+const typeScriptSkill = new Skill().id('typescript').name('TypeScript').type('tech').mock();
 
 const event = new TimelineEvent()
   .companyName('Meridian Dynamics')
@@ -20,8 +23,8 @@ const event = new TimelineEvent()
   .responsibilities([
     new Responsibility().id('job-1-r01').text('Lead frontend architecture').mock(),
   ])
-  .skills(['React', 'TypeScript'])
-  .techStack(['React', 'TypeScript'])
+  .skills([reactSkill, typeScriptSkill])
+  .techStack([reactSkill, typeScriptSkill])
   .mock();
 
 const recommendationItem = new Recommendation()
@@ -47,8 +50,21 @@ describe('TimelineEventCard', () => {
   });
 
   test('groups skills by category, omitting categories with no matching skills', () => {
+    const engineeringSkill = new Skill()
+      .id('react-skill')
+      .name('React')
+      .category('engineering')
+      .type('skill')
+      .mock();
+    const leadershipSkill = new Skill()
+      .id('team-leadership')
+      .name('Team Leadership')
+      .category('leadership-delivery')
+      .type('skill')
+      .mock();
+
     const screen = render(
-      <TimelineEventCard event={{ ...event, skills: ['React', 'Team Leadership'] }} />,
+      <TimelineEventCard event={{ ...event, skills: [engineeringSkill, leadershipSkill] }} />,
       { wrapper: MemoryRouter }
     );
 
@@ -71,8 +87,14 @@ describe('TimelineEventCard', () => {
   });
 
   test('renders tech stack items as comma-separated text', () => {
+    const viteSkill = new Skill().id('vite').name('Vite').type('tech').mock();
+    const jestSkill = new Skill().id('jest').name('Jest').type('tech').mock();
+    const playwrightSkill = new Skill().id('playwright').name('Playwright').type('tech').mock();
+
     const screen = render(
-      <TimelineEventCard event={{ ...event, techStack: ['Vite', 'Jest', 'Playwright'] }} />,
+      <TimelineEventCard
+        event={{ ...event, techStack: [viteSkill, jestSkill, playwrightSkill] }}
+      />,
       { wrapper: MemoryRouter }
     );
 
@@ -170,7 +192,7 @@ describe('TimelineEventCard', () => {
 
   describe('highlight and scroll', () => {
     test('applies an outline when highlightedSkill matches one of the role skills', () => {
-      const screen = render(<TimelineEventCard event={event} highlightedSkill="React" />, {
+      const screen = render(<TimelineEventCard event={event} highlightedSkill="react" />, {
         wrapper: MemoryRouter,
       });
 
@@ -180,7 +202,7 @@ describe('TimelineEventCard', () => {
     });
 
     test('does not apply an outline when highlightedSkill matches none of the role skills', () => {
-      const screen = render(<TimelineEventCard event={event} highlightedSkill="Kubernetes" />, {
+      const screen = render(<TimelineEventCard event={event} highlightedSkill="kubernetes" />, {
         wrapper: MemoryRouter,
       });
 
@@ -192,7 +214,7 @@ describe('TimelineEventCard', () => {
     test('scrolls into view when autoScrollToHighlight is true', () => {
       const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
 
-      render(<TimelineEventCard event={event} highlightedSkill="React" autoScrollToHighlight />, {
+      render(<TimelineEventCard event={event} highlightedSkill="react" autoScrollToHighlight />, {
         wrapper: MemoryRouter,
       });
 

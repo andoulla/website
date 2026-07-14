@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Stack from '@mui/material/Stack';
 
 import { Section } from '@/components/section';
-import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
+import type { SkillCategory, SkillSubCategory } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { hasSearchTerm } from '@/utils/hasSearchTerm';
 import {

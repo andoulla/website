@@ -1,5 +1,5 @@
 import { skills as defaultSkills } from '@/data/skills';
-import type { Skill } from '@/data/skills.types';
+import type { Skill } from '@/types';
 import { normaliseSearchTerm as normalise } from '@/utils/normaliseSearchTerm';
 
 import type { MatchSkillResult } from './matchSkill.types';

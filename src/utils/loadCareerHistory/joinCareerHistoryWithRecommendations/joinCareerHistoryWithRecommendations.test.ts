@@ -37,17 +37,20 @@ describe('joinCareerHistoryWithRecommendations', () => {
   });
 
   it('populates techStack and skills together, split by type, excluding unmatched job IDs', () => {
-    const careerHistory = [new TimelineEvent().mock()];
-    const skills = [
-      new Skill().name('React').mock(),
-      new Skill().name('Team Leadership').type('skill').mock(),
-      new Skill().name('Jest').jobIds(['job-2']).mock(),
-    ];
+    const careerHistory = [new TimelineEvent().mock(), new TimelineEvent().id('job-2').mock()];
+    const reactSkill = new Skill().id('react').name('React').type('tech').mock();
+    const leadershipSkill = new Skill()
+      .id('team-leadership')
+      .name('Team Leadership')
+      .type('skill')
+      .mock();
+    const jestSkill = new Skill().id('jest').name('Jest').type('tech').jobIds(['job-2']).mock();
+    const skills = [reactSkill, leadershipSkill, jestSkill];
 
     const [result] = joinCareerHistoryWithRecommendations(careerHistory, [], skills);
 
-    expect(result.techStack).toEqual(['React']);
-    expect(result.skills).toEqual(['Team Leadership']);
+    expect(result.techStack).toEqual([reactSkill]);
+    expect(result.skills).toEqual([leadershipSkill]);
   });
 
   it('preserves all original event fields', () => {

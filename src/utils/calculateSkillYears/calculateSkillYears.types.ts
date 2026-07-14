@@ -1,4 +1,4 @@
-import type { SkillSubCategory } from '@/data/skills.types';
+import type { SkillSubCategory } from '@/types';
 import type { SkillCategory, SkillColour } from '@/utils/skillColour';
 
 export interface SkillCompanyYears {

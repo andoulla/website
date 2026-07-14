@@ -38,7 +38,11 @@ const CareerTimeline = () => {
       );
     }
     if (highlightedSkill !== undefined) {
-      return careerHistory.findIndex((event) => event.skills.includes(highlightedSkill));
+      return careerHistory.findIndex((event) =>
+        event.skills.some(
+          (skill) => skill.name === highlightedSkill || skill.id === highlightedSkill
+        )
+      );
     }
     return -1;
   }, [careerHistory, highlightedSkill, highlightedRecommendationId]);

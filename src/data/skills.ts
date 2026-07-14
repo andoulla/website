@@ -1,4 +1,5 @@
-import type { Skill, SkillCategory, SkillSubCategory, SkillType } from './skills.types';
+import type { Skill, SkillCategory, SkillSubCategory, SkillType } from '@/types';
+
 import skillsData from './skills.json';
 
 const VALID_CATEGORIES: SkillCategory[] = [

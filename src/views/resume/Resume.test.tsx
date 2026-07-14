@@ -3,7 +3,7 @@ import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
 import { CareerDataContextProvider } from '@/context/careerData';
-import { Recommendation, TimelineEvent } from '@/testing';
+import { Recommendation, Skill, TimelineEvent } from '@/testing';
 import type { TimelineEventWithRecommendations } from '@/types';
 
 import { Resume } from './Resume';
@@ -68,18 +68,19 @@ describe('Resume', () => {
 
   test('scrolls only the first of several entries that list the highlighted skill', async () => {
     const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+    const reactSkill = new Skill().id('react').name('React').mock();
     const careerHistoryWithSharedSkill = [
       new TimelineEvent()
         .id('job-1')
         .companyName('Meridian Dynamics')
         .startDate('2022-04-01')
-        .skills(['React'])
+        .skills([reactSkill])
         .mock(),
       new TimelineEvent()
         .id('job-2')
         .companyName('Brightleaf Software')
         .startDate('2021-04-01')
-        .skills(['React'])
+        .skills([reactSkill])
         .mock(),
     ];
 
@@ -96,18 +97,19 @@ describe('Resume', () => {
   test('scrolls to the job containing the highlighted recommendation, taking priority over a skill match', async () => {
     const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
     const targetRecommendation = new Recommendation().id('rec-2').mock();
+    const reactSkill = new Skill().id('react').name('React').mock();
     const careerHistoryWithRecommendation = [
       new TimelineEvent()
         .id('job-1')
         .companyName('Meridian Dynamics')
         .startDate('2022-04-01')
-        .skills(['React'])
+        .skills([reactSkill])
         .mock(),
       new TimelineEvent()
         .id('job-2')
         .companyName('Brightleaf Software')
         .startDate('2021-04-01')
-        .skills(['React'])
+        .skills([reactSkill])
         .recommendations([targetRecommendation])
         .mock(),
     ];

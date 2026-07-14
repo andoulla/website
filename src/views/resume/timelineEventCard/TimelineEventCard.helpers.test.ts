@@ -1,3 +1,5 @@
+import { Skill } from '@/testing';
+
 import {
   getCardMotionSx,
   groupSkillsByCategory,
@@ -36,29 +38,52 @@ describe('getCardMotionSx', () => {
 
 describe('groupSkillsByCategory', () => {
   test('orders categories by skill count, most skills first', () => {
-    const groups = groupSkillsByCategory(['Team Leadership', 'React', 'TypeScript', 'Git']);
+    const reactSkill = new Skill().id('react').name('React').category('engineering').mock();
+    const typeScriptSkill = new Skill()
+      .id('typescript')
+      .name('TypeScript')
+      .category('engineering')
+      .mock();
+    const gitSkill = new Skill().id('git').name('Git').category('tooling').mock();
+    const leadershipSkill = new Skill()
+      .id('team-leadership')
+      .name('Team Leadership')
+      .category('leadership-delivery')
+      .mock();
+
+    const groups = groupSkillsByCategory([leadershipSkill, reactSkill, typeScriptSkill, gitSkill]);
 
     expect(groups).toEqual([
-      { category: 'engineering', skills: ['React', 'TypeScript'] },
-      { category: 'tooling', skills: ['Git'] },
-      { category: 'leadership-delivery', skills: ['Team Leadership'] },
+      { category: 'engineering', skills: [reactSkill, typeScriptSkill] },
+      { category: 'tooling', skills: [gitSkill] },
+      { category: 'leadership-delivery', skills: [leadershipSkill] },
     ]);
   });
 
   test('breaks ties between equally-sized categories using CATEGORY_ORDER', () => {
-    const groups = groupSkillsByCategory(['Team Leadership', 'React', 'Git']);
+    const reactSkill = new Skill().id('react').name('React').category('engineering').mock();
+    const gitSkill = new Skill().id('git').name('Git').category('tooling').mock();
+    const leadershipSkill = new Skill()
+      .id('team-leadership')
+      .name('Team Leadership')
+      .category('leadership-delivery')
+      .mock();
+
+    const groups = groupSkillsByCategory([leadershipSkill, reactSkill, gitSkill]);
 
     expect(groups).toEqual([
-      { category: 'engineering', skills: ['React'] },
-      { category: 'tooling', skills: ['Git'] },
-      { category: 'leadership-delivery', skills: ['Team Leadership'] },
+      { category: 'engineering', skills: [reactSkill] },
+      { category: 'tooling', skills: [gitSkill] },
+      { category: 'leadership-delivery', skills: [leadershipSkill] },
     ]);
   });
 
   test('omits categories with no matching skills', () => {
-    const groups = groupSkillsByCategory(['React']);
+    const reactSkill = new Skill().id('react').name('React').category('engineering').mock();
 
-    expect(groups).toEqual([{ category: 'engineering', skills: ['React'] }]);
+    const groups = groupSkillsByCategory([reactSkill]);
+
+    expect(groups).toEqual([{ category: 'engineering', skills: [reactSkill] }]);
   });
 
   test('returns an empty array for no skills', () => {
@@ -66,8 +91,14 @@ describe('groupSkillsByCategory', () => {
   });
 
   test('falls back to the tooling category for an unrecognised skill name', () => {
-    const groups = groupSkillsByCategory(['Some Made Up Skill']);
+    const unknownSkill = new Skill()
+      .id('unknown-skill')
+      .name('Some Made Up Skill')
+      .category('tooling')
+      .mock();
 
-    expect(groups).toEqual([{ category: 'tooling', skills: ['Some Made Up Skill'] }]);
+    const groups = groupSkillsByCategory([unknownSkill]);
+
+    expect(groups).toEqual([{ category: 'tooling', skills: [unknownSkill] }]);
   });
 });

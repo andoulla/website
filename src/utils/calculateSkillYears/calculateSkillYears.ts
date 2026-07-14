@@ -1,6 +1,5 @@
 import { skills as defaultSkills } from '@/data/skills';
-import type { Skill } from '@/data/skills.types';
-import type { TimelineEvent } from '@/types';
+import type { Skill, TimelineEvent } from '@/types';
 import { CATEGORY_ORDER } from '@/utils/skillCategory';
 import { skillColour } from '@/utils/skillColour';
 

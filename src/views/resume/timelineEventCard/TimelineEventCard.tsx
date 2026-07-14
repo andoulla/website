@@ -71,7 +71,10 @@ export const TimelineEventCard = ({
       (recommendation) => recommendation.id === highlightedRecommendationId
     );
   const isMatch =
-    (highlightedSkill !== undefined && event.skills.includes(highlightedSkill)) ||
+    (highlightedSkill !== undefined &&
+      event.skills.some(
+        (skill) => skill.id === highlightedSkill || skill.synonyms.includes(highlightedSkill)
+      )) ||
     hasHighlightedRecommendation;
 
   const cardNodeRef = useRef<HTMLDivElement | null>(null);
@@ -97,8 +100,8 @@ export const TimelineEventCard = ({
   }, [autoScrollToHighlight, highlightedRecommendationId]);
 
   const handleSkillClick = useCallback(
-    (skill: string) => {
-      void navigate(`/skills?skill=${encodeURIComponent(skill)}`);
+    (skillName: string) => {
+      void navigate(`/skills?skill=${encodeURIComponent(skillName)}`);
     },
     [navigate]
   );
@@ -106,7 +109,7 @@ export const TimelineEventCard = ({
   const handleViewAllSkillsClick = useCallback(() => {
     // Repeated params, not comma-joined — a skill name could contain a comma.
     const params = new URLSearchParams();
-    event.skills.forEach((skill) => params.append('skill', skill));
+    event.skills.forEach((skill) => params.append('skill', skill.name));
     void navigate(`/skills?${params.toString()}`);
   }, [navigate, event.skills]);
 
@@ -139,7 +142,7 @@ export const TimelineEventCard = ({
           <>
             <Section title="Tech Stack" titleLevel={4}>
               <Typography variant="body2" color="text.secondary">
-                {event.techStack.join(', ')}
+                {event.techStack.map((skill) => skill.name).join(', ')}
               </Typography>
             </Section>
             <Divider sx={{ my: 2 }} />
@@ -178,7 +181,7 @@ export const TimelineEventCard = ({
                       {`${CATEGORY_LABELS[group.category]}:`}
                     </Typography>
                     <TagList
-                      items={group.skills}
+                      items={group.skills.map((skill) => skill.name)}
                       onItemClick={handleSkillClick}
                       getColour={skillColour}
                       getShadeIndex={skillShadeIndex}

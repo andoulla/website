@@ -9,7 +9,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
 
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
-import type { SkillCategory } from '@/data/skills.types';
+import type { SkillCategory } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { CATEGORY_LABELS, derivePresentCategories } from '@/utils/skillCategory';
 import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';

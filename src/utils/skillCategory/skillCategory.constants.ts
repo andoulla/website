@@ -1,4 +1,4 @@
-import type { SkillCategory, SkillSubCategory } from '@/data/skills.types';
+import type { SkillCategory, SkillSubCategory } from '@/types';
 
 export const CATEGORY_LABELS: Record<SkillCategory, string> = {
   engineering: 'Engineering',

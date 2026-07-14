@@ -1,8 +1,7 @@
 import type { Theme } from '@mui/material/styles';
 
-import type { SkillCategory } from '@/data/skills.types';
+import type { Skill, SkillCategory } from '@/types';
 import { CATEGORY_ORDER } from '@/utils/skillCategory';
-import { skillCategory } from '@/utils/skillColour';
 
 import { CARD_FADE_DURATION_MS, CARD_FADE_TRANSLATE_Y } from './TimelineEventCard.constants';
 
@@ -11,13 +10,13 @@ export const recommendationElementId = (id: string): string =>
 
 interface SkillCategoryGroup {
   category: SkillCategory;
-  skills: string[];
+  skills: Skill[];
 }
 
-export const groupSkillsByCategory = (skills: string[]): SkillCategoryGroup[] =>
+export const groupSkillsByCategory = (skills: Skill[]): SkillCategoryGroup[] =>
   CATEGORY_ORDER.map((category) => ({
     category,
-    skills: skills.filter((skill) => skillCategory(skill) === category),
+    skills: skills.filter((skill) => skill.category === category),
   }))
     .filter((group) => group.skills.length > 0)
     // Stable sort: ties keep CATEGORY_ORDER as the tiebreaker.
