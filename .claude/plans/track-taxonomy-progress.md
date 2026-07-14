@@ -6,15 +6,15 @@ Started: 2026-07-13
 
 ## Status
 
-| Branch                           | Steps | Status                                                                                                           |
-| -------------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------- |
-| ~~`feat/00-deep-linking`~~       | 0     | ❌ dropped by user — empty-state rejected; branch deleted                                                        |
-| `feat/01-data-foundations`       | 1–3   | ✅ MERGED to main 2026-07-14 (fast-forward push, no PR — user request)                                           |
-| `feat/02-tracks-and-context`     | 4–5   | ✅ COMPLETE, pushed `da7e401` — track data (`f9f376c`), track context + App mount (`da7e401`); PR not opened yet |
-| `feat/03-join-skill-objects`     | 6     | pending                                                                                                          |
-| `feat/04-skills-view-tracks`     | 7     | pending                                                                                                          |
-| `feat/05-resume-tabs`            | 8     | pending                                                                                                          |
-| `feat/06-deeplinks-cleanup-docs` | 9–11  | pending                                                                                                          |
+| Branch                           | Steps | Status                                                                                                                                                        |
+| -------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ~~`feat/00-deep-linking`~~       | 0     | ❌ dropped by user — empty-state rejected; branch deleted                                                                                                     |
+| `feat/01-data-foundations`       | 1–3   | ✅ MERGED to main 2026-07-14 (fast-forward push, no PR — user request)                                                                                        |
+| `feat/02-tracks-and-context`     | 4–5   | ✅ COMPLETE + feedback fixes, pushed `5d6b224` — track data (`f9f376c`), track context + App mount (`da7e401`), feedback fixes (`e24b1d2`); PR not opened yet |
+| `feat/03-join-skill-objects`     | 6     | pending                                                                                                                                                       |
+| `feat/04-skills-view-tracks`     | 7     | pending                                                                                                                                                       |
+| `feat/05-resume-tabs`            | 8     | pending                                                                                                                                                       |
+| `feat/06-deeplinks-cleanup-docs` | 9–11  | pending                                                                                                                                                       |
 
 ## Decisions log (recent)
 
@@ -42,13 +42,22 @@ Code-review carry-forwards (2026-07-14 review of feat/02; setTrackId same-value 
 
 ### feat/02 handoff (what exists now)
 
-- `src/types/track.ts`: exports `TrackId` (`'em' | 'senior-swe' | 'full'`) + `Track`; `TrackCategory`/`TrackSubCategory` interfaces exist but are deliberately UNexported (code-style: no exports until imported) — export them when a consumer needs them.
-- `src/data/tracks/{em,senior-swe,full}.json`: em 71 skills/5 cats, senior-swe 79/5, full 113/7 (covers all of skills.json). Canonical renames applied (estimation-planning, technical-direction, roadmap-planning, documentation; agile-delivery, cross-functional-collaboration, design-patterns absorb their merge sources).
-- `src/data/tracks.ts`: exports `tracks: Track[]` (tab order em, senior-swe, full), `TRACK_IDS`, `isTrackId`. Runtime throws (all doMock-tested in `tracks.test.ts`, 9 tests): unrecognised/duplicate track id, >7 categories (`MAX_TRACK_CATEGORIES` local const — sync with `CATEGORY_COLOUR_PALETTE` when feat/04 creates it), duplicate category/subCategory id per track, unknown skillId, skillId twice per track, full-track-misses-a-skill.
-- `src/context/track/`: `TrackContextProvider` + `useTrackContext` (both exported from the .tsx; barrel `index.ts` exports ONLY the provider so far — add `useTrackContext` to it when feat/03+ consumes it). `TrackContextProvider.constants.ts`: `TRACK_PARAM = 'track'`, `DEFAULT_TRACK_ID = 'full'`. Normalises missing/invalid `?track=` to `?track=full` via replace; `setTrackId` writes the param, early-returns on the already-active id (no junk history entry). 7 tests.
+- `src/types/track.ts`: exports `TrackId` (`'lead' | 'senior-engineer' | 'full'`) + `Track`; `TrackCategory`/`TrackSubCategory` interfaces exist but are deliberately UNexported (code-style: no exports until imported) — export them when a consumer needs them.
+- `src/data/tracks/{lead,senior-engineer,full}.json`: lead 71 skills/5 cats, senior-engineer 79/5, full 113/7 (covers all of skills.json). Labels: "Lead / Engineering Manager", "Senior Engineer", "Full". Canonical renames applied (estimation-planning, technical-direction, roadmap-planning, documentation; agile-delivery, cross-functional-collaboration, design-patterns absorb their merge sources).
+- `src/data/tracks.ts`: exports `tracks: Track[]` (tab order lead, senior-engineer, full), `TRACK_IDS`, `isTrackId`. Runtime throws (doMock-tested in `tracks.test.ts`, 8 tests): unrecognised/duplicate track id, duplicate category/subCategory id per track, unknown skillId, skillId twice per track, full-track-misses-a-skill. **Removed** MAX_TRACK_CATEGORIES validation — tracks can now have unlimited categories; default fallback colour added in feat/04.
+- `src/context/track/`: `TrackContextProvider` + `useTrackContext` (both exported from the .tsx; barrel `index.ts` exports ONLY the provider so far — add `useTrackContext` to it when feat/03+ consumes it). `TrackContextProvider.types.ts` (renamed from .type.ts per code-style rule): `TRACK_PARAM = 'track'`, `DEFAULT_TRACK_ID = 'full'`. Normalises missing/invalid `?track=` to `?track=full` via replace; `setTrackId` writes the param, early-returns on the already-active id (no junk history entry). 6 tests.
 - `src/App.tsx`: TrackContextProvider wraps CareerDataContextProvider inside the ErrorBoundary route element (articles route excluded); the 4 TODO comments deleted.
-- `src/testing/Track` builder (default: id `full`, label `Full`, one category `frontend-development` → `core-technologies` → `['react']` matching default Skill id); exported from testing barrel.
-- Suite: 427 tests green at `da7e401` (hook-run).
+- `src/testing/Track` builder (default: id `full`, label `Full`, two categories: `frontend-development` → `core-technologies` → `['react']`, `backend-development` → `server-side` → `[]`); exported from testing barrel.
+- Suite: 427 tests green at `5d6b224` after feedback fixes.
+
+### Feedback fixes applied (2026-07-14)
+
+- Track id rename: `em` → `lead`, `senior-swe` → `senior-engineer`
+- Track labels: "Lead / Engineering Manager", "Senior Engineer"
+- Consistent `.types.ts` naming: renamed `CareerDataContextProvider.type.ts`, `ThemeContextProvider.type.ts`, `TrackContextProvider.type.ts`, `SkillsViewContext.type.ts` (all now `.types.ts`); updated code-style.md rule
+- Removed `MAX_TRACK_CATEGORIES` validation — tracks can now have unlimited categories (fallback colour to be added in feat/04)
+- Updated Track test builder to have two categories
+- Shortened verbose comment in TrackContextProvider.tsx per code-style (comments should be short, WHY-focused)
 
 ### feat/01 chunk 3 — responsibilities (pushed `9739f00`)
 
