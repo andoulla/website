@@ -5,7 +5,7 @@ import { isTrackId, tracks } from '@/data/tracks';
 import type { TrackId } from '@/types';
 
 import { DEFAULT_TRACK_ID, TRACK_PARAM } from './TrackContextProvider.constants';
-import type { TrackContextProviderProps, TrackContextValue } from './TrackContextProvider.type';
+import type { TrackContextProviderProps, TrackContextValue } from './TrackContextProvider.types';
 
 const TrackContext = createContext<TrackContextValue | null>(null);
 

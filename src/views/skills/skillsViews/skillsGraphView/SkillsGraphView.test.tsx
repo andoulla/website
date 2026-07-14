@@ -6,7 +6,7 @@ import { SkillSummary } from '@/testing';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 
 import { SkillsViewContextProvider } from '../SkillsViewContext';
-import type { SkillsViewContextValue } from '../SkillsViewContext.type';
+import type { SkillsViewContextValue } from '../SkillsViewContext.types';
 
 import { SkillsGraphView } from './SkillsGraphView';
 

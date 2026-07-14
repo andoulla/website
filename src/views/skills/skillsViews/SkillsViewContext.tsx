@@ -3,7 +3,7 @@ import { createContext, useContext, useMemo } from 'react';
 import type {
   SkillsViewContextProviderProps,
   SkillsViewContextValue,
-} from './SkillsViewContext.type';
+} from './SkillsViewContext.types';
 
 const SkillsViewContext = createContext<SkillsViewContextValue | null>(null);
 

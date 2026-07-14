@@ -14,7 +14,7 @@ const TrackProbe = () => {
       <span>{`Track id: ${trackId}`}</span>
       <span>{`Track label: ${track.label}`}</span>
       <span>{`Search: ${searchParams.toString()}`}</span>
-      <button onClick={() => setTrackId('em')}>Switch to EM</button>
+      <button onClick={() => setTrackId('lead')}>Switch to Lead</button>
       <button
         onClick={() => {
           void navigate(-1);
@@ -58,29 +58,29 @@ describe('TrackContextProvider', () => {
   });
 
   test('provides the track named by a valid param', () => {
-    const screen = renderWithRouter('/?track=em');
+    const screen = renderWithRouter('/?track=lead');
 
-    expect(screen.getByText('Track id: em')).toBeVisible();
-    expect(screen.getByText('Track label: EM / Lead')).toBeVisible();
-    expect(screen.getByText('Search: track=em')).toBeVisible();
+    expect(screen.getByText('Track id: lead')).toBeVisible();
+    expect(screen.getByText('Track label: Lead / Engineering Manager')).toBeVisible();
+    expect(screen.getByText('Search: track=lead')).toBeVisible();
   });
 
   test('setTrackId switches the track and updates the url', async () => {
     const user = userEvent.setup();
     const screen = renderWithRouter('/?track=full');
 
-    await user.click(screen.getByRole('button', { name: 'Switch to EM' }));
+    await user.click(screen.getByRole('button', { name: 'Switch to Lead' }));
 
-    expect(screen.getByText('Track id: em')).toBeVisible();
-    expect(screen.getByText('Search: track=em')).toBeVisible();
+    expect(screen.getByText('Track id: lead')).toBeVisible();
+    expect(screen.getByText('Search: track=lead')).toBeVisible();
   });
 
   test('setTrackId with the already-active track does not push a history entry', async () => {
     const user = userEvent.setup();
     const screen = renderWithRouter('/?track=full');
 
-    await user.click(screen.getByRole('button', { name: 'Switch to EM' }));
-    await user.click(screen.getByRole('button', { name: 'Switch to EM' }));
+    await user.click(screen.getByRole('button', { name: 'Switch to Lead' }));
+    await user.click(screen.getByRole('button', { name: 'Switch to Lead' }));
     await user.click(screen.getByRole('button', { name: 'Back' }));
 
     expect(screen.getByText('Track id: full')).toBeVisible();

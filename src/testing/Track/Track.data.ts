@@ -9,5 +9,10 @@ export const defaultTrack: Track = {
       name: 'Frontend Development',
       subCategories: [{ id: 'core-technologies', name: 'Core Technologies', skillIds: ['react'] }],
     },
+    {
+      id: 'backend-development',
+      name: 'Backend Development',
+      subCategories: [{ id: 'server-side', name: 'Server-Side', skillIds: [] }],
+    },
   ],
 };

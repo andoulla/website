@@ -1,17 +1,14 @@
 import type { Track, TrackId } from '@/types';
 
 import { skills } from './skills';
-import emTrackData from './tracks/em.json';
+import leadTrackData from './tracks/lead.json';
 import fullTrackData from './tracks/full.json';
-import seniorSweTrackData from './tracks/senior-swe.json';
+import seniorEngineerTrackData from './tracks/senior-engineer.json';
 
-export const TRACK_IDS: TrackId[] = ['em', 'senior-swe', 'full'];
+export const TRACK_IDS: TrackId[] = ['lead', 'senior-engineer', 'full'];
 
 export const isTrackId = (value: string): value is TrackId =>
   (TRACK_IDS as string[]).includes(value);
-
-// One fixed palette slot per category, no colour cycling — a track may never outgrow the palette.
-const MAX_TRACK_CATEGORIES = 7;
 
 const knownSkillIds = new Set(skills.map((skill) => skill.id));
 
@@ -39,11 +36,6 @@ const toTrack = (rawTrack: RawTrack, fileName: string): Track => {
 
   if (!isTrackId(id)) {
     throw new Error(`${fileName}: unrecognised track id "${id}"`);
-  }
-  if (categories.length > MAX_TRACK_CATEGORIES) {
-    throw new Error(
-      `${fileName}: ${categories.length} categories exceed the ${MAX_TRACK_CATEGORIES}-colour palette`
-    );
   }
 
   const seenCategoryIds = new Set<string>();
@@ -79,8 +71,8 @@ const toTrack = (rawTrack: RawTrack, fileName: string): Track => {
   return { id, label, categories };
 };
 
-const emTrack = toTrack(emTrackData, 'tracks/em.json');
-const seniorSweTrack = toTrack(seniorSweTrackData, 'tracks/senior-swe.json');
+const leadTrack = toTrack(leadTrackData, 'tracks/lead.json');
+const seniorEngineerTrack = toTrack(seniorEngineerTrackData, 'tracks/senior-engineer.json');
 const fullTrack = toTrack(fullTrackData, 'tracks/full.json');
 
 // "Full shows everything" is a data invariant, not a rendering special case: every skill in
@@ -98,7 +90,7 @@ skills.forEach((skill) => {
 });
 
 // Tab display order.
-export const tracks: Track[] = [emTrack, seniorSweTrack, fullTrack];
+export const tracks: Track[] = [leadTrack, seniorEngineerTrack, fullTrack];
 
 const seenTrackIds = new Set<string>();
 
