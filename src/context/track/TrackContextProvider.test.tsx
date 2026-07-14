@@ -1,12 +1,13 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, useSearchParams } from 'react-router-dom';
+import { MemoryRouter, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { TrackContextProvider, useTrackContext } from './TrackContextProvider';
 
 const TrackProbe = () => {
   const { track, trackId, setTrackId } = useTrackContext();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -14,6 +15,13 @@ const TrackProbe = () => {
       <span>{`Track label: ${track.label}`}</span>
       <span>{`Search: ${searchParams.toString()}`}</span>
       <button onClick={() => setTrackId('em')}>Switch to EM</button>
+      <button
+        onClick={() => {
+          void navigate(-1);
+        }}
+      >
+        Back
+      </button>
     </>
   );
 };
@@ -65,6 +73,18 @@ describe('TrackContextProvider', () => {
 
     expect(screen.getByText('Track id: em')).toBeVisible();
     expect(screen.getByText('Search: track=em')).toBeVisible();
+  });
+
+  test('setTrackId with the already-active track does not push a history entry', async () => {
+    const user = userEvent.setup();
+    const screen = renderWithRouter('/?track=full');
+
+    await user.click(screen.getByRole('button', { name: 'Switch to EM' }));
+    await user.click(screen.getByRole('button', { name: 'Switch to EM' }));
+    await user.click(screen.getByRole('button', { name: 'Back' }));
+
+    expect(screen.getByText('Track id: full')).toBeVisible();
+    expect(screen.getByText('Search: track=full')).toBeVisible();
   });
 
   test('throws when used outside a TrackContextProvider', () => {

@@ -41,13 +41,16 @@ export const TrackContextProvider = ({ children }: TrackContextProviderProps) =>
 
   const setTrackId = useCallback(
     (next: TrackId) => {
+      if (next === trackId) {
+        return;
+      }
       setSearchParams((params) => {
         const nextParams = new URLSearchParams(params);
         nextParams.set(TRACK_PARAM, next);
         return nextParams;
       });
     },
-    [setSearchParams]
+    [setSearchParams, trackId]
   );
 
   const track = useMemo(() => {
