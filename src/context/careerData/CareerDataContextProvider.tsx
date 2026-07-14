@@ -5,7 +5,7 @@ import { loadCareerHistory } from '@/utils/loadCareerHistory';
 import type {
   CareerDataContextProviderProps,
   CareerHistoryPromise,
-} from './CareerDataContextProvider.type';
+} from './CareerDataContextProvider.types';
 
 const CareerDataContext = createContext<CareerHistoryPromise | null>(null);
 

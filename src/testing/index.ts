@@ -4,3 +4,4 @@ export { Recommendation } from './Recommendation';
 export { Responsibility } from './Responsibility';
 export { Skill } from './Skill';
 export { SkillSummary } from './SkillSummary';
+export { Track } from './Track';

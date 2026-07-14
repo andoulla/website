@@ -7,7 +7,7 @@ import type {
   ThemeContextProviderProps,
   ThemeContextValue,
   ThemeName,
-} from './ThemeContextProvider.type';
+} from './ThemeContextProvider.types';
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 

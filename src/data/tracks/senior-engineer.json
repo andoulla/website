@@ -1,0 +1,167 @@
+{
+  "id": "senior-engineer",
+  "label": "Senior Engineer",
+  "categories": [
+    {
+      "id": "frontend-development",
+      "name": "Frontend Development",
+      "subCategories": [
+        {
+          "id": "core-technologies",
+          "name": "Core Technologies",
+          "skillIds": ["javascript-es6", "typescript", "react", "nextjs", "html5", "css3"]
+        },
+        {
+          "id": "react-ecosystem",
+          "name": "React Ecosystem",
+          "skillIds": [
+            "react-hooks",
+            "component-architecture",
+            "state-management",
+            "redux",
+            "react-query",
+            "context-api"
+          ]
+        },
+        {
+          "id": "ui-engineering",
+          "name": "UI Engineering",
+          "skillIds": [
+            "responsive-design",
+            "accessibility-wcag",
+            "design-systems",
+            "component-libraries",
+            "frontend-performance-optimisation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "backend-development",
+      "name": "Backend Development",
+      "subCategories": [
+        {
+          "id": "javascript-backend",
+          "name": "JavaScript Backend",
+          "skillIds": ["nodejs", "expressjs", "nestjs", "rest-apis", "graphql", "websockets"]
+        },
+        {
+          "id": "application-development",
+          "name": "Application Development",
+          "skillIds": [
+            "api-design",
+            "authentication",
+            "authorization",
+            "business-logic",
+            "server-side-development",
+            "integration-patterns"
+          ]
+        },
+        {
+          "id": "backend-architecture",
+          "name": "Backend Architecture",
+          "skillIds": [
+            "service-design",
+            "microservices",
+            "application-architecture",
+            "error-handling",
+            "performance-optimisation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data-storage",
+      "name": "Data & Storage",
+      "subCategories": [
+        {
+          "id": "databases",
+          "name": "Databases",
+          "skillIds": ["postgresql", "mysql", "mongodb", "redis"]
+        },
+        {
+          "id": "data-access",
+          "name": "Data Access",
+          "skillIds": ["database-design", "data-modelling", "sql", "orm", "query-optimisation"]
+        },
+        {
+          "id": "data-integration",
+          "name": "Data Integration",
+          "skillIds": ["api-data-integration", "data-validation", "transaction-management"]
+        }
+      ]
+    },
+    {
+      "id": "software-architecture-quality",
+      "name": "Software Architecture & Quality",
+      "subCategories": [
+        {
+          "id": "architecture",
+          "name": "Architecture",
+          "skillIds": [
+            "software-architecture",
+            "system-design",
+            "design-patterns",
+            "clean-architecture",
+            "solid-principles"
+          ]
+        },
+        {
+          "id": "quality",
+          "name": "Quality",
+          "skillIds": [
+            "code-reviews",
+            "refactoring",
+            "clean-code",
+            "design-reviews",
+            "technical-documentation"
+          ]
+        },
+        {
+          "id": "testing",
+          "name": "Testing",
+          "skillIds": [
+            "unit-testing",
+            "integration-testing",
+            "jest",
+            "react-testing-library",
+            "cypress",
+            "playwright"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "engineering-practices-tools",
+      "name": "Engineering Practices & Tools",
+      "subCategories": [
+        {
+          "id": "development-practices",
+          "name": "Development Practices",
+          "skillIds": [
+            "agile-delivery",
+            "scrum",
+            "continuous-improvement",
+            "ci-cd-awareness",
+            "developer-experience"
+          ]
+        },
+        {
+          "id": "tools",
+          "name": "Tools",
+          "skillIds": ["git", "github", "gitlab", "npm", "vite", "webpack", "eslint", "prettier"]
+        },
+        {
+          "id": "collaboration",
+          "name": "Collaboration",
+          "skillIds": [
+            "jira",
+            "documentation",
+            "cross-functional-collaboration",
+            "product-collaboration"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,250 @@
+{
+  "id": "full",
+  "label": "Full",
+  "categories": [
+    {
+      "id": "leadership-delivery",
+      "name": "Leadership & Delivery",
+      "subCategories": [
+        {
+          "id": "people-leadership",
+          "name": "People Leadership",
+          "skillIds": [
+            "engineering-leadership",
+            "team-leadership",
+            "mentoring-coaching",
+            "hiring-interviewing",
+            "developer-growth",
+            "technical-guidance",
+            "team-onboarding"
+          ]
+        },
+        {
+          "id": "delivery",
+          "name": "Delivery",
+          "skillIds": [
+            "agile-delivery",
+            "scrum",
+            "kanban",
+            "estimation-planning",
+            "roadmap-planning",
+            "prioritisation",
+            "release-management"
+          ]
+        },
+        {
+          "id": "collaboration",
+          "name": "Collaboration",
+          "skillIds": [
+            "stakeholder-management",
+            "product-collaboration",
+            "cross-functional-collaboration",
+            "technical-communication"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frontend-development",
+      "name": "Frontend Development",
+      "subCategories": [
+        {
+          "id": "core-technologies",
+          "name": "Core Technologies",
+          "skillIds": ["javascript-es6", "typescript", "flow", "react", "nextjs", "html5", "css3"]
+        },
+        {
+          "id": "react-ecosystem",
+          "name": "React Ecosystem",
+          "skillIds": [
+            "react-hooks",
+            "component-architecture",
+            "state-management",
+            "redux",
+            "react-query",
+            "context-api"
+          ]
+        },
+        {
+          "id": "ui-engineering",
+          "name": "UI Engineering",
+          "skillIds": [
+            "responsive-design",
+            "accessibility-wcag",
+            "design-systems",
+            "component-libraries",
+            "frontend-performance-optimisation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "backend-development",
+      "name": "Backend Development",
+      "subCategories": [
+        {
+          "id": "javascript-backend",
+          "name": "JavaScript Backend",
+          "skillIds": ["nodejs", "expressjs", "nestjs", "rest-apis", "graphql", "websockets"]
+        },
+        {
+          "id": "application-development",
+          "name": "Application Development",
+          "skillIds": [
+            "api-design",
+            "authentication",
+            "authorization",
+            "business-logic",
+            "server-side-development",
+            "integration-patterns"
+          ]
+        },
+        {
+          "id": "backend-architecture",
+          "name": "Backend Architecture",
+          "skillIds": [
+            "service-design",
+            "application-architecture",
+            "error-handling",
+            "error-monitoring"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data-storage",
+      "name": "Data & Storage",
+      "subCategories": [
+        {
+          "id": "databases",
+          "name": "Databases",
+          "skillIds": ["postgresql", "mysql", "mongodb", "redis"]
+        },
+        {
+          "id": "data-access",
+          "name": "Data Access",
+          "skillIds": ["database-design", "data-modelling", "sql", "orm", "query-optimisation"]
+        },
+        {
+          "id": "data-integration",
+          "name": "Data Integration",
+          "skillIds": ["api-data-integration", "data-validation", "transaction-management"]
+        }
+      ]
+    },
+    {
+      "id": "architecture-design",
+      "name": "Architecture & Design",
+      "subCategories": [
+        {
+          "id": "architecture",
+          "name": "Architecture",
+          "skillIds": [
+            "software-architecture",
+            "system-design",
+            "solution-design",
+            "technical-direction",
+            "architecture-reviews"
+          ]
+        },
+        {
+          "id": "engineering-design",
+          "name": "Engineering Design",
+          "skillIds": [
+            "clean-architecture",
+            "design-patterns",
+            "solid-principles",
+            "domain-driven-design"
+          ]
+        },
+        {
+          "id": "scalability-maintainability",
+          "name": "Scalability & Maintainability",
+          "skillIds": [
+            "performance-optimisation",
+            "scalability",
+            "distributed-systems",
+            "microservices",
+            "technical-debt-management"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "engineering-practices-quality",
+      "name": "Engineering Practices & Quality",
+      "subCategories": [
+        {
+          "id": "code-quality",
+          "name": "Code Quality",
+          "skillIds": [
+            "code-reviews",
+            "clean-code",
+            "refactoring",
+            "coding-standards",
+            "design-reviews",
+            "technical-documentation"
+          ]
+        },
+        {
+          "id": "testing",
+          "name": "Testing",
+          "skillIds": [
+            "test-driven-development",
+            "testing-strategy",
+            "unit-testing",
+            "integration-testing",
+            "jest",
+            "react-testing-library",
+            "enzyme",
+            "cypress",
+            "playwright"
+          ]
+        },
+        {
+          "id": "ways-of-working",
+          "name": "Ways of Working",
+          "skillIds": [
+            "agile-engineering-practices",
+            "continuous-improvement",
+            "developer-experience",
+            "process-improvement",
+            "ci-cd-awareness"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tools-development-workflow",
+      "name": "Tools & Development Workflow",
+      "subCategories": [
+        {
+          "id": "version-control",
+          "name": "Version Control",
+          "skillIds": ["git", "github", "gitlab"]
+        },
+        {
+          "id": "project-management",
+          "name": "Project Management",
+          "skillIds": ["jira", "documentation"]
+        },
+        {
+          "id": "development-workflow",
+          "name": "Development Workflow",
+          "skillIds": [
+            "npm",
+            "package-management",
+            "vite",
+            "webpack",
+            "eslint",
+            "prettier",
+            "api-testing",
+            "debugging",
+            "kibana",
+            "local-development-environments"
+          ]
+        }
+      ]
+    }
+  ]
+}
