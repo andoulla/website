@@ -32,6 +32,12 @@ Started: 2026-07-13
 
 ## Next up
 
+Code-review carry-forwards (2026-07-14 review of feat/02; setTrackId same-value guard already fixed on feat/02):
+
+- [ ] **feat/03 (third PR): stabilise `setTrackId` identity.** react-router rebuilds `setSearchParams` on every search-param change, so `setTrackId`/`contextValue` recreate on unrelated `?view=`/`?skill=` updates → every `useTrackContext` consumer re-renders for nothing. Fix in `TrackContextProvider.tsx` when consumers land: route the write through a ref (or `useNavigate`) so the callback is referentially stable.
+- [ ] **feat/04–05: don't lose the track on plain navigation.** NavBar links carry no `?track=`, and the provider normalises a missing param to `full` — once tabs exist, EM/SWE selection silently resets when clicking Home/Skills. Fix: track-aware nav links, or provider falls back to last-known trackId instead of the default.
+- [ ] **feat/04 MUST add a sync test**: when `CATEGORY_COLOUR_PALETTE` is created in `src/utils/skillColour/`, add a test asserting `CATEGORY_COLOUR_PALETTE.length === MAX_TRACK_CATEGORIES` (export the const from `src/data/tracks.ts` then; a test is the right home since data can't import utils). Until then the `7` in tracks.ts is a free-floating copy that can drift.
+
 `feat/03-join-skill-objects` (branch from feat/02): plan step 6 — `feat: join full skill objects into career history`. Join returns `Skill[]` for techStack/skills (split by `type`), integrity throws for unresolvable `skill.jobIds`/`recommendationIds`, `TimelineEventWithRecommendations` type ripple (`techStack: Skill[]; skills: Skill[]`), minimal card shims. Also per plan §1: move `Skill` types from `src/data/skills.types.ts` to `src/types/skill.ts` (delete the data one) — deferred to this branch on purpose.
 
 ### feat/02 handoff (what exists now)
@@ -39,7 +45,7 @@ Started: 2026-07-13
 - `src/types/track.ts`: exports `TrackId` (`'em' | 'senior-swe' | 'full'`) + `Track`; `TrackCategory`/`TrackSubCategory` interfaces exist but are deliberately UNexported (code-style: no exports until imported) — export them when a consumer needs them.
 - `src/data/tracks/{em,senior-swe,full}.json`: em 71 skills/5 cats, senior-swe 79/5, full 113/7 (covers all of skills.json). Canonical renames applied (estimation-planning, technical-direction, roadmap-planning, documentation; agile-delivery, cross-functional-collaboration, design-patterns absorb their merge sources).
 - `src/data/tracks.ts`: exports `tracks: Track[]` (tab order em, senior-swe, full), `TRACK_IDS`, `isTrackId`. Runtime throws (all doMock-tested in `tracks.test.ts`, 9 tests): unrecognised/duplicate track id, >7 categories (`MAX_TRACK_CATEGORIES` local const — sync with `CATEGORY_COLOUR_PALETTE` when feat/04 creates it), duplicate category/subCategory id per track, unknown skillId, skillId twice per track, full-track-misses-a-skill.
-- `src/context/track/`: `TrackContextProvider` + `useTrackContext` (both exported from the .tsx; barrel `index.ts` exports ONLY the provider so far — add `useTrackContext` to it when feat/03+ consumes it). `TrackContextProvider.constants.ts`: `TRACK_PARAM = 'track'`, `DEFAULT_TRACK_ID = 'full'`. Normalises missing/invalid `?track=` to `?track=full` via replace; `setTrackId` always writes the param. 6 tests.
+- `src/context/track/`: `TrackContextProvider` + `useTrackContext` (both exported from the .tsx; barrel `index.ts` exports ONLY the provider so far — add `useTrackContext` to it when feat/03+ consumes it). `TrackContextProvider.constants.ts`: `TRACK_PARAM = 'track'`, `DEFAULT_TRACK_ID = 'full'`. Normalises missing/invalid `?track=` to `?track=full` via replace; `setTrackId` writes the param, early-returns on the already-active id (no junk history entry). 7 tests.
 - `src/App.tsx`: TrackContextProvider wraps CareerDataContextProvider inside the ErrorBoundary route element (articles route excluded); the 4 TODO comments deleted.
 - `src/testing/Track` builder (default: id `full`, label `Full`, one category `frontend-development` → `core-technologies` → `['react']` matching default Skill id); exported from testing barrel.
 - Suite: 427 tests green at `da7e401` (hook-run).
