@@ -6,15 +6,15 @@ Started: 2026-07-13
 
 ## Status
 
-| Branch                           | Steps | Status                                                                                                              |
-| -------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------- |
-| ~~`feat/00-deep-linking`~~       | 0     | ❌ dropped by user — empty-state rejected; branch deleted                                                           |
-| `feat/01-data-foundations`       | 1–3   | 🟡 draft script pushed (`11f6383`); skills.json migration committed (this session); responsibilities migration NEXT |
-| `feat/02-tracks-and-context`     | 4–5   | pending                                                                                                             |
-| `feat/03-join-skill-objects`     | 6     | pending                                                                                                             |
-| `feat/04-skills-view-tracks`     | 7     | pending                                                                                                             |
-| `feat/05-resume-tabs`            | 8     | pending                                                                                                             |
-| `feat/06-deeplinks-cleanup-docs` | 9–11  | pending                                                                                                             |
+| Branch                           | Steps | Status                                                                                                                                                                                                         |
+| -------------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ~~`feat/00-deep-linking`~~       | 0     | ❌ dropped by user — empty-state rejected; branch deleted                                                                                                                                                      |
+| `feat/01-data-foundations`       | 1–3   | ✅ COMPLETE, pushed `9739f00` — script (`11f6383`), skills migration (`0faf505`, message misleading: user commit swept staged data in; left per user), normalize fix (`76ce13e`), responsibilities (`9739f00`) |
+| `feat/02-tracks-and-context`     | 4–5   | pending                                                                                                                                                                                                        |
+| `feat/03-join-skill-objects`     | 6     | pending                                                                                                                                                                                                        |
+| `feat/04-skills-view-tracks`     | 7     | pending                                                                                                                                                                                                        |
+| `feat/05-resume-tabs`            | 8     | pending                                                                                                                                                                                                        |
+| `feat/06-deeplinks-cleanup-docs` | 9–11  | pending                                                                                                                                                                                                        |
 
 ## Decisions log (recent)
 
@@ -31,7 +31,16 @@ Started: 2026-07-13
 
 ## Next up
 
-feat/01 remainder: responsibilities → `{ id, text, skillIds }` objects (plan step 3) using draft script (`yarn draft:mappings --threshold=0.35`) + Claude semantic merge; then types/careerHistory.ts validation, card `.text` mapping, builders, tests.
+`feat/02-tracks-and-context` (branch from feat/01): plan steps 4–5 — `src/types/track.ts`, 3 track JSONs under `src/data/tracks/` (author from the 3 taxonomy md files, referencing skills.json ids; canonical renames: sprint-planning→estimation-planning, technical-strategy→technical-direction, roadmapping→roadmap-planning, confluence→documentation), `src/data/tracks.ts` wrapper + validation + full-covers-all test + category-cap test, `TrackContextProvider` in `src/context/track/`, App.tsx mount + TODO cleanup.
+
+### feat/01 chunk 3 — responsibilities (pushed `9739f00`)
+
+- careerHistory.json: 30 bullets → `{ id: "<jobId>-rNN", text, skillIds (sorted) }`; education bullets `skillIds: []` (universal). Mapping authored via draft report (0.35) + semantic merge — frozen now.
+- skills.json: 34 skills gained bullet-derived jobIds (union with carried; careerHistory order). MEAN-stack bullet gave nodejs/expressjs/mongodb/rest-apis/api-design/server-side-development capco evidence.
+- New `src/types/responsibility.ts`; `TimelineEvent.responsibilities: Responsibility[]`; barrel updated.
+- `careerHistory.ts`: duplicate responsibility id + unknown skillId throws (imports `./skills`, one-directional).
+- New `src/testing/Responsibility` builder; TimelineEvent builder signature updated; card test + careerHistory tests updated (412 tests green).
+- TimelineEventCard: `.text` render + `length > 0` section guard (education entries all have bullets, so no visible change yet).
 
 ## Handoff notes
 
