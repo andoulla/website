@@ -24,8 +24,7 @@ export const TrackContextProvider = ({ children }: TrackContextProviderProps) =>
   const hasValidTrackParam = rawTrackId !== null && isTrackId(rawTrackId);
   const trackId = hasValidTrackParam ? rawTrackId : DEFAULT_TRACK_ID;
 
-  // ?track= is always present — one canonical URL shape. Normalise a missing or invalid param
-  // to the default without adding a history entry.
+  // Ensure ?track= is always present; normalise missing/invalid param via replace.
   useEffect(() => {
     if (!hasValidTrackParam) {
       setSearchParams(
