@@ -1,0 +1,173 @@
+{
+  "id": "em",
+  "label": "EM / Lead",
+  "categories": [
+    {
+      "id": "leadership-delivery",
+      "name": "Leadership & Delivery",
+      "subCategories": [
+        {
+          "id": "people-leadership",
+          "name": "People Leadership",
+          "skillIds": [
+            "engineering-leadership",
+            "team-leadership",
+            "mentoring-coaching",
+            "hiring-interviewing",
+            "developer-growth",
+            "technical-guidance"
+          ]
+        },
+        {
+          "id": "delivery",
+          "name": "Delivery",
+          "skillIds": [
+            "agile-delivery",
+            "scrum",
+            "kanban",
+            "estimation-planning",
+            "roadmap-planning",
+            "prioritisation",
+            "release-management"
+          ]
+        },
+        {
+          "id": "collaboration",
+          "name": "Collaboration",
+          "skillIds": [
+            "stakeholder-management",
+            "product-collaboration",
+            "cross-functional-collaboration",
+            "technical-communication"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "architecture-design",
+      "name": "Architecture & Design",
+      "subCategories": [
+        {
+          "id": "architecture",
+          "name": "Architecture",
+          "skillIds": [
+            "software-architecture",
+            "system-design",
+            "solution-design",
+            "technical-direction",
+            "architecture-reviews"
+          ]
+        },
+        {
+          "id": "engineering-design",
+          "name": "Engineering Design",
+          "skillIds": [
+            "clean-architecture",
+            "design-patterns",
+            "solid-principles",
+            "domain-driven-design",
+            "api-design"
+          ]
+        },
+        {
+          "id": "scalability-maintainability",
+          "name": "Scalability & Maintainability",
+          "skillIds": [
+            "performance-optimisation",
+            "scalability",
+            "distributed-systems",
+            "microservices",
+            "technical-debt-management"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "javascript-stack",
+      "name": "JavaScript Stack",
+      "subCategories": [
+        {
+          "id": "languages",
+          "name": "Languages",
+          "skillIds": ["javascript-es6", "typescript", "sql"]
+        },
+        {
+          "id": "backend",
+          "name": "Backend",
+          "skillIds": ["nodejs", "expressjs", "nestjs", "rest-apis", "graphql", "websockets"]
+        },
+        {
+          "id": "frontend",
+          "name": "Frontend",
+          "skillIds": ["react", "nextjs", "redux", "html5", "css3"]
+        }
+      ]
+    },
+    {
+      "id": "engineering-practices",
+      "name": "Engineering Practices",
+      "subCategories": [
+        {
+          "id": "code-quality",
+          "name": "Code Quality",
+          "skillIds": [
+            "code-reviews",
+            "clean-code",
+            "refactoring",
+            "coding-standards",
+            "design-reviews"
+          ]
+        },
+        {
+          "id": "testing",
+          "name": "Testing",
+          "skillIds": [
+            "test-driven-development",
+            "unit-testing",
+            "integration-testing",
+            "jest",
+            "cypress",
+            "playwright"
+          ]
+        },
+        {
+          "id": "ways-of-working",
+          "name": "Ways of Working",
+          "skillIds": [
+            "agile-engineering-practices",
+            "continuous-improvement",
+            "developer-experience",
+            "process-improvement"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tools-development-workflow",
+      "name": "Tools & Development Workflow",
+      "subCategories": [
+        {
+          "id": "version-control",
+          "name": "Version Control",
+          "skillIds": ["git", "github", "gitlab"]
+        },
+        {
+          "id": "project-management",
+          "name": "Project Management",
+          "skillIds": ["jira", "documentation"]
+        },
+        {
+          "id": "development-workflow",
+          "name": "Development Workflow",
+          "skillIds": [
+            "npm",
+            "package-management",
+            "api-testing",
+            "debugging",
+            "local-development-environments"
+          ]
+        }
+      ]
+    }
+  ]
+}
