@@ -6,7 +6,7 @@
     "subCategory": "leadership",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01", "elsevier-2016-08"],
     "recommendationIds": []
   },
   {
@@ -50,7 +50,7 @@
     "subCategory": "mentoring",
     "type": "skill",
     "synonyms": ["Recruitment", "Hiring", "Interviewing"],
-    "jobIds": ["elsevier-2016-08"],
+    "jobIds": ["moo-2017-01", "elsevier-2016-08"],
     "recommendationIds": []
   },
   {
@@ -90,7 +90,7 @@
     "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": ["Agile"],
-    "jobIds": ["moo-2017-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": ["notch-r.d.-c7d93c"]
   },
   {
@@ -120,7 +120,7 @@
     "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": ["Sprint Planning"],
-    "jobIds": ["elsevier-2016-08"],
+    "jobIds": ["elsevier-2016-08", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -140,7 +140,7 @@
     "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": ["Prioritization"],
-    "jobIds": [],
+    "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -150,7 +150,7 @@
     "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["capco-2012-12"],
+    "jobIds": ["atom-learning-2021-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -176,7 +176,7 @@
     "subCategory": "stakeholder-management",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -186,7 +186,7 @@
     "subCategory": "stakeholder-management",
     "type": "skill",
     "synonyms": ["Cross-functional Teams", "Cross-functional Delivery"],
-    "jobIds": ["atom-learning-2021-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": [
       "atom-learning-c.b.-da52d1",
       "atom-learning-c.t.-dead22",
@@ -291,7 +291,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -341,7 +341,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -371,7 +371,7 @@
     "subCategory": "design-system",
     "type": "skill",
     "synonyms": ["Radix UI", "Radix"],
-    "jobIds": ["atom-learning-2021-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -381,7 +381,7 @@
     "subCategory": "performance",
     "type": "skill",
     "synonyms": ["Frontend Performance Optimization"],
-    "jobIds": [],
+    "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -391,7 +391,7 @@
     "subCategory": "development",
     "type": "tech",
     "synonyms": ["Node", "NodeJS"],
-    "jobIds": [],
+    "jobIds": ["capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -401,7 +401,7 @@
     "subCategory": "development",
     "type": "tech",
     "synonyms": ["Express"],
-    "jobIds": [],
+    "jobIds": ["capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -421,7 +421,7 @@
     "subCategory": "development",
     "type": "tech",
     "synonyms": ["REST", "RESTful APIs"],
-    "jobIds": [],
+    "jobIds": ["capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -451,7 +451,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -481,7 +481,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -491,7 +491,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -521,7 +521,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
@@ -571,7 +571,7 @@
     "subCategory": "development",
     "type": "tech",
     "synonyms": ["Mongo"],
-    "jobIds": [],
+    "jobIds": ["capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -671,7 +671,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
@@ -756,7 +756,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": ["DDD"],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
@@ -776,7 +776,7 @@
     "subCategory": "performance",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
@@ -806,7 +806,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": ["Tech Debt"],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
@@ -826,7 +826,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
@@ -836,7 +836,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -846,7 +846,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
@@ -866,7 +866,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
@@ -896,7 +896,7 @@
     "subCategory": "testing",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
@@ -906,7 +906,7 @@
     "subCategory": "testing",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
@@ -966,7 +966,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -976,7 +976,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {
@@ -996,7 +996,7 @@
     "subCategory": "development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -1136,7 +1136,7 @@
     "subCategory": "tooling",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["moo-2017-01"],
     "recommendationIds": []
   },
   {

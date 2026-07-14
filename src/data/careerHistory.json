@@ -7,19 +7,106 @@
     "startDate": "2021-01-01",
     "endDate": null,
     "responsibilities": [
-      "Leading multiple cross-functional teams across core product areas in a fast-paced EdTech environment, with ownership across delivery, technical direction and team performance.",
-      "Currently leading a team of 6 engineers across frontend and backend on high-impact school assessment flows, with a focus on stability and reliability in critical assessment-taking journeys.",
-      "Took ownership of in-flight projects and drove them to completion, including a create-assessment flow refactor and the simplification of the feature-flag infrastructure supporting the OMR features.",
-      "Coordinated the delivery of a new B2B payment system, including redefining requirements and aligning stakeholders across product, sales, finance and engineering.",
-      "Established domain-specific shared apps and migrated features and components out of a broader shared workspace to improve team ownership and reduce complexity.",
-      "Led the home domain team of  4-6 engineers across frontend, backend and data, owned all apps in the B2C domain.",
-      "Increased code quality KPI across all three applications from around 50% to over 80% through hands-on delivery and roadmap alignment",
-      "Reduced weekly manual testing from a full-team effort to a single person by redefining the testing strategy and coordinating a robust Playwright end-to-end suite, while keeping strong unit and integration coverage.",
-      "Coordinated migration of the existing E2E suite from Cypress to Playwright.",
-      "Led the Assessments team to deliver a scalable assessment management platform, decoupled the assessment app from the legacy system, and introduced testing to the school apps.",
-      "Helped build and launch a company-wide design system and introduced automated accessibility testing and semantic releases.",
-      "Founded and later co-led the Frontend Guild, driving coding standards, code quality improvements, deprecation of the old design system, documentation improvements, mentoring, and planning for visual regression testing with Playwright and Argos.",
-      "Progressed from Lead Developer to Senior Lead Developer."
+      {
+        "id": "atom-learning-2021-01-r01",
+        "text": "Leading multiple cross-functional teams across core product areas in a fast-paced EdTech environment, with ownership across delivery, technical direction and team performance.",
+        "skillIds": [
+          "agile-delivery",
+          "cross-functional-collaboration",
+          "engineering-leadership",
+          "team-leadership",
+          "technical-direction"
+        ]
+      },
+      {
+        "id": "atom-learning-2021-01-r02",
+        "text": "Currently leading a team of 6 engineers across frontend and backend on high-impact school assessment flows, with a focus on stability and reliability in critical assessment-taking journeys.",
+        "skillIds": ["engineering-leadership", "team-leadership"]
+      },
+      {
+        "id": "atom-learning-2021-01-r03",
+        "text": "Took ownership of in-flight projects and drove them to completion, including a create-assessment flow refactor and the simplification of the feature-flag infrastructure supporting the OMR features.",
+        "skillIds": ["refactoring", "technical-debt-management"]
+      },
+      {
+        "id": "atom-learning-2021-01-r04",
+        "text": "Coordinated the delivery of a new B2B payment system, including redefining requirements and aligning stakeholders across product, sales, finance and engineering.",
+        "skillIds": [
+          "agile-delivery",
+          "cross-functional-collaboration",
+          "product-collaboration",
+          "stakeholder-management"
+        ]
+      },
+      {
+        "id": "atom-learning-2021-01-r05",
+        "text": "Established domain-specific shared apps and migrated features and components out of a broader shared workspace to improve team ownership and reduce complexity.",
+        "skillIds": ["application-architecture", "component-architecture", "domain-driven-design"]
+      },
+      {
+        "id": "atom-learning-2021-01-r06",
+        "text": "Led the home domain team of  4-6 engineers across frontend, backend and data, owned all apps in the B2C domain.",
+        "skillIds": ["cross-functional-collaboration", "engineering-leadership", "team-leadership"]
+      },
+      {
+        "id": "atom-learning-2021-01-r07",
+        "text": "Increased code quality KPI across all three applications from around 50% to over 80% through hands-on delivery and roadmap alignment",
+        "skillIds": ["clean-code", "coding-standards", "continuous-improvement", "roadmap-planning"]
+      },
+      {
+        "id": "atom-learning-2021-01-r08",
+        "text": "Reduced weekly manual testing from a full-team effort to a single person by redefining the testing strategy and coordinating a robust Playwright end-to-end suite, while keeping strong unit and integration coverage.",
+        "skillIds": [
+          "integration-testing",
+          "playwright",
+          "process-improvement",
+          "testing-strategy",
+          "unit-testing"
+        ]
+      },
+      {
+        "id": "atom-learning-2021-01-r09",
+        "text": "Coordinated migration of the existing E2E suite from Cypress to Playwright.",
+        "skillIds": ["cypress", "playwright"]
+      },
+      {
+        "id": "atom-learning-2021-01-r10",
+        "text": "Led the Assessments team to deliver a scalable assessment management platform, decoupled the assessment app from the legacy system, and introduced testing to the school apps.",
+        "skillIds": [
+          "scalability",
+          "software-architecture",
+          "team-leadership",
+          "technical-debt-management",
+          "testing-strategy"
+        ]
+      },
+      {
+        "id": "atom-learning-2021-01-r11",
+        "text": "Helped build and launch a company-wide design system and introduced automated accessibility testing and semantic releases.",
+        "skillIds": [
+          "accessibility-wcag",
+          "component-libraries",
+          "design-systems",
+          "release-management"
+        ]
+      },
+      {
+        "id": "atom-learning-2021-01-r12",
+        "text": "Founded and later co-led the Frontend Guild, driving coding standards, code quality improvements, deprecation of the old design system, documentation improvements, mentoring, and planning for visual regression testing with Playwright and Argos.",
+        "skillIds": [
+          "clean-code",
+          "coding-standards",
+          "design-systems",
+          "mentoring-coaching",
+          "playwright",
+          "technical-documentation"
+        ]
+      },
+      {
+        "id": "atom-learning-2021-01-r13",
+        "text": "Progressed from Lead Developer to Senior Lead Developer.",
+        "skillIds": []
+      }
     ],
     "title": "Senior Lead Engineer"
   },
@@ -31,13 +118,53 @@
     "startDate": "2017-01-01",
     "endDate": "2020-10-01",
     "responsibilities": [
-      "Worked across editor, B2B and checkout teams, contributing to product delivery, frontend architecture, performance, design system adoption and team practices.",
-      "Led a performance audit of the bespoke editor, investigated bottlenecks, shaped the backlog and ran prioritisation meetings; this work delivered a 16% reduction in bundle size and a 6-point Lighthouse improvement.",
-      "Drove the migration from LESS to Sass and helped deliver a 6-month refactor to make the editor responsive ahead of schedule.",
-      "Improved team onboarding by replacing the previous process with a leaner approach centred on pairing and focused introductions.",
-      "Delivered features for the bespoke B2B platform and contributed to a new checkout experience for sample packs.",
-      "Drove adoption of the design system in the B2B editor to improve brand compliance.",
-      "Supported hiring for technical roles and mentored a junior engineer outside the immediate team."
+      {
+        "id": "moo-2017-01-r01",
+        "text": "Worked across editor, B2B and checkout teams, contributing to product delivery, frontend architecture, performance, design system adoption and team practices.",
+        "skillIds": [
+          "agile-engineering-practices",
+          "component-architecture",
+          "cross-functional-collaboration",
+          "design-systems",
+          "frontend-performance-optimisation",
+          "product-collaboration"
+        ]
+      },
+      {
+        "id": "moo-2017-01-r02",
+        "text": "Led a performance audit of the bespoke editor, investigated bottlenecks, shaped the backlog and ran prioritisation meetings; this work delivered a 16% reduction in bundle size and a 6-point Lighthouse improvement.",
+        "skillIds": [
+          "debugging",
+          "frontend-performance-optimisation",
+          "performance-optimisation",
+          "prioritisation"
+        ]
+      },
+      {
+        "id": "moo-2017-01-r03",
+        "text": "Drove the migration from LESS to Sass and helped deliver a 6-month refactor to make the editor responsive ahead of schedule.",
+        "skillIds": ["css3", "refactoring", "responsive-design"]
+      },
+      {
+        "id": "moo-2017-01-r04",
+        "text": "Improved team onboarding by replacing the previous process with a leaner approach centred on pairing and focused introductions.",
+        "skillIds": ["mentoring-coaching", "process-improvement", "team-onboarding"]
+      },
+      {
+        "id": "moo-2017-01-r05",
+        "text": "Delivered features for the bespoke B2B platform and contributed to a new checkout experience for sample packs.",
+        "skillIds": ["agile-delivery", "business-logic"]
+      },
+      {
+        "id": "moo-2017-01-r06",
+        "text": "Drove adoption of the design system in the B2B editor to improve brand compliance.",
+        "skillIds": ["component-libraries", "design-systems"]
+      },
+      {
+        "id": "moo-2017-01-r07",
+        "text": "Supported hiring for technical roles and mentored a junior engineer outside the immediate team.",
+        "skillIds": ["hiring-interviewing", "mentoring-coaching"]
+      }
     ],
     "title": "Software Engineer"
   },
@@ -49,7 +176,16 @@
     "startDate": "2016-08-01",
     "endDate": "2016-12-01",
     "responsibilities": [
-      "Led the Mendeley Data team, taking ownership of recruitment, supporting day-to-day team operations, and contributing to estimation and planning for upcoming work."
+      {
+        "id": "elsevier-2016-08-r01",
+        "text": "Led the Mendeley Data team, taking ownership of recruitment, supporting day-to-day team operations, and contributing to estimation and planning for upcoming work.",
+        "skillIds": [
+          "engineering-leadership",
+          "estimation-planning",
+          "hiring-interviewing",
+          "team-leadership"
+        ]
+      }
     ],
     "title": "Lead Developer"
   },
@@ -61,11 +197,38 @@
     "startDate": "2012-12-01",
     "endDate": "2016-08-01",
     "responsibilities": [
-      "Progressed through multiple roles while delivering internal products and client-facing prototypes across web, API and mobile platforms.",
-      "Built and rebranded an internal document management application and helped launch it globally after a rigorous security review.",
-      "Delivered a client prototype end-to-end as the sole developer and contributed to client visualisation work on the MEAN stack.",
-      "Worked across four internal projects, including two production web applications, an API and a mobile app nearing global launch.",
-      "Led a team of 8–10 developers across London and Bratislava, managing planning, releases, stakeholder communication, onboarding and delivery, while remaining hands-on technically."
+      {
+        "id": "capco-2012-12-r01",
+        "text": "Progressed through multiple roles while delivering internal products and client-facing prototypes across web, API and mobile platforms.",
+        "skillIds": ["agile-delivery", "api-design", "server-side-development"]
+      },
+      {
+        "id": "capco-2012-12-r02",
+        "text": "Built and rebranded an internal document management application and helped launch it globally after a rigorous security review.",
+        "skillIds": ["release-management"]
+      },
+      {
+        "id": "capco-2012-12-r03",
+        "text": "Delivered a client prototype end-to-end as the sole developer and contributed to client visualisation work on the MEAN stack.",
+        "skillIds": ["expressjs", "mongodb", "nodejs", "server-side-development"]
+      },
+      {
+        "id": "capco-2012-12-r04",
+        "text": "Worked across four internal projects, including two production web applications, an API and a mobile app nearing global launch.",
+        "skillIds": ["rest-apis", "server-side-development"]
+      },
+      {
+        "id": "capco-2012-12-r05",
+        "text": "Led a team of 8–10 developers across London and Bratislava, managing planning, releases, stakeholder communication, onboarding and delivery, while remaining hands-on technically.",
+        "skillIds": [
+          "agile-delivery",
+          "estimation-planning",
+          "release-management",
+          "stakeholder-management",
+          "team-leadership",
+          "team-onboarding"
+        ]
+      }
     ],
     "title": "Senior Developer / Innovation Architect"
   },
@@ -77,8 +240,16 @@
     "startDate": "2011-09-01",
     "endDate": "2012-09-01",
     "responsibilities": [
-      "Grade: Distinction",
-      "Dissertation: Introducing creativity into programming: Can a software implementation of creativity techniques improve programming outcomes?"
+      {
+        "id": "city-st-georges-university-of-london-2011-09-r01",
+        "text": "Grade: Distinction",
+        "skillIds": []
+      },
+      {
+        "id": "city-st-georges-university-of-london-2011-09-r02",
+        "text": "Dissertation: Introducing creativity into programming: Can a software implementation of creativity techniques improve programming outcomes?",
+        "skillIds": []
+      }
     ],
     "title": "Master of Science (MSc), Software Engineering"
   },
@@ -90,8 +261,16 @@
     "startDate": "2007-09-01",
     "endDate": "2009-07-01",
     "responsibilities": [
-      "Activities and societies: DanceSport UEA, International Society",
-      "Dissertation: Texture classification for marshes from aerial photographs"
+      {
+        "id": "university-of-east-anglia-2007-09-r01",
+        "text": "Activities and societies: DanceSport UEA, International Society",
+        "skillIds": []
+      },
+      {
+        "id": "university-of-east-anglia-2007-09-r02",
+        "text": "Dissertation: Texture classification for marshes from aerial photographs",
+        "skillIds": []
+      }
     ],
     "title": "Bachelor of Science (BSc), Computer Science"
   }

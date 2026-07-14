@@ -1,3 +1,5 @@
+import type { Responsibility } from './responsibility';
+
 export interface TimelineEvent {
   id: string;
   type: 'work' | 'education' | 'other';
@@ -6,5 +8,5 @@ export interface TimelineEvent {
   location: string;
   startDate: string;
   endDate: string | null;
-  responsibilities: string[];
+  responsibilities: Responsibility[];
 }

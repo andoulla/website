@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
-import { Recommendation, TimelineEvent } from '@/testing';
+import { Recommendation, Responsibility, TimelineEvent } from '@/testing';
 
 import { TimelineEventCard } from './TimelineEventCard';
 
@@ -17,7 +17,9 @@ const event = new TimelineEvent()
   .title('Staff Frontend Engineer')
   .location('London, UK')
   .startDate('2022-04-01')
-  .responsibilities(['Lead frontend architecture'])
+  .responsibilities([
+    new Responsibility().id('job-1-r01').text('Lead frontend architecture').mock(),
+  ])
   .skills(['React', 'TypeScript'])
   .techStack(['React', 'TypeScript'])
   .mock();
@@ -277,7 +279,10 @@ describe('TimelineEventCard', () => {
       <TimelineEventCard
         event={{
           ...event,
-          responsibilities: ['Lead frontend architecture', 'Mentor engineers'],
+          responsibilities: [
+            new Responsibility().id('job-1-r01').text('Lead frontend architecture').mock(),
+            new Responsibility().id('job-1-r02').text('Mentor engineers').mock(),
+          ],
         }}
       />,
       { wrapper: MemoryRouter }

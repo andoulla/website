@@ -1,4 +1,4 @@
-import type { Recommendation, TimelineEventWithRecommendations } from '@/types';
+import type { Recommendation, Responsibility, TimelineEventWithRecommendations } from '@/types';
 
 import { defaultTimelineEvent } from './TimelineEvent.data';
 
@@ -44,7 +44,7 @@ export class TimelineEvent {
     return this;
   }
 
-  responsibilities(responsibilities: string[]): this {
+  responsibilities(responsibilities: Responsibility[]): this {
     this.data = { ...this.data, responsibilities };
     return this;
   }
