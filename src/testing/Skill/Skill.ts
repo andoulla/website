@@ -9,6 +9,11 @@ export class Skill {
     this.data = { ...defaultSkill };
   }
 
+  id(id: string): this {
+    this.data = { ...this.data, id };
+    return this;
+  }
+
   name(name: string): this {
     this.data = { ...this.data, name };
     return this;

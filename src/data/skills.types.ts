@@ -22,6 +22,7 @@ export type SkillSubCategory =
   | 'mentoring';
 
 export interface Skill {
+  id: string;
   name: string;
   category: SkillCategory;
   subCategory: SkillSubCategory;

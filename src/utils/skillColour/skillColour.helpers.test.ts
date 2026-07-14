@@ -20,7 +20,7 @@ describe('skillColour', () => {
   });
 
   test('people & stakeholders skills map to gold', () => {
-    expect(skillColour('Mentoring')).toBe('gold');
+    expect(skillColour('Mentoring & Coaching')).toBe('gold');
     expect(skillColour('Team Onboarding')).toBe('gold');
   });
 
@@ -39,7 +39,7 @@ describe('skillCategory', () => {
   test('returns the correct category for known skills', () => {
     expect(skillCategory('React')).toBe('engineering');
     expect(skillCategory('Team Leadership')).toBe('leadership-delivery');
-    expect(skillCategory('Mentoring')).toBe('people-stakeholders');
+    expect(skillCategory('Mentoring & Coaching')).toBe('people-stakeholders');
   });
 
   test('returns tooling for unknown skills', () => {

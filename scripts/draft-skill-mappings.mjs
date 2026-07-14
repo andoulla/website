@@ -1,18 +1,17 @@
 #!/usr/bin/env node
-// Drafting utility — writes a suggestions REPORT only; never writes to src/data/.
-//
-// Embeds every careerHistory responsibility and every recommendation text alongside every skill
-// (name + synonyms) using a local sentence-embedding model, then reports each (text, skill) pair
-// whose cosine similarity clears the threshold. The report is a first draft for the semantic
-// mapping merge pass — a human/Claude applies accepted rows to src/data/ and commits.
-//
-// Deterministic: pinned model + identical inputs => byte-identical report. The model (~25 MB)
-// downloads from the Hugging Face Hub on first run and is cached locally; offline afterwards.
-//
-// Usage:
-//   yarn draft:mappings [--threshold=0.5]
-//
-// Output: scripts/output/draft-mappings.json (gitignored)
+/**
+ * Drafts skill–responsibility/recommendation mappings via sentence embeddings.
+ *
+ * Embeds skills (name + synonyms) and career responsibilities/recommendations using a local model,
+ * reports (text, skill) pairs above the similarity threshold. Human/Claude then applies accepted
+ * suggestions to src/data/ and commits — this script only writes a report, never touches src/data/.
+ *
+ * Deterministic: pinned model + identical inputs → byte-identical report. Model (~25 MB) downloads
+ * once from Hugging Face Hub and caches locally.
+ *
+ * Usage: yarn draft:mappings [--threshold=0.5]
+ * Output: scripts/output/draft-mappings.json (gitignored)
+ */
 
 import { mkdirSync, readFileSync, writeFileSync } from 'fs';
 
@@ -21,9 +20,7 @@ import { pipeline } from '@huggingface/transformers';
 import { slugify } from './lib/slug.mjs';
 
 const MODEL = 'Xenova/all-MiniLM-L6-v2';
-// 'q8' pinned explicitly: quantisation affects scores, so leaving it to the library default
-// could silently change the report between library versions.
-const DTYPE = 'q8';
+const DTYPE = 'q8'; // Pinned: quantisation affects scores; defaults can change between library versions.
 const DEFAULT_THRESHOLD = 0.5;
 
 function parseThreshold(argv) {
@@ -42,12 +39,10 @@ function readJson(path) {
   return JSON.parse(readFileSync(path, 'utf-8'));
 }
 
-// Works before and after the id migration: prefers skill.id, falls back to slugified name.
 function skillId(skill) {
   return skill.id ?? slugify(skill.name);
 }
 
-// Works before and after the responsibilities-as-objects migration.
 function jobResponsibilities(job) {
   return job.responsibilities.map((responsibility, index) => {
     if (typeof responsibility === 'string') {
@@ -58,7 +53,7 @@ function jobResponsibilities(job) {
 }
 
 function cosine(a, b) {
-  // Embeddings are L2-normalised by the extractor, so the dot product IS the cosine similarity.
+  // L2-normalised embeddings: dot product IS cosine similarity.
   let dot = 0;
   for (let i = 0; i < a.length; i++) dot += a[i] * b[i];
   return dot;
@@ -84,7 +79,7 @@ async function main() {
 
   console.error(`Loading ${MODEL} (${DTYPE})…`);
   const extract = await pipeline('feature-extraction', MODEL, { dtype: DTYPE });
-  const embed = async (texts) => (await extract(texts, { pooling: 'mean', normalize: true })).tolist();
+  const embed = async (texts) => (await extract(texts, { pooling: 'mean', normalise: true })).tolist();
 
   console.error(
     `Embedding ${skills.length} skills, ${responsibilities.length} responsibilities, ` +
