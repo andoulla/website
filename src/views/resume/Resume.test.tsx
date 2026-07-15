@@ -62,10 +62,10 @@ describe('Resume', () => {
     expect(screen.getByText('Harborview Digital')).toBeVisible();
   });
 
-  test('renders a tab per track with Full selected by default, normalising the url', async () => {
+  test('renders a tab per track with General selected by default, normalising the url', async () => {
     const screen = await renderResume(() => Promise.resolve(testCareerHistory));
 
-    expect(screen.getByRole('tab', { name: 'Full', selected: true })).toBeVisible();
+    expect(screen.getByRole('tab', { name: 'General', selected: true })).toBeVisible();
     expect(
       screen.getByRole('tab', { name: 'Lead / Engineering Manager', selected: false })
     ).toBeVisible();

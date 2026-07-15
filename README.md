@@ -21,7 +21,7 @@ This is a personal project I'm using to explore Claude's models and features, wi
 
 ## Pages
 
-- **Resume** (`/`) — chronological timeline of work and education history with inline recommendations, viewed through three track tabs (Lead / Engineering Manager, Senior Engineer, and Full — the default). Role tabs hide responsibilities, skills, and tech stack not relevant to that track (a job with nothing relevant collapses to a compact primary-info card); education entries are always visible and visually distinguished (institution logo or a School icon); shows a skeleton while data loads
+- **Resume** (`/`) — chronological timeline of work and education history with inline recommendations, viewed through three track tabs (General — the default — Lead / Engineering Manager, and Senior Engineer). Role tabs hide responsibilities, skills, and tech stack not relevant to that track (a job with nothing relevant collapses to a compact primary-info card); education entries are always visible and visually distinguished (institution logo or a School icon); shows a skeleton while data loads
 - **Skills** (`/skills`) — three views (list, bar chart, radar) built on Recharts; supports search, category/sub-category filtering, and deep-linking to a specific skill via `?skill=<name>`. Categories and sub-categories come from the active track's taxonomy file (`src/data/tracks/*.json`), coloured by category position; skill names and search synonyms come from a master list (`src/data/skills.json`), and a skill's years of experience are computed by summing the durations of the jobs it's linked to there. The active track syncs to `?track=` on both pages
 - **Articles** (`/articles`) — fetches and renders posts from a Medium RSS feed
 
@@ -72,7 +72,7 @@ Until that's done, the upload step no-ops safely (`fail_ci_if_error: false`) rat
 
 **Resume**
 
-- Switch track tabs (Lead / Engineering Manager, Senior Engineer, Full) to filter every card to that track — synced to `?track=`, which the nav links and skill-chip links carry along
+- Switch track tabs (General, Lead / Engineering Manager, Senior Engineer) to filter every card to that track — synced to `?track=`, which the nav links and skill-chip links carry along
 - Click a "Key Skills" chip on a card to jump to that skill on the Skills page, highlighted
 - Click "View this role's skills on the graph" to jump to the Skills page with all of that role's skills highlighted
 - Click a recommendation's LinkedIn icon to open the original recommendation

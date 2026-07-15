@@ -67,7 +67,7 @@ describe('TrackContextProvider', () => {
     const screen = renderWithRouter('/');
 
     expect(screen.getByText('Track id: full')).toBeVisible();
-    expect(screen.getByText('Track label: Full')).toBeVisible();
+    expect(screen.getByText('Track label: General')).toBeVisible();
     expect(screen.getByText('Search: track=full')).toBeVisible();
   });
 

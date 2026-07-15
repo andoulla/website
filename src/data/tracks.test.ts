@@ -31,9 +31,9 @@ describe('tracks', () => {
 
     const { tracks, TRACK_IDS } = await import('./tracks');
 
-    expect(tracks.map((track) => track.id)).toEqual(['lead', 'senior-engineer', 'full']);
-    expect(tracks[2]).toEqual(new Track().mock());
-    expect(TRACK_IDS).toEqual(['lead', 'senior-engineer', 'full']);
+    expect(tracks.map((track) => track.id)).toEqual(['full', 'lead', 'senior-engineer']);
+    expect(tracks[0]).toEqual(new Track().mock());
+    expect(TRACK_IDS).toEqual(['full', 'lead', 'senior-engineer']);
   });
 
   test('throws when a track file has an unrecognised id', async () => {

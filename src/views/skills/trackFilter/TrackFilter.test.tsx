@@ -33,7 +33,7 @@ describe('TrackFilter', () => {
 
     expect(screen.getByRole('option', { name: 'Lead / Engineering Manager' })).toBeVisible();
     expect(screen.getByRole('option', { name: 'Senior Engineer' })).toBeVisible();
-    expect(screen.getByRole('option', { name: 'Full' })).toBeVisible();
+    expect(screen.getByRole('option', { name: 'General' })).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 

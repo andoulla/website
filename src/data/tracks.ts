@@ -5,7 +5,7 @@ import leadTrackData from './tracks/lead.json';
 import fullTrackData from './tracks/full.json';
 import seniorEngineerTrackData from './tracks/senior-engineer.json';
 
-export const TRACK_IDS: TrackId[] = ['lead', 'senior-engineer', 'full'];
+export const TRACK_IDS: TrackId[] = ['full', 'lead', 'senior-engineer'];
 
 export const isTrackId = (value: string): value is TrackId =>
   (TRACK_IDS as string[]).includes(value);
@@ -90,7 +90,7 @@ skills.forEach((skill) => {
 });
 
 // Tab display order.
-export const tracks: Track[] = [leadTrack, seniorEngineerTrack, fullTrack];
+export const tracks: Track[] = [fullTrack, leadTrack, seniorEngineerTrack];
 
 const seenTrackIds = new Set<string>();
 
