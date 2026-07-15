@@ -17,6 +17,10 @@ import { Resume } from './views/resume';
 import { Skills } from './views/skills';
 
 // TODO: optional — add Elsevier/Capco tech stack to careerHistory.json (neither carries one yet).
+// TODO: when hovering over tooltip in skills user can't click the links because it keeps moving left or right
+// TODO: bug, when clicking on a category orsubcategory in resume, it should go to barchart and have the skill selected , not just on the url but in the filters
+// TODO: bug when clicking on a skill in the barchart, it should go to the skill page and have the skill selected, not just on the url but in the filters, and the skill should be at the top
+// TODO : bug animation on card
 const App = () => {
   return (
     <ThemeContextProvider>
