@@ -12,7 +12,7 @@ Started: 2026-07-13
 | `feat/01-data-foundations`       | 1–3   | ✅ MERGED to main 2026-07-14 (fast-forward push, no PR — user request)                                                                                        |
 | `feat/02-tracks-and-context`     | 4–5   | ✅ COMPLETE + feedback fixes, pushed `5d6b224` — track data (`f9f376c`), track context + App mount (`da7e401`), feedback fixes (`e24b1d2`); PR not opened yet |
 | ``feat/03-join-skill-objects`    | 6     | ✅ MERGED to main 2026-07-15 (fast-forward push `2bf8d1d`, no PR — user request)                                                                              |
-| `feat/04-skills-view-tracks`     | 7     | ✅ COMPLETE, pushed `ad618e3` — skills view track-aware; 431 tests passing                                                                                    |
+| `feat/04-skills-view-tracks`     | 7     | ✅ MERGED to main 2026-07-15 (fast-forward push `4f09efe`, no PR — user request); incl. palette contrast fixes                                                |
 | `feat/05-resume-tabs`            | 8     | pending                                                                                                                                                       |
 | `feat/06-deeplinks-cleanup-docs` | 9–11  | pending                                                                                                                                                       |
 
