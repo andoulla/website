@@ -2,6 +2,8 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, useNavigate, useSearchParams } from 'react-router-dom';
 
+import type { TrackId } from '@/types';
+
 import { TrackContextProvider, useTrackContext } from './TrackContextProvider';
 
 const TrackProbe = () => {
@@ -23,6 +25,31 @@ const TrackProbe = () => {
         Back
       </button>
     </>
+  );
+};
+
+// Records the setTrackId reference seen on each render so identity stability can be asserted.
+const seenSetTrackIds: Array<(next: TrackId) => void> = [];
+
+const SetTrackIdIdentityProbe = () => {
+  const { setTrackId } = useTrackContext();
+  const [, setSearchParams] = useSearchParams();
+
+  seenSetTrackIds.push(setTrackId);
+
+  return (
+    <button
+      onClick={() => {
+        setSearchParams((params) => {
+          const nextParams = new URLSearchParams(params);
+
+          nextParams.set('view', 'list');
+          return nextParams;
+        });
+      }}
+    >
+      Change view param
+    </button>
   );
 };
 
@@ -85,6 +112,22 @@ describe('TrackContextProvider', () => {
 
     expect(screen.getByText('Track id: full')).toBeVisible();
     expect(screen.getByText('Search: track=full')).toBeVisible();
+  });
+
+  test('setTrackId identity is stable across unrelated search param changes', async () => {
+    const user = userEvent.setup();
+    const screen = render(
+      <MemoryRouter initialEntries={['/?track=full']}>
+        <TrackContextProvider>
+          <SetTrackIdIdentityProbe />
+        </TrackContextProvider>
+      </MemoryRouter>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Change view param' }));
+
+    expect(seenSetTrackIds.length).toBeGreaterThan(1);
+    expect(new Set(seenSetTrackIds).size).toBe(1);
   });
 
   test('throws when used outside a TrackContextProvider', () => {

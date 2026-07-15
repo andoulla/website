@@ -1,4 +1,4 @@
-import { createContext, use, useCallback, useEffect, useMemo } from 'react';
+import { createContext, use, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { isTrackId, tracks } from '@/data/tracks';
@@ -38,19 +38,26 @@ export const TrackContextProvider = ({ children }: TrackContextProviderProps) =>
     }
   }, [hasValidTrackParam, setSearchParams]);
 
-  const setTrackId = useCallback(
-    (next: TrackId) => {
-      if (next === trackId) {
-        return;
-      }
-      setSearchParams((params) => {
-        const nextParams = new URLSearchParams(params);
-        nextParams.set(TRACK_PARAM, next);
-        return nextParams;
-      });
-    },
-    [setSearchParams, trackId]
-  );
+  // Refs keep setTrackId referentially stable: react-router rebuilds setSearchParams on every
+  // search-param change, which would otherwise re-render every consumer on unrelated updates.
+  const trackIdRef = useRef(trackId);
+  const setSearchParamsRef = useRef(setSearchParams);
+  useEffect(() => {
+    trackIdRef.current = trackId;
+    setSearchParamsRef.current = setSearchParams;
+  });
+
+  const setTrackId = useCallback((next: TrackId) => {
+    // Guard before writing — setting an unchanged value would still push a history entry.
+    if (next === trackIdRef.current) {
+      return;
+    }
+    setSearchParamsRef.current((params) => {
+      const nextParams = new URLSearchParams(params);
+      nextParams.set(TRACK_PARAM, next);
+      return nextParams;
+    });
+  }, []);
 
   const track = useMemo(() => {
     const activeTrack = tracks.find((candidate) => candidate.id === trackId);
