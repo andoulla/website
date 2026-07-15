@@ -846,11 +846,19 @@
     "recommendationIds": []
   },
   {
-    "id": "documentation",
-    "name": "Documentation",
+    "id": "confluence",
+    "name": "Confluence",
     "type": "tech",
-    "synonyms": ["Confluence", "Notion"],
-    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
+    "synonyms": [],
+    "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "id": "notion",
+    "name": "Notion",
+    "type": "tech",
+    "synonyms": [],
+    "jobIds": ["atom-learning-2021-01"],
     "recommendationIds": []
   },
   {

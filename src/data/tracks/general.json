@@ -226,7 +226,12 @@
         {
           "id": "project-management",
           "name": "Project Management",
-          "skillIds": ["jira", "documentation"]
+          "skillIds": ["jira"]
+        },
+        {
+          "id": "documentation",
+          "name": "Documentation",
+          "skillIds": ["confluence", "notion"]
         },
         {
           "id": "development-workflow",

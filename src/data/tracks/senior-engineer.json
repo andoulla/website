@@ -154,12 +154,12 @@
         {
           "id": "collaboration",
           "name": "Collaboration",
-          "skillIds": [
-            "jira",
-            "documentation",
-            "cross-functional-collaboration",
-            "product-collaboration"
-          ]
+          "skillIds": ["jira", "cross-functional-collaboration", "product-collaboration"]
+        },
+        {
+          "id": "documentation",
+          "name": "Documentation",
+          "skillIds": ["confluence", "notion"]
         }
       ]
     }
