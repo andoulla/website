@@ -1,5 +1,3 @@
-export type { SkillCategory } from '@/types';
-
 // Hex colours outside MUI's named palette — see skillColour.constants.ts for why.
 export type CustomSkillColour = 'teal' | 'green' | 'plum' | 'brown' | 'gold' | 'indigo' | 'berry';
 

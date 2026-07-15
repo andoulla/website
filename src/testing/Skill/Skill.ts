@@ -19,16 +19,6 @@ export class Skill {
     return this;
   }
 
-  category(category: SkillType['category']): this {
-    this.data = { ...this.data, category };
-    return this;
-  }
-
-  subCategory(subCategory: SkillType['subCategory']): this {
-    this.data = { ...this.data, subCategory };
-    return this;
-  }
-
   type(type: SkillEntryType): this {
     this.data = { ...this.data, type };
     return this;

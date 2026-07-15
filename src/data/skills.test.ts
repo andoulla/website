@@ -8,8 +8,6 @@ describe('skills', () => {
     jest.doMock('./skills.json', () => [
       {
         name: 'Bad Skill',
-        category: 'engineering',
-        subCategory: 'development',
         type: 'skill',
         synonyms: [],
         jobIds: [],
@@ -27,8 +25,6 @@ describe('skills', () => {
       {
         id: 'react',
         name: 'React',
-        category: 'engineering',
-        subCategory: 'development',
         type: 'tech',
         synonyms: [],
         jobIds: [],
@@ -37,8 +33,6 @@ describe('skills', () => {
       {
         id: 'react',
         name: 'React Native',
-        category: 'engineering',
-        subCategory: 'development',
         type: 'tech',
         synonyms: [],
         jobIds: [],
@@ -54,8 +48,6 @@ describe('skills', () => {
       {
         id: 'typescript',
         name: 'TypeScript',
-        category: 'engineering',
-        subCategory: 'development',
         type: 'tech',
         synonyms: ['TS'],
         jobIds: [],
@@ -64,8 +56,6 @@ describe('skills', () => {
       {
         id: 'flow',
         name: 'Flow',
-        category: 'engineering',
-        subCategory: 'development',
         type: 'tech',
         synonyms: ['ts'],
         jobIds: [],
@@ -83,8 +73,6 @@ describe('skills', () => {
       {
         id: 'npm',
         name: 'npm',
-        category: 'tooling',
-        subCategory: 'tooling',
         type: 'tech',
         synonyms: ['NPM', 'Npm'],
         jobIds: [],
@@ -97,51 +85,11 @@ describe('skills', () => {
     expect(skills).toHaveLength(1);
   });
 
-  test('throws when a skill has an unrecognised category', async () => {
-    jest.doMock('./skills.json', () => [
-      {
-        id: 'bad-skill',
-        name: 'Bad Skill',
-        category: 'design',
-        subCategory: 'development',
-        type: 'skill',
-        synonyms: [],
-        jobIds: [],
-        recommendationIds: [],
-      },
-    ]);
-
-    await expect(import('./skills')).rejects.toThrow(
-      'skills.json: unrecognised category "design" on skill "Bad Skill"'
-    );
-  });
-
-  test('throws when a skill has an unrecognised subCategory', async () => {
-    jest.doMock('./skills.json', () => [
-      {
-        id: 'bad-skill',
-        name: 'Bad Skill',
-        category: 'engineering',
-        subCategory: 'design',
-        type: 'skill',
-        synonyms: [],
-        jobIds: [],
-        recommendationIds: [],
-      },
-    ]);
-
-    await expect(import('./skills')).rejects.toThrow(
-      'skills.json: unrecognised subCategory "design" on skill "Bad Skill"'
-    );
-  });
-
   test('throws when a skill has an unrecognised type', async () => {
     jest.doMock('./skills.json', () => [
       {
         id: 'bad-skill',
         name: 'Bad Skill',
-        category: 'engineering',
-        subCategory: 'development',
         type: 'expertise',
         synonyms: [],
         jobIds: [],

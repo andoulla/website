@@ -2,8 +2,6 @@
   {
     "id": "engineering-leadership",
     "name": "Engineering Leadership",
-    "category": "leadership-delivery",
-    "subCategory": "leadership",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01", "elsevier-2016-08"],
@@ -12,8 +10,6 @@
   {
     "id": "team-leadership",
     "name": "Team Leadership",
-    "category": "leadership-delivery",
-    "subCategory": "leadership",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01", "elsevier-2016-08", "capco-2012-12"],
@@ -29,8 +25,6 @@
   {
     "id": "mentoring-coaching",
     "name": "Mentoring & Coaching",
-    "category": "people-stakeholders",
-    "subCategory": "mentoring",
     "type": "skill",
     "synonyms": ["Mentoring", "Coaching"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -46,8 +40,6 @@
   {
     "id": "hiring-interviewing",
     "name": "Hiring & Interviewing",
-    "category": "people-stakeholders",
-    "subCategory": "mentoring",
     "type": "skill",
     "synonyms": ["Recruitment", "Hiring", "Interviewing"],
     "jobIds": ["moo-2017-01", "elsevier-2016-08"],
@@ -56,8 +48,6 @@
   {
     "id": "developer-growth",
     "name": "Developer Growth",
-    "category": "people-stakeholders",
-    "subCategory": "mentoring",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -66,8 +56,6 @@
   {
     "id": "technical-guidance",
     "name": "Technical Guidance",
-    "category": "people-stakeholders",
-    "subCategory": "mentoring",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -76,8 +64,6 @@
   {
     "id": "team-onboarding",
     "name": "Team Onboarding",
-    "category": "people-stakeholders",
-    "subCategory": "mentoring",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["moo-2017-01", "capco-2012-12"],
@@ -86,8 +72,6 @@
   {
     "id": "agile-delivery",
     "name": "Agile Delivery",
-    "category": "leadership-delivery",
-    "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": ["Agile"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
@@ -96,8 +80,6 @@
   {
     "id": "scrum",
     "name": "Scrum",
-    "category": "leadership-delivery",
-    "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -106,8 +88,6 @@
   {
     "id": "kanban",
     "name": "Kanban",
-    "category": "leadership-delivery",
-    "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -116,8 +96,6 @@
   {
     "id": "estimation-planning",
     "name": "Estimation & Planning",
-    "category": "leadership-delivery",
-    "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": ["Sprint Planning"],
     "jobIds": ["elsevier-2016-08", "capco-2012-12"],
@@ -126,8 +104,6 @@
   {
     "id": "roadmap-planning",
     "name": "Roadmap Planning",
-    "category": "leadership-delivery",
-    "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": ["Roadmapping", "Project Planning"],
     "jobIds": ["atom-learning-2021-01", "capco-2012-12"],
@@ -136,8 +112,6 @@
   {
     "id": "prioritisation",
     "name": "Prioritisation",
-    "category": "leadership-delivery",
-    "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": ["Prioritization"],
     "jobIds": ["moo-2017-01"],
@@ -146,8 +120,6 @@
   {
     "id": "release-management",
     "name": "Release Management",
-    "category": "leadership-delivery",
-    "subCategory": "delivery-planning",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01", "capco-2012-12"],
@@ -156,8 +128,6 @@
   {
     "id": "stakeholder-management",
     "name": "Stakeholder Management",
-    "category": "people-stakeholders",
-    "subCategory": "stakeholder-management",
     "type": "skill",
     "synonyms": ["Stakeholder Communication"],
     "jobIds": ["atom-learning-2021-01", "capco-2012-12"],
@@ -172,8 +142,6 @@
   {
     "id": "product-collaboration",
     "name": "Product Collaboration",
-    "category": "people-stakeholders",
-    "subCategory": "stakeholder-management",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -182,8 +150,6 @@
   {
     "id": "cross-functional-collaboration",
     "name": "Cross-functional Collaboration",
-    "category": "people-stakeholders",
-    "subCategory": "stakeholder-management",
     "type": "skill",
     "synonyms": ["Cross-functional Teams", "Cross-functional Delivery"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -197,8 +163,6 @@
   {
     "id": "technical-communication",
     "name": "Technical Communication",
-    "category": "people-stakeholders",
-    "subCategory": "stakeholder-management",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -207,8 +171,6 @@
   {
     "id": "javascript-es6",
     "name": "JavaScript (ES6+)",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["JavaScript", "JS", "ECMAScript"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
@@ -217,8 +179,6 @@
   {
     "id": "typescript",
     "name": "TypeScript",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["TS"],
     "jobIds": ["atom-learning-2021-01"],
@@ -227,8 +187,6 @@
   {
     "id": "flow",
     "name": "Flow",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["Flowtype", "Facebook Flow"],
     "jobIds": ["moo-2017-01"],
@@ -237,8 +195,6 @@
   {
     "id": "react",
     "name": "React",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["ReactJS", "React.js"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -247,8 +203,6 @@
   {
     "id": "nextjs",
     "name": "Next.js",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["NextJS", "Next"],
     "jobIds": [],
@@ -257,8 +211,6 @@
   {
     "id": "html5",
     "name": "HTML5",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["HTML"],
     "jobIds": [],
@@ -267,8 +219,6 @@
   {
     "id": "css3",
     "name": "CSS3",
-    "category": "engineering",
-    "subCategory": "styling",
     "type": "tech",
     "synonyms": ["CSS", "CSS-in-JS", "CSS in JS", "Sass", "SCSS", "Less"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -277,8 +227,6 @@
   {
     "id": "react-hooks",
     "name": "React Hooks",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["Hooks"],
     "jobIds": [],
@@ -287,8 +235,6 @@
   {
     "id": "component-architecture",
     "name": "Component Architecture",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -297,8 +243,6 @@
   {
     "id": "state-management",
     "name": "State Management",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -307,8 +251,6 @@
   {
     "id": "redux",
     "name": "Redux",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": [],
     "jobIds": [],
@@ -317,8 +259,6 @@
   {
     "id": "react-query",
     "name": "React Query",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["TanStack Query", "RQ"],
     "jobIds": ["atom-learning-2021-01"],
@@ -327,8 +267,6 @@
   {
     "id": "context-api",
     "name": "Context API",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["React Context"],
     "jobIds": [],
@@ -337,8 +275,6 @@
   {
     "id": "responsive-design",
     "name": "Responsive Design",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["moo-2017-01"],
@@ -347,8 +283,6 @@
   {
     "id": "accessibility-wcag",
     "name": "Accessibility (WCAG)",
-    "category": "quality-performance",
-    "subCategory": "accessibility",
     "type": "skill",
     "synonyms": ["Accessibility", "a11y", "A11Y", "WCAG"],
     "jobIds": ["atom-learning-2021-01"],
@@ -357,8 +291,6 @@
   {
     "id": "design-systems",
     "name": "Design Systems",
-    "category": "engineering",
-    "subCategory": "design-system",
     "type": "skill",
     "synonyms": ["Design System", "Stitches"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -367,8 +299,6 @@
   {
     "id": "component-libraries",
     "name": "Component Libraries",
-    "category": "engineering",
-    "subCategory": "design-system",
     "type": "skill",
     "synonyms": ["Radix UI", "Radix"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -377,8 +307,6 @@
   {
     "id": "frontend-performance-optimisation",
     "name": "Frontend Performance Optimisation",
-    "category": "quality-performance",
-    "subCategory": "performance",
     "type": "skill",
     "synonyms": ["Frontend Performance Optimization"],
     "jobIds": ["moo-2017-01"],
@@ -387,8 +315,6 @@
   {
     "id": "nodejs",
     "name": "Node.js",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["Node", "NodeJS"],
     "jobIds": ["capco-2012-12"],
@@ -397,8 +323,6 @@
   {
     "id": "expressjs",
     "name": "Express.js",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["Express"],
     "jobIds": ["capco-2012-12"],
@@ -407,8 +331,6 @@
   {
     "id": "nestjs",
     "name": "NestJS",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["Nest"],
     "jobIds": [],
@@ -417,8 +339,6 @@
   {
     "id": "rest-apis",
     "name": "REST APIs",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["REST", "RESTful APIs"],
     "jobIds": ["capco-2012-12"],
@@ -427,8 +347,6 @@
   {
     "id": "graphql",
     "name": "GraphQL",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": [],
     "jobIds": [],
@@ -437,8 +355,6 @@
   {
     "id": "websockets",
     "name": "WebSockets",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["WebSocket"],
     "jobIds": [],
@@ -447,8 +363,6 @@
   {
     "id": "api-design",
     "name": "API Design",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["capco-2012-12"],
@@ -457,8 +371,6 @@
   {
     "id": "authentication",
     "name": "Authentication",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": ["Auth"],
     "jobIds": [],
@@ -467,8 +379,6 @@
   {
     "id": "authorization",
     "name": "Authorization",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": ["Authorisation"],
     "jobIds": [],
@@ -477,8 +387,6 @@
   {
     "id": "business-logic",
     "name": "Business Logic",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["moo-2017-01"],
@@ -487,8 +395,6 @@
   {
     "id": "server-side-development",
     "name": "Server-side Development",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["capco-2012-12"],
@@ -497,8 +403,6 @@
   {
     "id": "integration-patterns",
     "name": "Integration Patterns",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -507,8 +411,6 @@
   {
     "id": "service-design",
     "name": "Service Design",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -517,8 +419,6 @@
   {
     "id": "application-architecture",
     "name": "Application Architecture",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
@@ -527,8 +427,6 @@
   {
     "id": "error-handling",
     "name": "Error Handling",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -537,8 +435,6 @@
   {
     "id": "error-monitoring",
     "name": "Error Monitoring",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "skill",
     "synonyms": ["Sentry"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -547,8 +443,6 @@
   {
     "id": "postgresql",
     "name": "PostgreSQL",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["Postgres"],
     "jobIds": [],
@@ -557,8 +451,6 @@
   {
     "id": "mysql",
     "name": "MySQL",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": [],
     "jobIds": [],
@@ -567,8 +459,6 @@
   {
     "id": "mongodb",
     "name": "MongoDB",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["Mongo"],
     "jobIds": ["capco-2012-12"],
@@ -577,8 +467,6 @@
   {
     "id": "redis",
     "name": "Redis",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": [],
     "jobIds": [],
@@ -587,8 +475,6 @@
   {
     "id": "database-design",
     "name": "Database Design",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -597,8 +483,6 @@
   {
     "id": "data-modelling",
     "name": "Data Modelling",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": ["Data Modeling"],
     "jobIds": [],
@@ -607,8 +491,6 @@
   {
     "id": "sql",
     "name": "SQL",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": [],
     "jobIds": [],
@@ -617,8 +499,6 @@
   {
     "id": "orm",
     "name": "ORM",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "tech",
     "synonyms": ["Object-Relational Mapping"],
     "jobIds": [],
@@ -627,8 +507,6 @@
   {
     "id": "query-optimisation",
     "name": "Query Optimisation",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": ["Query Optimization"],
     "jobIds": [],
@@ -637,8 +515,6 @@
   {
     "id": "api-data-integration",
     "name": "API Data Integration",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -647,8 +523,6 @@
   {
     "id": "data-validation",
     "name": "Data Validation",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -657,8 +531,6 @@
   {
     "id": "transaction-management",
     "name": "Transaction Management",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -667,8 +539,6 @@
   {
     "id": "software-architecture",
     "name": "Software Architecture",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
@@ -677,8 +547,6 @@
   {
     "id": "system-design",
     "name": "System Design",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -687,8 +555,6 @@
   {
     "id": "solution-design",
     "name": "Solution Design",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -697,8 +563,6 @@
   {
     "id": "technical-direction",
     "name": "Technical Direction",
-    "category": "leadership-delivery",
-    "subCategory": "leadership",
     "type": "skill",
     "synonyms": ["Technical Strategy"],
     "jobIds": ["atom-learning-2021-01"],
@@ -712,8 +576,6 @@
   {
     "id": "architecture-reviews",
     "name": "Architecture Reviews",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -722,8 +584,6 @@
   {
     "id": "clean-architecture",
     "name": "Clean Architecture",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -732,8 +592,6 @@
   {
     "id": "design-patterns",
     "name": "Design Patterns",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": ["Component Design Patterns"],
     "jobIds": [],
@@ -742,8 +600,6 @@
   {
     "id": "solid-principles",
     "name": "SOLID Principles",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": ["SOLID"],
     "jobIds": [],
@@ -752,8 +608,6 @@
   {
     "id": "domain-driven-design",
     "name": "Domain-Driven Design",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": ["DDD"],
     "jobIds": ["atom-learning-2021-01"],
@@ -762,8 +616,6 @@
   {
     "id": "performance-optimisation",
     "name": "Performance Optimisation",
-    "category": "quality-performance",
-    "subCategory": "performance",
     "type": "skill",
     "synonyms": ["Performance Optimization", "Perf"],
     "jobIds": ["moo-2017-01"],
@@ -772,8 +624,6 @@
   {
     "id": "scalability",
     "name": "Scalability",
-    "category": "quality-performance",
-    "subCategory": "performance",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
@@ -782,8 +632,6 @@
   {
     "id": "distributed-systems",
     "name": "Distributed Systems",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -792,8 +640,6 @@
   {
     "id": "microservices",
     "name": "Microservices",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": ["Micro-services"],
     "jobIds": [],
@@ -802,8 +648,6 @@
   {
     "id": "technical-debt-management",
     "name": "Technical Debt Management",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": ["Tech Debt"],
     "jobIds": ["atom-learning-2021-01"],
@@ -812,8 +656,6 @@
   {
     "id": "code-reviews",
     "name": "Code Reviews",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": ["Code Review", "PR Reviews"],
     "jobIds": [],
@@ -822,8 +664,6 @@
   {
     "id": "clean-code",
     "name": "Clean Code",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
@@ -832,8 +672,6 @@
   {
     "id": "refactoring",
     "name": "Refactoring",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -842,8 +680,6 @@
   {
     "id": "coding-standards",
     "name": "Coding Standards",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
@@ -852,8 +688,6 @@
   {
     "id": "design-reviews",
     "name": "Design Reviews",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -862,8 +696,6 @@
   {
     "id": "technical-documentation",
     "name": "Technical Documentation",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
@@ -872,8 +704,6 @@
   {
     "id": "test-driven-development",
     "name": "Test-Driven Development (TDD)",
-    "category": "quality-performance",
-    "subCategory": "testing",
     "type": "skill",
     "synonyms": ["TDD"],
     "jobIds": [],
@@ -882,8 +712,6 @@
   {
     "id": "testing-strategy",
     "name": "Testing Strategy",
-    "category": "quality-performance",
-    "subCategory": "testing",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
@@ -892,8 +720,6 @@
   {
     "id": "unit-testing",
     "name": "Unit Testing",
-    "category": "quality-performance",
-    "subCategory": "testing",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
@@ -902,8 +728,6 @@
   {
     "id": "integration-testing",
     "name": "Integration Testing",
-    "category": "quality-performance",
-    "subCategory": "testing",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
@@ -912,8 +736,6 @@
   {
     "id": "jest",
     "name": "Jest",
-    "category": "quality-performance",
-    "subCategory": "testing",
     "type": "tech",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -922,8 +744,6 @@
   {
     "id": "react-testing-library",
     "name": "React Testing Library",
-    "category": "quality-performance",
-    "subCategory": "testing",
     "type": "tech",
     "synonyms": ["RTL"],
     "jobIds": ["atom-learning-2021-01"],
@@ -932,8 +752,6 @@
   {
     "id": "enzyme",
     "name": "Enzyme",
-    "category": "quality-performance",
-    "subCategory": "testing",
     "type": "tech",
     "synonyms": [],
     "jobIds": ["moo-2017-01"],
@@ -942,8 +760,6 @@
   {
     "id": "cypress",
     "name": "Cypress",
-    "category": "quality-performance",
-    "subCategory": "testing",
     "type": "tech",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
@@ -952,8 +768,6 @@
   {
     "id": "playwright",
     "name": "Playwright",
-    "category": "quality-performance",
-    "subCategory": "testing",
     "type": "tech",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
@@ -962,8 +776,6 @@
   {
     "id": "agile-engineering-practices",
     "name": "Agile Engineering Practices",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["moo-2017-01"],
@@ -972,8 +784,6 @@
   {
     "id": "continuous-improvement",
     "name": "Continuous Improvement",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
@@ -982,8 +792,6 @@
   {
     "id": "developer-experience",
     "name": "Developer Experience",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": ["DX"],
     "jobIds": [],
@@ -992,8 +800,6 @@
   {
     "id": "process-improvement",
     "name": "Process Improvement",
-    "category": "engineering",
-    "subCategory": "development",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -1002,8 +808,6 @@
   {
     "id": "ci-cd-awareness",
     "name": "CI/CD Awareness",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "skill",
     "synonyms": ["CI/CD"],
     "jobIds": [],
@@ -1012,8 +816,6 @@
   {
     "id": "git",
     "name": "Git",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "tech",
     "synonyms": ["Source Control"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01", "elsevier-2016-08", "capco-2012-12"],
@@ -1022,8 +824,6 @@
   {
     "id": "github",
     "name": "GitHub",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "tech",
     "synonyms": ["Repository"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -1032,8 +832,6 @@
   {
     "id": "gitlab",
     "name": "GitLab",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "tech",
     "synonyms": [],
     "jobIds": ["moo-2017-01"],
@@ -1042,8 +840,6 @@
   {
     "id": "jira",
     "name": "Jira",
-    "category": "tooling",
-    "subCategory": "collaboration-tools",
     "type": "tech",
     "synonyms": ["JIRA"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -1052,8 +848,6 @@
   {
     "id": "documentation",
     "name": "Documentation",
-    "category": "tooling",
-    "subCategory": "collaboration-tools",
     "type": "tech",
     "synonyms": ["Confluence", "Notion"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -1062,8 +856,6 @@
   {
     "id": "npm",
     "name": "npm",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "tech",
     "synonyms": ["Npm", "NPM", "Node Package Manager"],
     "jobIds": ["moo-2017-01"],
@@ -1072,8 +864,6 @@
   {
     "id": "package-management",
     "name": "Package Management",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "skill",
     "synonyms": ["Yarn"],
     "jobIds": ["atom-learning-2021-01"],
@@ -1082,8 +872,6 @@
   {
     "id": "vite",
     "name": "Vite",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "tech",
     "synonyms": [],
     "jobIds": [],
@@ -1092,8 +880,6 @@
   {
     "id": "webpack",
     "name": "Webpack",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "tech",
     "synonyms": [],
     "jobIds": ["moo-2017-01"],
@@ -1102,8 +888,6 @@
   {
     "id": "eslint",
     "name": "ESLint",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "tech",
     "synonyms": ["ES Lint"],
     "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
@@ -1112,8 +896,6 @@
   {
     "id": "prettier",
     "name": "Prettier",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "tech",
     "synonyms": [],
     "jobIds": ["atom-learning-2021-01"],
@@ -1122,8 +904,6 @@
   {
     "id": "api-testing",
     "name": "API Testing",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "skill",
     "synonyms": [],
     "jobIds": [],
@@ -1132,8 +912,6 @@
   {
     "id": "debugging",
     "name": "Debugging",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "skill",
     "synonyms": [],
     "jobIds": ["moo-2017-01"],
@@ -1142,8 +920,6 @@
   {
     "id": "kibana",
     "name": "Kibana",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "tech",
     "synonyms": [],
     "jobIds": ["moo-2017-01"],
@@ -1152,8 +928,6 @@
   {
     "id": "local-development-environments",
     "name": "Local Development Environments",
-    "category": "tooling",
-    "subCategory": "tooling",
     "type": "skill",
     "synonyms": ["Local Dev Environments"],
     "jobIds": [],

@@ -3,8 +3,6 @@ import type { Skill } from '@/types';
 export const defaultSkill: Skill = {
   id: 'react',
   name: 'React',
-  category: 'engineering',
-  subCategory: 'development',
   type: 'tech',
   synonyms: [],
   jobIds: ['job-1'],

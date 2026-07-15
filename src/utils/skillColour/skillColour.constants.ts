@@ -1,4 +1,4 @@
-import type { CustomSkillColour, SkillCategory, SkillColour } from './skillColour.types';
+import type { CustomSkillColour, SkillColour } from './skillColour.types';
 
 // Avoids red/orange/blue/grey (MUI warning/error/info, or washed-out on grid/axis lines) and
 // both themes' primary/secondary (src/themes/*.ts), so a category never blends into the theme.
@@ -25,13 +25,3 @@ export const CATEGORY_COLOUR_PALETTE: SkillColour[] = [
   'indigo',
   'berry',
 ];
-
-// Legacy map for the old fixed taxonomy — still drives the resume card's chip colours until the
-// track-aware card grouping lands; dies with the legacy category fields.
-export const CATEGORY_COLOUR_MAP: Record<SkillCategory, SkillColour> = {
-  engineering: 'teal',
-  'quality-performance': 'green',
-  tooling: 'plum',
-  'leadership-delivery': 'brown',
-  'people-stakeholders': 'gold',
-};

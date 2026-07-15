@@ -4,49 +4,8 @@ import { CATEGORY_COLOUR_PALETTE, CUSTOM_COLOUR_HEX } from './skillColour.consta
 import {
   categoryColourFromIndex,
   resolveSkillColourMain,
-  skillCategory,
-  skillColour,
   skillShadeIndex,
 } from './skillColour.helpers';
-
-describe('skillColour', () => {
-  test('engineering skills map to teal', () => {
-    expect(skillColour('React')).toBe('teal');
-    expect(skillColour('TypeScript')).toBe('teal');
-  });
-
-  test('leadership & delivery skills map to brown', () => {
-    expect(skillColour('Team Leadership')).toBe('brown');
-    expect(skillColour('Roadmap Planning')).toBe('brown');
-  });
-
-  test('people & stakeholders skills map to gold', () => {
-    expect(skillColour('Mentoring & Coaching')).toBe('gold');
-    expect(skillColour('Team Onboarding')).toBe('gold');
-  });
-
-  test('unknown skills map to plum (the tooling fallback)', () => {
-    expect(skillColour('Rust')).toBe('plum');
-    expect(skillColour('Cobol')).toBe('plum');
-  });
-
-  test('always returns the same colour for the same skill', () => {
-    expect(skillColour('GraphQL')).toBe(skillColour('GraphQL'));
-    expect(skillColour('Rust')).toBe(skillColour('Rust'));
-  });
-});
-
-describe('skillCategory', () => {
-  test('returns the correct category for known skills', () => {
-    expect(skillCategory('React')).toBe('engineering');
-    expect(skillCategory('Team Leadership')).toBe('leadership-delivery');
-    expect(skillCategory('Mentoring & Coaching')).toBe('people-stakeholders');
-  });
-
-  test('returns tooling for unknown skills', () => {
-    expect(skillCategory('Rust')).toBe('tooling');
-  });
-});
 
 describe('categoryColourFromIndex', () => {
   test('returns the palette colour at the given index', () => {

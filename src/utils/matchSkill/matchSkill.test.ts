@@ -3,12 +3,7 @@ import { Skill } from '@/testing';
 import { matchSkill } from './matchSkill';
 
 const REACT = new Skill().name('React').synonyms(['ReactJS', 'React.js']).jobIds(['job-1']).mock();
-const RTL = new Skill()
-  .name('React Testing Library')
-  .subCategory('testing')
-  .synonyms(['RTL'])
-  .jobIds(['job-1'])
-  .mock();
+const RTL = new Skill().name('React Testing Library').synonyms(['RTL']).jobIds(['job-1']).mock();
 const JAVASCRIPT = new Skill()
   .name('JavaScript')
   .synonyms(['JS', 'ECMAScript'])
@@ -16,16 +11,10 @@ const JAVASCRIPT = new Skill()
   .mock();
 const ACCESSIBILITY = new Skill()
   .name('Accessibility')
-  .subCategory('accessibility')
   .synonyms(['a11y', 'A11Y'])
   .jobIds(['job-1'])
   .mock();
-const GIT = new Skill()
-  .name('Git/GitHub')
-  .subCategory('tooling')
-  .synonyms(['Git', 'GitHub'])
-  .jobIds(['job-1'])
-  .mock();
+const GIT = new Skill().name('Git/GitHub').synonyms(['Git', 'GitHub']).jobIds(['job-1']).mock();
 
 const ALL_SKILLS = [REACT, RTL, JAVASCRIPT, ACCESSIBILITY, GIT];
 
