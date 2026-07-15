@@ -20,6 +20,8 @@ export const TrackFilter = () => {
       sx={{
         height: 36,
         color: 'inherit',
+        // 0.8125rem = MUI small-button font size, so the value matches the Filters button.
+        fontSize: '0.8125rem',
         '& .MuiSelect-select': { py: '6px' },
         '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' },
       }}
