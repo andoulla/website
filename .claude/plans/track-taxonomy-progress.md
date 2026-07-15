@@ -13,7 +13,7 @@ Started: 2026-07-13
 | `feat/02-tracks-and-context`       | 4–5   | ✅ COMPLETE + feedback fixes, pushed `5d6b224` — track data (`f9f376c`), track context + App mount (`da7e401`), feedback fixes (`e24b1d2`); PR not opened yet |
 | ``feat/03-join-skill-objects`      | 6     | ✅ MERGED to main 2026-07-15 (fast-forward push `2bf8d1d`, no PR — user request)                                                                              |
 | `feat/04-skills-view-tracks`       | 7     | ✅ MERGED to main 2026-07-15 (fast-forward push `4f09efe`, no PR — user request); incl. palette contrast fixes                                                |
-| `feat/05-resume-tabs-cleanup-docs` | 8–11  | 🔨 IN PROGRESS — user asked for ONE final branch covering steps 8–11 + all carry-forwards ("lets do the last branch, make sure all todos are completed")      |
+| `feat/05-resume-tabs-cleanup-docs` | 8–11  | ✅ COMPLETE, pushed `3fbee57` — one final branch covering steps 8–11 + all carry-forwards (user request); full suite green (pre-commit hook); not yet merged  |
 
 ## Decisions log (recent)
 
@@ -29,102 +29,49 @@ Started: 2026-07-13
 - [ ] Optional: Elsevier/Capco tech stack (its App.tsx TODO was deleted in feat/02 per plan — tracked only here now)
 - [ ] Open PR for feat/02: https://github.com/andoulla/website/pull/new/feat/02-tracks-and-context
 
-## feat/05 IN-PROGRESS handoff (written 2026-07-15, session low on credits)
+## feat/05 handoff (COMPLETE — steps 8–11 + carry-forwards, pushed 2026-07-15)
 
-Branch `feat/05-resume-tabs-cleanup-docs` created from origin/main `6ad5b7a` (local main was stale
-at 2bf8d1d — already reset with `git reset --hard origin/main`). NOTHING implemented yet — repo
-scan complete, all facts below verified this session. Planned commits, in order:
+Branch `feat/05-resume-tabs-cleanup-docs` from origin/main `6ad5b7a`. Commits:
 
-1. `fix: stabilise setTrackId identity` — TrackContextProvider.tsx: `setTrackId` currently
-   `useCallback([setSearchParams, trackId])` → recreates on every unrelated param change.
-   Fix: `trackIdRef` + `setSearchParamsRef` refs updated in a `useEffect`, `useCallback([])`
-   keeps the `next === trackIdRef.current` early-return guard (guard MUST stay before the
-   setSearchParams call — calling with an unchanged value still pushes a history entry).
-   Add test: capture `setTrackId` identity across an unrelated search-param change.
-2. `feat: add resume track tabs with per-track filtering` (step 8):
-   - NEW `src/utils/filterEventsByTrack/`: `(events: TimelineEventWithRecommendations[], track: Track)` —
-     Set of track skillIds from `track.categories.flatMap(c => c.subCategories.flatMap(sc => sc.skillIds))`;
-     map each event: keep responsibility iff `skillIds.length === 0` (universal) or intersects set;
-     filter `techStack`/`skills` by `id in set`. Events themselves always kept.
-   - NEW `src/utils/deriveSkillCategoryMap/`: `(track: Track) => Map<string, TrackCategoryRef>`,
-     `TrackCategoryRef = { id, name, index }` (types file), skillId → owning category.
-   - `Resume.tsx`: `useTrackContext()`; MUI `<Tabs value={trackId} onChange={(_e, next: TrackId) => setTrackId(next)} aria-label="Resume track">`
-     between heading Box and "Work Experience" Section; one `<Tab>` per `tracks` (import from `@/data/tracks`, views→data legal);
-     Tab `id={'track-tab-'+t.id}` `aria-controls={'track-panel-'+t.id}`; wrap Section in
-     `<Box role="tabpanel" id={'track-panel-'+trackId} aria-labelledby={'track-tab-'+trackId}>`.
-   - `CareerTimeline`: `visibleHistory = useMemo(() => filterEventsByTrack(careerHistory, track), [careerHistory, track])`.
-     GOTCHA: `roleIcons` currently index-keyed off unfiltered array (Resume.tsx:29) — key by event id
-     instead (build Record/Map from UNFILTERED careerHistory so icons stay stable across tab switches);
-     `firstMatchIndex` must run over visibleHistory.
-   - `TimelineEventCard.tsx`: `useTrackContext()` (tests need TrackContextProvider inside MemoryRouter).
-     `groupSkillsByCategory(skills, track)` rework in helpers via `deriveSkillCategoryMap` — group
-     label `category.name`, chip colour `() => categoryColourFromIndex(category.index)` (TagList
-     `getColour?: (item: string) => SkillColour | undefined`); drops CATEGORY_LABELS/CATEGORY_ORDER/skillColour()
-     imports (TimelineEventCard.tsx:18-19, helpers.ts:4). `handleSkillClick` (line 102) and
-     `handleViewAllSkillsClick` (line 109) append `&track=${trackId}` (TRACK_PARAM from '@/context/track').
-     Compact bare-card variant: when filtered event has responsibilities/skills/techStack ALL empty →
-     CardHeader only (company/title/duration/location), no CardContent/sections/recommendations, reduced padding.
-     ALSO fold in carry-forward: section order becomes responsibilities → techStack → skills → recommendations
-     (techStack currently first, lines 141-150; move to directly above Key Skills).
-   - a11y tests: jest-axe per tab state; Resume.test.tsx currently does NOT wrap TrackContextProvider — add
-     (view-level tests use the REAL provider + real track data, same as Skills.test.tsx pattern).
-     ⚠️ lead track DOES contain `react` (under its `javascript-stack` category) — for the
-     "role tab hides content" test find a skill id in full but NOT in lead
-     (full-only cats: frontend-development, backend-development, data-storage — check e.g. `css3`/`html5`
-     or a backend id against lead's set before using).
-   - lead cats: leadership-delivery, architecture-design, javascript-stack, engineering-practices,
-     tools-development-workflow. full cats: leadership-delivery, frontend-development, backend-development,
-     data-storage, architecture-design, engineering-practices-quality, tools-development-workflow.
-3. `feat: preserve track across nav links` — NavBar.tsx (components layer): do NOT useTrackContext
-   (NavBar renders on /articles where the provider isn't mounted). Read `useSearchParams`, keep
-   `?track=` on Home + Skills NavLinks via `to={{ pathname, search }}` when `isTrackId(raw)`
-   (imports: TRACK_PARAM from '@/context/track', isTrackId from '@/data/tracks' — both legal
-   components→lower-layer). Articles link stays plain. Update NavBar.test.tsx.
-4. `feat: resolve skill deep links through synonyms` (step 9):
-   - matchSkill (src/utils/matchSkill/matchSkill.ts): signature `(term, allSkills = defaultSkills) => MatchSkillResult | null`,
-     `MatchSkillResult = { skill, matchedOn: 'name'|'synonym', matchedTerm }`; normalises via
-     normaliseSearchTerm. Update its "Not used by any runtime UI code" doc comment.
-   - Skills.tsx:59-64: resolve each raw `?skill=` through matchSkill → canonical `skill.name`, drop
-     unresolved (list view highlights/scrolls by `skill.skill` display name — SkillItemsList.tsx:67,
-     skillElementId(highlightedSkills[0]) in SkillsListView.tsx:27).
-   - Resume.tsx:40-48 + TimelineEventCard isMatch (lines 73-78): resolve `?skill=` once in
-     CareerTimeline via matchSkill, pass canonical skill id; card compares `skill.id === highlightedSkillId`
-     (currently inconsistent: Resume matches name||id, card matches id||synonyms).
-5. `refactor: drop legacy skill taxonomy fields` (step 10):
-   - Delete `src/utils/skillCategory/` (now only constants: CATEGORY_LABELS, CATEGORY_ORDER + index).
-   - skillColour.helpers.ts: delete `skillCategory()`, `skillColour()`, `SKILL_CATEGORY_MAP` (lines 15-29)
-     - the `import { skills }`; skillColour.constants.ts: delete `CATEGORY_COLOUR_MAP`;
-       skillColour.types.ts: drop legacy `SkillCategory` re-export if present; trim barrel + tests.
-   - `src/types/skill.ts`: delete `SkillCategory`, `SkillSubCategory`, `category`, `subCategory` fields;
-     check `src/types/index.ts` barrel.
-   - `src/data/skills.json`: strip `category`/`subCategory` keys from all 113 entries (node script,
-     then `yarn prettier --write src/data/skills.json`).
-   - `src/data/skills.ts`: remove VALID_CATEGORIES/SUBCATEGORIES-style validation if still present (unverified).
-   - `src/testing/Skill/`: drop `category`/`subCategory` setters + defaults in Skill.data.ts; sweep
-     tests using `.category(`/`.subCategory(` builder calls.
-   - Legacy consumers confirmed gone after commit 2 (card was the ONLY one — verified by grep).
-6. `docs: update claude.md and readme for track taxonomy` (step 11, plan §9): CLAUDE.md routes
-   (+`?track=`), data-flow diagram rewrite (skills.json + tracks/\*.json), contexts table
-   (+TrackContextProvider row), directory layout (+tracks/, context/track/, new utils, −skillCategory);
-   README pages/features/scripts per plan §9.
-7. Update this tracker, push branch, give PR-body code block. Then merge via
-   `git push origin feat/05-resume-tabs-cleanup-docs:main` ONLY when user asks.
+1. `c2bdd4b` fix: stabilise setTrackId identity — TrackContextProvider routes trackId/setSearchParams
+   through refs (updated in useEffect); `setTrackId` is `useCallback([])`, guard intact; identity test added.
+2. `53160d5` feat: add resume track tabs with per-track filtering —
+   NEW `src/utils/filterEventsByTrack/` (keeps events; narrows responsibilities/techStack/skills;
+   empty responsibility skillIds = universal) + NEW `src/utils/deriveSkillCategoryMap/`
+   (`Map<skillId, TrackCategoryRef {id,name,index}>`). Resume.tsx: MUI Tabs (scrollable,
+   sm+ centred via flexContainer sx) between heading and Work Experience; tabpanel Box wired
+   aria-labelledby/id; CareerTimeline filters via filterEventsByTrack; roleIcons keyed by event id
+   off UNFILTERED history. TimelineEventCard: takes `track: Track` PROP (fixture-driven tests,
+   NOT useTrackContext); groupSkillsByCategory(skills, track) via deriveSkillCategoryMap (largest
+   group first, ties = track order, off-track skills skipped); chip colour
+   categoryColourFromIndex(category.index); skill links append `&track=`; section order now
+   responsibilities → techStack → skills → recommendations (tech-stack carry-forward folded in);
+   compact bare-card variant (CardHeader only, py 0.5, no recommendations) when all three empty.
+3. `db00812` feat: preserve track across nav links — NavBar reads `?track=` via useSearchParams +
+   isTrackId (NOT useTrackContext — renders on /articles outside provider); Home/Skills links carry
+   it, Articles stays plain. App.test hrefs now `/?track=full`, `/skills?track=full`.
+4. `d9c3451` feat: resolve skill deep links through synonyms — Skills.tsx maps `?skill=` params
+   through matchSkill → canonical names (unresolved dropped); Resume resolves once to canonical id,
+   card prop renamed `highlightedSkill` → `highlightedSkillId` (id-only match); matchSkill doc
+   comment updated (now runtime). Tests: synonym scroll tests in both views ('reactjs', 'JavaScript').
+5. `8261695` refactor: drop legacy skill taxonomy fields — deleted `src/utils/skillCategory/`;
+   skillColour lost `skillCategory()`/`skillColour()`/`SKILL_CATEGORY_MAP`/`CATEGORY_COLOUR_MAP`
+   (+ its skills.json import — skillColour is now data-free); `Skill` type/json/builder lost
+   `category`/`subCategory` (+ SkillCategory/SkillSubCategory types); skills.ts lost the
+   category/subCategory validation.
+6. `3fbee57` docs: update claude.md and readme for track taxonomy — routes (+`?track=`), data-flow
+   diagram (skills.json + tracks/\*.json + TrackContextProvider), contexts table row, directory
+   layout (new utils, tracks/, −skillCategory); README pages/features/scripts (+`yarn draft:mappings`).
 
-Key file facts (verified, save a rescan): Resume.tsx:22-90 CareerTimeline / 92-108 Resume;
-card sections at TimelineEventCard.tsx:140-221 (order techStack→responsibilities→skills→recommendations);
-groupSkillsByCategory in TimelineEventCard.helpers.ts:16-23 (CATEGORY_ORDER-driven, size-sorted);
-TrackContextProvider setTrackId at lines 41-53; NavBar links at NavBar.tsx:59-69;
-`SkillsViewContext` already carries `track`; radar/bar views don't consume highlightedSkills (list view only).
-Tests: Resume.test.tsx renders via renderResume(loader, initialEntries) helper (act+flush pattern per
-.claude/rules/testing.md — use `const screen = render(...)` alias, builders only).
+Suite: full run green at every commit (pre-commit hook). NOT merged to main yet.
 
 ## Next up
 
 Code-review carry-forwards (2026-07-14 review of feat/02; setTrackId same-value guard already fixed on feat/02):
 
-- [ ] **stabilise `setTrackId` identity** (from feat/02 review). react-router rebuilds `setSearchParams` on every search-param change, so `setTrackId`/`contextValue` recreate on unrelated `?view=`/`?skill=` updates → every `useTrackContext` consumer re-renders for nothing. Fix in `TrackContextProvider.tsx`: route the write through a ref (or `useNavigate`) so the callback is referentially stable. NOT yet done — carry into feat/05.
-- [ ] **feat/05: don't lose the track on plain navigation.** NavBar links carry no `?track=`, and the provider normalises a missing param to `full` — Skills is track-aware now, and once tabs exist EM/SWE selection silently resets when clicking Home/Skills. Fix: track-aware nav links, or provider falls back to last-known trackId instead of the default.
-- [ ] **UI UX note (feat/05 or later)**: Move tech stack display to render directly above skills section in TimelineEventCard (currently appears above responsibilities).
+- [x] ~~stabilise `setTrackId` identity~~ — done on feat/05 (`c2bdd4b`).
+- [x] ~~don't lose the track on plain navigation~~ — done on feat/05 (`db00812`).
+- [x] ~~tech stack directly above skills section~~ — done on feat/05 (folded into `53160d5`).
 - [x] ~~feat/04 palette sync test~~ — superseded: `categoryColourFromIndex` falls back to `'default'` grey past the 7-slot palette (unlimited categories allowed); patterns cycle by index.
 
 ### feat/04 handoff (what exists now)
