@@ -13,10 +13,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { BulletList } from '@/components/bulletList';
 import { Section } from '@/components/section';
 import { TagList } from '@/components/tagList';
-import type { TimelineEventWithRecommendations } from '@/types';
+import { TRACK_PARAM } from '@/context/track';
+import type { TimelineEventWithRecommendations, Track } from '@/types';
 import { MONTH_NAMES } from '@/utils/formatDate';
-import { CATEGORY_LABELS } from '@/utils/skillCategory';
-import { skillColour, skillShadeIndex } from '@/utils/skillColour';
+import { categoryColourFromIndex, skillShadeIndex } from '@/utils/skillColour';
 
 import { RESPONSIBILITIES_LABEL_BY_TYPE } from './TimelineEventCard.constants';
 import {
@@ -29,6 +29,7 @@ import { useInView } from './useInView';
 
 export interface TimelineEventCardProps {
   event: TimelineEventWithRecommendations;
+  track: Track;
   highlightedSkill?: string;
   highlightedRecommendationId?: string;
   autoScrollToHighlight?: boolean;
@@ -49,6 +50,7 @@ const formatDuration = (startDate: string, endDate: string | null): string => {
 
 export const TimelineEventCard = ({
   event,
+  track,
   highlightedSkill,
   highlightedRecommendationId,
   autoScrollToHighlight,
@@ -101,19 +103,54 @@ export const TimelineEventCard = ({
 
   const handleSkillClick = useCallback(
     (skillName: string) => {
-      void navigate(`/skills?skill=${encodeURIComponent(skillName)}`);
+      void navigate(`/skills?skill=${encodeURIComponent(skillName)}&${TRACK_PARAM}=${track.id}`);
     },
-    [navigate]
+    [navigate, track.id]
   );
 
   const handleViewAllSkillsClick = useCallback(() => {
     // Repeated params, not comma-joined — a skill name could contain a comma.
     const params = new URLSearchParams();
     event.skills.forEach((skill) => params.append('skill', skill.name));
+    params.set(TRACK_PARAM, track.id);
     void navigate(`/skills?${params.toString()}`);
-  }, [navigate, event.skills]);
+  }, [navigate, event.skills, track.id]);
 
-  const skillGroups = useMemo(() => groupSkillsByCategory(event.skills), [event.skills]);
+  const skillGroups = useMemo(
+    () => groupSkillsByCategory(event.skills, track),
+    [event.skills, track]
+  );
+
+  const hasResponsibilities = event.responsibilities.length > 0;
+  const hasTechStack = event.techStack.length > 0;
+  const hasSkills = event.skills.length > 0;
+  // A role with nothing relevant to the active track collapses to its primary information only.
+  const isBare = !hasResponsibilities && !hasTechStack && !hasSkills;
+
+  const cardHeader = (
+    <CardHeader
+      title={event.companyName}
+      // Render the company name as a real h3 heading (visually sized h6) so it sits
+      // correctly under the h2 "Work Experience" section in the heading hierarchy.
+      slotProps={{
+        title: { variant: 'h6', component: 'h3' },
+        subheader: { variant: 'body2' },
+      }}
+      subheader={`${event.title} · ${event.location} · ${duration}`}
+    />
+  );
+
+  if (isBare) {
+    return (
+      <Card
+        ref={setCardNode}
+        elevation={0}
+        sx={[getCardMotionSx(isInView, prefersReducedMotion), { py: 0.5 }]}
+      >
+        {cardHeader}
+      </Card>
+    );
+  }
 
   return (
     <Card
@@ -127,28 +164,9 @@ export const TimelineEventCard = ({
         },
       ]}
     >
-      <CardHeader
-        title={event.companyName}
-        // Render the company name as a real h3 heading (visually sized h6) so it sits
-        // correctly under the h2 "Work Experience" section in the heading hierarchy.
-        slotProps={{
-          title: { variant: 'h6', component: 'h3' },
-          subheader: { variant: 'body2' },
-        }}
-        subheader={`${event.title} · ${event.location} · ${duration}`}
-      />
+      {cardHeader}
       <CardContent>
-        {event.techStack.length > 0 && (
-          <>
-            <Section title="Tech Stack" titleLevel={4}>
-              <Typography variant="body2" color="text.secondary">
-                {event.techStack.map((skill) => skill.name).join(', ')}
-              </Typography>
-            </Section>
-            <Divider sx={{ my: 2 }} />
-          </>
-        )}
-        {event.responsibilities.length > 0 && (
+        {hasResponsibilities && (
           <Section title={RESPONSIBILITIES_LABEL_BY_TYPE[event.type]} titleLevel={4}>
             {event.responsibilities.length === 1 ? (
               <Typography variant="body2">{event.responsibilities[0].text}</Typography>
@@ -159,14 +177,24 @@ export const TimelineEventCard = ({
             )}
           </Section>
         )}
-        {event.skills.length > 0 && (
+        {hasTechStack && (
           <>
-            <Divider sx={{ my: 2 }} />
+            {hasResponsibilities && <Divider sx={{ my: 2 }} />}
+            <Section title="Tech Stack" titleLevel={4}>
+              <Typography variant="body2" color="text.secondary">
+                {event.techStack.map((skill) => skill.name).join(', ')}
+              </Typography>
+            </Section>
+          </>
+        )}
+        {hasSkills && (
+          <>
+            {(hasResponsibilities || hasTechStack) && <Divider sx={{ my: 2 }} />}
             <Section title="Key Skills" titleLevel={4}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                 {skillGroups.map((group) => (
                   <Box
-                    key={group.category}
+                    key={group.category.id}
                     sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
                   >
                     <Typography
@@ -178,12 +206,12 @@ export const TimelineEventCard = ({
                         color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
                       }}
                     >
-                      {`${CATEGORY_LABELS[group.category]}:`}
+                      {`${group.category.name}:`}
                     </Typography>
                     <TagList
                       items={group.skills.map((skill) => skill.name)}
                       onItemClick={handleSkillClick}
-                      getColour={skillColour}
+                      getColour={() => categoryColourFromIndex(group.category.index)}
                       getShadeIndex={skillShadeIndex}
                     />
                   </Box>

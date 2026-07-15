@@ -1,7 +1,7 @@
 import type { Theme } from '@mui/material/styles';
 
-import type { Skill, SkillCategory } from '@/types';
-import { CATEGORY_ORDER } from '@/utils/skillCategory';
+import type { Skill, Track } from '@/types';
+import { deriveSkillCategoryMap, type TrackCategoryRef } from '@/utils/deriveSkillCategoryMap';
 
 import { CARD_FADE_DURATION_MS, CARD_FADE_TRANSLATE_Y } from './TimelineEventCard.constants';
 
@@ -9,18 +9,33 @@ export const recommendationElementId = (id: string): string =>
   `recommendation-${encodeURIComponent(id)}`;
 
 interface SkillCategoryGroup {
-  category: SkillCategory;
+  category: TrackCategoryRef;
   skills: Skill[];
 }
 
-export const groupSkillsByCategory = (skills: Skill[]): SkillCategoryGroup[] =>
-  CATEGORY_ORDER.map((category) => ({
-    category,
-    skills: skills.filter((skill) => skill.category === category),
-  }))
-    .filter((group) => group.skills.length > 0)
-    // Stable sort: ties keep CATEGORY_ORDER as the tiebreaker.
-    .sort((groupA, groupB) => groupB.skills.length - groupA.skills.length);
+// Groups skills by their owning track category, largest group first; skills the track doesn't
+// know are skipped (upstream track filtering already hides them).
+export const groupSkillsByCategory = (skills: Skill[], track: Track): SkillCategoryGroup[] => {
+  const categoryBySkillId = deriveSkillCategoryMap(track);
+  const groupsByCategoryId = new Map<string, SkillCategoryGroup>();
+
+  skills.forEach((skill) => {
+    const category = categoryBySkillId.get(skill.id);
+    if (category === undefined) return;
+    const group = groupsByCategoryId.get(category.id);
+    if (group === undefined) {
+      groupsByCategoryId.set(category.id, { category, skills: [skill] });
+    } else {
+      group.skills.push(skill);
+    }
+  });
+
+  return [...groupsByCategoryId.values()].sort(
+    // Stable sort: ties keep track category order as the tiebreaker.
+    (groupA, groupB) =>
+      groupB.skills.length - groupA.skills.length || groupA.category.index - groupB.category.index
+  );
+};
 
 export const getCardMotionSx = (isInView: boolean, prefersReducedMotion: boolean) => {
   // Reduced motion: stay fully visible with no transform/transition, so scrolling

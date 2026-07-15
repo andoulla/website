@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
-import { Recommendation, Responsibility, Skill, TimelineEvent } from '@/testing';
+import { Recommendation, Responsibility, Skill, TimelineEvent, Track } from '@/testing';
 
 import { TimelineEventCard } from './TimelineEventCard';
 
@@ -14,6 +14,27 @@ const LocationDisplay = () => {
 
 const reactSkill = new Skill().id('react').name('React').type('tech').mock();
 const typeScriptSkill = new Skill().id('typescript').name('TypeScript').type('tech').mock();
+
+const testTrack = new Track()
+  .categories([
+    {
+      id: 'engineering',
+      name: 'Engineering',
+      subCategories: [
+        {
+          id: 'core',
+          name: 'Core',
+          skillIds: ['react', 'typescript', 'vite', 'jest', 'playwright'],
+        },
+      ],
+    },
+    {
+      id: 'leadership-delivery',
+      name: 'Leadership & Delivery',
+      subCategories: [{ id: 'people', name: 'People', skillIds: ['team-leadership'] }],
+    },
+  ])
+  .mock();
 
 const event = new TimelineEvent()
   .companyName('Meridian Dynamics')
@@ -36,7 +57,7 @@ const recommendationItem = new Recommendation()
 
 describe('TimelineEventCard', () => {
   test('renders company details, responsibilities, and skills', () => {
-    const screen = render(<TimelineEventCard event={event} />, {
+    const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
       wrapper: MemoryRouter,
     });
 
@@ -49,22 +70,19 @@ describe('TimelineEventCard', () => {
     expect(screen.getByText('TypeScript')).toBeVisible();
   });
 
-  test('groups skills by category, omitting categories with no matching skills', () => {
-    const engineeringSkill = new Skill()
-      .id('react-skill')
-      .name('React')
-      .category('engineering')
-      .type('skill')
-      .mock();
+  test('groups skills by track category, skipping skills the track does not include', () => {
     const leadershipSkill = new Skill()
       .id('team-leadership')
       .name('Team Leadership')
-      .category('leadership-delivery')
       .type('skill')
       .mock();
+    const offTrackSkill = new Skill().id('kubernetes').name('Kubernetes').type('skill').mock();
 
     const screen = render(
-      <TimelineEventCard event={{ ...event, skills: [engineeringSkill, leadershipSkill] }} />,
+      <TimelineEventCard
+        event={{ ...event, skills: [reactSkill, leadershipSkill, offTrackSkill] }}
+        track={testTrack}
+      />,
       { wrapper: MemoryRouter }
     );
 
@@ -72,18 +90,23 @@ describe('TimelineEventCard', () => {
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByText('Leadership & Delivery:')).toBeVisible();
     expect(screen.getByText('Team Leadership')).toBeVisible();
-    expect(screen.queryByText('Tooling:')).not.toBeInTheDocument();
+    expect(screen.queryByText('Kubernetes')).not.toBeInTheDocument();
   });
 
-  test('places the company and its sections correctly in the heading hierarchy', () => {
-    const screen = render(<TimelineEventCard event={event} />, {
+  test('places the company and its sections correctly in the heading hierarchy, responsibilities first', () => {
+    const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
       wrapper: MemoryRouter,
     });
 
     expect(screen.getByRole('heading', { level: 3, name: 'Meridian Dynamics' })).toBeVisible();
-    expect(screen.getByRole('heading', { level: 4, name: 'Tech Stack' })).toBeVisible();
-    expect(screen.getByRole('heading', { level: 4, name: 'Responsibilities' })).toBeVisible();
-    expect(screen.getByRole('heading', { level: 4, name: 'Key Skills' })).toBeVisible();
+
+    const sectionHeadings = screen.getAllByRole('heading', { level: 4 });
+
+    expect(sectionHeadings.map((heading) => heading.textContent)).toEqual([
+      'Responsibilities',
+      'Tech Stack',
+      'Key Skills',
+    ]);
   });
 
   test('renders tech stack items as comma-separated text', () => {
@@ -94,6 +117,7 @@ describe('TimelineEventCard', () => {
     const screen = render(
       <TimelineEventCard
         event={{ ...event, techStack: [viteSkill, jestSkill, playwrightSkill] }}
+        track={testTrack}
       />,
       { wrapper: MemoryRouter }
     );
@@ -103,9 +127,10 @@ describe('TimelineEventCard', () => {
   });
 
   test('renders the end month for a past role instead of "Present"', () => {
-    const screen = render(<TimelineEventCard event={{ ...event, endDate: '2023-09-30' }} />, {
-      wrapper: MemoryRouter,
-    });
+    const screen = render(
+      <TimelineEventCard event={{ ...event, endDate: '2023-09-30' }} track={testTrack} />,
+      { wrapper: MemoryRouter }
+    );
 
     expect(
       screen.getByText('Staff Frontend Engineer · London, UK · Apr 2022 – Sep 2023')
@@ -114,7 +139,10 @@ describe('TimelineEventCard', () => {
 
   test('renders recommendations when present', async () => {
     const screen = render(
-      <TimelineEventCard event={{ ...event, recommendations: [recommendationItem] }} />,
+      <TimelineEventCard
+        event={{ ...event, recommendations: [recommendationItem] }}
+        track={testTrack}
+      />,
       { wrapper: MemoryRouter }
     );
 
@@ -124,7 +152,7 @@ describe('TimelineEventCard', () => {
   });
 
   test('omits the Recommendations section when there are none', async () => {
-    const screen = render(<TimelineEventCard event={event} />, {
+    const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
       wrapper: MemoryRouter,
     });
 
@@ -132,38 +160,65 @@ describe('TimelineEventCard', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('navigates to the skill page when a skill tag is clicked', async () => {
+  test('collapses to a compact primary-info card when nothing is relevant to the track', async () => {
+    const screen = render(
+      <TimelineEventCard
+        event={{
+          ...event,
+          responsibilities: [],
+          skills: [],
+          techStack: [],
+          recommendations: [recommendationItem],
+        }}
+        track={testTrack}
+      />,
+      { wrapper: MemoryRouter }
+    );
+
+    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
+    expect(
+      screen.getByText('Staff Frontend Engineer · London, UK · Apr 2022 – Present')
+    ).toBeVisible();
+    expect(screen.queryByRole('heading', { level: 4 })).not.toBeInTheDocument();
+    expect(screen.queryByText('Recommendations (1)')).not.toBeInTheDocument();
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('navigates to the skill page, carrying the track, when a skill tag is clicked', async () => {
     const user = userEvent.setup();
     const screen = render(
       <MemoryRouter>
-        <TimelineEventCard event={event} />
+        <TimelineEventCard event={event} track={testTrack} />
         <LocationDisplay />
       </MemoryRouter>
     );
 
     await user.click(screen.getByText('React'));
 
-    expect(screen.getByText('location:/skills?skill=React')).toBeVisible();
+    expect(screen.getByText('location:/skills?skill=React&track=full')).toBeVisible();
   });
 
   test('navigates to the skills page with all of the role skills when "View this role\'s skills on the graph" is clicked', async () => {
     const user = userEvent.setup();
     const screen = render(
       <MemoryRouter>
-        <TimelineEventCard event={event} />
+        <TimelineEventCard event={event} track={testTrack} />
         <LocationDisplay />
       </MemoryRouter>
     );
 
     await user.click(screen.getByRole('button', { name: "View this role's skills on the graph" }));
 
-    expect(screen.getByText('location:/skills?skill=React&skill=TypeScript')).toBeVisible();
+    expect(
+      screen.getByText('location:/skills?skill=React&skill=TypeScript&track=full')
+    ).toBeVisible();
   });
 
   test('omits the Key Skills section, including its button, when the role has no skills', () => {
-    const screen = render(<TimelineEventCard event={{ ...event, skills: [] }} />, {
-      wrapper: MemoryRouter,
-    });
+    const screen = render(
+      <TimelineEventCard event={{ ...event, skills: [] }} track={testTrack} />,
+      { wrapper: MemoryRouter }
+    );
 
     expect(screen.queryByRole('heading', { level: 4, name: 'Key Skills' })).not.toBeInTheDocument();
     expect(
@@ -172,17 +227,19 @@ describe('TimelineEventCard', () => {
   });
 
   test('omits the Tech Stack section when there is no tech stack', () => {
-    const screen = render(<TimelineEventCard event={{ ...event, techStack: [] }} />, {
-      wrapper: MemoryRouter,
-    });
+    const screen = render(
+      <TimelineEventCard event={{ ...event, techStack: [] }} track={testTrack} />,
+      { wrapper: MemoryRouter }
+    );
 
     expect(screen.queryByRole('heading', { level: 4, name: 'Tech Stack' })).not.toBeInTheDocument();
   });
 
   test('shows a "Description" heading instead of "Responsibilities" for an education entry', () => {
-    const screen = render(<TimelineEventCard event={{ ...event, type: 'education' }} />, {
-      wrapper: MemoryRouter,
-    });
+    const screen = render(
+      <TimelineEventCard event={{ ...event, type: 'education' }} track={testTrack} />,
+      { wrapper: MemoryRouter }
+    );
 
     expect(screen.getByRole('heading', { level: 4, name: 'Description' })).toBeVisible();
     expect(
@@ -192,9 +249,10 @@ describe('TimelineEventCard', () => {
 
   describe('highlight and scroll', () => {
     test('applies an outline when highlightedSkill matches one of the role skills', () => {
-      const screen = render(<TimelineEventCard event={event} highlightedSkill="react" />, {
-        wrapper: MemoryRouter,
-      });
+      const screen = render(
+        <TimelineEventCard event={event} track={testTrack} highlightedSkill="react" />,
+        { wrapper: MemoryRouter }
+      );
 
       expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
         outlineOffset: '2px',
@@ -202,9 +260,10 @@ describe('TimelineEventCard', () => {
     });
 
     test('does not apply an outline when highlightedSkill matches none of the role skills', () => {
-      const screen = render(<TimelineEventCard event={event} highlightedSkill="kubernetes" />, {
-        wrapper: MemoryRouter,
-      });
+      const screen = render(
+        <TimelineEventCard event={event} track={testTrack} highlightedSkill="kubernetes" />,
+        { wrapper: MemoryRouter }
+      );
 
       expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).not.toHaveStyle({
         outlineOffset: '2px',
@@ -214,9 +273,15 @@ describe('TimelineEventCard', () => {
     test('scrolls into view when autoScrollToHighlight is true', () => {
       const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
 
-      render(<TimelineEventCard event={event} highlightedSkill="react" autoScrollToHighlight />, {
-        wrapper: MemoryRouter,
-      });
+      render(
+        <TimelineEventCard
+          event={event}
+          track={testTrack}
+          highlightedSkill="react"
+          autoScrollToHighlight
+        />,
+        { wrapper: MemoryRouter }
+      );
 
       expect(scrollIntoViewSpy).toHaveBeenCalledWith({ behavior: 'smooth', block: 'center' });
 
@@ -226,7 +291,7 @@ describe('TimelineEventCard', () => {
     test('does not scroll when matching but autoScrollToHighlight is false', () => {
       const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
 
-      render(<TimelineEventCard event={event} highlightedSkill="React" />, {
+      render(<TimelineEventCard event={event} track={testTrack} highlightedSkill="React" />, {
         wrapper: MemoryRouter,
       });
 
@@ -238,7 +303,7 @@ describe('TimelineEventCard', () => {
     test('does not scroll when there is no highlighted skill', () => {
       const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
 
-      render(<TimelineEventCard event={event} />, { wrapper: MemoryRouter });
+      render(<TimelineEventCard event={event} track={testTrack} />, { wrapper: MemoryRouter });
 
       expect(scrollIntoViewSpy).not.toHaveBeenCalled();
 
@@ -249,6 +314,7 @@ describe('TimelineEventCard', () => {
       const screen = render(
         <TimelineEventCard
           event={{ ...event, recommendations: [recommendationItem] }}
+          track={testTrack}
           highlightedRecommendationId={recommendationItem.id}
         />,
         { wrapper: MemoryRouter }
@@ -265,6 +331,7 @@ describe('TimelineEventCard', () => {
       render(
         <TimelineEventCard
           event={{ ...event, recommendations: [recommendationItem] }}
+          track={testTrack}
           highlightedRecommendationId={recommendationItem.id}
           autoScrollToHighlight
         />,
@@ -285,6 +352,7 @@ describe('TimelineEventCard', () => {
       render(
         <TimelineEventCard
           event={{ ...event, recommendations: [recommendationItem] }}
+          track={testTrack}
           highlightedRecommendationId={recommendationItem.id}
         />,
         { wrapper: MemoryRouter }
@@ -306,6 +374,7 @@ describe('TimelineEventCard', () => {
             new Responsibility().id('job-1-r02').text('Mentor engineers').mock(),
           ],
         }}
+        track={testTrack}
       />,
       { wrapper: MemoryRouter }
     );

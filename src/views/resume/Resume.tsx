@@ -6,6 +6,8 @@ import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import { timelineOppositeContentClasses } from '@mui/lab/TimelineOppositeContent';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import { Suspense, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -13,6 +15,10 @@ import { useSearchParams } from 'react-router-dom';
 import { PageContainer } from '@/components/pageContainer';
 import { Section } from '@/components/section';
 import { useCareerDataContext } from '@/context/careerData';
+import { useTrackContext } from '@/context/track';
+import { tracks } from '@/data/tracks';
+import type { TrackId } from '@/types';
+import { filterEventsByTrack } from '@/utils/filterEventsByTrack';
 
 import { ContactDetails } from './contactDetails';
 import { TimelineEventCard } from './timelineEventCard';
@@ -21,31 +27,41 @@ import { pickRandomRoleIcon, RoleIcon } from './roleIcons';
 
 const CareerTimeline = () => {
   const careerHistory = useCareerDataContext();
+  const { track } = useTrackContext();
   const [searchParams] = useSearchParams();
   const highlightedSkill = searchParams.get('skill') ?? undefined;
   const highlightedRecommendationId = searchParams.get('recommendation') ?? undefined;
 
-  // Pick a random icon per role once so it stays stable across re-renders.
-  const roleIcons = useMemo(() => careerHistory.map(() => pickRandomRoleIcon()), [careerHistory]);
+  const visibleHistory = useMemo(
+    () => filterEventsByTrack(careerHistory, track),
+    [careerHistory, track]
+  );
+
+  // Pick a random icon per role once, keyed by event id off the unfiltered history, so icons
+  // stay stable across re-renders and track switches.
+  const roleIconByEventId = useMemo(
+    () => Object.fromEntries(careerHistory.map((event) => [event.id, pickRandomRoleIcon()])),
+    [careerHistory]
+  );
 
   // A recommendation id pins to exactly one job, so it takes priority over the skill match.
   const firstMatchIndex = useMemo(() => {
     if (highlightedRecommendationId !== undefined) {
-      return careerHistory.findIndex((event) =>
+      return visibleHistory.findIndex((event) =>
         event.recommendations.some(
           (recommendation) => recommendation.id === highlightedRecommendationId
         )
       );
     }
     if (highlightedSkill !== undefined) {
-      return careerHistory.findIndex((event) =>
+      return visibleHistory.findIndex((event) =>
         event.skills.some(
           (skill) => skill.name === highlightedSkill || skill.id === highlightedSkill
         )
       );
     }
     return -1;
-  }, [careerHistory, highlightedSkill, highlightedRecommendationId]);
+  }, [visibleHistory, highlightedSkill, highlightedRecommendationId]);
 
   return (
     <Timeline
@@ -63,19 +79,20 @@ const CareerTimeline = () => {
           { flex: 0, p: 0 },
       }}
     >
-      {careerHistory.map((event, index) => {
-        const FallbackIcon = roleIcons[index];
+      {visibleHistory.map((event, index) => {
+        const FallbackIcon = roleIconByEventId[event.id];
         return (
           <TimelineItem key={event.id}>
             <TimelineSeparator>
               <TimelineDot color="primary">
                 <RoleIcon event={event} fallbackIcon={FallbackIcon} />
               </TimelineDot>
-              {index < careerHistory.length - 1 && <TimelineConnector />}
+              {index < visibleHistory.length - 1 && <TimelineConnector />}
             </TimelineSeparator>
             <TimelineContent sx={{ pr: 0 }}>
               <TimelineEventCard
                 event={event}
+                track={track}
                 highlightedSkill={highlightedSkill}
                 highlightedRecommendationId={highlightedRecommendationId}
                 autoScrollToHighlight={index === firstMatchIndex}
@@ -90,6 +107,8 @@ const CareerTimeline = () => {
 };
 
 export const Resume = () => {
+  const { trackId, setTrackId } = useTrackContext();
+
   return (
     <PageContainer>
       <Box sx={{ mb: 5, textAlign: 'center' }}>
@@ -98,11 +117,33 @@ export const Resume = () => {
         </Typography>
         <ContactDetails />
       </Box>
-      <Section title="Work Experience">
-        <Suspense fallback={<TimelineEventSkeleton />}>
-          <CareerTimeline />
-        </Suspense>
-      </Section>
+      <Tabs
+        value={trackId}
+        onChange={(_event, next: TrackId) => {
+          setTrackId(next);
+        }}
+        aria-label="Resume track"
+        variant="scrollable"
+        allowScrollButtonsMobile
+        sx={{ mb: 3, '& .MuiTabs-flexContainer': { justifyContent: { sm: 'center' } } }}
+      >
+        {tracks.map((track) => (
+          <Tab
+            key={track.id}
+            value={track.id}
+            label={track.label}
+            id={`track-tab-${track.id}`}
+            aria-controls={`track-panel-${track.id}`}
+          />
+        ))}
+      </Tabs>
+      <Box role="tabpanel" id={`track-panel-${trackId}`} aria-labelledby={`track-tab-${trackId}`}>
+        <Section title="Work Experience">
+          <Suspense fallback={<TimelineEventSkeleton />}>
+            <CareerTimeline />
+          </Suspense>
+        </Section>
+      </Box>
     </PageContainer>
   );
 };

@@ -1,4 +1,4 @@
-import { Skill } from '@/testing';
+import { Skill, Track } from '@/testing';
 
 import {
   getCardMotionSx,
@@ -37,68 +37,60 @@ describe('getCardMotionSx', () => {
 });
 
 describe('groupSkillsByCategory', () => {
+  const track = new Track()
+    .categories([
+      {
+        id: 'leadership',
+        name: 'Leadership',
+        subCategories: [{ id: 'people', name: 'People', skillIds: ['team-leadership'] }],
+      },
+      {
+        id: 'engineering',
+        name: 'Engineering',
+        subCategories: [{ id: 'core', name: 'Core', skillIds: ['react', 'typescript'] }],
+      },
+      {
+        id: 'tooling',
+        name: 'Tooling',
+        subCategories: [{ id: 'tools', name: 'Tools', skillIds: ['git'] }],
+      },
+    ])
+    .mock();
+  const reactSkill = new Skill().id('react').name('React').mock();
+  const typeScriptSkill = new Skill().id('typescript').name('TypeScript').mock();
+  const gitSkill = new Skill().id('git').name('Git').mock();
+  const leadershipSkill = new Skill().id('team-leadership').name('Team Leadership').mock();
+
   test('orders categories by skill count, most skills first', () => {
-    const reactSkill = new Skill().id('react').name('React').category('engineering').mock();
-    const typeScriptSkill = new Skill()
-      .id('typescript')
-      .name('TypeScript')
-      .category('engineering')
-      .mock();
-    const gitSkill = new Skill().id('git').name('Git').category('tooling').mock();
-    const leadershipSkill = new Skill()
-      .id('team-leadership')
-      .name('Team Leadership')
-      .category('leadership-delivery')
-      .mock();
-
-    const groups = groupSkillsByCategory([leadershipSkill, reactSkill, typeScriptSkill, gitSkill]);
+    const groups = groupSkillsByCategory(
+      [leadershipSkill, reactSkill, typeScriptSkill, gitSkill],
+      track
+    );
 
     expect(groups).toEqual([
-      { category: 'engineering', skills: [reactSkill, typeScriptSkill] },
-      { category: 'tooling', skills: [gitSkill] },
-      { category: 'leadership-delivery', skills: [leadershipSkill] },
+      {
+        category: { id: 'engineering', name: 'Engineering', index: 1 },
+        skills: [reactSkill, typeScriptSkill],
+      },
+      { category: { id: 'leadership', name: 'Leadership', index: 0 }, skills: [leadershipSkill] },
+      { category: { id: 'tooling', name: 'Tooling', index: 2 }, skills: [gitSkill] },
     ]);
   });
 
-  test('breaks ties between equally-sized categories using CATEGORY_ORDER', () => {
-    const reactSkill = new Skill().id('react').name('React').category('engineering').mock();
-    const gitSkill = new Skill().id('git').name('Git').category('tooling').mock();
-    const leadershipSkill = new Skill()
-      .id('team-leadership')
-      .name('Team Leadership')
-      .category('leadership-delivery')
-      .mock();
-
-    const groups = groupSkillsByCategory([leadershipSkill, reactSkill, gitSkill]);
+  test('breaks ties between equally-sized categories using the track category order', () => {
+    const groups = groupSkillsByCategory([gitSkill, reactSkill, leadershipSkill], track);
 
     expect(groups).toEqual([
-      { category: 'engineering', skills: [reactSkill] },
-      { category: 'tooling', skills: [gitSkill] },
-      { category: 'leadership-delivery', skills: [leadershipSkill] },
+      { category: { id: 'leadership', name: 'Leadership', index: 0 }, skills: [leadershipSkill] },
+      { category: { id: 'engineering', name: 'Engineering', index: 1 }, skills: [reactSkill] },
+      { category: { id: 'tooling', name: 'Tooling', index: 2 }, skills: [gitSkill] },
     ]);
   });
 
-  test('omits categories with no matching skills', () => {
-    const reactSkill = new Skill().id('react').name('React').category('engineering').mock();
+  test('skips skills the track does not include and returns an empty array for no skills', () => {
+    const offTrackSkill = new Skill().id('kubernetes').name('Kubernetes').mock();
 
-    const groups = groupSkillsByCategory([reactSkill]);
-
-    expect(groups).toEqual([{ category: 'engineering', skills: [reactSkill] }]);
-  });
-
-  test('returns an empty array for no skills', () => {
-    expect(groupSkillsByCategory([])).toEqual([]);
-  });
-
-  test('falls back to the tooling category for an unrecognised skill name', () => {
-    const unknownSkill = new Skill()
-      .id('unknown-skill')
-      .name('Some Made Up Skill')
-      .category('tooling')
-      .mock();
-
-    const groups = groupSkillsByCategory([unknownSkill]);
-
-    expect(groups).toEqual([{ category: 'tooling', skills: [unknownSkill] }]);
+    expect(groupSkillsByCategory([offTrackSkill], track)).toEqual([]);
+    expect(groupSkillsByCategory([], track)).toEqual([]);
   });
 });
