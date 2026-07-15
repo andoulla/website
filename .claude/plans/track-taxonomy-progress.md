@@ -6,14 +6,14 @@ Started: 2026-07-13
 
 ## Status
 
-| Branch                             | Steps | Status                                                                                                                                                        |
-| ---------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ~~`feat/00-deep-linking`~~         | 0     | ❌ dropped by user — empty-state rejected; branch deleted                                                                                                     |
-| `feat/01-data-foundations`         | 1–3   | ✅ MERGED to main 2026-07-14 (fast-forward push, no PR — user request)                                                                                        |
-| `feat/02-tracks-and-context`       | 4–5   | ✅ COMPLETE + feedback fixes, pushed `5d6b224` — track data (`f9f376c`), track context + App mount (`da7e401`), feedback fixes (`e24b1d2`); PR not opened yet |
-| ``feat/03-join-skill-objects`      | 6     | ✅ MERGED to main 2026-07-15 (fast-forward push `2bf8d1d`, no PR — user request)                                                                              |
-| `feat/04-skills-view-tracks`       | 7     | ✅ MERGED to main 2026-07-15 (fast-forward push `4f09efe`, no PR — user request); incl. palette contrast fixes                                                |
-| `feat/05-resume-tabs-cleanup-docs` | 8–11  | ✅ COMPLETE, pushed `3fbee57` — one final branch covering steps 8–11 + all carry-forwards (user request); full suite green (pre-commit hook); not yet merged  |
+| Branch                             | Steps | Status                                                                                                                                                                |
+| ---------------------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ~~`feat/00-deep-linking`~~         | 0     | ❌ dropped by user — empty-state rejected; branch deleted                                                                                                             |
+| `feat/01-data-foundations`         | 1–3   | ✅ MERGED to main 2026-07-14 (fast-forward push, no PR — user request)                                                                                                |
+| `feat/02-tracks-and-context`       | 4–5   | ✅ COMPLETE + feedback fixes, pushed `5d6b224` — track data (`f9f376c`), track context + App mount (`da7e401`), feedback fixes (`e24b1d2`); PR not opened yet         |
+| ``feat/03-join-skill-objects`      | 6     | ✅ MERGED to main 2026-07-15 (fast-forward push `2bf8d1d`, no PR — user request)                                                                                      |
+| `feat/04-skills-view-tracks`       | 7     | ✅ MERGED to main 2026-07-15 (fast-forward push `4f09efe`, no PR — user request); incl. palette contrast fixes                                                        |
+| `feat/05-resume-tabs-cleanup-docs` | 8–11  | ✅ COMPLETE, pushed `c61bd58` — steps 8–11 + carry-forwards + follow-ups (skills track filter, toolbar/tab styling, full→general rename); suite green; not yet merged |
 
 ## Decisions log (recent)
 
