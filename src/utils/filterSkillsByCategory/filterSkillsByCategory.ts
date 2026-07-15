@@ -1,11 +1,10 @@
-import type { SkillCategory, SkillSubCategory } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 
-// Narrows `skills` down to the selected categories/subcategories (AND semantics between the two).
+// Narrows `skills` down to the selected category/subcategory ids (AND semantics between the two).
 export const filterSkillsByCategory = (
   skills: SkillSummary[],
-  selectedCategories: SkillCategory[],
-  selectedSubCategories: SkillSubCategory[]
+  selectedCategories: string[],
+  selectedSubCategories: string[]
 ): SkillSummary[] => {
   // No filters active — nothing to narrow down.
   if (selectedCategories.length === 0 && selectedSubCategories.length === 0) return skills;
@@ -14,7 +13,7 @@ export const filterSkillsByCategory = (
   // subcategory (when any are selected).
   return skills.filter(
     (skill) =>
-      (selectedCategories.length === 0 || selectedCategories.includes(skill.category)) &&
-      (selectedSubCategories.length === 0 || selectedSubCategories.includes(skill.subCategory))
+      (selectedCategories.length === 0 || selectedCategories.includes(skill.categoryId)) &&
+      (selectedSubCategories.length === 0 || selectedSubCategories.includes(skill.subCategoryId))
   );
 };

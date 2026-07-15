@@ -17,6 +17,7 @@ export const useSkillsViewContext = (): SkillsViewContextValue => {
 
 export const SkillsViewContextProvider = ({
   children,
+  track,
   skills,
   filteredSkills,
   selectedCategories,
@@ -27,6 +28,7 @@ export const SkillsViewContextProvider = ({
 }: SkillsViewContextProviderProps) => {
   const value = useMemo<SkillsViewContextValue>(
     () => ({
+      track,
       skills,
       filteredSkills,
       selectedCategories,
@@ -36,6 +38,7 @@ export const SkillsViewContextProvider = ({
       onClearFilters,
     }),
     [
+      track,
       skills,
       filteredSkills,
       selectedCategories,

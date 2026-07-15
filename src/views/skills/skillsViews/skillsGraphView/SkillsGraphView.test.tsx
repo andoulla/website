@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
-import { SkillSummary } from '@/testing';
+import { SkillSummary, Track } from '@/testing';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 
 import { SkillsViewContextProvider } from '../SkillsViewContext';
@@ -13,11 +13,15 @@ import { SkillsGraphView } from './SkillsGraphView';
 const SKILLS = [
   new SkillSummary().years(4).mock(),
   new SkillSummary()
+    .id('team-leadership')
     .skill('Team Leadership')
     .years(2)
-    .category('leadership-delivery')
-    .subCategory('leadership')
-    .colour('secondary')
+    .categoryId('leadership')
+    .categoryName('Leadership & Delivery')
+    .categoryIndex(1)
+    .subCategoryId('people-management')
+    .subCategoryName('People Management')
+    .colour('green')
     .mock(),
 ];
 
@@ -28,6 +32,7 @@ const renderGraphView = (overrides: Partial<SkillsViewContextValue> = {}) => {
 
   return render(
     <SkillsViewContextProvider
+      track={new Track().mock()}
       skills={skills}
       filteredSkills={filterSkillsByCategory(skills, selectedCategories, selectedSubCategories)}
       selectedCategories={selectedCategories}
@@ -51,16 +56,16 @@ describe('SkillsGraphView', () => {
   });
 
   test('filtering to a category shows only matching skills', () => {
-    const screen = renderGraphView({ selectedCategories: ['engineering'] });
+    const screen = renderGraphView({ selectedCategories: ['frontend-development'] });
 
-    // header row + 1 data row for the one engineering skill
+    // header row + 1 data row for the one frontend skill
     expect(screen.getAllByRole('row')).toHaveLength(2);
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.queryByText('Team Leadership')).not.toBeInTheDocument();
   });
 
   test('filtering to a subcategory shows only matching skills', () => {
-    const screen = renderGraphView({ selectedSubCategories: ['leadership'] });
+    const screen = renderGraphView({ selectedSubCategories: ['people-management'] });
 
     expect(screen.getAllByRole('row')).toHaveLength(2);
     expect(screen.getByText('Team Leadership')).toBeVisible();
@@ -69,8 +74,8 @@ describe('SkillsGraphView', () => {
 
   test('combines category and subcategory filters', () => {
     const screen = renderGraphView({
-      selectedCategories: ['leadership-delivery'],
-      selectedSubCategories: ['development'],
+      selectedCategories: ['leadership'],
+      selectedSubCategories: ['core-technologies'],
     });
 
     expect(screen.queryByText('React')).not.toBeInTheDocument();
@@ -87,8 +92,8 @@ describe('SkillsGraphView', () => {
     const user = userEvent.setup();
     const onClearFilters = jest.fn();
     const screen = renderGraphView({
-      selectedCategories: ['leadership-delivery'],
-      selectedSubCategories: ['development'],
+      selectedCategories: ['leadership'],
+      selectedSubCategories: ['core-technologies'],
       onClearFilters,
     });
 

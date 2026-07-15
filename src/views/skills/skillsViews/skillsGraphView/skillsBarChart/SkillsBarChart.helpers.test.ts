@@ -1,8 +1,10 @@
 import { SkillSummary } from '@/testing';
 
+import { CATEGORY_PATTERN_ORDER } from './SkillsBarChart.constants';
 import {
   getCategoryPatternBackground,
   getCategoryPatternId,
+  getCategoryPatternType,
   isBarMatch,
 } from './SkillsBarChart.helpers';
 
@@ -44,54 +46,45 @@ describe('isBarMatch', () => {
   });
 });
 
-describe('getCategoryPatternId', () => {
-  test('returns a stable id derived from the category', () => {
-    const result = getCategoryPatternId('engineering');
+describe('getCategoryPatternType', () => {
+  test('assigns patterns in fixed order by category index', () => {
+    expect(getCategoryPatternType(0)).toBe('diagonal');
+    expect(getCategoryPatternType(6)).toBe('rings');
+  });
 
-    expect(result).toBe('skill-bar-pattern-engineering');
+  test('cycles back to the first pattern past the end of the order', () => {
+    expect(getCategoryPatternType(CATEGORY_PATTERN_ORDER.length)).toBe('diagonal');
+  });
+});
+
+describe('getCategoryPatternId', () => {
+  test('returns a stable id derived from the category id', () => {
+    const result = getCategoryPatternId('frontend-development');
+
+    expect(result).toBe('skill-bar-pattern-frontend-development');
   });
 
   test('returns a different id per category', () => {
-    const engineering = getCategoryPatternId('engineering');
+    const frontend = getCategoryPatternId('frontend-development');
     const tooling = getCategoryPatternId('tooling');
 
-    expect(engineering).not.toBe(tooling);
+    expect(frontend).not.toBe(tooling);
   });
 });
 
 describe('getCategoryPatternBackground', () => {
-  test('returns a distinct background per category for the same colours', () => {
-    const engineering = getCategoryPatternBackground('engineering', '#123456', '#ffffff');
-    const qualityPerformance = getCategoryPatternBackground(
-      'quality-performance',
-      '#123456',
-      '#ffffff'
-    );
-    const tooling = getCategoryPatternBackground('tooling', '#123456', '#ffffff');
-    const leadershipDelivery = getCategoryPatternBackground(
-      'leadership-delivery',
-      '#123456',
-      '#ffffff'
-    );
-    const peopleStakeholders = getCategoryPatternBackground(
-      'people-stakeholders',
-      '#123456',
-      '#ffffff'
+  test('returns a distinct background per category index for the same colours', () => {
+    const backgrounds = new Set(
+      CATEGORY_PATTERN_ORDER.map((_pattern, index) =>
+        getCategoryPatternBackground(index, '#123456', '#ffffff')
+      )
     );
 
-    const backgrounds = new Set([
-      engineering,
-      qualityPerformance,
-      tooling,
-      leadershipDelivery,
-      peopleStakeholders,
-    ]);
-
-    expect(backgrounds.size).toBe(5);
+    expect(backgrounds.size).toBe(CATEGORY_PATTERN_ORDER.length);
   });
 
   test('includes both the base colour and the mark colour', () => {
-    const result = getCategoryPatternBackground('engineering', '#123456', '#abcdef');
+    const result = getCategoryPatternBackground(0, '#123456', '#abcdef');
 
     expect(result).toContain('#123456');
     expect(result).toContain('#abcdef');

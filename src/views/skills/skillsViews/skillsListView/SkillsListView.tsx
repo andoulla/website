@@ -2,30 +2,18 @@ import { useEffect } from 'react';
 import Stack from '@mui/material/Stack';
 
 import { Section } from '@/components/section';
-import type { SkillCategory, SkillSubCategory } from '@/types';
-import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { hasSearchTerm } from '@/utils/hasSearchTerm';
-import {
-  CATEGORY_LABELS,
-  CATEGORY_ORDER,
-  SUBCATEGORIES_BY_CATEGORY,
-  SUBCATEGORY_LABELS,
-} from '@/utils/skillCategory';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
 import { SkillsEmptyState } from '../skillsEmptyState';
 
-import { createEmptyByCategory, skillElementId } from './SkillsListView.helpers';
+import { skillElementId } from './SkillsListView.helpers';
 import { SkillItemsList } from './skillItemsList';
-
-interface SubCategoryGroup {
-  subCategory: SkillSubCategory;
-  skills: SkillSummary[];
-}
 
 export const SkillsListView = () => {
   const {
+    track,
     filteredSkills,
     highlightedSkills,
     searchTerm,
@@ -45,27 +33,24 @@ export const SkillsListView = () => {
     ? filteredSkills
     : filteredSkills.filter((skill) => skillMatchesSearch(skill, searchTerm));
 
-  const byCategory = CATEGORY_ORDER.reduce<Record<SkillCategory, SkillSummary[]>>((acc, cat) => {
-    acc[cat] = searchedSkills.filter((skill) => skill.category === cat);
-    return acc;
-  }, createEmptyByCategory<SkillSummary>());
-
-  const subGroupsByCategory = CATEGORY_ORDER.reduce<Record<SkillCategory, SubCategoryGroup[]>>(
-    (acc, cat) => {
-      acc[cat] = SUBCATEGORIES_BY_CATEGORY[cat]
+  // Group by the active track's taxonomy; summaries keep their years-descending order.
+  const categoryGroups = track.categories
+    .map((category) => {
+      const subGroups = category.subCategories
         .map((subCategory) => ({
           subCategory,
-          skills: byCategory[cat].filter((skill) => skill.subCategory === subCategory),
+          skills: searchedSkills.filter((skill) => skill.subCategoryId === subCategory.id),
         }))
         .filter((group) => group.skills.length > 0);
-      return acc;
-    },
-    createEmptyByCategory<SubCategoryGroup>()
-  );
+      return {
+        category,
+        subGroups,
+        skills: subGroups.flatMap((group) => group.skills),
+      };
+    })
+    .filter((group) => group.skills.length > 0);
 
-  const nonEmptyCategories = CATEGORY_ORDER.filter((cat) => byCategory[cat].length > 0);
-
-  if (nonEmptyCategories.length === 0) {
+  if (categoryGroups.length === 0) {
     return (
       <SkillsEmptyState
         hasActiveFilters={selectedCategories.length > 0 || selectedSubCategories.length > 0}
@@ -76,22 +61,18 @@ export const SkillsListView = () => {
 
   return (
     <Stack spacing={2}>
-      {nonEmptyCategories.map((cat) => (
-        <Section key={cat} title={CATEGORY_LABELS[cat]}>
-          {subGroupsByCategory[cat].length > 1 ? (
+      {categoryGroups.map(({ category, subGroups, skills }) => (
+        <Section key={category.id} title={category.name}>
+          {subGroups.length > 1 ? (
             <Stack spacing={1.5}>
-              {subGroupsByCategory[cat].map((group) => (
-                <Section
-                  key={group.subCategory}
-                  title={SUBCATEGORY_LABELS[group.subCategory]}
-                  titleLevel={3}
-                >
+              {subGroups.map((group) => (
+                <Section key={group.subCategory.id} title={group.subCategory.name} titleLevel={3}>
                   <SkillItemsList skills={group.skills} highlightedSkills={highlightedSkills} />
                 </Section>
               ))}
             </Stack>
           ) : (
-            <SkillItemsList skills={byCategory[cat]} highlightedSkills={highlightedSkills} />
+            <SkillItemsList skills={skills} highlightedSkills={highlightedSkills} />
           )}
         </Section>
       ))}

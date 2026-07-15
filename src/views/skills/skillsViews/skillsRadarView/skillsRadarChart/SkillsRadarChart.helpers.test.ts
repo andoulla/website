@@ -1,28 +1,54 @@
 import { SkillSummary } from '@/testing';
+import type { PresentCategory } from '@/utils/derivePresentCategories';
 
 import { aggregateSkillsByCategory } from './SkillsRadarChart.helpers';
+
+const frontendCategory: PresentCategory = {
+  id: 'frontend-development',
+  name: 'Frontend Development',
+  index: 0,
+  colour: 'teal',
+};
+
+const leadershipCategory: PresentCategory = {
+  id: 'leadership',
+  name: 'Leadership',
+  index: 1,
+  colour: 'green',
+};
+
+const leadershipSkill = () =>
+  new SkillSummary()
+    .id('team-leadership')
+    .skill('Team Leadership')
+    .categoryId('leadership')
+    .categoryName('Leadership')
+    .categoryIndex(1)
+    .colour('green');
 
 describe('aggregateSkillsByCategory', () => {
   test('averages years and counts skills per category', () => {
     const skills = [
-      new SkillSummary().skill('React').category('engineering').years(3).mock(),
-      new SkillSummary().skill('TypeScript').category('engineering').years(2).mock(),
-      new SkillSummary().skill('Team Leadership').category('leadership-delivery').years(1.5).mock(),
+      new SkillSummary().skill('React').years(3).mock(),
+      new SkillSummary().id('typescript').skill('TypeScript').years(2).mock(),
+      leadershipSkill().years(1.5).mock(),
     ];
 
-    const result = aggregateSkillsByCategory(['engineering', 'leadership-delivery'], skills);
+    const result = aggregateSkillsByCategory([frontendCategory, leadershipCategory], skills);
 
     expect(result).toEqual([
       {
-        category: 'engineering',
-        label: 'Engineering',
+        categoryId: 'frontend-development',
+        categoryIndex: 0,
+        label: 'Frontend Development',
         avgYears: 2.5,
         skillCount: 2,
         isMatch: true,
       },
       {
-        category: 'leadership-delivery',
-        label: 'Leadership & Delivery',
+        categoryId: 'leadership',
+        categoryIndex: 1,
+        label: 'Leadership',
         avgYears: 1.5,
         skillCount: 1,
         isMatch: true,
@@ -31,13 +57,14 @@ describe('aggregateSkillsByCategory', () => {
   });
 
   test('includes a category with zero matching skills at 0 years', () => {
-    const skills = [new SkillSummary().category('engineering').years(3).mock()];
+    const skills = [new SkillSummary().years(3).mock()];
 
-    const result = aggregateSkillsByCategory(['engineering', 'quality-performance'], skills);
+    const result = aggregateSkillsByCategory([frontendCategory, leadershipCategory], skills);
 
     expect(result).toContainEqual({
-      category: 'quality-performance',
-      label: 'Quality & Performance',
+      categoryId: 'leadership',
+      categoryIndex: 1,
+      label: 'Leadership',
       avgYears: 0,
       skillCount: 0,
       isMatch: true,
@@ -46,48 +73,45 @@ describe('aggregateSkillsByCategory', () => {
 
   test('rounds averaged years to 1 decimal place', () => {
     const skills = [
-      new SkillSummary().category('engineering').years(1.11).mock(),
-      new SkillSummary().skill('TypeScript').category('engineering').years(1.12).mock(),
+      new SkillSummary().years(1.11).mock(),
+      new SkillSummary().id('typescript').skill('TypeScript').years(1.12).mock(),
     ];
 
-    const result = aggregateSkillsByCategory(['engineering'], skills);
+    const result = aggregateSkillsByCategory([frontendCategory], skills);
 
     expect(result[0].avgYears).toBe(1.1);
   });
 
   test('marks isMatch true for every category when no search term is given', () => {
-    const skills = [new SkillSummary().category('engineering').mock()];
+    const skills = [new SkillSummary().mock()];
 
-    const result = aggregateSkillsByCategory(['engineering', 'quality-performance'], skills);
+    const result = aggregateSkillsByCategory([frontendCategory, leadershipCategory], skills);
 
     expect(result.every((point) => point.isMatch)).toBe(true);
   });
 
   test('marks isMatch true only for categories with a matching skill', () => {
-    const skills = [
-      new SkillSummary().skill('React').category('engineering').mock(),
-      new SkillSummary().skill('Team Leadership').category('leadership-delivery').mock(),
-    ];
+    const skills = [new SkillSummary().skill('React').mock(), leadershipSkill().mock()];
 
     const result = aggregateSkillsByCategory(
-      ['engineering', 'leadership-delivery'],
+      [frontendCategory, leadershipCategory],
       skills,
       'react'
     );
 
-    expect(result.find((point) => point.category === 'engineering')?.isMatch).toBe(true);
-    expect(result.find((point) => point.category === 'leadership-delivery')?.isMatch).toBe(false);
+    expect(result.find((point) => point.categoryId === 'frontend-development')?.isMatch).toBe(true);
+    expect(result.find((point) => point.categoryId === 'leadership')?.isMatch).toBe(false);
   });
 
   test('marks isMatch false for a category with zero skills when a search term is active', () => {
-    const skills = [new SkillSummary().category('engineering').mock()];
+    const skills = [new SkillSummary().mock()];
 
     const result = aggregateSkillsByCategory(
-      ['engineering', 'quality-performance'],
+      [frontendCategory, leadershipCategory],
       skills,
       'react'
     );
 
-    expect(result.find((point) => point.category === 'quality-performance')?.isMatch).toBe(false);
+    expect(result.find((point) => point.categoryId === 'leadership')?.isMatch).toBe(false);
   });
 });

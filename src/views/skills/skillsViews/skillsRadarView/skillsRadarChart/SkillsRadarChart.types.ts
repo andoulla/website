@@ -1,7 +1,6 @@
-import type { SkillCategory } from '@/types';
-
 export interface CategoryRadarPoint {
-  category: SkillCategory;
+  categoryId: string;
+  categoryIndex: number;
   label: string;
   avgYears: number;
   skillCount: number;

@@ -7,9 +7,9 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
+import { TRACK_PARAM, useTrackContext } from '@/context/track';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { formatYears } from '@/utils/formatYears';
-import { SUBCATEGORY_LABELS } from '@/utils/skillCategory';
 
 interface SkillTooltipContentProps {
   skill: SkillSummary;
@@ -17,6 +17,7 @@ interface SkillTooltipContentProps {
 
 export const SkillTooltipContent = ({ skill }: SkillTooltipContentProps) => {
   const theme = useTheme();
+  const { trackId } = useTrackContext();
 
   return (
     <Paper
@@ -31,7 +32,7 @@ export const SkillTooltipContent = ({ skill }: SkillTooltipContentProps) => {
         {skill.skill}
       </Typography>
       <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-        {SUBCATEGORY_LABELS[skill.subCategory]}
+        {skill.subCategoryName}
       </Typography>
       <Typography
         variant="body2"
@@ -55,7 +56,7 @@ export const SkillTooltipContent = ({ skill }: SkillTooltipContentProps) => {
       <Divider sx={{ my: 1 }} />
       <Link
         component={RouterLink}
-        to={`/?skill=${encodeURIComponent(skill.skill)}`}
+        to={`/?skill=${encodeURIComponent(skill.skill)}&${TRACK_PARAM}=${trackId}`}
         variant="body2"
         underline="none"
         sx={{ display: 'block' }}
@@ -65,7 +66,7 @@ export const SkillTooltipContent = ({ skill }: SkillTooltipContentProps) => {
       {skill.recommendationIds.length > 0 && (
         <Link
           component={RouterLink}
-          to={`/?recommendation=${encodeURIComponent(skill.recommendationIds[0])}`}
+          to={`/?recommendation=${encodeURIComponent(skill.recommendationIds[0])}&${TRACK_PARAM}=${trackId}`}
           variant="body2"
           underline="none"
           sx={{ display: 'block', mt: 0.5 }}

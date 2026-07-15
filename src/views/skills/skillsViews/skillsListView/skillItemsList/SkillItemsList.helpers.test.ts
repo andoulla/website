@@ -15,11 +15,11 @@ describe('dotColour', () => {
     expect(dotColour(skill, theme)).toBe(theme.palette.grey[400]);
   });
 
-  test('returns a shaded background colour for a skill colour present on the palette', () => {
-    const skill = new SkillSummary().skill('React').colour('primary').mock();
+  test('returns a shaded background colour for a palette skill colour', () => {
+    const skill = new SkillSummary().skill('React').colour('teal').mock();
 
     const expected = computeShadeColour(
-      theme.palette.primary.main,
+      CUSTOM_COLOUR_HEX.teal.light,
       skillShadeIndex(skill.skill),
       theme.palette.getContrastText
     );
@@ -27,16 +27,16 @@ describe('dotColour', () => {
     expect(dotColour(skill, theme)).toBe(expected.bg);
   });
 
-  test('returns a shaded background colour for a custom (non-palette) skill colour', () => {
-    const skill = new SkillSummary().skill('Team Leadership').colour('brown').mock();
-    const theme = createTheme();
+  test('resolves the dark-mode hex for a colour with a dark variant on a dark theme', () => {
+    const darkTheme = createTheme({ palette: { mode: 'dark' } });
+    const skill = new SkillSummary().skill('Team Leadership').colour('plum').mock();
 
     const expected = computeShadeColour(
-      CUSTOM_COLOUR_HEX.brown,
+      CUSTOM_COLOUR_HEX.plum.dark,
       skillShadeIndex(skill.skill),
-      theme.palette.getContrastText
+      darkTheme.palette.getContrastText
     );
 
-    expect(dotColour(skill, theme)).toBe(expected.bg);
+    expect(dotColour(skill, darkTheme)).toBe(expected.bg);
   });
 });

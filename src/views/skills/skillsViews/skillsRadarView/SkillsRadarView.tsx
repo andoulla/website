@@ -1,6 +1,6 @@
 import Alert from '@mui/material/Alert';
 
-import { derivePresentCategories } from '@/utils/skillCategory';
+import { derivePresentCategories } from '@/utils/derivePresentCategories';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
 import { SkillsEmptyState } from '../skillsEmptyState';

@@ -2,14 +2,28 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
-import { CATEGORY_ORDER, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory';
+import { SkillFilterBar } from './SkillFilterBar';
+import type { SkillFilterBarProps, SkillFilterOption } from './SkillFilterBar.types';
 
-import { SkillFilterBar, type SkillFilterBarProps } from './SkillFilterBar';
+const CATEGORIES: SkillFilterOption[] = [
+  { id: 'frontend-development', name: 'Frontend Development' },
+  { id: 'quality', name: 'Quality & Performance' },
+  { id: 'leadership', name: 'Leadership' },
+];
+
+const SUBCATEGORIES_BY_CATEGORY: Record<string, SkillFilterOption[]> = {
+  'frontend-development': [
+    { id: 'core-technologies', name: 'Core Technologies' },
+    { id: 'styling', name: 'Styling & UI' },
+  ],
+  quality: [{ id: 'testing', name: 'Testing' }],
+  leadership: [{ id: 'people-management', name: 'People Management' }],
+};
 
 const renderFilterBar = (props: Partial<SkillFilterBarProps> = {}) =>
   render(
     <SkillFilterBar
-      categories={CATEGORY_ORDER}
+      categories={CATEGORIES}
       subCategoriesByCategory={SUBCATEGORIES_BY_CATEGORY}
       selectedCategories={[]}
       selectedSubCategories={[]}
@@ -34,7 +48,7 @@ describe('SkillFilterBar', () => {
 
     test('renders a trigger button showing the active filter count', () => {
       const screen = renderFilterBar({
-        selectedCategories: ['engineering'],
+        selectedCategories: ['frontend-development'],
         selectedSubCategories: ['testing'],
       });
 
@@ -58,19 +72,13 @@ describe('SkillFilterBar', () => {
       );
 
       expect(
-        screen.getByRole('menuitemcheckbox', { name: 'Engineering', checked: false })
+        screen.getByRole('menuitemcheckbox', { name: 'Frontend Development', checked: false })
       ).toBeVisible();
       expect(
         screen.getByRole('menuitemcheckbox', { name: 'Quality & Performance', checked: false })
       ).toBeVisible();
       expect(
-        screen.getByRole('menuitemcheckbox', { name: 'Tooling', checked: false })
-      ).toBeVisible();
-      expect(
-        screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery', checked: false })
-      ).toBeVisible();
-      expect(
-        screen.getByRole('menuitemcheckbox', { name: 'People & Stakeholders', checked: false })
+        screen.getByRole('menuitemcheckbox', { name: 'Leadership', checked: false })
       ).toBeVisible();
       expect(await axe(screen.container)).toHaveNoViolations();
     });
@@ -85,15 +93,15 @@ describe('SkillFilterBar', () => {
           name: 'Filter skills by category and subcategory, currently: All',
         })
       );
-      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
-      expect(onCategoriesChange).toHaveBeenCalledWith(['engineering']);
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Frontend Development' }));
+      expect(onCategoriesChange).toHaveBeenCalledWith(['frontend-development']);
     });
 
     test('calls onCategoriesChange removing the category when an already-selected category is clicked', async () => {
       const user = userEvent.setup();
       const onCategoriesChange = jest.fn();
       const screen = renderFilterBar({
-        selectedCategories: ['engineering', 'leadership-delivery'],
+        selectedCategories: ['frontend-development', 'leadership'],
         onCategoriesChange,
       });
 
@@ -102,15 +110,15 @@ describe('SkillFilterBar', () => {
           name: 'Filter skills by category and subcategory, currently: Filters (2)',
         })
       );
-      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
-      expect(onCategoriesChange).toHaveBeenCalledWith(['leadership-delivery']);
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Frontend Development' }));
+      expect(onCategoriesChange).toHaveBeenCalledWith(['leadership']);
     });
 
     test('prunes selected subcategories that belong to a category being deselected', async () => {
       const user = userEvent.setup();
       const onSubCategoriesChange = jest.fn();
       const screen = renderFilterBar({
-        selectedCategories: ['engineering'],
+        selectedCategories: ['frontend-development'],
         selectedSubCategories: ['styling'],
         onSubCategoriesChange,
       });
@@ -120,7 +128,7 @@ describe('SkillFilterBar', () => {
           name: 'Filter skills by category and subcategory, currently: Filters (2)',
         })
       );
-      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Frontend Development' }));
       expect(onSubCategoriesChange).toHaveBeenCalledWith([]);
     });
 
@@ -137,7 +145,7 @@ describe('SkillFilterBar', () => {
           name: 'Filter skills by category and subcategory, currently: Filters (1)',
         })
       );
-      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Engineering' }));
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Frontend Development' }));
       expect(onSubCategoriesChange).toHaveBeenCalledWith([]);
     });
 
@@ -170,23 +178,15 @@ describe('SkillFilterBar', () => {
         })
       );
 
-      expect(screen.getByText('Development')).toBeVisible();
-      expect(screen.getByText('Testing')).toBeVisible();
+      expect(screen.getByText('Core Technologies')).toBeVisible();
       expect(screen.getByText('Styling & UI')).toBeVisible();
-      expect(screen.getByText('Design System')).toBeVisible();
-      expect(screen.getByText('Dev Tools')).toBeVisible();
-      expect(screen.getByText('Collaboration Tools')).toBeVisible();
-      expect(screen.getByText('Accessibility')).toBeVisible();
-      expect(screen.getByText('Performance')).toBeVisible();
-      expect(screen.getByText('Leadership')).toBeVisible();
-      expect(screen.getByText('Delivery & Planning')).toBeVisible();
-      expect(screen.getByText('Stakeholder Management')).toBeVisible();
-      expect(screen.getByText('Mentoring')).toBeVisible();
+      expect(screen.getByText('Testing')).toBeVisible();
+      expect(screen.getByText('People Management')).toBeVisible();
     });
 
     test('scopes subcategory options to the selected categories', async () => {
       const user = userEvent.setup();
-      const screen = renderFilterBar({ selectedCategories: ['engineering'] });
+      const screen = renderFilterBar({ selectedCategories: ['frontend-development'] });
 
       await user.click(
         screen.getByRole('button', {
@@ -194,10 +194,10 @@ describe('SkillFilterBar', () => {
         })
       );
 
-      expect(screen.getByText('Development')).toBeVisible();
+      expect(screen.getByText('Core Technologies')).toBeVisible();
       expect(screen.getByText('Styling & UI')).toBeVisible();
-      expect(screen.queryByText('Leadership')).not.toBeInTheDocument();
-      expect(screen.queryByText('Mentoring')).not.toBeInTheDocument();
+      expect(screen.queryByText('Testing')).not.toBeInTheDocument();
+      expect(screen.queryByText('People Management')).not.toBeInTheDocument();
     });
 
     test('calls onSubCategoriesChange when a subcategory item is clicked, without touching categories', async () => {

@@ -9,19 +9,16 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
 
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
-import type { SkillCategory } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
-import { CATEGORY_LABELS, derivePresentCategories } from '@/utils/skillCategory';
-import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';
+import { derivePresentCategories, type PresentCategory } from '@/utils/derivePresentCategories';
+import { resolveSkillColourMain } from '@/utils/skillColour';
 import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
-import {
-  CATEGORY_PATTERN_SHAPE_DEFINITIONS,
-  CATEGORY_PATTERN_TYPE,
-} from './SkillsBarChart.constants';
+import { CATEGORY_PATTERN_SHAPE_DEFINITIONS } from './SkillsBarChart.constants';
 import {
   getCategoryPatternBackground,
   getCategoryPatternId,
+  getCategoryPatternType,
   isBarMatch,
 } from './SkillsBarChart.helpers';
 
@@ -38,7 +35,7 @@ const SkillBarTooltip = ({ active, payload }: TooltipContentProps) => {
 };
 
 interface CategoryPatternDefinitionProps {
-  category: SkillCategory;
+  category: PresentCategory;
   colour: string;
   markColour: string;
 }
@@ -50,9 +47,9 @@ const CategoryPatternDefinition = ({
   colour,
   markColour,
 }: CategoryPatternDefinitionProps) => {
-  const id = getCategoryPatternId(category);
-  const { width, height, patternTransform, lines, circle } =
-    CATEGORY_PATTERN_SHAPE_DEFINITIONS[CATEGORY_PATTERN_TYPE[category]];
+  const id = getCategoryPatternId(category.id);
+  const { width, height, patternTransform, lines, circle, ring } =
+    CATEGORY_PATTERN_SHAPE_DEFINITIONS[getCategoryPatternType(category.index)];
 
   return (
     <pattern
@@ -77,6 +74,16 @@ const CategoryPatternDefinition = ({
       {circle !== undefined && (
         <circle cx={circle.cx} cy={circle.cy} r={circle.r} fill={markColour} />
       )}
+      {ring !== undefined && (
+        <circle
+          cx={ring.cx}
+          cy={ring.cy}
+          r={ring.r}
+          fill="none"
+          stroke={markColour}
+          strokeWidth={ring.strokeWidth}
+        />
+      )}
     </pattern>
   );
 };
@@ -98,15 +105,14 @@ export const SkillsBarChart = ({
 
   const chartHeight = Math.max(MIN_HEIGHT, skills.length * BAR_HEIGHT + CHART_PADDING);
 
-  // Legend: one entry per category present, in fixed display order. markColour is the pattern's
+  // Legend: one entry per category present, in track order. markColour is the pattern's
   // ink colour — high-contrast against the category colour so the texture reads at swatch size.
-  const legendEntries = derivePresentCategories(skills).map((cat) => {
-    const colour = resolveSkillColourMain(CATEGORY_COLOUR_MAP[cat], theme);
+  const legendEntries = derivePresentCategories(skills).map((category) => {
+    const colour = resolveSkillColourMain(category.colour, theme);
     return {
-      cat,
+      category,
       colour,
       markColour: theme.palette.getContrastText(colour),
-      label: CATEGORY_LABELS[cat],
     };
   });
 
@@ -148,10 +154,10 @@ export const SkillsBarChart = ({
           />
           {showPatterns && (
             <defs>
-              {legendEntries.map(({ cat, colour, markColour }) => (
+              {legendEntries.map(({ category, colour, markColour }) => (
                 <CategoryPatternDefinition
-                  key={cat}
-                  category={cat}
+                  key={category.id}
+                  category={category}
                   colour={colour}
                   markColour={markColour}
                 />
@@ -178,8 +184,8 @@ export const SkillsBarChart = ({
               const colour = resolveSkillColourMain(skill.colour, theme);
               return (
                 <Cell
-                  key={skill.skill}
-                  fill={showPatterns ? `url(#${getCategoryPatternId(skill.category)})` : colour}
+                  key={skill.id}
+                  fill={showPatterns ? `url(#${getCategoryPatternId(skill.categoryId)})` : colour}
                   style={{
                     opacity: isMatch ? 1 : 0.35,
                     filter: isHovered ? 'brightness(1.25)' : 'none',
@@ -205,17 +211,19 @@ export const SkillsBarChart = ({
           pt: 1,
         }}
       >
-        {legendEntries.map(({ cat, colour, markColour, label }) => (
-          <Box key={cat} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        {legendEntries.map(({ category, colour, markColour }) => (
+          <Box key={category.id} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <CategoryColourDot
               shape="square"
               colour={colour}
               background={
-                showPatterns ? getCategoryPatternBackground(cat, colour, markColour) : undefined
+                showPatterns
+                  ? getCategoryPatternBackground(category.index, colour, markColour)
+                  : undefined
               }
             />
             <Typography variant="caption" color="text.secondary">
-              {label}
+              {category.name}
             </Typography>
           </Box>
         ))}
@@ -233,10 +241,10 @@ export const SkillsBarChart = ({
         </thead>
         <tbody>
           {skills.map((skill) => (
-            <tr key={skill.skill}>
+            <tr key={skill.id}>
               <td>{skill.skill}</td>
               <td>{skill.years}</td>
-              <td>{CATEGORY_LABELS[skill.category]}</td>
+              <td>{skill.categoryName}</td>
             </tr>
           ))}
         </tbody>

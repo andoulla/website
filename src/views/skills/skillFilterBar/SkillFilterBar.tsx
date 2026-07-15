@@ -8,17 +8,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-import type { SkillCategory, SkillSubCategory } from '@/types';
-import { CATEGORY_LABELS, SUBCATEGORY_LABELS } from '@/utils/skillCategory';
-
-export interface SkillFilterBarProps {
-  categories: SkillCategory[];
-  subCategoriesByCategory: Partial<Record<SkillCategory, SkillSubCategory[]>>;
-  selectedCategories: SkillCategory[];
-  selectedSubCategories: SkillSubCategory[];
-  onCategoriesChange: (categories: SkillCategory[]) => void;
-  onSubCategoriesChange: (subCategories: SkillSubCategory[]) => void;
-}
+import type { SkillFilterBarProps } from './SkillFilterBar.types';
 
 const MENU_ITEM_SX = {
   display: 'flex',
@@ -39,26 +29,30 @@ export const SkillFilterBar = ({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = anchorEl !== null;
 
-  const toggleCategory = (category: SkillCategory) => {
-    const isSelected = selectedCategories.includes(category);
+  const toggleCategory = (categoryId: string) => {
+    const isSelected = selectedCategories.includes(categoryId);
     const nextCategories = isSelected
-      ? selectedCategories.filter((selectedCategory) => selectedCategory !== category)
-      : [...selectedCategories, category];
+      ? selectedCategories.filter((selectedCategory) => selectedCategory !== categoryId)
+      : [...selectedCategories, categoryId];
     onCategoriesChange(nextCategories);
 
     // Drop subcategories of a just-deselected category.
-    const subCategoriesForToggledCategory = subCategoriesByCategory[category] ?? [];
+    const subCategoriesForToggledCategory = (subCategoriesByCategory[categoryId] ?? []).map(
+      (subCategory) => subCategory.id
+    );
     // filterSkillsByCategory ANDs category+subCategory, so drop subcategories not in any selected category.
     const validSubCategories =
       nextCategories.length > 0
         ? new Set(
-            nextCategories.flatMap((nextCategory) => subCategoriesByCategory[nextCategory] ?? [])
+            nextCategories.flatMap((nextCategory) =>
+              (subCategoriesByCategory[nextCategory] ?? []).map((subCategory) => subCategory.id)
+            )
           )
         : null;
 
-    const nextSubCategories = selectedSubCategories.filter((subCategory) => {
-      if (isSelected && subCategoriesForToggledCategory.includes(subCategory)) return false;
-      if (validSubCategories !== null && !validSubCategories.has(subCategory)) return false;
+    const nextSubCategories = selectedSubCategories.filter((subCategoryId) => {
+      if (isSelected && subCategoriesForToggledCategory.includes(subCategoryId)) return false;
+      if (validSubCategories !== null && !validSubCategories.has(subCategoryId)) return false;
       return true;
     });
 
@@ -67,20 +61,24 @@ export const SkillFilterBar = ({
     }
   };
 
-  const toggleSubCategory = (subCategory: SkillSubCategory) => {
+  const toggleSubCategory = (subCategoryId: string) => {
     onSubCategoriesChange(
-      selectedSubCategories.includes(subCategory)
-        ? selectedSubCategories.filter((selectedSubCategory) => selectedSubCategory !== subCategory)
-        : [...selectedSubCategories, subCategory]
+      selectedSubCategories.includes(subCategoryId)
+        ? selectedSubCategories.filter(
+            (selectedSubCategory) => selectedSubCategory !== subCategoryId
+          )
+        : [...selectedSubCategories, subCategoryId]
     );
   };
 
   const categoriesForSubCategories =
-    selectedCategories.length > 0 ? selectedCategories : categories;
+    selectedCategories.length > 0
+      ? categories.filter((category) => selectedCategories.includes(category.id))
+      : categories;
   const subCategoryGroups = categoriesForSubCategories
     .map((category) => ({
       category,
-      subCategories: subCategoriesByCategory[category] ?? [],
+      subCategories: subCategoriesByCategory[category.id] ?? [],
     }))
     .filter((group) => group.subCategories.length > 0);
 
@@ -112,10 +110,10 @@ export const SkillFilterBar = ({
         <ListSubheader>Category</ListSubheader>
         {categories.map((category) => (
           <MenuItem
-            key={category}
+            key={category.id}
             role="menuitemcheckbox"
-            aria-checked={selectedCategories.includes(category)}
-            onClick={() => toggleCategory(category)}
+            aria-checked={selectedCategories.includes(category.id)}
+            onClick={() => toggleCategory(category.id)}
             sx={MENU_ITEM_SX}
           >
             <Checkbox
@@ -123,10 +121,10 @@ export const SkillFilterBar = ({
               tabIndex={-1}
               disableRipple
               size="small"
-              checked={selectedCategories.includes(category)}
+              checked={selectedCategories.includes(category.id)}
               sx={{ p: 0 }}
             />
-            <ListItemText>{CATEGORY_LABELS[category]}</ListItemText>
+            <ListItemText>{category.name}</ListItemText>
           </MenuItem>
         ))}
         {subCategoryGroups.length > 0 && <Divider />}
@@ -134,19 +132,19 @@ export const SkillFilterBar = ({
         {subCategoryGroups.flatMap(({ category, subCategories }) => [
           subCategoryGroups.length > 1 ? (
             <ListSubheader
-              key={`${category}-heading`}
+              key={`${category.id}-heading`}
               disableSticky
               sx={{ pl: 3, lineHeight: 2.5, fontSize: '0.75rem' }}
             >
-              {CATEGORY_LABELS[category]}
+              {category.name}
             </ListSubheader>
           ) : null,
           ...subCategories.map((subCategory) => (
             <MenuItem
-              key={subCategory}
+              key={subCategory.id}
               role="menuitemcheckbox"
-              aria-checked={selectedSubCategories.includes(subCategory)}
-              onClick={() => toggleSubCategory(subCategory)}
+              aria-checked={selectedSubCategories.includes(subCategory.id)}
+              onClick={() => toggleSubCategory(subCategory.id)}
               sx={MENU_ITEM_SX}
             >
               <Checkbox
@@ -154,10 +152,10 @@ export const SkillFilterBar = ({
                 tabIndex={-1}
                 disableRipple
                 size="small"
-                checked={selectedSubCategories.includes(subCategory)}
+                checked={selectedSubCategories.includes(subCategory.id)}
                 sx={{ p: 0 }}
               />
-              <ListItemText>{SUBCATEGORY_LABELS[subCategory]}</ListItemText>
+              <ListItemText>{subCategory.name}</ListItemText>
             </MenuItem>
           )),
         ])}

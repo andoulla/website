@@ -1,13 +1,14 @@
 import type { ReactNode } from 'react';
 
-import type { SkillCategory, SkillSubCategory } from '@/types';
+import type { Track } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 
 export interface SkillsViewContextValue {
+  track: Track;
   skills: SkillSummary[];
   filteredSkills: SkillSummary[];
-  selectedCategories: SkillCategory[];
-  selectedSubCategories: SkillSubCategory[];
+  selectedCategories: string[];
+  selectedSubCategories: string[];
   highlightedSkills: string[];
   searchTerm: string;
   onClearFilters: () => void;

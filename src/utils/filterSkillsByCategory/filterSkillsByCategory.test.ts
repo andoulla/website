@@ -4,12 +4,16 @@ import type { SkillSummary as SkillSummaryData } from '@/utils/calculateSkillYea
 import { filterSkillsByCategory } from './filterSkillsByCategory';
 
 const SKILLS: SkillSummaryData[] = [
-  new SkillSummary().skill('React').category('engineering').subCategory('development').mock(),
-  new SkillSummary().skill('Jest').category('quality-performance').subCategory('testing').mock(),
+  new SkillSummary()
+    .skill('React')
+    .categoryId('frontend-development')
+    .subCategoryId('core-technologies')
+    .mock(),
+  new SkillSummary().skill('Jest').categoryId('quality').subCategoryId('testing').mock(),
   new SkillSummary()
     .skill('Team Leadership')
-    .category('leadership-delivery')
-    .subCategory('leadership')
+    .categoryId('leadership')
+    .subCategoryId('people-management')
     .mock(),
 ];
 
@@ -21,25 +25,25 @@ describe('filterSkillsByCategory', () => {
   });
 
   test('filters by category only', () => {
-    const result = filterSkillsByCategory(SKILLS, ['leadership-delivery'], []);
+    const result = filterSkillsByCategory(SKILLS, ['leadership'], []);
 
-    expect(result.map((s) => s.skill)).toEqual(['Team Leadership']);
+    expect(result.map((skill) => skill.skill)).toEqual(['Team Leadership']);
   });
 
   test('filters by subcategory only', () => {
     const result = filterSkillsByCategory(SKILLS, [], ['testing']);
 
-    expect(result.map((s) => s.skill)).toEqual(['Jest']);
+    expect(result.map((skill) => skill.skill)).toEqual(['Jest']);
   });
 
   test('filters by category and subcategory combined using AND semantics', () => {
-    const result = filterSkillsByCategory(SKILLS, ['quality-performance'], ['testing']);
+    const result = filterSkillsByCategory(SKILLS, ['quality'], ['testing']);
 
-    expect(result.map((s) => s.skill)).toEqual(['Jest']);
+    expect(result.map((skill) => skill.skill)).toEqual(['Jest']);
   });
 
   test('returns an empty array when nothing matches', () => {
-    const result = filterSkillsByCategory(SKILLS, ['leadership-delivery'], ['testing']);
+    const result = filterSkillsByCategory(SKILLS, ['leadership'], ['testing']);
 
     expect(result).toEqual([]);
   });

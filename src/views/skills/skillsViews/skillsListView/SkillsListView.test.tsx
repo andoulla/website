@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
-import { SkillSummary } from '@/testing';
+import { SkillSummary, Track } from '@/testing';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 
 import { SkillsViewContextProvider } from '../SkillsViewContext';
@@ -11,19 +11,64 @@ import type { SkillsViewContextValue } from '../SkillsViewContext.types';
 
 import { SkillsListView } from './SkillsListView';
 
+const testTrack = new Track()
+  .categories([
+    {
+      id: 'frontend-development',
+      name: 'Frontend Development',
+      subCategories: [
+        {
+          id: 'core-technologies',
+          name: 'Core Technologies',
+          skillIds: ['react', 'typescript', 'docker'],
+        },
+        { id: 'styling', name: 'Styling & UI', skillIds: ['css-in-js'] },
+        { id: 'testing', name: 'Testing', skillIds: ['jest'] },
+      ],
+    },
+    {
+      id: 'leadership',
+      name: 'Leadership & Delivery',
+      subCategories: [
+        { id: 'people-management', name: 'People Management', skillIds: ['team-leadership'] },
+      ],
+    },
+    {
+      id: 'people-stakeholders',
+      name: 'People & Stakeholders',
+      subCategories: [{ id: 'mentoring', name: 'Mentoring', skillIds: ['mentoring'] }],
+    },
+    {
+      id: 'tooling',
+      name: 'Tooling',
+      subCategories: [{ id: 'dev-tools', name: 'Dev Tools', skillIds: [] }],
+    },
+  ])
+  .mock();
+
 const SKILLS = [
   new SkillSummary().years(4).mock(),
   new SkillSummary()
+    .id('team-leadership')
     .skill('Team Leadership')
     .years(3)
-    .category('leadership-delivery')
-    .colour('secondary')
+    .categoryId('leadership')
+    .categoryName('Leadership & Delivery')
+    .categoryIndex(1)
+    .subCategoryId('people-management')
+    .subCategoryName('People Management')
+    .colour('green')
     .mock(),
   new SkillSummary()
+    .id('mentoring')
     .skill('Mentoring')
     .years(2)
-    .category('people-stakeholders')
-    .colour('success')
+    .categoryId('people-stakeholders')
+    .categoryName('People & Stakeholders')
+    .categoryIndex(2)
+    .subCategoryId('mentoring')
+    .subCategoryName('Mentoring')
+    .colour('plum')
     .recommendationIds(['rec-1'])
     .mock(),
 ];
@@ -36,6 +81,7 @@ const renderListView = (overrides: Partial<SkillsViewContextValue> = {}) => {
   return render(
     <MemoryRouter>
       <SkillsViewContextProvider
+        track={testTrack}
         skills={skills}
         filteredSkills={filterSkillsByCategory(skills, selectedCategories, selectedSubCategories)}
         selectedCategories={selectedCategories}
@@ -65,16 +111,16 @@ describe('SkillsListView', () => {
     });
 
     test('renders "year" (singular) when a skill has exactly 1 year', () => {
-      const skills = [new SkillSummary().skill('Docker').years(1).mock()];
+      const skills = [new SkillSummary().id('docker').skill('Docker').years(1).mock()];
       const screen = renderListView({ skills });
 
       expect(screen.getByText('est. 1 year')).toBeVisible();
     });
 
-    test('renders category section headings', () => {
+    test('renders category section headings from the track', () => {
       const screen = renderListView();
 
-      expect(screen.getByText('Engineering')).toBeVisible();
+      expect(screen.getByText('Frontend Development')).toBeVisible();
       expect(screen.getByText('Leadership & Delivery')).toBeVisible();
       expect(screen.getByText('People & Stakeholders')).toBeVisible();
     });
@@ -87,45 +133,55 @@ describe('SkillsListView', () => {
 
     test('groups skills into sub-category headings when a category has more than one sub-category present', () => {
       const skills = [
-        new SkillSummary().skill('React').subCategory('development').mock(),
-        new SkillSummary().skill('CSS-in-JS').subCategory('styling').mock(),
+        new SkillSummary().mock(),
+        new SkillSummary()
+          .id('css-in-js')
+          .skill('CSS-in-JS')
+          .subCategoryId('styling')
+          .subCategoryName('Styling & UI')
+          .mock(),
       ];
       const screen = renderListView({ skills });
 
-      expect(screen.getByText('Development')).toBeVisible();
+      expect(screen.getByText('Core Technologies')).toBeVisible();
       expect(screen.getByText('Styling & UI')).toBeVisible();
     });
 
     test('does not render a sub-category heading when a category has only one sub-category present', () => {
       const skills = [
-        new SkillSummary().skill('React').subCategory('development').mock(),
-        new SkillSummary().skill('TypeScript').subCategory('development').mock(),
+        new SkillSummary().mock(),
+        new SkillSummary().id('typescript').skill('TypeScript').mock(),
       ];
       const screen = renderListView({ skills });
 
-      expect(screen.queryByText('Development')).not.toBeInTheDocument();
+      expect(screen.queryByText('Core Technologies')).not.toBeInTheDocument();
     });
   });
 
   describe('filtering', () => {
     test('hides skills outside the selected categories', () => {
-      const screen = renderListView({ selectedCategories: ['leadership-delivery'] });
+      const screen = renderListView({ selectedCategories: ['leadership'] });
 
       expect(screen.getByText('Team Leadership')).toBeVisible();
       expect(screen.queryByText('React')).not.toBeInTheDocument();
     });
 
     test('does not render a section for a category with no matching skills after filtering', () => {
-      const screen = renderListView({ selectedCategories: ['leadership-delivery'] });
+      const screen = renderListView({ selectedCategories: ['leadership'] });
 
-      expect(screen.queryByText('Engineering')).not.toBeInTheDocument();
+      expect(screen.queryByText('Frontend Development')).not.toBeInTheDocument();
       expect(screen.queryByText('People & Stakeholders')).not.toBeInTheDocument();
     });
 
     test('hides skills outside the selected subcategories', () => {
       const skills = [
-        new SkillSummary().skill('React').subCategory('development').mock(),
-        new SkillSummary().skill('Jest').subCategory('testing').mock(),
+        new SkillSummary().mock(),
+        new SkillSummary()
+          .id('jest')
+          .skill('Jest')
+          .subCategoryId('testing')
+          .subCategoryName('Testing')
+          .mock(),
       ];
       const screen = renderListView({
         skills,
