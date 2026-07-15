@@ -10,9 +10,11 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Toolbar from '@mui/material/Toolbar';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useSearchParams } from 'react-router-dom';
 
 import { useThemeContext } from '@/context/theme';
+import { TRACK_PARAM } from '@/context/track';
+import { isTrackId } from '@/data/tracks';
 
 const navLinkStyle = ({ isActive }: { isActive: boolean }): React.CSSProperties => ({
   color: 'inherit',
@@ -42,6 +44,11 @@ export const NavBar = () => {
   const nextTheme = themeName === 'green' ? 'purple' : 'green';
   const theme = useTheme();
   const isNarrow = useMediaQuery(theme.breakpoints.down('sm'));
+  // Param read directly, not via useTrackContext — nav also renders outside the provider (/articles).
+  const [searchParams] = useSearchParams();
+  const rawTrackId = searchParams.get(TRACK_PARAM);
+  const trackSearch =
+    rawTrackId !== null && isTrackId(rawTrackId) ? `?${TRACK_PARAM}=${rawTrackId}` : '';
 
   return (
     <AppBar component="nav" position="static">
@@ -57,10 +64,10 @@ export const NavBar = () => {
             true center of the toolbar, however wide the controls column ends up being. */}
         <Box />
         <Stack direction="row" spacing={isNarrow ? 1.5 : 3} sx={{ justifySelf: 'center' }}>
-          <NavLink to="/" end style={navLinkStyle}>
+          <NavLink to={`/${trackSearch}`} end style={navLinkStyle}>
             Home
           </NavLink>
-          <NavLink to="/skills" style={navLinkStyle}>
+          <NavLink to={`/skills${trackSearch}`} style={navLinkStyle}>
             Skills
           </NavLink>
           <NavLink to="/articles" style={navLinkStyle}>

@@ -7,12 +7,13 @@ import { ThemeContextProvider } from '@/context/theme';
 
 import { NavBar } from './NavBar';
 
-function renderNavBar() {
+function renderNavBar(initialEntry = '/') {
   return render(
-    <ThemeContextProvider>
-      <NavBar />
-    </ThemeContextProvider>,
-    { wrapper: MemoryRouter }
+    <MemoryRouter initialEntries={[initialEntry]}>
+      <ThemeContextProvider>
+        <NavBar />
+      </ThemeContextProvider>
+    </MemoryRouter>
   );
 }
 
@@ -37,6 +38,24 @@ describe('NavBar', () => {
 
       expect(articlesLink).toBeVisible();
       expect(articlesLink).toHaveAttribute('href', '/articles');
+    });
+
+    test('carries a valid track param on the Home and Skills links but not Articles', () => {
+      const screen = renderNavBar('/?track=lead');
+
+      expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/?track=lead');
+      expect(screen.getByRole('link', { name: 'Skills' })).toHaveAttribute(
+        'href',
+        '/skills?track=lead'
+      );
+      expect(screen.getByRole('link', { name: 'Articles' })).toHaveAttribute('href', '/articles');
+    });
+
+    test('drops an invalid track param from the links', () => {
+      const screen = renderNavBar('/?track=astronaut');
+
+      expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
+      expect(screen.getByRole('link', { name: 'Skills' })).toHaveAttribute('href', '/skills');
     });
   });
 

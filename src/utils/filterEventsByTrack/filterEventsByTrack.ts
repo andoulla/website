@@ -1,7 +1,7 @@
 import type { TimelineEventWithRecommendations, Track } from '@/types';
 
-// Narrows each event's responsibilities/techStack/skills to the active track's skill set;
-// the events themselves always render. Responsibilities with no skillIds are universal.
+// Keeps every event; narrows its responsibilities/techStack/skills to the track's skill set.
+// Empty responsibility skillIds = universal (kept in every track).
 export const filterEventsByTrack = (
   events: TimelineEventWithRecommendations[],
   track: Track

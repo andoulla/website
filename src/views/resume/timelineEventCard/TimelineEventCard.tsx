@@ -124,7 +124,7 @@ export const TimelineEventCard = ({
   const hasResponsibilities = event.responsibilities.length > 0;
   const hasTechStack = event.techStack.length > 0;
   const hasSkills = event.skills.length > 0;
-  // A role with nothing relevant to the active track collapses to its primary information only.
+  // Nothing relevant to the active track — collapse to primary info only.
   const isBare = !hasResponsibilities && !hasTechStack && !hasSkills;
 
   const cardHeader = (

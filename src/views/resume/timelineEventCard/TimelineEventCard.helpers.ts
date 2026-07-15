@@ -13,8 +13,7 @@ interface SkillCategoryGroup {
   skills: Skill[];
 }
 
-// Groups skills by their owning track category, largest group first; skills the track doesn't
-// know are skipped (upstream track filtering already hides them).
+// Groups skills by owning track category; skills unknown to the track are skipped.
 export const groupSkillsByCategory = (skills: Skill[], track: Track): SkillCategoryGroup[] => {
   const categoryBySkillId = deriveSkillCategoryMap(track);
   const groupsByCategoryId = new Map<string, SkillCategoryGroup>();
@@ -31,7 +30,7 @@ export const groupSkillsByCategory = (skills: Skill[], track: Track): SkillCateg
   });
 
   return [...groupsByCategoryId.values()].sort(
-    // Stable sort: ties keep track category order as the tiebreaker.
+    // Largest group first; ties keep track category order.
     (groupA, groupB) =>
       groupB.skills.length - groupA.skills.length || groupA.category.index - groupB.category.index
   );

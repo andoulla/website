@@ -38,8 +38,7 @@ export const TrackContextProvider = ({ children }: TrackContextProviderProps) =>
     }
   }, [hasValidTrackParam, setSearchParams]);
 
-  // Refs keep setTrackId referentially stable: react-router rebuilds setSearchParams on every
-  // search-param change, which would otherwise re-render every consumer on unrelated updates.
+  // Refs keep setTrackId stable — react-router rebuilds setSearchParams on every param change.
   const trackIdRef = useRef(trackId);
   const setSearchParamsRef = useRef(setSearchParams);
   useEffect(() => {
@@ -48,7 +47,7 @@ export const TrackContextProvider = ({ children }: TrackContextProviderProps) =>
   });
 
   const setTrackId = useCallback((next: TrackId) => {
-    // Guard before writing — setting an unchanged value would still push a history entry.
+    // Writing an unchanged value would still push a history entry.
     if (next === trackIdRef.current) {
       return;
     }

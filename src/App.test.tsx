@@ -27,15 +27,16 @@ describe('App', () => {
       return result;
     });
 
+    // Home route normalises to ?track=full; nav links carry it.
     const homeLink = screen.getByRole('link', { name: 'Home' });
 
     expect(homeLink).toBeVisible();
-    expect(homeLink).toHaveAttribute('href', '/');
+    expect(homeLink).toHaveAttribute('href', '/?track=full');
 
     const skillsLink = screen.getByRole('link', { name: 'Skills' });
 
     expect(skillsLink).toBeVisible();
-    expect(skillsLink).toHaveAttribute('href', '/skills');
+    expect(skillsLink).toHaveAttribute('href', '/skills?track=full');
 
     const articlesLink = screen.getByRole('link', { name: 'Articles' });
 

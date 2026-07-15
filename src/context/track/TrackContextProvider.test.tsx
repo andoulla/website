@@ -28,7 +28,7 @@ const TrackProbe = () => {
   );
 };
 
-// Records the setTrackId reference seen on each render so identity stability can be asserted.
+// Records setTrackId per render to assert identity stability.
 const seenSetTrackIds: Array<(next: TrackId) => void> = [];
 
 const SetTrackIdIdentityProbe = () => {

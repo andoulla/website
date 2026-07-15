@@ -37,8 +37,7 @@ const CareerTimeline = () => {
     [careerHistory, track]
   );
 
-  // Pick a random icon per role once, keyed by event id off the unfiltered history, so icons
-  // stay stable across re-renders and track switches.
+  // Random icon per role, keyed by event id off the unfiltered history — stable across track switches.
   const roleIconByEventId = useMemo(
     () => Object.fromEntries(careerHistory.map((event) => [event.id, pickRandomRoleIcon()])),
     [careerHistory]
