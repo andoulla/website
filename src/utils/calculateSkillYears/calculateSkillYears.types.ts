@@ -1,5 +1,4 @@
-import type { SkillSubCategory } from '@/types';
-import type { SkillCategory, SkillColour } from '@/utils/skillColour';
+import type { SkillColour } from '@/utils/skillColour';
 
 export interface SkillCompanyYears {
   name: string;
@@ -7,10 +6,15 @@ export interface SkillCompanyYears {
 }
 
 export interface SkillSummary {
+  id: string;
+  // Display name — keep the key name: charts bind to dataKey="skill".
   skill: string;
   years: number;
-  category: SkillCategory;
-  subCategory: SkillSubCategory;
+  categoryId: string;
+  categoryName: string;
+  categoryIndex: number;
+  subCategoryId: string;
+  subCategoryName: string;
   colour: SkillColour;
   synonyms: string[];
   jobIds: string[];

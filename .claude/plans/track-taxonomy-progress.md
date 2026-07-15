@@ -11,8 +11,8 @@ Started: 2026-07-13
 | ~~`feat/00-deep-linking`~~       | 0     | ❌ dropped by user — empty-state rejected; branch deleted                                                                                                     |
 | `feat/01-data-foundations`       | 1–3   | ✅ MERGED to main 2026-07-14 (fast-forward push, no PR — user request)                                                                                        |
 | `feat/02-tracks-and-context`     | 4–5   | ✅ COMPLETE + feedback fixes, pushed `5d6b224` — track data (`f9f376c`), track context + App mount (`da7e401`), feedback fixes (`e24b1d2`); PR not opened yet |
-| ``feat/03-join-skill-objects`    | 6     | ✅ COMPLETE — skill objects joined; moved Skill types to src/types; 427 tests passing                                                                         |
-| `feat/04-skills-view-tracks`     | 7     | pending                                                                                                                                                       |
+| ``feat/03-join-skill-objects`    | 6     | ✅ MERGED to main 2026-07-15 (fast-forward push `2bf8d1d`, no PR — user request)                                                                              |
+| `feat/04-skills-view-tracks`     | 7     | ✅ MERGED to main 2026-07-15 (fast-forward push `4f09efe`, no PR — user request); incl. palette contrast fixes                                                |
 | `feat/05-resume-tabs`            | 8     | pending                                                                                                                                                       |
 | `feat/06-deeplinks-cleanup-docs` | 9–11  | pending                                                                                                                                                       |
 
@@ -34,12 +34,30 @@ Started: 2026-07-13
 
 Code-review carry-forwards (2026-07-14 review of feat/02; setTrackId same-value guard already fixed on feat/02):
 
-- [ ] **feat/03 (third PR): stabilise `setTrackId` identity.** react-router rebuilds `setSearchParams` on every search-param change, so `setTrackId`/`contextValue` recreate on unrelated `?view=`/`?skill=` updates → every `useTrackContext` consumer re-renders for nothing. Fix in `TrackContextProvider.tsx` when consumers land: route the write through a ref (or `useNavigate`) so the callback is referentially stable.
-- [ ] **feat/04–05: don't lose the track on plain navigation.** NavBar links carry no `?track=`, and the provider normalises a missing param to `full` — once tabs exist, EM/SWE selection silently resets when clicking Home/Skills. Fix: track-aware nav links, or provider falls back to last-known trackId instead of the default.
-- [ ] **feat/04 MUST add a sync test**: when `CATEGORY_COLOUR_PALETTE` is created in `src/utils/skillColour/`, add a test asserting `CATEGORY_COLOUR_PALETTE.length === MAX_TRACK_CATEGORIES` (export the const from `src/data/tracks.ts` then; a test is the right home since data can't import utils). Until then the `7` in tracks.ts is a free-floating copy that can drift.
-- [ ] **UI UX note (feat/04 or later)**: Move tech stack display to render directly above skills section in TimelineEventCard (currently appears above responsibilities).
+- [ ] **stabilise `setTrackId` identity** (from feat/02 review). react-router rebuilds `setSearchParams` on every search-param change, so `setTrackId`/`contextValue` recreate on unrelated `?view=`/`?skill=` updates → every `useTrackContext` consumer re-renders for nothing. Fix in `TrackContextProvider.tsx`: route the write through a ref (or `useNavigate`) so the callback is referentially stable. NOT yet done — carry into feat/05.
+- [ ] **feat/05: don't lose the track on plain navigation.** NavBar links carry no `?track=`, and the provider normalises a missing param to `full` — Skills is track-aware now, and once tabs exist EM/SWE selection silently resets when clicking Home/Skills. Fix: track-aware nav links, or provider falls back to last-known trackId instead of the default.
+- [ ] **UI UX note (feat/05 or later)**: Move tech stack display to render directly above skills section in TimelineEventCard (currently appears above responsibilities).
+- [x] ~~feat/04 palette sync test~~ — superseded: `categoryColourFromIndex` falls back to `'default'` grey past the 7-slot palette (unlimited categories allowed); patterns cycle by index.
 
-`feat/03-join-skill-objects` (branch from feat/02): plan step 6 — `feat: join full skill objects into career history`. Join returns `Skill[]` for techStack/skills (split by `type`), integrity throws for unresolvable `skill.jobIds`/`recommendationIds`, `TimelineEventWithRecommendations` type ripple (`techStack: Skill[]; skills: Skill[]`), minimal card shims. Also per plan §1: move `Skill` types from `src/data/skills.types.ts` to `src/types/skill.ts` (delete the data one) — deferred to this branch on purpose.
+### feat/04 handoff (what exists now)
+
+- `SkillSummary` reshaped (`src/utils/calculateSkillYears/calculateSkillYears.types.ts`): `{ id, skill, years, categoryId, categoryName, categoryIndex, subCategoryId, subCategoryName, colour, synonyms, jobIds, recommendationIds, companyYears }`. `skill` key kept — charts bind `dataKey="skill"`.
+- `calculateSkillYears(careerHistory, track, allSkills = defaultSkills, today = new Date())` — iterates `track.categories` (with index) → subCategories → skillIds; skips skills missing from `allSkills` or with 0 years; order = track category order, then years desc within category; `colour: categoryColourFromIndex(categoryIndex)`.
+- `src/utils/skillColour/`: `CUSTOM_COLOUR_HEX` is per-mode `{ light, dark }` for 7 colours (teal, green, plum, brown, gold, indigo, berry); `CATEGORY_COLOUR_PALETTE` (7 slots); `categoryColourFromIndex(i)` → palette[i] ?? 'default'; `resolveSkillColourMain` picks hex by `theme.palette.mode`, grey[400] for 'default'. `SkillColour = CustomSkillColour | 'default'` (MUI names GONE — Tag.tsx last branch only ever sees 'default'/undefined now). LEGACY kept for resume card until feat/06: `skillCategory()`, `skillColour()`, `CATEGORY_COLOUR_MAP` (quality-performance remapped 'success'→'green').
+- `src/utils/skillCategory/` trimmed to `CATEGORY_LABELS` + `CATEGORY_ORDER` (resume card only); helpers file + SUBCATEGORY_LABELS/SUBCATEGORIES_BY_CATEGORY/isSkillCategory/isSkillSubCategory deleted.
+- NEW `src/utils/derivePresentCategories/`: `(skills: SkillSummary[]) => PresentCategory[]` where `PresentCategory = { id, name, index, colour }`; dedupe by categoryId, sort by index.
+- `filterSkillsByCategory(skills, selectedCategories: string[], selectedSubCategories: string[])` — matches `categoryId`/`subCategoryId`.
+- `src/context/track/index.ts` barrel now exports `useTrackContext` + `TRACK_PARAM`.
+- `Skills.tsx`: `useTrackContext()`; parsers `parseCategoryIds/parseSubCategoryIds(raw, track)` wrapped in `useCallback([track])` (useSkillSearchUrl memoizes on parser identity); `subCategoriesByCategory: Record<string, SkillFilterOption[]>` from track ∩ present summaries.
+- `reorderFilterParams` prefix order: `track, view, category, subCategory`.
+- `SkillsViewContext` gained `track: Track` (provided by Skills.tsx) — SkillsListView groups via context track, NOT useTrackContext (keeps tests fixture-driven).
+- `SkillFilterBar` props in `SkillFilterBar.types.ts`: `SkillFilterOption = { id, name }`; all selections `string[]` ids.
+- Radar: `CategoryRadarPoint = { categoryId, categoryIndex, label, avgYears, skillCount, isMatch }`; dot colour `categoryColourFromIndex(point.categoryIndex)`; `CategoryLegend` takes `PresentCategory[]`.
+- Bar chart: `CATEGORY_PATTERN_ORDER` (7: diagonal, crosshatch, dots, vertical, grid, horizontal, rings) cycled via `getCategoryPatternType(categoryIndex)`; pattern ids keyed by category id; legend/table from `categoryName`.
+- `SkillTooltipContent`: renders `skill.subCategoryName`; links append `&track=${trackId}` via `useTrackContext` (components→context import is legal); its tests + SkillItemsList tests wrap `TrackContextProvider` inside MemoryRouter.
+- `SkillSummary` builder reshaped to match (defaults: id 'react', categoryId 'frontend-development'/'Frontend Development'/index 0, subCategoryId 'core-technologies'/'Core Technologies', colour 'teal') — aligned with the Track builder default.
+- Real track category ids (for tests): full = leadership-delivery, frontend-development, backend-development, data-storage, architecture-design, engineering-practices-quality, tools-development-workflow; lead has javascript-stack etc., NO frontend-development (used for the stale-param test).
+- Suite: 431 tests green at `ad618e3`.
 
 ### feat/02 handoff (what exists now)
 

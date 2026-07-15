@@ -6,6 +6,7 @@ describe('createPurpleTheme', () => {
     const theme = createPurpleTheme('light');
 
     expect(theme.palette.mode).toBe('light');
+    expect(theme.palette.contrastThreshold).toBe(4.5);
     expect(theme.palette.background).toEqual(lightTokens.background);
     expect(theme.palette.text.secondary).toBe('#7A5A73');
     expect(theme.palette.divider).toBe('#E3D3DD');

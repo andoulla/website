@@ -6,6 +6,7 @@ describe('createGreenTheme', () => {
     const theme = createGreenTheme('light');
 
     expect(theme.palette.mode).toBe('light');
+    expect(theme.palette.contrastThreshold).toBe(4.5);
     expect(theme.palette.background).toEqual(lightTokens.background);
     expect(theme.palette.text.secondary).toBe('#6E6E68');
     expect(theme.palette.divider).toBe('#E0E0DB');

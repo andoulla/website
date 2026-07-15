@@ -4,6 +4,7 @@ import { axe } from 'jest-axe';
 import { MemoryRouter, useSearchParams } from 'react-router-dom';
 
 import { CareerDataContextProvider } from '@/context/careerData';
+import { TrackContextProvider } from '@/context/track';
 import { TimelineEvent } from '@/testing';
 
 import { Skills } from './Skills';
@@ -30,10 +31,12 @@ function renderWithProvider(
 ) {
   return render(
     <MemoryRouter initialEntries={initialEntries}>
-      <CareerDataContextProvider loader={loader}>
-        <Skills />
-        <SearchParamsDisplay />
-      </CareerDataContextProvider>
+      <TrackContextProvider>
+        <CareerDataContextProvider loader={loader}>
+          <Skills />
+          <SearchParamsDisplay />
+        </CareerDataContextProvider>
+      </TrackContextProvider>
     </MemoryRouter>
   );
 }
@@ -82,6 +85,46 @@ describe('Skills', () => {
     });
   });
 
+  describe('track URL sync', () => {
+    test('normalises a missing track param to the default full track', async () => {
+      const screen = await renderAndFlush();
+
+      expect(screen.getByText('search:track=full')).toBeVisible();
+    });
+
+    test("groups skills by the active track's taxonomy for ?track=lead", async () => {
+      const user = userEvent.setup();
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?track=lead']
+      );
+
+      await user.click(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: All',
+        })
+      );
+
+      expect(screen.getByRole('menuitemcheckbox', { name: 'JavaScript Stack' })).toBeVisible();
+      expect(
+        screen.queryByRole('menuitemcheckbox', { name: 'Frontend Development' })
+      ).not.toBeInTheDocument();
+    });
+
+    test('drops a category param that is not part of the active track', async () => {
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?track=lead&category=frontend-development']
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: All',
+        })
+      ).toBeVisible();
+    });
+  });
+
   describe('pattern toggle', () => {
     test('shows an unchecked patterns checkbox by default in graph view', async () => {
       const user = userEvent.setup();
@@ -127,7 +170,7 @@ describe('Skills', () => {
       ).toBeVisible();
     });
 
-    test('reflects a category filter selection as a URL query param', async () => {
+    test('reflects a category filter selection as a URL query param, after the track', async () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
@@ -140,7 +183,7 @@ describe('Skills', () => {
 
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
 
-      expect(screen.getByText('search:category=leadership-delivery')).toBeVisible();
+      expect(screen.getByText('search:track=full&category=leadership-delivery')).toBeVisible();
     });
 
     test('removes the category query param when the filter is cleared', async () => {
@@ -157,7 +200,7 @@ describe('Skills', () => {
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
 
-      expect(screen.getByText('search:')).toBeVisible();
+      expect(screen.getByText('search:track=full')).toBeVisible();
     });
   });
 
@@ -186,7 +229,7 @@ describe('Skills', () => {
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
 
-      expect(screen.getByText('search:subCategory=testing')).toBeVisible();
+      expect(screen.getByText('search:track=full&subCategory=testing')).toBeVisible();
     });
 
     test('removes the subcategory query param when the filter is cleared', async () => {
@@ -203,7 +246,7 @@ describe('Skills', () => {
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
 
-      expect(screen.getByText('search:')).toBeVisible();
+      expect(screen.getByText('search:track=full')).toBeVisible();
     });
   });
 
@@ -223,7 +266,7 @@ describe('Skills', () => {
 
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
 
-      expect(screen.getByText('search:search=react')).toBeVisible();
+      expect(screen.getByText('search:track=full&search=react')).toBeVisible();
     });
 
     test('removes the search query param when the search box is cleared', async () => {
@@ -235,7 +278,7 @@ describe('Skills', () => {
 
       await user.click(screen.getByRole('button', { name: 'Clear search' }));
 
-      expect(screen.getByText('search:')).toBeVisible();
+      expect(screen.getByText('search:track=full')).toBeVisible();
     });
   });
 
@@ -258,7 +301,7 @@ describe('Skills', () => {
 
       await user.click(screen.getByRole('button', { name: 'List view' }));
 
-      expect(screen.getByText('search:view=list')).toBeVisible();
+      expect(screen.getByText('search:track=full&view=list')).toBeVisible();
     });
 
     test('omits the view query param when toggling to the default radar view', async () => {
@@ -270,7 +313,7 @@ describe('Skills', () => {
 
       await user.click(screen.getByRole('button', { name: 'Radar view' }));
 
-      expect(screen.getByText('search:')).toBeVisible();
+      expect(screen.getByText('search:track=full')).toBeVisible();
     });
   });
 
@@ -319,10 +362,12 @@ describe('Skills', () => {
     test('keeps category and subcategory query params independent of each other', async () => {
       const screen = await renderAndFlush(
         () => Promise.resolve(CAREER_HISTORY),
-        ['/skills?category=engineering&subCategory=testing']
+        ['/skills?category=frontend-development&subCategory=testing']
       );
 
-      expect(screen.getByText('search:category=engineering&subCategory=testing')).toBeVisible();
+      expect(
+        screen.getByText('search:category=frontend-development&subCategory=testing&track=full')
+      ).toBeVisible();
       expect(
         screen.getByRole('button', {
           name: 'Filter skills by category and subcategory, currently: Filters (2)',

@@ -13,10 +13,10 @@ import Typography from '@mui/material/Typography';
 
 import { PageContainer } from '@/components/pageContainer';
 import { useCareerDataContext } from '@/context/careerData';
-import type { SkillCategory, SkillSubCategory } from '@/types';
+import { useTrackContext } from '@/context/track';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
+import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
-import { derivePresentCategories, SUBCATEGORIES_BY_CATEGORY } from '@/utils/skillCategory';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 
 import {
@@ -26,10 +26,15 @@ import {
   SUBCATEGORY_PARAM,
   VIEW_PARAM,
 } from './Skills.constants';
-import { parseCategories, parseSearch, parseSubCategories, parseViewMode } from './Skills.helpers';
+import {
+  parseCategoryIds,
+  parseSearch,
+  parseSubCategoryIds,
+  parseViewMode,
+} from './Skills.helpers';
 import type { ViewMode } from './Skills.types';
 import { CopyLinkButton } from './copyLinkButton';
-import { SkillFilterBar } from './skillFilterBar';
+import { SkillFilterBar, type SkillFilterOption } from './skillFilterBar';
 import { SkillSearchBar } from './skillSearchBar';
 import {
   SkillsGraphView,
@@ -47,7 +52,8 @@ const renderSkillsView = (viewMode: ViewMode, showPatterns: boolean) => {
 
 const SkillsContent = () => {
   const careerHistory = useCareerDataContext();
-  const skills = useMemo(() => calculateSkillYears(careerHistory), [careerHistory]);
+  const { track } = useTrackContext();
+  const skills = useMemo(() => calculateSkillYears(careerHistory, track), [careerHistory, track]);
 
   const [searchParams] = useSearchParams();
   const highlightedSkillsKey = JSON.stringify(searchParams.getAll(SKILL_PARAM));
@@ -55,6 +61,17 @@ const SkillsContent = () => {
     () => searchParams.getAll(SKILL_PARAM),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on content, not the ref
     [highlightedSkillsKey]
+  );
+
+  // Parsers are track-bound; useSkillSearchUrl memoizes on parser identity, so they must be
+  // stable per track or the parsed state goes stale.
+  const parseCategories = useCallback(
+    (raw: string | null) => parseCategoryIds(raw, track),
+    [track]
+  );
+  const parseSubCategories = useCallback(
+    (raw: string | null) => parseSubCategoryIds(raw, track),
+    [track]
   );
 
   const [selectedCategories, setSelectedCategories] = useSkillSearchUrl(
@@ -120,16 +137,17 @@ const SkillsContent = () => {
 
   const categories = useMemo(() => derivePresentCategories(skills), [skills]);
 
+  // Active track's subcategories, narrowed to those with at least one present summary.
   const subCategoriesByCategory = useMemo(
     () =>
-      categories.reduce<Partial<Record<SkillCategory, SkillSubCategory[]>>>((acc, cat) => {
-        const subCategories = SUBCATEGORIES_BY_CATEGORY[cat].filter((sub) =>
-          skills.some((skill) => skill.category === cat && skill.subCategory === sub)
-        );
-        if (subCategories.length > 0) acc[cat] = subCategories;
+      track.categories.reduce<Record<string, SkillFilterOption[]>>((acc, category) => {
+        const presentSubCategories = category.subCategories
+          .filter((subCategory) => skills.some((skill) => skill.subCategoryId === subCategory.id))
+          .map(({ id, name }) => ({ id, name }));
+        if (presentSubCategories.length > 0) acc[category.id] = presentSubCategories;
         return acc;
       }, {}),
-    [categories, skills]
+    [track, skills]
   );
 
   return (
@@ -191,6 +209,7 @@ const SkillsContent = () => {
         </Stack>
       </Stack>
       <SkillsViewContextProvider
+        track={track}
         skills={skills}
         filteredSkills={filteredSkills}
         selectedCategories={selectedCategories}

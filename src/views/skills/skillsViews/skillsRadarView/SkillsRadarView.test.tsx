@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
-import { SkillSummary } from '@/testing';
+import { SkillSummary, Track } from '@/testing';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 
 import { SkillsViewContextProvider } from '../SkillsViewContext';
@@ -13,11 +13,15 @@ import { SkillsRadarView } from './SkillsRadarView';
 const SKILLS = [
   new SkillSummary().years(4).mock(),
   new SkillSummary()
+    .id('team-leadership')
     .skill('Team Leadership')
     .years(2)
-    .category('leadership-delivery')
-    .subCategory('leadership')
-    .colour('secondary')
+    .categoryId('leadership')
+    .categoryName('Leadership & Delivery')
+    .categoryIndex(1)
+    .subCategoryId('people-management')
+    .subCategoryName('People Management')
+    .colour('green')
     .mock(),
 ];
 
@@ -28,6 +32,7 @@ const renderRadarView = (overrides: Partial<SkillsViewContextValue> = {}) => {
 
   return render(
     <SkillsViewContextProvider
+      track={new Track().mock()}
       skills={skills}
       filteredSkills={filterSkillsByCategory(skills, selectedCategories, selectedSubCategories)}
       selectedCategories={selectedCategories}
@@ -45,9 +50,9 @@ describe('SkillsRadarView', () => {
   test('renders category totals for the unfiltered skill set', async () => {
     const screen = renderRadarView();
 
-    expect(screen.getByRole('cell', { name: 'Engineering' }).closest('tr')?.textContent).toBe(
-      'Engineering41'
-    );
+    expect(
+      screen.getByRole('cell', { name: 'Frontend Development' }).closest('tr')?.textContent
+    ).toBe('Frontend Development41');
     expect(
       screen.getByRole('cell', { name: 'Leadership & Delivery' }).closest('tr')?.textContent
     ).toBe('Leadership & Delivery21');
@@ -55,11 +60,11 @@ describe('SkillsRadarView', () => {
   });
 
   test('keeps a filtered-out category present at 0, rather than removing its axis', () => {
-    const screen = renderRadarView({ selectedCategories: ['leadership-delivery'] });
+    const screen = renderRadarView({ selectedCategories: ['leadership'] });
 
-    expect(screen.getByRole('cell', { name: 'Engineering' }).closest('tr')?.textContent).toBe(
-      'Engineering00'
-    );
+    expect(
+      screen.getByRole('cell', { name: 'Frontend Development' }).closest('tr')?.textContent
+    ).toBe('Frontend Development00');
     expect(
       screen.getByRole('cell', { name: 'Leadership & Delivery' }).closest('tr')?.textContent
     ).toBe('Leadership & Delivery21');

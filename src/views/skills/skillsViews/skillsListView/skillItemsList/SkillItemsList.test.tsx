@@ -4,21 +4,25 @@ import { axe } from 'jest-axe';
 import { alpha, createTheme } from '@mui/material/styles';
 import { MemoryRouter } from 'react-router-dom';
 
+import { TrackContextProvider } from '@/context/track';
 import { SkillSummary } from '@/testing';
 
 import { SkillItemsList } from './SkillItemsList';
 
 const SKILLS = [
   new SkillSummary().skill('React').years(4).mock(),
-  new SkillSummary().skill('Docker').years(1).mock(),
+  new SkillSummary().id('docker').skill('Docker').years(1).mock(),
 ];
 
 const theme = createTheme();
 
+// TrackContextProvider backs the track-carrying links inside the skill tooltip.
 const renderSkillItemsList = (props: Parameters<typeof SkillItemsList>[0]) =>
   render(
     <MemoryRouter>
-      <SkillItemsList {...props} />
+      <TrackContextProvider>
+        <SkillItemsList {...props} />
+      </TrackContextProvider>
     </MemoryRouter>
   );
 

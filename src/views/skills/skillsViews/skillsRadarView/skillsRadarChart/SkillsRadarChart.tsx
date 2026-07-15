@@ -14,9 +14,9 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
 
-import type { SkillCategory } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
-import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';
+import type { PresentCategory } from '@/utils/derivePresentCategories';
+import { categoryColourFromIndex, resolveSkillColourMain } from '@/utils/skillColour';
 
 import { aggregateSkillsByCategory } from './SkillsRadarChart.helpers';
 import type { CategoryRadarPoint } from './SkillsRadarChart.types';
@@ -27,7 +27,7 @@ const CHART_HEIGHT = 440;
 
 interface SkillsRadarChartProps {
   skills: SkillSummary[];
-  categories: SkillCategory[];
+  categories: PresentCategory[];
   searchTerm?: string;
 }
 
@@ -48,10 +48,10 @@ export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadar
   // individually instead, so a non-matching axis still stands out.
   const renderDot = ({ cx, cy, payload }: DotItemDotProps) => {
     const point = payload as CategoryRadarPoint;
-    const colour = resolveSkillColourMain(CATEGORY_COLOUR_MAP[point.category], theme);
+    const colour = resolveSkillColourMain(categoryColourFromIndex(point.categoryIndex), theme);
     return (
       <circle
-        key={point.category}
+        key={point.categoryId}
         cx={cx}
         cy={cy}
         r={5}
@@ -101,7 +101,7 @@ export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadar
         </thead>
         <tbody>
           {radarData.map((point) => (
-            <tr key={point.category}>
+            <tr key={point.categoryId}>
               <td>{point.label}</td>
               <td>{point.avgYears}</td>
               <td>{point.skillCount}</td>

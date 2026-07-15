@@ -2,13 +2,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
-import type { SkillCategory } from '@/types';
-import { CATEGORY_LABELS } from '@/utils/skillCategory';
-import { CATEGORY_COLOUR_MAP, resolveSkillColourMain } from '@/utils/skillColour';
+import type { PresentCategory } from '@/utils/derivePresentCategories';
+import { resolveSkillColourMain } from '@/utils/skillColour';
 import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
 interface CategoryLegendProps {
-  categories: SkillCategory[];
+  categories: PresentCategory[];
 }
 
 export const CategoryLegend = ({ categories }: CategoryLegendProps) => {
@@ -29,13 +28,13 @@ export const CategoryLegend = ({ categories }: CategoryLegendProps) => {
       }}
     >
       {categories.map((category) => (
-        <Box key={category} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box key={category.id} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <CategoryColourDot
-            colour={resolveSkillColourMain(CATEGORY_COLOUR_MAP[category], theme)}
+            colour={resolveSkillColourMain(category.colour, theme)}
             sx={{ opacity: 0.7 }}
           />
           <Typography variant="caption" color="text.secondary">
-            {CATEGORY_LABELS[category]}
+            {category.name}
           </Typography>
         </Box>
       ))}

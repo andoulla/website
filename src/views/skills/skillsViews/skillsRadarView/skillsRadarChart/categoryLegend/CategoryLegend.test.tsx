@@ -5,10 +5,17 @@ import { CategoryLegend } from './CategoryLegend';
 
 describe('CategoryLegend', () => {
   test('renders one label per category passed in', async () => {
-    const screen = render(<CategoryLegend categories={['engineering', 'leadership-delivery']} />);
+    const screen = render(
+      <CategoryLegend
+        categories={[
+          { id: 'frontend-development', name: 'Frontend Development', index: 0, colour: 'teal' },
+          { id: 'leadership', name: 'Leadership', index: 1, colour: 'green' },
+        ]}
+      />
+    );
 
-    expect(screen.getByText('Engineering')).toBeVisible();
-    expect(screen.getByText('Leadership & Delivery')).toBeVisible();
+    expect(screen.getByText('Frontend Development')).toBeVisible();
+    expect(screen.getByText('Leadership')).toBeVisible();
     expect(screen.queryByText('Tooling')).not.toBeInTheDocument();
     expect(await axe(screen.container)).toHaveNoViolations();
   });

@@ -20,14 +20,14 @@ describe('Tag', () => {
   });
 
   test('has no axe violations with a chip colour', async () => {
-    const screen = render(<Tag colour="primary">React</Tag>);
+    const screen = render(<Tag colour="teal">React</Tag>);
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('renders with a shade override when shadeIndex is provided', () => {
     const screen = render(
-      <Tag colour="primary" shadeIndex={2}>
+      <Tag colour="teal" shadeIndex={2}>
         React
       </Tag>
     );
@@ -37,7 +37,7 @@ describe('Tag', () => {
 
   test('has no axe violations with a shade override', async () => {
     const screen = render(
-      <Tag colour="primary" shadeIndex={2}>
+      <Tag colour="teal" shadeIndex={2}>
         React
       </Tag>
     );
@@ -47,7 +47,7 @@ describe('Tag', () => {
 
   test('renders as an outlined chip when variant is "outlined"', () => {
     const screen = render(
-      <Tag colour="secondary" variant="outlined">
+      <Tag colour="plum" variant="outlined">
         React
       </Tag>
     );

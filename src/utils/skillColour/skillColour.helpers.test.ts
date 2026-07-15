@@ -1,7 +1,8 @@
 import type { Theme } from '@mui/material/styles';
 
-import { CUSTOM_COLOUR_HEX } from './skillColour.constants';
+import { CATEGORY_COLOUR_PALETTE, CUSTOM_COLOUR_HEX } from './skillColour.constants';
 import {
+  categoryColourFromIndex,
   resolveSkillColourMain,
   skillCategory,
   skillColour,
@@ -47,6 +48,17 @@ describe('skillCategory', () => {
   });
 });
 
+describe('categoryColourFromIndex', () => {
+  test('returns the palette colour at the given index', () => {
+    expect(categoryColourFromIndex(0)).toBe('teal');
+    expect(categoryColourFromIndex(6)).toBe('berry');
+  });
+
+  test('falls back to default for an index beyond the palette', () => {
+    expect(categoryColourFromIndex(CATEGORY_COLOUR_PALETTE.length)).toBe('default');
+  });
+});
+
 describe('skillShadeIndex', () => {
   test('returns a number between 0 and 5 inclusive', () => {
     const idx = skillShadeIndex('React');
@@ -72,25 +84,24 @@ describe('skillShadeIndex', () => {
 
 describe('resolveSkillColourMain', () => {
   const GREY_400 = '#bdbdbd';
-  const PRIMARY_MAIN = '#3B6D11';
 
-  const createTheme = (): Theme =>
+  const createTheme = (mode: 'light' | 'dark'): Theme =>
     ({
       palette: {
+        mode,
         grey: { 400: GREY_400 },
-        primary: { main: PRIMARY_MAIN },
       },
     }) as unknown as Theme;
 
   test('returns grey for the default colour', () => {
-    expect(resolveSkillColourMain('default', createTheme())).toBe(GREY_400);
+    expect(resolveSkillColourMain('default', createTheme('light'))).toBe(GREY_400);
   });
 
-  test('returns the palette main for a recognised colour', () => {
-    expect(resolveSkillColourMain('primary', createTheme())).toBe(PRIMARY_MAIN);
+  test('returns the light-mode hex for a custom colour on a light theme', () => {
+    expect(resolveSkillColourMain('plum', createTheme('light'))).toBe(CUSTOM_COLOUR_HEX.plum.light);
   });
 
-  test('returns the fixed hex for a custom colour, bypassing the theme palette', () => {
-    expect(resolveSkillColourMain('teal', createTheme())).toBe(CUSTOM_COLOUR_HEX.teal);
+  test('returns the dark-mode hex for a custom colour on a dark theme', () => {
+    expect(resolveSkillColourMain('plum', createTheme('dark'))).toBe(CUSTOM_COLOUR_HEX.plum.dark);
   });
 });

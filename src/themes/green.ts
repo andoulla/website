@@ -9,6 +9,8 @@ export const createGreenTheme = (mode: 'light' | 'dark') => {
       typography: baseTokens.typography,
       palette: {
         mode,
+        // WCAG small-text ratio — stops getContrastText picking sub-4.5:1 white text.
+        contrastThreshold: 4.5,
         primary: {
           light: '#9DC46B',
           main: '#3B6D11',

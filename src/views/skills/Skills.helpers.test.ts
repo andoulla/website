@@ -1,70 +1,90 @@
+import { Track } from '@/testing';
+
 import {
-  parseCategories,
+  parseCategoryIds,
   parseSearch,
-  parseSubCategories,
+  parseSubCategoryIds,
   parseViewMode,
   reorderFilterParams,
 } from './Skills.helpers';
 
-describe('parseCategories', () => {
+const testTrack = new Track()
+  .categories([
+    {
+      id: 'frontend-development',
+      name: 'Frontend Development',
+      subCategories: [
+        { id: 'core-technologies', name: 'Core Technologies', skillIds: ['react'] },
+        { id: 'testing', name: 'Testing', skillIds: [] },
+      ],
+    },
+    {
+      id: 'leadership',
+      name: 'Leadership',
+      subCategories: [{ id: 'people-management', name: 'People Management', skillIds: [] }],
+    },
+  ])
+  .mock();
+
+describe('parseCategoryIds', () => {
   test('returns an empty array when the param is null', () => {
-    const result = parseCategories(null);
+    const result = parseCategoryIds(null, testTrack);
 
     expect(result).toEqual([]);
   });
 
   test('returns an empty array when the param is an empty string', () => {
-    const result = parseCategories('');
+    const result = parseCategoryIds('', testTrack);
 
     expect(result).toEqual([]);
   });
 
-  test('splits a single category', () => {
-    const result = parseCategories('engineering');
+  test('splits a single category id', () => {
+    const result = parseCategoryIds('frontend-development', testTrack);
 
-    expect(result).toEqual(['engineering']);
+    expect(result).toEqual(['frontend-development']);
   });
 
-  test('splits multiple comma-separated categories', () => {
-    const result = parseCategories('engineering,leadership-delivery');
+  test('splits multiple comma-separated category ids', () => {
+    const result = parseCategoryIds('frontend-development,leadership', testTrack);
 
-    expect(result).toEqual(['engineering', 'leadership-delivery']);
+    expect(result).toEqual(['frontend-development', 'leadership']);
   });
 
-  test('drops unrecognised values', () => {
-    const result = parseCategories('engineering,bogus');
+  test('drops ids unknown to the active track', () => {
+    const result = parseCategoryIds('frontend-development,bogus', testTrack);
 
-    expect(result).toEqual(['engineering']);
+    expect(result).toEqual(['frontend-development']);
   });
 });
 
-describe('parseSubCategories', () => {
+describe('parseSubCategoryIds', () => {
   test('returns an empty array when the param is null', () => {
-    const result = parseSubCategories(null);
+    const result = parseSubCategoryIds(null, testTrack);
 
     expect(result).toEqual([]);
   });
 
   test('returns an empty array when the param is an empty string', () => {
-    const result = parseSubCategories('');
+    const result = parseSubCategoryIds('', testTrack);
 
     expect(result).toEqual([]);
   });
 
-  test('splits a single subcategory', () => {
-    const result = parseSubCategories('testing');
+  test('splits a single subcategory id', () => {
+    const result = parseSubCategoryIds('testing', testTrack);
 
     expect(result).toEqual(['testing']);
   });
 
-  test('splits multiple comma-separated subcategories', () => {
-    const result = parseSubCategories('testing,leadership');
+  test('splits multiple comma-separated subcategory ids across categories', () => {
+    const result = parseSubCategoryIds('testing,people-management', testTrack);
 
-    expect(result).toEqual(['testing', 'leadership']);
+    expect(result).toEqual(['testing', 'people-management']);
   });
 
-  test('drops unrecognised values', () => {
-    const result = parseSubCategories('testing,bogus');
+  test('drops ids unknown to the active track', () => {
+    const result = parseSubCategoryIds('testing,bogus', testTrack);
 
     expect(result).toEqual(['testing']);
   });
@@ -106,30 +126,36 @@ describe('parseViewMode', () => {
 
 describe('reorderFilterParams', () => {
   test('moves category ahead of subCategory when subCategory was set first', () => {
-    const params = new URLSearchParams('subCategory=testing&category=engineering');
+    const params = new URLSearchParams('subCategory=testing&category=frontend-development');
 
     const result = reorderFilterParams(params);
 
-    expect(result.toString()).toBe('category=engineering&subCategory=testing');
+    expect(result.toString()).toBe('category=frontend-development&subCategory=testing');
   });
 
-  test('puts view ahead of category and subCategory', () => {
-    const params = new URLSearchParams('subCategory=testing&category=engineering&view=list');
+  test('puts track ahead of view ahead of category and subCategory', () => {
+    const params = new URLSearchParams(
+      'subCategory=testing&category=frontend-development&view=list&track=full'
+    );
 
     const result = reorderFilterParams(params);
 
-    expect(result.toString()).toBe('view=list&category=engineering&subCategory=testing');
+    expect(result.toString()).toBe(
+      'track=full&view=list&category=frontend-development&subCategory=testing'
+    );
   });
 
-  test('leaves other params in place after view, category, and subCategory', () => {
-    const params = new URLSearchParams('skill=React&subCategory=testing&category=engineering');
+  test('leaves other params in place after the prefix params', () => {
+    const params = new URLSearchParams(
+      'skill=React&subCategory=testing&category=frontend-development'
+    );
 
     const result = reorderFilterParams(params);
 
-    expect(result.toString()).toBe('category=engineering&subCategory=testing&skill=React');
+    expect(result.toString()).toBe('category=frontend-development&subCategory=testing&skill=React');
   });
 
-  test('omits view, category, or subCategory when not present', () => {
+  test('omits track, view, category, or subCategory when not present', () => {
     const params = new URLSearchParams('skill=React&subCategory=testing');
 
     const result = reorderFilterParams(params);
@@ -138,10 +164,12 @@ describe('reorderFilterParams', () => {
   });
 
   test('preserves repeated skill params instead of collapsing to the last one', () => {
-    const params = new URLSearchParams('skill=React&skill=TypeScript&category=engineering');
+    const params = new URLSearchParams(
+      'skill=React&skill=TypeScript&category=frontend-development'
+    );
 
     const result = reorderFilterParams(params);
 
-    expect(result.toString()).toBe('category=engineering&skill=React&skill=TypeScript');
+    expect(result.toString()).toBe('category=frontend-development&skill=React&skill=TypeScript');
   });
 });

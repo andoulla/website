@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import { SkillSummary } from '@/testing';
+import { SkillSummary, Track } from '@/testing';
 
 import { SkillsViewContextProvider, useSkillsViewContext } from './SkillsViewContext';
 
@@ -8,6 +8,7 @@ const SKILLS = [new SkillSummary().skill('React').years(4).mock()];
 
 const SkillsViewDisplay = () => {
   const {
+    track,
     skills,
     filteredSkills,
     selectedCategories,
@@ -18,6 +19,7 @@ const SkillsViewDisplay = () => {
 
   return (
     <>
+      <span>{`track:${track.id}`}</span>
       <span>{`skills:${skills.map((skill) => skill.skill).join(',')}`}</span>
       <span>{`filteredSkills:${filteredSkills.map((skill) => skill.skill).join(',') || 'none'}`}</span>
       <span>{`categories:${selectedCategories.join(',') || 'none'}`}</span>
@@ -32,10 +34,11 @@ describe('SkillsViewContext', () => {
   test('provides the given values to consumers', () => {
     const screen = render(
       <SkillsViewContextProvider
+        track={new Track().mock()}
         skills={SKILLS}
         filteredSkills={SKILLS}
-        selectedCategories={['engineering']}
-        selectedSubCategories={['development']}
+        selectedCategories={['frontend-development']}
+        selectedSubCategories={['core-technologies']}
         highlightedSkills={['React']}
         searchTerm="rea"
         onClearFilters={jest.fn()}
@@ -44,10 +47,11 @@ describe('SkillsViewContext', () => {
       </SkillsViewContextProvider>
     );
 
+    expect(screen.getByText('track:full')).toBeVisible();
     expect(screen.getByText('skills:React')).toBeVisible();
     expect(screen.getByText('filteredSkills:React')).toBeVisible();
-    expect(screen.getByText('categories:engineering')).toBeVisible();
-    expect(screen.getByText('subCategories:development')).toBeVisible();
+    expect(screen.getByText('categories:frontend-development')).toBeVisible();
+    expect(screen.getByText('subCategories:core-technologies')).toBeVisible();
     expect(screen.getByText('highlighted:React')).toBeVisible();
     expect(screen.getByText('search:rea')).toBeVisible();
   });
@@ -55,6 +59,7 @@ describe('SkillsViewContext', () => {
   test('defaults to an empty list when not provided, and defaults searchTerm', () => {
     const screen = render(
       <SkillsViewContextProvider
+        track={new Track().mock()}
         skills={SKILLS}
         filteredSkills={[]}
         selectedCategories={[]}
