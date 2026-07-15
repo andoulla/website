@@ -39,8 +39,7 @@ const calculateYearsForSkill = (
   return { years: Math.round(years * 10) / 10, companyYears };
 };
 
-// Summaries come out in track order: categories as authored in the track file, skills within a
-// category by years descending.
+// Ordered by track category position, then years descending within each category.
 export const calculateSkillYears = (
   careerHistory: TimelineEvent[],
   track: Track,

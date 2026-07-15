@@ -9,7 +9,7 @@ export const CUSTOM_COLOUR_HEX: Record<CustomSkillColour, { light: string; dark:
   plum: { light: '#7B4B94', dark: '#8E5CAD' },
   brown: { light: '#9A5B2F', dark: '#9A5B2F' },
   gold: { light: '#B08D1E', dark: '#B08D1E' },
-  indigo: { light: '#4E5FBF', dark: '#4E5FBF' },
+  indigo: { light: '#4E5FBF', dark: '#5C6DD2' },
   berry: { light: '#B03060', dark: '#C74A7B' },
 };
 

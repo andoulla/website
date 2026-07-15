@@ -1,6 +1,6 @@
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 
-// Narrows `skills` down to the selected category/subcategory ids (AND semantics between the two).
+// Keeps skills matching the selected category AND subcategory ids.
 export const filterSkillsByCategory = (
   skills: SkillSummary[],
   selectedCategories: string[],

@@ -9,6 +9,8 @@ export const createPurpleTheme = (mode: 'light' | 'dark') => {
       typography: baseTokens.typography,
       palette: {
         mode,
+        // WCAG small-text ratio — stops getContrastText picking sub-4.5:1 white text.
+        contrastThreshold: 4.5,
         primary: {
           light: '#E9C7E3',
           main: '#702963',
