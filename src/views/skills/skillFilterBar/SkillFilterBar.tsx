@@ -91,6 +91,8 @@ export const SkillFilterBar = ({
         variant="outlined"
         size="small"
         color="inherit"
+        // Match the 36px height and divider border of the other toolbar controls.
+        sx={{ height: 36, borderColor: 'divider' }}
         startIcon={<FilterListIcon fontSize="small" />}
         onClick={(e) => setAnchorEl(e.currentTarget)}
         aria-haspopup="true"

@@ -16,10 +16,11 @@ export const TrackFilter = () => {
         setTrackId(event.target.value);
       }}
       inputProps={{ 'aria-label': 'Track' }}
-      // Match the ~36px height and divider-coloured border of the toggle group / filter button.
+      // Match the 36px height and divider border of the other toolbar controls.
       sx={{
         height: 36,
         color: 'inherit',
+        '& .MuiSelect-select': { py: '6px' },
         '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' },
       }}
     >
