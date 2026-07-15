@@ -3,9 +3,9 @@ import Alert from '@mui/material/Alert';
 
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 import { sortMatchesFirst } from '@/utils/sortMatchesFirst';
+import { SkillsEmptyState } from '@/views/skills/skillsEmptyState';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
-import { SkillsEmptyState } from '../skillsEmptyState';
 
 import { SkillsBarChart } from './skillsBarChart';
 

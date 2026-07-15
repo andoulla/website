@@ -1,9 +1,9 @@
 import Alert from '@mui/material/Alert';
 
 import { derivePresentCategories } from '@/utils/derivePresentCategories';
+import { SkillsEmptyState } from '@/views/skills/skillsEmptyState';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
-import { SkillsEmptyState } from '../skillsEmptyState';
 
 import { SkillsRadarChart } from './skillsRadarChart';
 

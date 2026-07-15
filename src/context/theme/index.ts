@@ -3,4 +3,4 @@ export type {
   ThemeContextProviderProps,
   ThemeContextValue,
   ThemeName,
-} from './ThemeContextProvider.type';
+} from './ThemeContextProvider.types';

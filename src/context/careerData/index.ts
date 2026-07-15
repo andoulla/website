@@ -1,2 +1,2 @@
 export { useCareerDataContext, CareerDataContextProvider } from './CareerDataContextProvider';
-export type { CareerDataContextProviderProps } from './CareerDataContextProvider.type';
+export type { CareerDataContextProviderProps } from './CareerDataContextProvider.types';

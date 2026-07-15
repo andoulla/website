@@ -4,9 +4,9 @@ import Stack from '@mui/material/Stack';
 import { Section } from '@/components/section';
 import { hasSearchTerm } from '@/utils/hasSearchTerm';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
+import { SkillsEmptyState } from '@/views/skills/skillsEmptyState';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
-import { SkillsEmptyState } from '../skillsEmptyState';
 
 import { skillElementId } from './SkillsListView.helpers';
 import { SkillItemsList } from './skillItemsList';

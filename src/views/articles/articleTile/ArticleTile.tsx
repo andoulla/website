@@ -20,7 +20,7 @@ const lineClampSx = (lines: number) => ({
   overflow: 'hidden',
 });
 
-const getTagColour = () => 'primary' as const;
+const getTagColour = () => 'teal' as const;
 
 export const ArticleTile = memo(({ article }: ArticleTileProps) => {
   return (
