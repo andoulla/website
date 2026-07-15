@@ -162,6 +162,28 @@ describe('Resume', () => {
     scrollIntoViewSpy.mockRestore();
   });
 
+  test('resolves an old skill name through synonyms and still scrolls to the matching job', async () => {
+    const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+    const careerHistoryWithSkill = [
+      new TimelineEvent()
+        .id('job-1')
+        .companyName('Meridian Dynamics')
+        .startDate('2022-04-01')
+        .skills([new Skill().id('react').name('React').mock()])
+        .mock(),
+    ];
+
+    // 'reactjs' is a synonym of React in skills.json; matching is case-insensitive.
+    await renderResume(
+      () => Promise.resolve(careerHistoryWithSkill),
+      [{ pathname: '/', search: '?skill=reactjs' }]
+    );
+
+    expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+
+    scrollIntoViewSpy.mockRestore();
+  });
+
   test('scrolls to the job containing the highlighted recommendation, taking priority over a skill match', async () => {
     const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
     const targetRecommendation = new Recommendation().id('rec-2').mock();

@@ -4,12 +4,8 @@ import { normaliseSearchTerm as normalise } from '@/utils/normaliseSearchTerm';
 
 import type { MatchSkillResult } from './matchSkill.types';
 
-/**
- * Authoring-time helper: looks up a raw tech/skill term (e.g. from a new job's
- * tech stack) against the canonical `name`/`synonyms` of every known skill, so
- * duplicate entries aren't created for a term that already exists under a
- * different spelling. Not used by any runtime UI code.
- */
+// Resolves a raw term (?skill= param, tech-stack entry) against every skill's
+// name/synonyms — old display names keep deep-linking after renames.
 export const matchSkill = (
   term: string,
   allSkills: Skill[] = defaultSkills

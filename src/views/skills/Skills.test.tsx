@@ -125,6 +125,35 @@ describe('Skills', () => {
     });
   });
 
+  describe('skill deep links', () => {
+    test('resolves an old skill name through synonyms and scrolls to the canonical row', async () => {
+      const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+
+      // 'JavaScript' is a synonym of 'JavaScript (ES6+)' in skills.json.
+      await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?view=list&skill=JavaScript']
+      );
+
+      expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+
+      scrollIntoViewSpy.mockRestore();
+    });
+
+    test('does not scroll for a skill param that resolves to nothing', async () => {
+      const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+
+      await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?view=list&skill=not-a-real-skill']
+      );
+
+      expect(scrollIntoViewSpy).not.toHaveBeenCalled();
+
+      scrollIntoViewSpy.mockRestore();
+    });
+  });
+
   describe('pattern toggle', () => {
     test('shows an unchecked patterns checkbox by default in graph view', async () => {
       const user = userEvent.setup();

@@ -30,7 +30,8 @@ import { useInView } from './useInView';
 export interface TimelineEventCardProps {
   event: TimelineEventWithRecommendations;
   track: Track;
-  highlightedSkill?: string;
+  // Canonical skill id — the resume view resolves raw ?skill= terms through matchSkill.
+  highlightedSkillId?: string;
   highlightedRecommendationId?: string;
   autoScrollToHighlight?: boolean;
   // The first card is already visible on landing, so it should render in without waiting on the
@@ -51,7 +52,7 @@ const formatDuration = (startDate: string, endDate: string | null): string => {
 export const TimelineEventCard = ({
   event,
   track,
-  highlightedSkill,
+  highlightedSkillId,
   highlightedRecommendationId,
   autoScrollToHighlight,
   startInView,
@@ -73,10 +74,8 @@ export const TimelineEventCard = ({
       (recommendation) => recommendation.id === highlightedRecommendationId
     );
   const isMatch =
-    (highlightedSkill !== undefined &&
-      event.skills.some(
-        (skill) => skill.id === highlightedSkill || skill.synonyms.includes(highlightedSkill)
-      )) ||
+    (highlightedSkillId !== undefined &&
+      event.skills.some((skill) => skill.id === highlightedSkillId)) ||
     hasHighlightedRecommendation;
 
   const cardNodeRef = useRef<HTMLDivElement | null>(null);

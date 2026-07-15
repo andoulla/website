@@ -19,6 +19,7 @@ import { useTrackContext } from '@/context/track';
 import { tracks } from '@/data/tracks';
 import type { TrackId } from '@/types';
 import { filterEventsByTrack } from '@/utils/filterEventsByTrack';
+import { matchSkill } from '@/utils/matchSkill';
 
 import { ContactDetails } from './contactDetails';
 import { TimelineEventCard } from './timelineEventCard';
@@ -29,8 +30,15 @@ const CareerTimeline = () => {
   const careerHistory = useCareerDataContext();
   const { track } = useTrackContext();
   const [searchParams] = useSearchParams();
-  const highlightedSkill = searchParams.get('skill') ?? undefined;
+  const rawHighlightedSkill = searchParams.get('skill') ?? undefined;
   const highlightedRecommendationId = searchParams.get('recommendation') ?? undefined;
+
+  // Old display names/synonyms resolve to the canonical skill id; unresolved terms no-op.
+  const highlightedSkillId = useMemo(
+    () =>
+      rawHighlightedSkill === undefined ? undefined : matchSkill(rawHighlightedSkill)?.skill.id,
+    [rawHighlightedSkill]
+  );
 
   const visibleHistory = useMemo(
     () => filterEventsByTrack(careerHistory, track),
@@ -52,15 +60,13 @@ const CareerTimeline = () => {
         )
       );
     }
-    if (highlightedSkill !== undefined) {
+    if (highlightedSkillId !== undefined) {
       return visibleHistory.findIndex((event) =>
-        event.skills.some(
-          (skill) => skill.name === highlightedSkill || skill.id === highlightedSkill
-        )
+        event.skills.some((skill) => skill.id === highlightedSkillId)
       );
     }
     return -1;
-  }, [visibleHistory, highlightedSkill, highlightedRecommendationId]);
+  }, [visibleHistory, highlightedSkillId, highlightedRecommendationId]);
 
   return (
     <Timeline
@@ -92,7 +98,7 @@ const CareerTimeline = () => {
               <TimelineEventCard
                 event={event}
                 track={track}
-                highlightedSkill={highlightedSkill}
+                highlightedSkillId={highlightedSkillId}
                 highlightedRecommendationId={highlightedRecommendationId}
                 autoScrollToHighlight={index === firstMatchIndex}
                 startInView={index === 0}

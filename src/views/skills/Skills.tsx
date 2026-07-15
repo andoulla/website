@@ -17,6 +17,7 @@ import { useTrackContext } from '@/context/track';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
 import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
+import { matchSkill } from '@/utils/matchSkill';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 
 import {
@@ -57,8 +58,13 @@ const SkillsContent = () => {
 
   const [searchParams] = useSearchParams();
   const highlightedSkillsKey = JSON.stringify(searchParams.getAll(SKILL_PARAM));
+  // Params resolve through matchSkill, so old names/synonyms map to canonical names.
   const highlightedSkills = useMemo(
-    () => searchParams.getAll(SKILL_PARAM),
+    () =>
+      searchParams
+        .getAll(SKILL_PARAM)
+        .map((term) => matchSkill(term)?.skill.name)
+        .filter((name): name is string => name !== undefined),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on content, not the ref
     [highlightedSkillsKey]
   );

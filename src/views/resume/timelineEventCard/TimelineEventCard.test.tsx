@@ -248,9 +248,9 @@ describe('TimelineEventCard', () => {
   });
 
   describe('highlight and scroll', () => {
-    test('applies an outline when highlightedSkill matches one of the role skills', () => {
+    test('applies an outline when highlightedSkillId matches one of the role skills', () => {
       const screen = render(
-        <TimelineEventCard event={event} track={testTrack} highlightedSkill="react" />,
+        <TimelineEventCard event={event} track={testTrack} highlightedSkillId="react" />,
         { wrapper: MemoryRouter }
       );
 
@@ -259,9 +259,9 @@ describe('TimelineEventCard', () => {
       });
     });
 
-    test('does not apply an outline when highlightedSkill matches none of the role skills', () => {
+    test('does not apply an outline when highlightedSkillId matches none of the role skills', () => {
       const screen = render(
-        <TimelineEventCard event={event} track={testTrack} highlightedSkill="kubernetes" />,
+        <TimelineEventCard event={event} track={testTrack} highlightedSkillId="kubernetes" />,
         { wrapper: MemoryRouter }
       );
 
@@ -277,7 +277,7 @@ describe('TimelineEventCard', () => {
         <TimelineEventCard
           event={event}
           track={testTrack}
-          highlightedSkill="react"
+          highlightedSkillId="react"
           autoScrollToHighlight
         />,
         { wrapper: MemoryRouter }
@@ -291,7 +291,7 @@ describe('TimelineEventCard', () => {
     test('does not scroll when matching but autoScrollToHighlight is false', () => {
       const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
 
-      render(<TimelineEventCard event={event} track={testTrack} highlightedSkill="React" />, {
+      render(<TimelineEventCard event={event} track={testTrack} highlightedSkillId="react" />, {
         wrapper: MemoryRouter,
       });
 
