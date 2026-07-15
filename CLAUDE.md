@@ -28,22 +28,27 @@ A minimal React + TypeScript web app run in strict mode across the whole toolcha
 
 ## Routes
 
-| Path      | View     | Notes                                                              |
-| --------- | -------- | ------------------------------------------------------------------ |
-| `/`       | `Resume` | Work-experience timeline + contact details                         |
-| `/skills` | `Skills` | List/graph toggle; `?skill=<name>` deep-links to a highlighted row |
+| Path      | View     | Notes                                                                                                                                    |
+| --------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`       | `Resume` | Track tabs over the timeline (`?track=<id>`, default `full`); `?skill=<name>`/`?recommendation=<id>` deep-link to a highlighted card     |
+| `/skills` | `Skills` | List/graph/radar toggle; `?track=` drives the taxonomy; `?skill=<name>` deep-links to a highlighted row (old names resolve via synonyms) |
 
 ## Data flow
 
 ```
-src/data/careerHistory.json + recommendations.json
-  → loadCareerHistory()    (dynamic import, joins data, 600 ms artificial delay)
+src/data/careerHistory.json + recommendations.json + skills.json
+  → loadCareerHistory()    (dynamic import, joins data into full Skill objects, 600 ms artificial delay)
   → CareerDataContextProvider (holds a stable Promise via useState lazy init)
   → useCareerDataContext() (React 19 use() — must sit under a Suspense boundary)
   → Resume / Skills views
+
+src/data/tracks/{lead,senior-engineer,full}.json
+  → TrackContextProvider   (active track, synced to the ?track= URL param)
+  → Resume: filterEventsByTrack(events, track) narrows each card to the track
+  → Skills: calculateSkillYears(careerHistory, track) derives SkillSummary[] in track order
 ```
 
-Skills have **no dedicated data file** — `calculateSkillYears(experiences)` derives them from `TimelineEvent.skills` and `TimelineEvent.techStack` at render time.
+Skill years are derived at render time: `calculateSkillYears` walks the active track's categories and sums job durations from each skill's `jobIds`.
 
 ## Skill mappings are frozen
 
@@ -59,10 +64,11 @@ suggestions report to gitignored `scripts/output/` — it NEVER writes to `src/d
 
 ## Contexts
 
-| Provider                    | Hook                     | Exposes                                                      |
-| --------------------------- | ------------------------ | ------------------------------------------------------------ |
-| `CareerDataContextProvider` | `useCareerDataContext()` | `TimelineEventWithRecommendations[]` — suspends until loaded |
-| `ThemeContextProvider`      | `useThemeContext()`      | `{ themeName, toggleTheme, isDarkMode, toggleDarkMode }`     |
+| Provider                    | Hook                     | Exposes                                                                                     |
+| --------------------------- | ------------------------ | ------------------------------------------------------------------------------------------- |
+| `CareerDataContextProvider` | `useCareerDataContext()` | `TimelineEventWithRecommendations[]` — suspends until loaded                                |
+| `ThemeContextProvider`      | `useThemeContext()`      | `{ themeName, toggleTheme, isDarkMode, toggleDarkMode }`                                    |
+| `TrackContextProvider`      | `useTrackContext()`      | `{ track, trackId, setTrackId }` — URL is source of truth (`?track=`, normalised to `full`) |
 
 ## Directory layout
 
@@ -70,13 +76,17 @@ suggestions report to gitignored `scripts/output/` — it NEVER writes to `src/d
 - [src/views/](src/views/) — page-level views; view-specific components nest directly under the owning view (see nesting convention below)
   - [src/views/resume/](src/views/resume/) — sub-components: ContactDetails, TimelineEventCard, TimelineEventSkeleton
   - [src/views/skills/](src/views/skills/) — sub-components: SkillsListView, SkillsGraphView
-- [src/context/](src/context/) — React context providers (careerData, theme)
-- [src/data/](src/data/) — JSON fixtures + typed `.ts` wrappers (careerHistory, recommendations, contact)
-- [src/types/](src/types/) — shared TypeScript types (TimelineEvent, Recommendation, TimelineEventWithRecommendations)
+- [src/context/](src/context/) — React context providers (careerData, theme, track)
+- [src/data/](src/data/) — JSON fixtures + typed `.ts` wrappers (careerHistory, recommendations, skills, contact) and per-track taxonomies ([src/data/tracks/](src/data/tracks/))
+- [src/types/](src/types/) — shared TypeScript types (TimelineEvent, Recommendation, TimelineEventWithRecommendations, Skill, Track, Responsibility)
 - [src/themes/](src/themes/) — MUI theme factories (green, purple) and design tokens
 - [src/utils/](src/utils/) — pure utility functions
-  - `calculateSkillYears` — derives `SkillSummary[]` from `TimelineEvent[]`
-  - `skillColour` — maps skill name → MUI colour + category (`engineering` | `managerial` | `soft-skills` | `other`)
+  - `calculateSkillYears` — derives `SkillSummary[]` from `TimelineEvent[]` + the active `Track` (track category order, years desc within category)
+  - `filterEventsByTrack` — narrows each event's responsibilities/techStack/skills to the active track
+  - `deriveSkillCategoryMap` — skillId → owning track category (used by resume card grouping)
+  - `derivePresentCategories` — deduped, ordered categories present in a `SkillSummary[]`
+  - `matchSkill` — resolves a raw term against every skill's name/synonyms (deep-link back-compat)
+  - `skillColour` — 7-slot category colour palette by track position (`categoryColourFromIndex`), per-mode hexes, grey `'default'` fallback
   - `computeShadeColour` — shade interpolation helper used by skillColour
   - `loadCareerHistory` — async loader used by CareerDataContextProvider, joins career history + recommendations into `TimelineEventWithRecommendations[]` via its `joinCareerHistoryWithRecommendations` sub-util
 

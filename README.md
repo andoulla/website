@@ -21,8 +21,8 @@ This is a personal project I'm using to explore Claude's models and features, wi
 
 ## Pages
 
-- **Resume** (`/`) — chronological timeline of work and education history with inline recommendations; education entries are visually distinguished (institution logo or a School icon); shows a skeleton while data loads
-- **Skills** (`/skills`) — colour-coded by category, with three views (list, bar chart, radar) built on Recharts; supports search, category/sub-category filtering, and deep-linking to a specific skill via `?skill=<name>`. Each skill's category, sub-category, and search synonyms come from a master list (`src/data/skills.json`); a skill's years of experience are computed by summing the durations of the jobs it's linked to there, and a skill missing from the list falls back to the "tooling" category colour
+- **Resume** (`/`) — chronological timeline of work and education history with inline recommendations, viewed through three track tabs (Lead / Engineering Manager, Senior Engineer, and Full — the default). Role tabs hide responsibilities, skills, and tech stack not relevant to that track (a job with nothing relevant collapses to a compact primary-info card); education entries are always visible and visually distinguished (institution logo or a School icon); shows a skeleton while data loads
+- **Skills** (`/skills`) — three views (list, bar chart, radar) built on Recharts; supports search, category/sub-category filtering, and deep-linking to a specific skill via `?skill=<name>`. Categories and sub-categories come from the active track's taxonomy file (`src/data/tracks/*.json`), coloured by category position; skill names and search synonyms come from a master list (`src/data/skills.json`), and a skill's years of experience are computed by summing the durations of the jobs it's linked to there. The active track syncs to `?track=` on both pages
 - **Articles** (`/articles`) — fetches and renders posts from a Medium RSS feed
 
 The nav bar also exposes a dark mode toggle and a theme switcher (green / purple).
@@ -42,6 +42,7 @@ Data is loaded asynchronously via React 19's `use()` hook under `Suspense` — t
 - `yarn format` — format code with Prettier
 - `yarn format:check` — check formatting without writing changes
 - `yarn typecheck` — run TypeScript type checking
+- `yarn draft:mappings` — report-only draft of responsibility/recommendation → skill mappings (writes to gitignored `scripts/output/`, never to `src/data/`)
 
 ## CI/CD
 
@@ -71,10 +72,11 @@ Until that's done, the upload step no-ops safely (`fail_ci_if_error: false`) rat
 
 **Resume**
 
+- Switch track tabs (Lead / Engineering Manager, Senior Engineer, Full) to filter every card to that track — synced to `?track=`, which the nav links and skill-chip links carry along
 - Click a "Key Skills" chip on a card to jump to that skill on the Skills page, highlighted
 - Click "View this role's skills on the graph" to jump to the Skills page with all of that role's skills highlighted
 - Click a recommendation's LinkedIn icon to open the original recommendation
-- Deep-link into a card via `?skill=<name>` or `?recommendation=<id>` — it auto-scrolls into view and gets a highlighted outline
+- Deep-link into a card via `?skill=<name>` or `?recommendation=<id>` — it auto-scrolls into view and gets a highlighted outline; old skill names still resolve via synonyms
 - Education entries show an institution logo (or a School icon)
 
 **Skills**
@@ -82,10 +84,10 @@ Until that's done, the upload step no-ops safely (`fail_ci_if_error: false`) rat
 - Switch between list, bar chart, and radar views (persisted in `?view=`)
 - Hover a skill (bar, list row, or radar category vertex) for a tooltip — name, subcategory, years, per-company breakdown, and links back to that skill on the Resume or to its first recommendation
 - Toggle "Patterns" (bar chart view) to fill bars with colour-blind-safe textures instead of solid colour
-- Filter by category and sub-category via the Filters dropdown (multi-select checkboxes)
+- Filter by category and sub-category via the Filters dropdown (multi-select checkboxes) — options, grouping, and colours reflect the active track, and stale filters self-clean on track switch
 - Search skills by name; a hint reports matches hidden by active filters
-- Copy the current URL (view, filters, search, highlighted skill) via the copy-link button
-- Deep-link to a skill via `?skill=<name>`
+- Copy the current URL (track, view, filters, search, highlighted skill) via the copy-link button
+- Deep-link to a skill via `?skill=<name>` — old names and synonyms resolve to the canonical skill
 
 **Articles**
 
