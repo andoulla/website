@@ -21,6 +21,8 @@ import { Skills } from './views/skills';
 // TODO: bug, when clicking on a category orsubcategory in resume, it should go to barchart and have the skill selected , not just on the url but in the filters
 // TODO: bug when clicking on a skill in the barchart, it should go to the skill page and have the skill selected, not just on the url but in the filters, and the skill should be at the top
 // TODO : bug animation on card
+// TODO: in tech stack I want to show Notion, not documentation
+// TODO: why isn't jira and notion not showing up as documentation in Tools & Development Workflow look at Atom experience
 const App = () => {
   return (
     <ThemeContextProvider>
