@@ -162,7 +162,7 @@ describe('Resume', () => {
     scrollIntoViewSpy.mockRestore();
   });
 
-  test('resolves an old skill name through synonyms and still scrolls to the matching job', async () => {
+  test('resolves a synonym to the canonical skill and still scrolls to the matching job', async () => {
     const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
     const careerHistoryWithSkill = [
       new TimelineEvent()

@@ -75,8 +75,7 @@ const leadTrack = toTrack(leadTrackData, 'tracks/lead.json');
 const seniorEngineerTrack = toTrack(seniorEngineerTrackData, 'tracks/senior-engineer.json');
 const generalTrack = toTrack(generalTrackData, 'tracks/general.json');
 
-// "Full shows everything" is a data invariant, not a rendering special case: every skill in
-// skills.json must appear somewhere in the general track.
+// Data invariant: every skill in skills.json must appear in the general track.
 const generalTrackSkillIds = new Set(
   generalTrack.categories.flatMap((category) =>
     category.subCategories.flatMap((subCategory) => subCategory.skillIds)

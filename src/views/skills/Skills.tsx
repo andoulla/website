@@ -59,7 +59,7 @@ const SkillsContent = () => {
 
   const [searchParams] = useSearchParams();
   const highlightedSkillsKey = JSON.stringify(searchParams.getAll(SKILL_PARAM));
-  // Params resolve through matchSkill, so old names/synonyms map to canonical names.
+  // Params resolve through matchSkill: synonyms map to canonical names.
   const highlightedSkills = useMemo(
     () =>
       searchParams

@@ -145,7 +145,7 @@ describe('Skills', () => {
   });
 
   describe('skill deep links', () => {
-    test('resolves an old skill name through synonyms and scrolls to the canonical row', async () => {
+    test('resolves a synonym to the canonical skill and scrolls to its row', async () => {
       const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
 
       // 'JavaScript' is a synonym of 'JavaScript (ES6+)' in skills.json.

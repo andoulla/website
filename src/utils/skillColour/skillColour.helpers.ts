@@ -6,8 +6,7 @@ import type { CustomSkillColour, SkillColour } from './skillColour.types';
 export const isCustomSkillColour = (colour: SkillColour): colour is CustomSkillColour =>
   colour in CUSTOM_COLOUR_HEX;
 
-// Track categories are coloured by position in the track file; anything past the palette
-// renders in the grey fallback rather than reusing a hue.
+// Coloured by category position in the track file; past the palette = grey fallback, no hue reuse.
 export const categoryColourFromIndex = (categoryIndex: number): SkillColour =>
   CATEGORY_COLOUR_PALETTE[categoryIndex] ?? 'default';
 

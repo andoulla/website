@@ -33,7 +33,7 @@ const CareerTimeline = () => {
   const rawHighlightedSkill = searchParams.get('skill') ?? undefined;
   const highlightedRecommendationId = searchParams.get('recommendation') ?? undefined;
 
-  // Old display names/synonyms resolve to the canonical skill id; unresolved terms no-op.
+  // Synonyms resolve to the canonical skill id; unresolved terms no-op.
   const highlightedSkillId = useMemo(
     () =>
       rawHighlightedSkill === undefined ? undefined : matchSkill(rawHighlightedSkill)?.skill.id,

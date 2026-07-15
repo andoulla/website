@@ -129,8 +129,7 @@ export const TimelineEventCard = ({
   const cardHeader = (
     <CardHeader
       title={event.companyName}
-      // Render the company name as a real h3 heading (visually sized h6) so it sits
-      // correctly under the h2 "Work Experience" section in the heading hierarchy.
+      // Real h3 (visually h6) — keeps the hierarchy under the h2 "Work Experience".
       slotProps={{
         title: { variant: 'h6', component: 'h3' },
         subheader: { variant: 'body2' },

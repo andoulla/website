@@ -4,8 +4,7 @@ import { normaliseSearchTerm as normalise } from '@/utils/normaliseSearchTerm';
 
 import type { MatchSkillResult } from './matchSkill.types';
 
-// Resolves a raw term (?skill= param, tech-stack entry) against every skill's
-// name/synonyms — old display names keep deep-linking after renames.
+// Matches a raw term (?skill= param, tech-stack entry) against skill names/synonyms.
 export const matchSkill = (
   term: string,
   allSkills: Skill[] = defaultSkills
