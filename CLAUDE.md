@@ -28,10 +28,10 @@ A minimal React + TypeScript web app run in strict mode across the whole toolcha
 
 ## Routes
 
-| Path      | View     | Notes                                                                                                                                    |
-| --------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `/`       | `Resume` | Track tabs over the timeline (`?track=<id>`, default `general`); `?skill=<name>`/`?recommendation=<id>` deep-link to a highlighted card  |
-| `/skills` | `Skills` | List/graph/radar toggle; `?track=` drives the taxonomy; `?skill=<name>` deep-links to a highlighted row (old names resolve via synonyms) |
+| Path      | View     | Notes                                                                                                                                   |
+| --------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`       | `Resume` | Track tabs over the timeline (`?track=<id>`, default `general`); `?skill=<name>`/`?recommendation=<id>` deep-link to a highlighted card |
+| `/skills` | `Skills` | List/graph/radar toggle; `?track=` drives the taxonomy; `?skill=<name>` deep-links to a highlighted row (synonyms resolve)              |
 
 ## Data flow
 
@@ -85,7 +85,7 @@ suggestions report to gitignored `scripts/output/` — it NEVER writes to `src/d
   - `filterEventsByTrack` — narrows each event's responsibilities/techStack/skills to the active track
   - `deriveSkillCategoryMap` — skillId → owning track category (used by resume card grouping)
   - `derivePresentCategories` — deduped, ordered categories present in a `SkillSummary[]`
-  - `matchSkill` — resolves a raw term against every skill's name/synonyms (deep-link back-compat)
+  - `matchSkill` — synonym-aware lookup of a raw term against skill names/synonyms
   - `skillColour` — 7-slot category colour palette by track position (`categoryColourFromIndex`), per-mode hexes, grey `'default'` fallback
   - `computeShadeColour` — shade interpolation helper used by skillColour
   - `loadCareerHistory` — async loader used by CareerDataContextProvider, joins career history + recommendations into `TimelineEventWithRecommendations[]` via its `joinCareerHistoryWithRecommendations` sub-util
