@@ -130,7 +130,13 @@ export const Resume = () => {
         aria-label="Resume track"
         variant="scrollable"
         allowScrollButtonsMobile
-        sx={{ mb: 3, '& .MuiTabs-flexContainer': { justifyContent: { sm: 'center' } } }}
+        // Full-width divider under the tab bar separates it from the panel content.
+        sx={{
+          mb: 3,
+          borderBottom: 1,
+          borderColor: 'divider',
+          '& .MuiTabs-flexContainer': { justifyContent: { sm: 'center' } },
+        }}
       >
         {tracks.map((track) => (
           <Tab
