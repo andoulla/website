@@ -25,9 +25,9 @@ Started: 2026-07-13
 
 ## Blocked on user
 
-- [ ] Drop `stash@{0}`? (100% redundant now)
-- [ ] Optional: Elsevier/Capco tech stack (its App.tsx TODO was deleted in feat/02 per plan — tracked only here now)
-- [ ] Open PR for feat/02: https://github.com/andoulla/website/pull/new/feat/02-tracks-and-context
+- [x] ~~Drop `stash@{0}`~~ — already gone (stash list empty, 2026-07-15)
+- [x] ~~Elsevier/Capco tech stack~~ — moved back to a TODO comment in App.tsx (user request)
+- [x] ~~Open PR for feat/02~~ — moot: feat/02 commits reached main via the feat/03/04 fast-forward merges
 
 ## feat/05 handoff (COMPLETE — steps 8–11 + carry-forwards, pushed 2026-07-15)
 

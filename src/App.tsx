@@ -16,6 +16,7 @@ import { Articles } from './views/articles';
 import { Resume } from './views/resume';
 import { Skills } from './views/skills';
 
+// TODO: optional — add Elsevier/Capco tech stack to careerHistory.json (neither carries one yet).
 const App = () => {
   return (
     <ThemeContextProvider>
