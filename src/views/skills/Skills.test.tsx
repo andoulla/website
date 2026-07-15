@@ -111,6 +111,25 @@ describe('Skills', () => {
       ).not.toBeInTheDocument();
     });
 
+    test('switching track via the track filter updates the url and drops stale filters', async () => {
+      const user = userEvent.setup();
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?track=full&category=frontend-development']
+      );
+
+      await user.click(screen.getByRole('combobox', { name: 'Track' }));
+      await user.click(screen.getByRole('option', { name: 'Lead / Engineering Manager' }));
+
+      // frontend-development is not a lead category, so the parsed filters self-clean.
+      expect(screen.getByText('search:track=lead&category=frontend-development')).toBeVisible();
+      expect(
+        screen.getByRole('button', {
+          name: 'Filter skills by category and subcategory, currently: All',
+        })
+      ).toBeVisible();
+    });
+
     test('drops a category param that is not part of the active track', async () => {
       const screen = await renderAndFlush(
         () => Promise.resolve(CAREER_HISTORY),

@@ -37,6 +37,7 @@ import type { ViewMode } from './Skills.types';
 import { CopyLinkButton } from './copyLinkButton';
 import { SkillFilterBar, type SkillFilterOption } from './skillFilterBar';
 import { SkillSearchBar } from './skillSearchBar';
+import { TrackFilter } from './trackFilter';
 import {
   SkillsGraphView,
   SkillsListView,
@@ -169,6 +170,7 @@ const SkillsContent = () => {
         }}
       >
         <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
+        <TrackFilter />
         <SkillFilterBar
           categories={categories}
           subCategoriesByCategory={subCategoriesByCategory}
