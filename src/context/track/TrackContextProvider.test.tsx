@@ -63,25 +63,25 @@ const renderWithRouter = (initialEntry: string) =>
   );
 
 describe('TrackContextProvider', () => {
-  test('defaults to the full track and normalises the missing param', () => {
+  test('defaults to the general track and normalises the missing param', () => {
     const screen = renderWithRouter('/');
 
-    expect(screen.getByText('Track id: full')).toBeVisible();
+    expect(screen.getByText('Track id: general')).toBeVisible();
     expect(screen.getByText('Track label: General')).toBeVisible();
-    expect(screen.getByText('Search: track=full')).toBeVisible();
+    expect(screen.getByText('Search: track=general')).toBeVisible();
   });
 
-  test('normalises an invalid track param to full', () => {
+  test('normalises an invalid track param to general', () => {
     const screen = renderWithRouter('/?track=astronaut');
 
-    expect(screen.getByText('Track id: full')).toBeVisible();
-    expect(screen.getByText('Search: track=full')).toBeVisible();
+    expect(screen.getByText('Track id: general')).toBeVisible();
+    expect(screen.getByText('Search: track=general')).toBeVisible();
   });
 
   test('keeps other query params when normalising', () => {
     const screen = renderWithRouter('/?skill=React');
 
-    expect(screen.getByText('Search: skill=React&track=full')).toBeVisible();
+    expect(screen.getByText('Search: skill=React&track=general')).toBeVisible();
   });
 
   test('provides the track named by a valid param', () => {
@@ -94,7 +94,7 @@ describe('TrackContextProvider', () => {
 
   test('setTrackId switches the track and updates the url', async () => {
     const user = userEvent.setup();
-    const screen = renderWithRouter('/?track=full');
+    const screen = renderWithRouter('/?track=general');
 
     await user.click(screen.getByRole('button', { name: 'Switch to Lead' }));
 
@@ -104,20 +104,20 @@ describe('TrackContextProvider', () => {
 
   test('setTrackId with the already-active track does not push a history entry', async () => {
     const user = userEvent.setup();
-    const screen = renderWithRouter('/?track=full');
+    const screen = renderWithRouter('/?track=general');
 
     await user.click(screen.getByRole('button', { name: 'Switch to Lead' }));
     await user.click(screen.getByRole('button', { name: 'Switch to Lead' }));
     await user.click(screen.getByRole('button', { name: 'Back' }));
 
-    expect(screen.getByText('Track id: full')).toBeVisible();
-    expect(screen.getByText('Search: track=full')).toBeVisible();
+    expect(screen.getByText('Track id: general')).toBeVisible();
+    expect(screen.getByText('Search: track=general')).toBeVisible();
   });
 
   test('setTrackId identity is stable across unrelated search param changes', async () => {
     const user = userEvent.setup();
     const screen = render(
-      <MemoryRouter initialEntries={['/?track=full']}>
+      <MemoryRouter initialEntries={['/?track=general']}>
         <TrackContextProvider>
           <SetTrackIdIdentityProbe />
         </TrackContextProvider>

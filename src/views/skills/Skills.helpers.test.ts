@@ -135,13 +135,13 @@ describe('reorderFilterParams', () => {
 
   test('puts track ahead of view ahead of category and subCategory', () => {
     const params = new URLSearchParams(
-      'subCategory=testing&category=frontend-development&view=list&track=full'
+      'subCategory=testing&category=frontend-development&view=list&track=general'
     );
 
     const result = reorderFilterParams(params);
 
     expect(result.toString()).toBe(
-      'track=full&view=list&category=frontend-development&subCategory=testing'
+      'track=general&view=list&category=frontend-development&subCategory=testing'
     );
   });
 

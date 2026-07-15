@@ -2,10 +2,10 @@ import type { Track, TrackId } from '@/types';
 
 import { skills } from './skills';
 import leadTrackData from './tracks/lead.json';
-import fullTrackData from './tracks/full.json';
+import generalTrackData from './tracks/general.json';
 import seniorEngineerTrackData from './tracks/senior-engineer.json';
 
-export const TRACK_IDS: TrackId[] = ['full', 'lead', 'senior-engineer'];
+export const TRACK_IDS: TrackId[] = ['general', 'lead', 'senior-engineer'];
 
 export const isTrackId = (value: string): value is TrackId =>
   (TRACK_IDS as string[]).includes(value);
@@ -73,24 +73,24 @@ const toTrack = (rawTrack: RawTrack, fileName: string): Track => {
 
 const leadTrack = toTrack(leadTrackData, 'tracks/lead.json');
 const seniorEngineerTrack = toTrack(seniorEngineerTrackData, 'tracks/senior-engineer.json');
-const fullTrack = toTrack(fullTrackData, 'tracks/full.json');
+const generalTrack = toTrack(generalTrackData, 'tracks/general.json');
 
 // "Full shows everything" is a data invariant, not a rendering special case: every skill in
-// skills.json must appear somewhere in the full track.
-const fullTrackSkillIds = new Set(
-  fullTrack.categories.flatMap((category) =>
+// skills.json must appear somewhere in the general track.
+const generalTrackSkillIds = new Set(
+  generalTrack.categories.flatMap((category) =>
     category.subCategories.flatMap((subCategory) => subCategory.skillIds)
   )
 );
 
 skills.forEach((skill) => {
-  if (!fullTrackSkillIds.has(skill.id)) {
-    throw new Error(`tracks/full.json: skill "${skill.id}" missing from the full track`);
+  if (!generalTrackSkillIds.has(skill.id)) {
+    throw new Error(`tracks/general.json: skill "${skill.id}" missing from the general track`);
   }
 });
 
 // Tab display order.
-export const tracks: Track[] = [fullTrack, leadTrack, seniorEngineerTrack];
+export const tracks: Track[] = [generalTrack, leadTrack, seniorEngineerTrack];
 
 const seenTrackIds = new Set<string>();
 

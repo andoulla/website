@@ -1,7 +1,7 @@
 import type { Track } from '@/types';
 
 export const defaultTrack: Track = {
-  id: 'full',
+  id: 'general',
   label: 'Full',
   categories: [
     {

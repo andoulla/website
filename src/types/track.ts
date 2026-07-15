@@ -1,4 +1,4 @@
-export type TrackId = 'lead' | 'senior-engineer' | 'full';
+export type TrackId = 'lead' | 'senior-engineer' | 'general';
 
 interface TrackSubCategory {
   id: string;

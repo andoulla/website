@@ -195,7 +195,7 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByText('React'));
 
-    expect(screen.getByText('location:/skills?skill=React&track=full')).toBeVisible();
+    expect(screen.getByText('location:/skills?skill=React&track=general')).toBeVisible();
   });
 
   test('navigates to the skills page with all of the role skills when "View this role\'s skills on the graph" is clicked', async () => {
@@ -210,7 +210,7 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: "View this role's skills on the graph" }));
 
     expect(
-      screen.getByText('location:/skills?skill=React&skill=TypeScript&track=full')
+      screen.getByText('location:/skills?skill=React&skill=TypeScript&track=general')
     ).toBeVisible();
   });
 

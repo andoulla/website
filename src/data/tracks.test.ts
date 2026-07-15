@@ -6,7 +6,7 @@ describe('tracks', () => {
     jest.dontMock('./skills');
     jest.dontMock('./tracks/lead.json');
     jest.dontMock('./tracks/senior-engineer.json');
-    jest.dontMock('./tracks/full.json');
+    jest.dontMock('./tracks/general.json');
   });
 
   const mockSkills = (ids: string[]) => {
@@ -22,7 +22,7 @@ describe('tracks', () => {
     jest.doMock('./tracks/senior-engineer.json', () =>
       new Track().id('senior-engineer').label('Senior Engineer').mock()
     );
-    jest.doMock('./tracks/full.json', () => new Track().mock());
+    jest.doMock('./tracks/general.json', () => new Track().mock());
   };
 
   test('exposes the three tracks in tab display order', async () => {
@@ -31,9 +31,9 @@ describe('tracks', () => {
 
     const { tracks, TRACK_IDS } = await import('./tracks');
 
-    expect(tracks.map((track) => track.id)).toEqual(['full', 'lead', 'senior-engineer']);
+    expect(tracks.map((track) => track.id)).toEqual(['general', 'lead', 'senior-engineer']);
     expect(tracks[0]).toEqual(new Track().mock());
-    expect(TRACK_IDS).toEqual(['full', 'lead', 'senior-engineer']);
+    expect(TRACK_IDS).toEqual(['general', 'lead', 'senior-engineer']);
   });
 
   test('throws when a track file has an unrecognised id', async () => {
@@ -54,10 +54,10 @@ describe('tracks', () => {
     mockSkills(['react']);
     mockValidTrackFiles();
     jest.doMock('./tracks/lead.json', () =>
-      new Track().id('full').label('Lead / Engineering Manager').mock()
+      new Track().id('general').label('Lead / Engineering Manager').mock()
     );
 
-    await expect(import('./tracks')).rejects.toThrow('tracks: duplicate track id "full"');
+    await expect(import('./tracks')).rejects.toThrow('tracks: duplicate track id "general"');
   });
 
   test('throws when a track repeats a category id', async () => {
@@ -145,12 +145,12 @@ describe('tracks', () => {
     );
   });
 
-  test('throws when the full track misses a skill', async () => {
+  test('throws when the general track misses a skill', async () => {
     mockSkills(['react', 'nodejs']);
     mockValidTrackFiles();
 
     await expect(import('./tracks')).rejects.toThrow(
-      'tracks/full.json: skill "nodejs" missing from the full track'
+      'tracks/general.json: skill "nodejs" missing from the general track'
     );
   });
 });

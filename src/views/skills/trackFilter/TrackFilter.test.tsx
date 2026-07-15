@@ -39,7 +39,7 @@ describe('TrackFilter', () => {
 
   test('selecting a track writes it to the url', async () => {
     const user = userEvent.setup();
-    const screen = renderTrackFilter('/skills?track=full');
+    const screen = renderTrackFilter('/skills?track=general');
 
     await user.click(screen.getByRole('combobox', { name: 'Track' }));
     await user.click(screen.getByRole('option', { name: 'Lead / Engineering Manager' }));

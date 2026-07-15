@@ -86,10 +86,10 @@ describe('Skills', () => {
   });
 
   describe('track URL sync', () => {
-    test('normalises a missing track param to the default full track', async () => {
+    test('normalises a missing track param to the default general track', async () => {
       const screen = await renderAndFlush();
 
-      expect(screen.getByText('search:track=full')).toBeVisible();
+      expect(screen.getByText('search:track=general')).toBeVisible();
     });
 
     test("groups skills by the active track's taxonomy for ?track=lead", async () => {
@@ -115,7 +115,7 @@ describe('Skills', () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush(
         () => Promise.resolve(CAREER_HISTORY),
-        ['/skills?track=full&category=frontend-development']
+        ['/skills?track=general&category=frontend-development']
       );
 
       await user.click(screen.getByRole('combobox', { name: 'Track' }));
@@ -231,7 +231,7 @@ describe('Skills', () => {
 
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
 
-      expect(screen.getByText('search:track=full&category=leadership-delivery')).toBeVisible();
+      expect(screen.getByText('search:track=general&category=leadership-delivery')).toBeVisible();
     });
 
     test('removes the category query param when the filter is cleared', async () => {
@@ -248,7 +248,7 @@ describe('Skills', () => {
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
 
-      expect(screen.getByText('search:track=full')).toBeVisible();
+      expect(screen.getByText('search:track=general')).toBeVisible();
     });
   });
 
@@ -277,7 +277,7 @@ describe('Skills', () => {
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
 
-      expect(screen.getByText('search:track=full&subCategory=testing')).toBeVisible();
+      expect(screen.getByText('search:track=general&subCategory=testing')).toBeVisible();
     });
 
     test('removes the subcategory query param when the filter is cleared', async () => {
@@ -294,7 +294,7 @@ describe('Skills', () => {
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
 
-      expect(screen.getByText('search:track=full')).toBeVisible();
+      expect(screen.getByText('search:track=general')).toBeVisible();
     });
   });
 
@@ -314,7 +314,7 @@ describe('Skills', () => {
 
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
 
-      expect(screen.getByText('search:track=full&search=react')).toBeVisible();
+      expect(screen.getByText('search:track=general&search=react')).toBeVisible();
     });
 
     test('removes the search query param when the search box is cleared', async () => {
@@ -326,7 +326,7 @@ describe('Skills', () => {
 
       await user.click(screen.getByRole('button', { name: 'Clear search' }));
 
-      expect(screen.getByText('search:track=full')).toBeVisible();
+      expect(screen.getByText('search:track=general')).toBeVisible();
     });
   });
 
@@ -349,7 +349,7 @@ describe('Skills', () => {
 
       await user.click(screen.getByRole('button', { name: 'List view' }));
 
-      expect(screen.getByText('search:track=full&view=list')).toBeVisible();
+      expect(screen.getByText('search:track=general&view=list')).toBeVisible();
     });
 
     test('omits the view query param when toggling to the default radar view', async () => {
@@ -361,7 +361,7 @@ describe('Skills', () => {
 
       await user.click(screen.getByRole('button', { name: 'Radar view' }));
 
-      expect(screen.getByText('search:track=full')).toBeVisible();
+      expect(screen.getByText('search:track=general')).toBeVisible();
     });
   });
 
@@ -414,7 +414,7 @@ describe('Skills', () => {
       );
 
       expect(
-        screen.getByText('search:category=frontend-development&subCategory=testing&track=full')
+        screen.getByText('search:category=frontend-development&subCategory=testing&track=general')
       ).toBeVisible();
       expect(
         screen.getByRole('button', {

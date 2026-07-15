@@ -27,16 +27,16 @@ describe('App', () => {
       return result;
     });
 
-    // Home route normalises to ?track=full; nav links carry it.
+    // Home route normalises to ?track=general; nav links carry it.
     const homeLink = screen.getByRole('link', { name: 'Home' });
 
     expect(homeLink).toBeVisible();
-    expect(homeLink).toHaveAttribute('href', '/?track=full');
+    expect(homeLink).toHaveAttribute('href', '/?track=general');
 
     const skillsLink = screen.getByRole('link', { name: 'Skills' });
 
     expect(skillsLink).toBeVisible();
-    expect(skillsLink).toHaveAttribute('href', '/skills?track=full');
+    expect(skillsLink).toHaveAttribute('href', '/skills?track=general');
 
     const articlesLink = screen.getByRole('link', { name: 'Articles' });
 

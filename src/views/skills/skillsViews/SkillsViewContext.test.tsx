@@ -47,7 +47,7 @@ describe('SkillsViewContext', () => {
       </SkillsViewContextProvider>
     );
 
-    expect(screen.getByText('track:full')).toBeVisible();
+    expect(screen.getByText('track:general')).toBeVisible();
     expect(screen.getByText('skills:React')).toBeVisible();
     expect(screen.getByText('filteredSkills:React')).toBeVisible();
     expect(screen.getByText('categories:frontend-development')).toBeVisible();

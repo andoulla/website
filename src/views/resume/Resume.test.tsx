@@ -70,7 +70,7 @@ describe('Resume', () => {
       screen.getByRole('tab', { name: 'Lead / Engineering Manager', selected: false })
     ).toBeVisible();
     expect(screen.getByRole('tab', { name: 'Senior Engineer', selected: false })).toBeVisible();
-    expect(screen.getByText('location:/?track=full')).toBeVisible();
+    expect(screen.getByText('location:/?track=general')).toBeVisible();
   });
 
   test('switching tabs hides content outside the track, updates the url, and stays axe-clean', async () => {

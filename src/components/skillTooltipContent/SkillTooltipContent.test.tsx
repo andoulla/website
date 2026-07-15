@@ -8,7 +8,7 @@ import type { SkillSummary as SkillSummaryData } from '@/utils/calculateSkillYea
 
 import { SkillTooltipContent } from './SkillTooltipContent';
 
-// The provider normalises the missing ?track= param to the default 'full'.
+// The provider normalises the missing ?track= param to the default 'general'.
 const renderTooltip = (skill: SkillSummaryData) =>
   render(
     <MemoryRouter>
@@ -89,7 +89,7 @@ describe('SkillTooltipContent', () => {
 
       expect(screen.getByRole('link', { name: 'View on Resume' })).toHaveAttribute(
         'href',
-        '/?skill=React&track=full'
+        '/?skill=React&track=general'
       );
     });
 
@@ -99,7 +99,7 @@ describe('SkillTooltipContent', () => {
 
       expect(screen.getByRole('link', { name: 'View on Resume' })).toHaveAttribute(
         'href',
-        '/?skill=Team%20Leadership&track=full'
+        '/?skill=Team%20Leadership&track=general'
       );
     });
   });
@@ -119,7 +119,7 @@ describe('SkillTooltipContent', () => {
 
       expect(screen.getByRole('link', { name: '1 recommendation' })).toHaveAttribute(
         'href',
-        '/?recommendation=rec-1&track=full'
+        '/?recommendation=rec-1&track=general'
       );
     });
 
@@ -129,7 +129,7 @@ describe('SkillTooltipContent', () => {
 
       expect(screen.getByRole('link', { name: '2 recommendations' })).toHaveAttribute(
         'href',
-        '/?recommendation=rec-1&track=full'
+        '/?recommendation=rec-1&track=general'
       );
     });
   });

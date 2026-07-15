@@ -30,7 +30,7 @@ A minimal React + TypeScript web app run in strict mode across the whole toolcha
 
 | Path      | View     | Notes                                                                                                                                    |
 | --------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `/`       | `Resume` | Track tabs over the timeline (`?track=<id>`, default `full`); `?skill=<name>`/`?recommendation=<id>` deep-link to a highlighted card     |
+| `/`       | `Resume` | Track tabs over the timeline (`?track=<id>`, default `general`); `?skill=<name>`/`?recommendation=<id>` deep-link to a highlighted card  |
 | `/skills` | `Skills` | List/graph/radar toggle; `?track=` drives the taxonomy; `?skill=<name>` deep-links to a highlighted row (old names resolve via synonyms) |
 
 ## Data flow
@@ -42,7 +42,7 @@ src/data/careerHistory.json + recommendations.json + skills.json
   → useCareerDataContext() (React 19 use() — must sit under a Suspense boundary)
   → Resume / Skills views
 
-src/data/tracks/{lead,senior-engineer,full}.json
+src/data/tracks/{general,lead,senior-engineer}.json
   → TrackContextProvider   (active track, synced to the ?track= URL param)
   → Resume: filterEventsByTrack(events, track) narrows each card to the track
   → Skills: calculateSkillYears(careerHistory, track) derives SkillSummary[] in track order
@@ -64,11 +64,11 @@ suggestions report to gitignored `scripts/output/` — it NEVER writes to `src/d
 
 ## Contexts
 
-| Provider                    | Hook                     | Exposes                                                                                     |
-| --------------------------- | ------------------------ | ------------------------------------------------------------------------------------------- |
-| `CareerDataContextProvider` | `useCareerDataContext()` | `TimelineEventWithRecommendations[]` — suspends until loaded                                |
-| `ThemeContextProvider`      | `useThemeContext()`      | `{ themeName, toggleTheme, isDarkMode, toggleDarkMode }`                                    |
-| `TrackContextProvider`      | `useTrackContext()`      | `{ track, trackId, setTrackId }` — URL is source of truth (`?track=`, normalised to `full`) |
+| Provider                    | Hook                     | Exposes                                                                                        |
+| --------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------- |
+| `CareerDataContextProvider` | `useCareerDataContext()` | `TimelineEventWithRecommendations[]` — suspends until loaded                                   |
+| `ThemeContextProvider`      | `useThemeContext()`      | `{ themeName, toggleTheme, isDarkMode, toggleDarkMode }`                                       |
+| `TrackContextProvider`      | `useTrackContext()`      | `{ track, trackId, setTrackId }` — URL is source of truth (`?track=`, normalised to `general`) |
 
 ## Directory layout
 
