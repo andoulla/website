@@ -1,10 +1,9 @@
 import Box from '@mui/material/Box';
-import School from '@mui/icons-material/School';
 import type { SvgIconComponent } from '@mui/icons-material';
 
 import type { TimelineEventWithRecommendations } from '@/types';
 
-import { LOGO_BY_EVENT_ID } from './RoleIcons.constants';
+import { ICON_BY_TYPE, LOGO_BY_EVENT_ID } from './RoleIcons.constants';
 
 export interface RoleIconProps {
   event: TimelineEventWithRecommendations;
@@ -24,6 +23,6 @@ export const RoleIcon = ({ event, fallbackIcon: FallbackIcon }: RoleIconProps) =
     );
   }
 
-  const Icon = event.type === 'education' ? School : FallbackIcon;
+  const Icon = ICON_BY_TYPE[event.type] ?? FallbackIcon;
   return <Icon fontSize="small" />;
 };

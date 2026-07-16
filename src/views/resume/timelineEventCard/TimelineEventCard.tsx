@@ -39,6 +39,8 @@ export interface TimelineEventCardProps {
   // The first card is already visible on landing, so it should render in without waiting on the
   // IntersectionObserver's first callback — only cards below the fold need the scroll-triggered fade.
   startInView?: boolean;
+  // For internships: auto-derived caption naming concurrent events (e.g. "Alongside X").
+  overlapCaption?: string;
 }
 
 const formatMonthYear = (isoDate: string): string => {
@@ -58,6 +60,7 @@ export const TimelineEventCard = ({
   highlightedRecommendationId,
   autoScrollToHighlight,
   startInView,
+  overlapCaption,
 }: TimelineEventCardProps) => {
   const navigate = useNavigate();
   const duration = formatDuration(event.startDate, event.endDate);
@@ -149,7 +152,9 @@ export const TimelineEventCard = ({
         title: { variant: 'h6', component: 'h3' },
         subheader: { variant: 'body2' },
       }}
-      subheader={`${event.title} · ${event.location} · ${duration}`}
+      subheader={`${event.title} · ${event.location} · ${duration}${
+        overlapCaption !== undefined ? ` · ${overlapCaption}` : ''
+      }`}
     />
   );
 

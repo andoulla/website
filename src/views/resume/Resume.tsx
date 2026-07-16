@@ -18,6 +18,7 @@ import { useCareerDataContext } from '@/context/careerData';
 import { useTrackContext } from '@/context/track';
 import { tracks } from '@/data/tracks';
 import type { TrackId } from '@/types';
+import { deriveOverlapCaption } from '@/utils/deriveOverlapCaption';
 import { filterEventsByTrack } from '@/utils/filterEventsByTrack';
 import { matchSkill } from '@/utils/matchSkill';
 
@@ -50,6 +51,15 @@ const CareerTimeline = () => {
   const roleIconByEventId = useMemo(
     () => Object.fromEntries(careerHistory.map((event) => [event.id, pickRandomRoleIcon()])),
     [careerHistory]
+  );
+
+  // Overlap caption for internships.
+  const overlapCaptionByEventId = useMemo(
+    () =>
+      Object.fromEntries(
+        visibleHistory.map((event) => [event.id, deriveOverlapCaption(event, visibleHistory)])
+      ),
+    [visibleHistory]
   );
 
   // A recommendation id pins to exactly one job, so it takes priority over the skill match.
@@ -89,7 +99,10 @@ const CareerTimeline = () => {
         return (
           <TimelineItem key={event.id}>
             <TimelineSeparator>
-              <TimelineDot color="primary">
+              <TimelineDot
+                color="primary"
+                variant={event.type === 'internship' ? 'outlined' : 'filled'}
+              >
                 <RoleIcon event={event} fallbackIcon={FallbackIcon} />
               </TimelineDot>
               {index < visibleHistory.length - 1 && <TimelineConnector />}
@@ -102,6 +115,7 @@ const CareerTimeline = () => {
                 highlightedRecommendationId={highlightedRecommendationId}
                 autoScrollToHighlight={index === matchIndex}
                 startInView={index === 0}
+                overlapCaption={overlapCaptionByEventId[event.id]}
               />
             </TimelineContent>
           </TimelineItem>

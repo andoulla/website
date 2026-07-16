@@ -8,7 +8,7 @@ describe('careerHistory', () => {
     jest.doMock('./careerHistory.json', () => [
       {
         id: 'bad-event',
-        type: 'internship',
+        type: 'unknown',
         companyName: 'Acme',
         location: 'Remote',
         startDate: '2020-01-01',
@@ -18,7 +18,7 @@ describe('careerHistory', () => {
     ]);
 
     await expect(import('./careerHistory')).rejects.toThrow(
-      'careerHistory.json: unrecognised type "internship" on event "bad-event"'
+      'careerHistory.json: unrecognised type "unknown" on event "bad-event"'
     );
   });
 

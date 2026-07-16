@@ -3,7 +3,7 @@ import type { TimelineEvent } from '@/types';
 import careerHistoryData from './careerHistory.json';
 import { skills } from './skills';
 
-const VALID_TYPES: TimelineEvent['type'][] = ['work', 'education', 'other'];
+const VALID_TYPES: TimelineEvent['type'][] = ['work', 'education', 'other', 'internship'];
 
 const skillIds = new Set(skills.map((skill) => skill.id));
 const seenResponsibilityIds = new Set<string>();

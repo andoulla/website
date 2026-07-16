@@ -7,4 +7,5 @@ export const RESPONSIBILITIES_LABEL_BY_TYPE: Record<TimelineEvent['type'], strin
   work: 'Responsibilities',
   education: 'Description',
   other: 'Responsibilities',
+  internship: 'Responsibilities',
 };

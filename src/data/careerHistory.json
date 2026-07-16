@@ -254,6 +254,22 @@
     "title": "Master of Science (MSc), Software Engineering"
   },
   {
+    "id": "ncr-corporation-2008-07",
+    "type": "internship",
+    "companyName": "NCR Corporation",
+    "location": "Cyprus",
+    "startDate": "2008-07-01",
+    "endDate": "2008-08-01",
+    "responsibilities": [
+      {
+        "id": "ncr-corporation-2008-07-r01",
+        "text": "Created documentation and user manuals for computing projects in the development stage, tailored to different types of users",
+        "skillIds": []
+      }
+    ],
+    "title": "Software Developer Trainee"
+  },
+  {
     "id": "university-of-east-anglia-2007-09",
     "type": "education",
     "companyName": "University of East Anglia",
