@@ -63,8 +63,8 @@ export const RecommendationText = ({
           <RecommendationByline recommendation={recommendation} />
         </Stack>
         <Typography
+          variant="body2"
           sx={{
-            fontSize: '0.4375rem',
             lineHeight: 1.8,
             letterSpacing: '0.3px',
           }}
