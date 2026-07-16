@@ -6,6 +6,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
+import Link from '@mui/material/Link';
 import { alpha, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -17,6 +18,7 @@ import { TRACK_PARAM } from '@/context/track';
 import type { TimelineEventWithRecommendations, Track } from '@/types';
 import { MONTH_NAMES } from '@/utils/formatDate';
 import { categoryColourFromIndex, skillShadeIndex } from '@/utils/skillColour';
+import { CATEGORY_PARAM, SKILL_PARAM, VIEW_PARAM } from '@/utils/skillsUrlParams';
 
 import { RESPONSIBILITIES_LABEL_BY_TYPE } from './TimelineEventCard.constants';
 import {
@@ -66,6 +68,7 @@ export const TimelineEventCard = ({
   const { ref, isInView } = useInView<HTMLDivElement>({
     threshold: isMobile ? 0.05 : 0.15,
     initialInView: startInView,
+    disabled: startInView,
   });
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const hasHighlightedRecommendation =
@@ -102,7 +105,18 @@ export const TimelineEventCard = ({
 
   const handleSkillClick = useCallback(
     (skillName: string) => {
-      void navigate(`/skills?skill=${encodeURIComponent(skillName)}&${TRACK_PARAM}=${track.id}`);
+      void navigate(
+        `/skills?${SKILL_PARAM}=${encodeURIComponent(skillName)}&${VIEW_PARAM}=barchart&${TRACK_PARAM}=${track.id}`
+      );
+    },
+    [navigate, track.id]
+  );
+
+  const handleCategoryClick = useCallback(
+    (categoryId: string) => {
+      void navigate(
+        `/skills?${CATEGORY_PARAM}=${encodeURIComponent(categoryId)}&${VIEW_PARAM}=barchart&${TRACK_PARAM}=${track.id}`
+      );
     },
     [navigate, track.id]
   );
@@ -110,7 +124,8 @@ export const TimelineEventCard = ({
   const handleViewAllSkillsClick = useCallback(() => {
     // Repeated params, not comma-joined — a skill name could contain a comma.
     const params = new URLSearchParams();
-    event.skills.forEach((skill) => params.append('skill', skill.name));
+    event.skills.forEach((skill) => params.append(SKILL_PARAM, skill.name));
+    params.set(VIEW_PARAM, 'barchart');
     params.set(TRACK_PARAM, track.id);
     void navigate(`/skills?${params.toString()}`);
   }, [navigate, event.skills, track.id]);
@@ -195,9 +210,12 @@ export const TimelineEventCard = ({
                     key={group.category.id}
                     sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
                   >
-                    <Typography
+                    <Link
+                      component="button"
+                      type="button"
                       variant="caption"
-                      component="span"
+                      underline="hover"
+                      onClick={() => handleCategoryClick(group.category.id)}
                       sx={{
                         fontWeight: 'medium',
                         flexShrink: 0,
@@ -205,7 +223,7 @@ export const TimelineEventCard = ({
                       }}
                     >
                       {`${group.category.name}:`}
-                    </Typography>
+                    </Link>
                     <TagList
                       items={group.skills.map((skill) => skill.name)}
                       onItemClick={handleSkillClick}

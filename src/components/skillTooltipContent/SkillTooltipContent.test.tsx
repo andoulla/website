@@ -113,23 +113,27 @@ describe('SkillTooltipContent', () => {
       expect(screen.queryByText('recommendation', { exact: false })).not.toBeInTheDocument();
     });
 
-    test('shows a singular count linking to the recommendation', () => {
+    test('links to the recommendation, unnumbered, when there is only one', () => {
       const skill = new SkillSummary().recommendationIds(['rec-1']).mock();
       const screen = renderTooltip(skill);
 
-      expect(screen.getByRole('link', { name: '1 recommendation' })).toHaveAttribute(
+      expect(screen.getByRole('link', { name: 'Recommendation' })).toHaveAttribute(
         'href',
         '/?recommendation=rec-1&track=general'
       );
     });
 
-    test('shows a plural count linking to the first recommendation', () => {
+    test('renders one link per recommendation, each to its own id, when there are several', () => {
       const skill = new SkillSummary().recommendationIds(['rec-1', 'rec-2']).mock();
       const screen = renderTooltip(skill);
 
-      expect(screen.getByRole('link', { name: '2 recommendations' })).toHaveAttribute(
+      expect(screen.getByRole('link', { name: 'Recommendation 1' })).toHaveAttribute(
         'href',
         '/?recommendation=rec-1&track=general'
+      );
+      expect(screen.getByRole('link', { name: 'Recommendation 2' })).toHaveAttribute(
+        'href',
+        '/?recommendation=rec-2&track=general'
       );
     });
   });

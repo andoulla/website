@@ -63,17 +63,18 @@ export const SkillTooltipContent = ({ skill }: SkillTooltipContentProps) => {
       >
         View on Resume
       </Link>
-      {skill.recommendationIds.length > 0 && (
+      {skill.recommendationIds.map((recommendationId, index) => (
         <Link
+          key={recommendationId}
           component={RouterLink}
-          to={`/?recommendation=${encodeURIComponent(skill.recommendationIds[0])}&${TRACK_PARAM}=${trackId}`}
+          to={`/?recommendation=${encodeURIComponent(recommendationId)}&${TRACK_PARAM}=${trackId}`}
           variant="body2"
           underline="none"
           sx={{ display: 'block', mt: 0.5 }}
         >
-          {`${skill.recommendationIds.length} recommendation${skill.recommendationIds.length === 1 ? '' : 's'}`}
+          {skill.recommendationIds.length === 1 ? 'Recommendation' : `Recommendation ${index + 1}`}
         </Link>
-      )}
+      ))}
     </Paper>
   );
 };

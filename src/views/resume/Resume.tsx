@@ -22,6 +22,7 @@ import { filterEventsByTrack } from '@/utils/filterEventsByTrack';
 import { matchSkill } from '@/utils/matchSkill';
 
 import { ContactDetails } from './contactDetails';
+import { findMostRecentSkillMatchIndex } from './Resume.helpers';
 import { TimelineEventCard } from './timelineEventCard';
 import { TimelineEventSkeleton } from './timelineEventSkeleton';
 import { pickRandomRoleIcon, RoleIcon } from './roleIcons';
@@ -52,7 +53,7 @@ const CareerTimeline = () => {
   );
 
   // A recommendation id pins to exactly one job, so it takes priority over the skill match.
-  const firstMatchIndex = useMemo(() => {
+  const matchIndex = useMemo(() => {
     if (highlightedRecommendationId !== undefined) {
       return visibleHistory.findIndex((event) =>
         event.recommendations.some(
@@ -61,9 +62,8 @@ const CareerTimeline = () => {
       );
     }
     if (highlightedSkillId !== undefined) {
-      return visibleHistory.findIndex((event) =>
-        event.skills.some((skill) => skill.id === highlightedSkillId)
-      );
+      // A skill can span multiple jobs — scroll to the most recent, not just the first match.
+      return findMostRecentSkillMatchIndex(visibleHistory, highlightedSkillId);
     }
     return -1;
   }, [visibleHistory, highlightedSkillId, highlightedRecommendationId]);
@@ -100,7 +100,7 @@ const CareerTimeline = () => {
                 track={track}
                 highlightedSkillId={highlightedSkillId}
                 highlightedRecommendationId={highlightedRecommendationId}
-                autoScrollToHighlight={index === firstMatchIndex}
+                autoScrollToHighlight={index === matchIndex}
                 startInView={index === 0}
               />
             </TimelineContent>

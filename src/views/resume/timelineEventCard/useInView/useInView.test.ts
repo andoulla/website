@@ -116,6 +116,26 @@ describe('useInView', () => {
     expect(observer.disconnect).toHaveBeenCalledTimes(1);
   });
 
+  test('is always in view and never creates an observer when disabled', () => {
+    const { result } = renderHook(() => useInView<HTMLDivElement>({ disabled: true }));
+    const node = document.createElement('div');
+
+    act(() => {
+      result.current.ref(node);
+    });
+
+    expect(result.current.isInView).toBe(true);
+    expect(MockIntersectionObserver.instances).toHaveLength(0);
+  });
+
+  test('is in view when disabled, regardless of initialInView', () => {
+    const { result } = renderHook(() =>
+      useInView<HTMLDivElement>({ disabled: true, initialInView: false })
+    );
+
+    expect(result.current.isInView).toBe(true);
+  });
+
   test('passes threshold and rootMargin options through to the observer', () => {
     const { result } = renderHook(() =>
       useInView<HTMLDivElement>({ threshold: 0.5, rootMargin: '-10px' })

@@ -184,7 +184,7 @@ describe('TimelineEventCard', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('navigates to the skill page, carrying the track, when a skill tag is clicked', async () => {
+  test('navigates to the skill page in the bar chart view, carrying the track, when a skill tag is clicked', async () => {
     const user = userEvent.setup();
     const screen = render(
       <MemoryRouter>
@@ -195,10 +195,12 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByText('React'));
 
-    expect(screen.getByText('location:/skills?skill=React&track=general')).toBeVisible();
+    expect(
+      screen.getByText('location:/skills?skill=React&view=barchart&track=general')
+    ).toBeVisible();
   });
 
-  test('navigates to the skills page with all of the role skills when "View this role\'s skills on the graph" is clicked', async () => {
+  test('navigates to the skills page with all of the role skills, in the bar chart view, when "View this role\'s skills on the graph" is clicked', async () => {
     const user = userEvent.setup();
     const screen = render(
       <MemoryRouter>
@@ -210,7 +212,23 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: "View this role's skills on the graph" }));
 
     expect(
-      screen.getByText('location:/skills?skill=React&skill=TypeScript&track=general')
+      screen.getByText('location:/skills?skill=React&skill=TypeScript&view=barchart&track=general')
+    ).toBeVisible();
+  });
+
+  test('navigates to the skills page filtered to that category, in the bar chart view, when the category caption is clicked', async () => {
+    const user = userEvent.setup();
+    const screen = render(
+      <MemoryRouter>
+        <TimelineEventCard event={event} track={testTrack} />
+        <LocationDisplay />
+      </MemoryRouter>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Engineering:' }));
+
+    expect(
+      screen.getByText('location:/skills?category=engineering&view=barchart&track=general')
     ).toBeVisible();
   });
 
@@ -391,5 +409,49 @@ describe('TimelineEventCard', () => {
     expect(items).toHaveLength(2);
     expect(items[0]).toHaveTextContent('Lead frontend architecture');
     expect(items[1]).toHaveTextContent('Mentor engineers');
+  });
+
+  describe('scroll-fade animation', () => {
+    // Global mock auto-fires isIntersecting: true; silent one reproduces "not yet reported".
+    class SilentIntersectionObserver {
+      observe = jest.fn();
+      unobserve = jest.fn();
+      disconnect = jest.fn();
+      takeRecords = (): IntersectionObserverEntry[] => [];
+      root = null;
+      rootMargin = '';
+      thresholds: ReadonlyArray<number> = [];
+    }
+
+    const originalIntersectionObserver = global.IntersectionObserver;
+
+    beforeEach(() => {
+      global.IntersectionObserver =
+        SilentIntersectionObserver as unknown as typeof IntersectionObserver;
+    });
+
+    afterEach(() => {
+      global.IntersectionObserver = originalIntersectionObserver;
+    });
+
+    test('the top card renders fully visible even before any IntersectionObserver callback fires', () => {
+      const screen = render(<TimelineEventCard event={event} track={testTrack} startInView />, {
+        wrapper: MemoryRouter,
+      });
+
+      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
+        opacity: 1,
+      });
+    });
+
+    test('a card below the fold stays hidden until the observer reports it as intersecting', () => {
+      const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+        wrapper: MemoryRouter,
+      });
+
+      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
+        opacity: 0,
+      });
+    });
   });
 });

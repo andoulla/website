@@ -5,12 +5,12 @@ import type { UseInViewOptions, UseInViewResult } from './useInView.types';
 export const useInView = <T extends Element>(
   options: UseInViewOptions = {}
 ): UseInViewResult<T> => {
-  const { threshold = 0.15, rootMargin = '0px', initialInView = false } = options;
+  const { threshold = 0.15, rootMargin = '0px', initialInView = false, disabled = false } = options;
   const [isInView, setIsInView] = useState(initialInView);
 
   const ref = useCallback(
     (node: T | null) => {
-      if (node === null) return undefined;
+      if (node === null || disabled) return undefined;
 
       const observer = new IntersectionObserver(
         (entries) => {
@@ -25,8 +25,8 @@ export const useInView = <T extends Element>(
       // React 19 ref-callback cleanup: runs when the node unmounts or the ref changes.
       return () => observer.disconnect();
     },
-    [threshold, rootMargin]
+    [threshold, rootMargin, disabled]
   );
 
-  return { ref, isInView };
+  return { ref, isInView: disabled ? true : isInView };
 };

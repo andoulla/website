@@ -15,11 +15,7 @@ import { TrackContextProvider } from './context/track';
 import { Articles } from './views/articles';
 import { Resume } from './views/resume';
 import { Skills } from './views/skills';
-// TODO: when hovering over tooltip in skills user can't click the links because it keeps moving left or right
-// TODO: bug, when clicking on a category orsubcategory in resume, it should go to barchart and have the skill selected , not just on the url but in the filters
-// TODO: bug when clicking on a skill in the barchart, it should go to the skill page and have the skill selected, not just on the url but in the filters, and the skill should be at the top
-// TODO: bug animation on timelineeventCard, don't hide the top card when scrolling upwards and have reached the top of the scroll area, also, for a normal mac scrensize the top card doesn't show until you scroll
-// TODO: add subsections in responsiblities for Atom
+// TODO: add subsections in responsiblities for Atom?
 
 // TODO: Add gnosisnet and NCR
 // TODO: add projects

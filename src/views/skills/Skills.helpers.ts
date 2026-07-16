@@ -1,7 +1,7 @@
 import { TRACK_PARAM } from '@/context/track';
 import type { Track } from '@/types';
+import { CATEGORY_PARAM, SUBCATEGORY_PARAM, VIEW_MODES, VIEW_PARAM } from '@/utils/skillsUrlParams';
 
-import { CATEGORY_PARAM, SUBCATEGORY_PARAM, VIEW_MODES, VIEW_PARAM } from './Skills.constants';
 import type { ViewMode } from './Skills.types';
 
 // Reads the comma-separated `category` URL param, dropping ids unknown to the active track —

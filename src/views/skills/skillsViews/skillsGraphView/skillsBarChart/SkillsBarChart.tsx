@@ -92,12 +92,14 @@ interface SkillsBarChartProps {
   skills: SkillSummary[];
   searchTerm?: string;
   showPatterns?: boolean;
+  highlightedSkills?: string[];
 }
 
 export const SkillsBarChart = ({
   skills,
   searchTerm,
   showPatterns = true,
+  highlightedSkills = [],
 }: SkillsBarChartProps) => {
   const theme = useTheme();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
@@ -198,13 +200,16 @@ export const SkillsBarChart = ({
             {skills.map((skill, i) => {
               const isMatch = isBarMatch(skill, searchTerm);
               const isHovered = i === hoverIndex && isMatch;
+              const isHighlighted = highlightedSkills.includes(skill.skill);
               const colour = resolveSkillColourMain(skill.colour, theme);
               return (
                 <Cell
                   key={skill.id}
                   fill={showPatterns ? `url(#${getCategoryPatternId(skill.categoryId)})` : colour}
+                  stroke={isHighlighted ? theme.palette.primary.main : 'none'}
+                  strokeWidth={isHighlighted ? 2 : 0}
                   style={{
-                    opacity: isMatch ? 1 : 0.35,
+                    opacity: isMatch || isHighlighted ? 1 : 0.35,
                     filter: isHovered ? 'brightness(1.25)' : 'none',
                     transition: 'filter 0.15s ease, opacity 0.2s ease',
                     cursor: 'pointer',

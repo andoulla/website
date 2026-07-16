@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
@@ -86,6 +86,16 @@ describe('SkillsGraphView', () => {
     const screen = renderGraphView({ searchTerm: 'react' });
 
     expect(screen.getByText('React')).toBeVisible();
+  });
+
+  test('floats a highlighted skill above the rest, alphabetical order otherwise', () => {
+    const screen = renderGraphView({ highlightedSkills: ['Team Leadership'] });
+
+    // header row, then Team Leadership before React (its alphabetical order would be after)
+    const rows = screen.getAllByRole('row');
+
+    expect(within(rows[1]).getByText('Team Leadership')).toBeVisible();
+    expect(within(rows[2]).getByText('React')).toBeVisible();
   });
 
   test('shows the empty-filter message and a Clear filters button, not the no-data Alert, when filters exclude every skill', async () => {

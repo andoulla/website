@@ -134,30 +134,36 @@ describe('Resume', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('scrolls only the first of several entries that list the highlighted skill', async () => {
+  test('scrolls to the most recent, not the first, of several entries that list the highlighted skill', async () => {
     const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
     const reactSkill = new Skill().id('react').name('React').mock();
+    // Meridian is first in the array but the older role — Brightleaf is the current job.
     const careerHistoryWithSharedSkill = [
       new TimelineEvent()
         .id('job-1')
         .companyName('Meridian Dynamics')
-        .startDate('2022-04-01')
+        .startDate('2021-04-01')
+        .endDate('2022-04-01')
         .skills([reactSkill])
         .mock(),
       new TimelineEvent()
         .id('job-2')
         .companyName('Brightleaf Software')
-        .startDate('2021-04-01')
+        .startDate('2023-04-01')
+        .endDate(null)
         .skills([reactSkill])
         .mock(),
     ];
 
-    await renderResume(
+    const screen = await renderResume(
       () => Promise.resolve(careerHistoryWithSharedSkill),
       [{ pathname: '/', search: '?skill=React' }]
     );
 
     expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+    expect(scrollIntoViewSpy.mock.instances[0]).toBe(
+      screen.getByText('Brightleaf Software').closest('.MuiCard-root')
+    );
 
     scrollIntoViewSpy.mockRestore();
   });

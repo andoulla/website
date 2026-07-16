@@ -19,14 +19,14 @@ import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 import { matchSkill } from '@/utils/matchSkill';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
-
 import {
   CATEGORY_PARAM,
   SEARCH_PARAM,
   SKILL_PARAM,
   SUBCATEGORY_PARAM,
   VIEW_PARAM,
-} from './Skills.constants';
+} from '@/utils/skillsUrlParams';
+
 import {
   parseCategoryIds,
   parseSearch,
