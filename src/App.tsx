@@ -15,10 +15,7 @@ import { TrackContextProvider } from './context/track';
 import { Articles } from './views/articles';
 import { Resume } from './views/resume';
 import { Skills } from './views/skills';
-// TODO: add subsections in responsiblities for Atom?
 
-// TODO: Add gnosisnet and NCR
-// TODO: add projects
 const App = () => {
   return (
     <ThemeContextProvider>

@@ -187,7 +187,15 @@ export const TimelineEventCard = ({
         {hasResponsibilities && (
           <Section title={RESPONSIBILITIES_LABEL_BY_TYPE[event.type]} titleLevel={4}>
             {event.responsibilities.length === 1 ? (
-              <Typography variant="body2">{event.responsibilities[0].text}</Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  lineHeight: 1.7,
+                  letterSpacing: '0.3px',
+                }}
+              >
+                {event.responsibilities[0].text}
+              </Typography>
             ) : (
               <BulletList
                 items={event.responsibilities.map((responsibility) => responsibility.text)}
@@ -199,7 +207,14 @@ export const TimelineEventCard = ({
           <>
             {hasResponsibilities && <Divider sx={{ my: 2 }} />}
             <Section title="Tech Stack" titleLevel={4}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  lineHeight: 1.7,
+                  letterSpacing: '0.3px',
+                }}
+              >
                 {event.techStack.map((skill) => skill.name).join(', ')}
               </Typography>
             </Section>

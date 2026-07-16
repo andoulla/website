@@ -24,7 +24,7 @@ export const Section = ({ title, titleLevel = 2, children }: SectionProps) => {
       >
         {title}
       </Typography>
-      <Box sx={{ mt: 1 }}>{children}</Box>
+      <Box sx={{ mt: 1.5 }}>{children}</Box>
     </Box>
   );
 };
