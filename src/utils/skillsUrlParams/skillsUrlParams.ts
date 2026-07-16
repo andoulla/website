@@ -4,4 +4,4 @@ export const SEARCH_PARAM = 'search';
 export const VIEW_PARAM = 'view';
 export const SKILL_PARAM = 'skill';
 
-export const VIEW_MODES = ['barchart', 'radar', 'list'] as const;
+export const VIEW_MODES = ['barchart', 'radar', 'table'] as const;

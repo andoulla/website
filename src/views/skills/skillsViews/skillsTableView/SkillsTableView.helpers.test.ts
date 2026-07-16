@@ -1,4 +1,4 @@
-import { skillElementId } from './SkillsListView.helpers';
+import { skillElementId } from './SkillsTableView.helpers';
 
 describe('skillElementId', () => {
   test('prefixes the skill name', () => {

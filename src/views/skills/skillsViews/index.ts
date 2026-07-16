@@ -5,5 +5,5 @@ export type {
 } from './SkillsViewContext.types';
 export { SkillsGraphView } from './skillsGraphView';
 export type { SkillsGraphViewProps } from './skillsGraphView';
-export { SkillsListView } from './skillsListView';
+export { SkillsTableView } from './skillsTableView';
 export { SkillsRadarView } from './skillsRadarView';

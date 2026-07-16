@@ -60,7 +60,7 @@ describe('Skills', () => {
 
       expect(screen.getByRole('heading', { level: 1, name: 'Skills' })).toBeVisible();
       expect(screen.getByRole('cell', { name: 'Leadership & Delivery' })).toBeVisible();
-      expect(screen.getByRole('button', { name: 'List view' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Table view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Graph view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Radar view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Radar view' })).toHaveAttribute(
@@ -70,11 +70,11 @@ describe('Skills', () => {
       expect(await axe(screen.container)).toHaveNoViolations();
     });
 
-    test('shows the filter bar in list view as well as graph view', async () => {
+    test('shows the filter bar in table view as well as graph view', async () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
-      await user.click(screen.getByRole('button', { name: 'List view' }));
+      await user.click(screen.getByRole('button', { name: 'Table view' }));
 
       expect(
         screen.getByRole('button', {
@@ -151,7 +151,7 @@ describe('Skills', () => {
       // 'JavaScript' is a synonym of 'JavaScript (ES6+)' in skills.json.
       await renderAndFlush(
         () => Promise.resolve(CAREER_HISTORY),
-        ['/skills?view=list&skill=JavaScript']
+        ['/skills?view=table&skill=JavaScript']
       );
 
       expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
@@ -164,7 +164,7 @@ describe('Skills', () => {
 
       await renderAndFlush(
         () => Promise.resolve(CAREER_HISTORY),
-        ['/skills?view=list&skill=not-a-real-skill']
+        ['/skills?view=table&skill=not-a-real-skill']
       );
 
       expect(scrollIntoViewSpy).not.toHaveBeenCalled();
@@ -187,7 +187,7 @@ describe('Skills', () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
-      await user.click(screen.getByRole('button', { name: 'List view' }));
+      await user.click(screen.getByRole('button', { name: 'Table view' }));
 
       expect(screen.queryByRole('checkbox', { name: 'Patterns' })).not.toBeInTheDocument();
     });
@@ -347,16 +347,16 @@ describe('Skills', () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
-      await user.click(screen.getByRole('button', { name: 'List view' }));
+      await user.click(screen.getByRole('button', { name: 'Table view' }));
 
-      expect(screen.getByText('search:track=general&view=list')).toBeVisible();
+      expect(screen.getByText('search:track=general&view=table')).toBeVisible();
     });
 
     test('omits the view query param when toggling to the default radar view', async () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush(
         () => Promise.resolve(CAREER_HISTORY),
-        ['/skills?view=list']
+        ['/skills?view=table']
       );
 
       await user.click(screen.getByRole('button', { name: 'Radar view' }));
