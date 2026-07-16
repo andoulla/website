@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import type { SvgIconComponent } from '@mui/icons-material';
 
 import type { TimelineEventWithRecommendations } from '@/types';
 
@@ -7,10 +6,9 @@ import { ICON_BY_TYPE, LOGO_BY_EVENT_ID } from './RoleIcons.constants';
 
 export interface RoleIconProps {
   event: TimelineEventWithRecommendations;
-  fallbackIcon: SvgIconComponent;
 }
 
-export const RoleIcon = ({ event, fallbackIcon: FallbackIcon }: RoleIconProps) => {
+export const RoleIcon = ({ event }: RoleIconProps) => {
   const logo = LOGO_BY_EVENT_ID[event.id];
   if (logo !== undefined) {
     return (
@@ -23,6 +21,6 @@ export const RoleIcon = ({ event, fallbackIcon: FallbackIcon }: RoleIconProps) =
     );
   }
 
-  const Icon = ICON_BY_TYPE[event.type] ?? FallbackIcon;
+  const Icon = ICON_BY_TYPE[event.type];
   return <Icon fontSize="small" />;
 };

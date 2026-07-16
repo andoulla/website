@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import Business from '@mui/icons-material/Business';
 
 import { TimelineEvent } from '@/testing';
 
@@ -14,7 +13,7 @@ describe('RoleIcon', () => {
       .companyName("City St George's, University of London")
       .mock();
 
-    const screen = render(<RoleIcon event={event} fallbackIcon={Business} />);
+    const screen = render(<RoleIcon event={event} />);
 
     const logo = screen.getByRole('img', { name: "City St George's, University of London logo" });
 
@@ -24,26 +23,26 @@ describe('RoleIcon', () => {
   test('renders the School icon for an education entry with no mapped logo', () => {
     const event = new TimelineEvent().id('unmapped-education-entry').type('education').mock();
 
-    const screen = render(<RoleIcon event={event} fallbackIcon={Business} />);
+    const screen = render(<RoleIcon event={event} />);
 
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
     expect(screen.getByTestId('SchoolIcon')).toBeInTheDocument();
   });
 
-  test('renders the fallback icon for a work entry with no mapped logo', () => {
+  test('renders the Work icon for a work entry with no mapped logo', () => {
     const event = new TimelineEvent().id('unmapped-work-entry').type('work').mock();
 
-    const screen = render(<RoleIcon event={event} fallbackIcon={Business} />);
+    const screen = render(<RoleIcon event={event} />);
 
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
-    expect(screen.getByTestId('BusinessIcon')).toBeInTheDocument();
+    expect(screen.getByTestId('WorkIcon')).toBeInTheDocument();
   });
 
   test('renders a mapped logo for every LOGO_BY_EVENT_ID key', () => {
     Object.keys(LOGO_BY_EVENT_ID).forEach((eventId) => {
       const event = new TimelineEvent().id(eventId).type('education').mock();
 
-      const screen = render(<RoleIcon event={event} fallbackIcon={Business} />);
+      const screen = render(<RoleIcon event={event} />);
 
       expect(screen.getByRole('img')).toBeVisible();
 

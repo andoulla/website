@@ -26,7 +26,7 @@ import { ContactDetails } from './contactDetails';
 import { findMostRecentSkillMatchIndex } from './Resume.helpers';
 import { TimelineEventCard } from './timelineEventCard';
 import { TimelineEventSkeleton } from './timelineEventSkeleton';
-import { pickRandomRoleIcon, RoleIcon } from './roleIcons';
+import { RoleIcon } from './roleIcons';
 
 const CareerTimeline = () => {
   const careerHistory = useCareerDataContext();
@@ -45,12 +45,6 @@ const CareerTimeline = () => {
   const visibleHistory = useMemo(
     () => filterEventsByTrack(careerHistory, track),
     [careerHistory, track]
-  );
-
-  // Random icon per role, keyed by event id off the unfiltered history — stable across track switches.
-  const roleIconByEventId = useMemo(
-    () => Object.fromEntries(careerHistory.map((event) => [event.id, pickRandomRoleIcon()])),
-    [careerHistory]
   );
 
   // Overlap caption for internships.
@@ -94,33 +88,30 @@ const CareerTimeline = () => {
           { flex: 0, p: 0 },
       }}
     >
-      {visibleHistory.map((event, index) => {
-        const FallbackIcon = roleIconByEventId[event.id];
-        return (
-          <TimelineItem key={event.id}>
-            <TimelineSeparator>
-              <TimelineDot
-                color="primary"
-                variant={event.type === 'internship' ? 'outlined' : 'filled'}
-              >
-                <RoleIcon event={event} fallbackIcon={FallbackIcon} />
-              </TimelineDot>
-              {index < visibleHistory.length - 1 && <TimelineConnector />}
-            </TimelineSeparator>
-            <TimelineContent sx={{ pr: 0 }}>
-              <TimelineEventCard
-                event={event}
-                track={track}
-                highlightedSkillId={highlightedSkillId}
-                highlightedRecommendationId={highlightedRecommendationId}
-                autoScrollToHighlight={index === matchIndex}
-                startInView={index === 0}
-                overlapCaption={overlapCaptionByEventId[event.id]}
-              />
-            </TimelineContent>
-          </TimelineItem>
-        );
-      })}
+      {visibleHistory.map((event, index) => (
+        <TimelineItem key={event.id}>
+          <TimelineSeparator>
+            <TimelineDot
+              color="primary"
+              variant={event.type === 'internship' ? 'outlined' : 'filled'}
+            >
+              <RoleIcon event={event} />
+            </TimelineDot>
+            {index < visibleHistory.length - 1 && <TimelineConnector />}
+          </TimelineSeparator>
+          <TimelineContent sx={{ pr: 0 }}>
+            <TimelineEventCard
+              event={event}
+              track={track}
+              highlightedSkillId={highlightedSkillId}
+              highlightedRecommendationId={highlightedRecommendationId}
+              autoScrollToHighlight={index === matchIndex}
+              startInView={index === 0}
+              overlapCaption={overlapCaptionByEventId[event.id]}
+            />
+          </TimelineContent>
+        </TimelineItem>
+      ))}
     </Timeline>
   );
 };

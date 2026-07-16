@@ -1,10 +1,7 @@
 import type { SvgIconComponent } from '@mui/icons-material';
-import Business from '@mui/icons-material/Business';
-import Code from '@mui/icons-material/Code';
 import CorporateFare from '@mui/icons-material/CorporateFare';
-import RocketLaunch from '@mui/icons-material/RocketLaunch';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import School from '@mui/icons-material/School';
-import Terminal from '@mui/icons-material/Terminal';
 import Work from '@mui/icons-material/Work';
 
 import type { TimelineEvent } from '@/types';
@@ -12,17 +9,12 @@ import type { TimelineEvent } from '@/types';
 import cityStGeorgesLogo from './logos/city_university_london_logo.jpeg';
 import universityOfEastAngliaLogo from './logos/university_of_east_anglia_logo.jpeg';
 
-export const ROLE_ICONS: SvgIconComponent[] = [Business, Code, RocketLaunch, Terminal, Work];
-
-/** Pick a random icon from the pool, used to give each role a distinct timeline bullet. */
-export const pickRandomRoleIcon = (): SvgIconComponent => {
-  return ROLE_ICONS[Math.floor(Math.random() * ROLE_ICONS.length)];
-};
-
-/** Type-specific icons for education and internship — jobs/other use random fallback. */
-export const ICON_BY_TYPE: Partial<Record<TimelineEvent['type'], SvgIconComponent>> = {
+/** Type-specific icons for each event type. */
+export const ICON_BY_TYPE: Record<TimelineEvent['type'], SvgIconComponent> = {
+  work: Work,
   education: School,
   internship: CorporateFare,
+  other: InfoOutlined,
 };
 
 /** Institution logos, keyed by the timeline event's id, for education entries with a known logo. */
