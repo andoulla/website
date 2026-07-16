@@ -44,6 +44,7 @@ describe('loadArticles', () => {
         publishedDate: '2026-06-16',
         tags: ['career'],
         excerpt: 'Excerpt',
+        imageUrl: undefined,
       },
     ]);
   });

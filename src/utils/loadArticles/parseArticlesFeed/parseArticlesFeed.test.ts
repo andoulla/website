@@ -1,7 +1,7 @@
 import { parseArticlesFeed } from './parseArticlesFeed';
 
 describe('parseArticlesFeed', () => {
-  test('maps a valid rss2json response into Article objects', () => {
+  test('maps a valid rss2json response into Article objects with imageUrl', () => {
     const payload = {
       status: 'ok',
       items: [
@@ -11,7 +11,8 @@ describe('parseArticlesFeed', () => {
           title: 'Post One',
           pubDate: '2026-06-16 09:00:00',
           categories: ['engineering', 'career'],
-          description: '<p>A short <em>excerpt</em>.</p>',
+          description:
+            '<figure><img src="https://cdn.example.com/image.png"></figure><p>A short <em>excerpt</em>.</p>',
         },
       ],
     };
@@ -24,6 +25,7 @@ describe('parseArticlesFeed', () => {
         publishedDate: '2026-06-16',
         tags: ['engineering', 'career'],
         excerpt: 'A short excerpt.',
+        imageUrl: 'https://cdn.example.com/image.png',
       },
     ]);
   });
@@ -43,7 +45,7 @@ describe('parseArticlesFeed', () => {
     expect(parseArticlesFeed(payload)[0].id).toBe('https://medium.com/@user/post-2');
   });
 
-  test('defaults tags and excerpt when categories/description are absent', () => {
+  test('defaults tags, excerpt, and imageUrl when categories/description are absent', () => {
     const payload = {
       status: 'ok',
       items: [
@@ -59,6 +61,25 @@ describe('parseArticlesFeed', () => {
 
     expect(article.tags).toEqual([]);
     expect(article.excerpt).toBe('');
+    expect(article.imageUrl).toBeUndefined();
+  });
+
+  test('sets imageUrl to undefined when description has no images', () => {
+    const payload = {
+      status: 'ok',
+      items: [
+        {
+          link: 'https://medium.com/@user/post-4',
+          title: 'Post Four',
+          pubDate: '2026-03-18 12:00:00',
+          description: '<p>Just text, no images</p>',
+        },
+      ],
+    };
+
+    const [article] = parseArticlesFeed(payload);
+
+    expect(article.imageUrl).toBeUndefined();
   });
 
   test('throws when the response status is not ok', () => {

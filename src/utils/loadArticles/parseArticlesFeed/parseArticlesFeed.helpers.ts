@@ -5,6 +5,19 @@ import type { RssFeedResponse } from './parseArticlesFeed.types';
 export const stripHtmlToText = (html: string): string =>
   new DOMParser().parseFromString(html, 'text/html').body.textContent ?? '';
 
+export const extractImageUrl = (html: string): string | undefined => {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const images = Array.from(doc.querySelectorAll('img'));
+  const featuredImg = images.find((img) => {
+    const width = img.getAttribute('width');
+    const height = img.getAttribute('height');
+    const src = img.getAttribute('src') ?? '';
+    const isTrackingPixel = (width === '1' && height === '1') || src.includes('medium.com/_/stat');
+    return !isTrackingPixel;
+  });
+  return featuredImg?.getAttribute('src') ?? undefined;
+};
+
 // Matches a leading YYYY-MM-DD, the ISO-date prefix RSS feeds use before the time/offset.
 const PUB_DATE_PREFIX_PATTERN = /^\d{4}-\d{2}-\d{2}/;
 

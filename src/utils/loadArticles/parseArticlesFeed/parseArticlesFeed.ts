@@ -1,6 +1,6 @@
 import type { Article } from '@/types';
 
-import { isRssFeedResponse, stripHtmlToText } from './parseArticlesFeed.helpers';
+import { extractImageUrl, isRssFeedResponse, stripHtmlToText } from './parseArticlesFeed.helpers';
 
 export const parseArticlesFeed = (payload: unknown): Article[] => {
   if (!isRssFeedResponse(payload)) {
@@ -14,5 +14,6 @@ export const parseArticlesFeed = (payload: unknown): Article[] => {
     publishedDate: item.pubDate.slice(0, 10),
     tags: item.categories ?? [],
     excerpt: item.description !== undefined ? stripHtmlToText(item.description) : '',
+    imageUrl: item.description !== undefined ? extractImageUrl(item.description) : undefined,
   }));
 };

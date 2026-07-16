@@ -1,4 +1,4 @@
-import { isRssFeedResponse, stripHtmlToText } from './parseArticlesFeed.helpers';
+import { extractImageUrl, isRssFeedResponse, stripHtmlToText } from './parseArticlesFeed.helpers';
 
 describe('stripHtmlToText', () => {
   test('strips HTML tags and returns plain text', () => {
@@ -53,5 +53,39 @@ describe('isRssFeedResponse', () => {
     };
 
     expect(isRssFeedResponse(payload)).toBe(false);
+  });
+});
+
+describe('extractImageUrl', () => {
+  test('extracts the src from the first non-tracking img tag', () => {
+    const html = '<figure><img src="https://cdn.example.com/image.png"></figure>';
+
+    expect(extractImageUrl(html)).toBe('https://cdn.example.com/image.png');
+  });
+
+  test('skips 1x1 tracking pixels', () => {
+    const html =
+      '<figure><img src="https://cdn.example.com/image.png"></figure><img width="1" height="1" src="https://tracker.example.com/pixel">';
+
+    expect(extractImageUrl(html)).toBe('https://cdn.example.com/image.png');
+  });
+
+  test('skips medium.com/_/stat tracking URLs', () => {
+    const html =
+      '<figure><img src="https://cdn.example.com/image.png"></figure><img src="https://medium.com/_/stat?event=post.clientViewed">';
+
+    expect(extractImageUrl(html)).toBe('https://cdn.example.com/image.png');
+  });
+
+  test('returns undefined when there are no images', () => {
+    const html = '<p>Just text</p>';
+
+    expect(extractImageUrl(html)).toBeUndefined();
+  });
+
+  test('returns undefined when all images are tracking pixels', () => {
+    const html = '<img width="1" height="1" src="https://tracker.example.com/pixel">';
+
+    expect(extractImageUrl(html)).toBeUndefined();
   });
 });

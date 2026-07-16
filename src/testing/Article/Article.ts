@@ -39,6 +39,11 @@ export class Article {
     return this;
   }
 
+  imageUrl(imageUrl: string): this {
+    this.data = { ...this.data, imageUrl };
+    return this;
+  }
+
   mock(): ArticleType {
     return { ...this.data };
   }

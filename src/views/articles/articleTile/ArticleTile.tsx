@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { memo } from 'react';
 
@@ -20,7 +21,7 @@ const lineClampSx = (lines: number) => ({
   overflow: 'hidden',
 });
 
-const getTagColour = () => 'teal' as const;
+const getTagColour = () => 'secondary' as const;
 
 export const ArticleTile = memo(({ article }: ArticleTileProps) => {
   return (
@@ -38,9 +39,17 @@ export const ArticleTile = memo(({ article }: ArticleTileProps) => {
         href={article.link}
         target="_blank"
         rel="noopener noreferrer"
-        sx={{ height: '100%', alignItems: 'stretch' }}
+        sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
       >
-        <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        {article.imageUrl !== undefined && (
+          <CardMedia
+            component="img"
+            image={article.imageUrl}
+            alt={article.title}
+            sx={{ height: 200, objectFit: 'cover' }}
+          />
+        )}
+        <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%', flex: 1 }}>
           <Typography variant="h6" component="h2" sx={lineClampSx(2)}>
             {article.title}
           </Typography>

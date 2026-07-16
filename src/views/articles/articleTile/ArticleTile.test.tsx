@@ -5,7 +5,7 @@ import { Article } from '@/testing';
 
 import { ArticleTile } from './ArticleTile';
 
-const article = new Article()
+const articleWithoutImage = new Article()
   .id('article-1')
   .title('When I have time…')
   .link('https://mariandi-stylianou.medium.com/when-i-have-time-fde00a39c7e0')
@@ -14,9 +14,19 @@ const article = new Article()
   .excerpt('A short excerpt about the article.')
   .mock();
 
+const articleWithImage = new Article()
+  .id('article-2')
+  .title('Article with image')
+  .link('https://mariandi-stylianou.medium.com/article-with-image')
+  .publishedDate('2026-06-17')
+  .tags(['Engineering'])
+  .excerpt('An article with a featured image.')
+  .imageUrl('https://cdn.example.com/featured-image.png')
+  .mock();
+
 describe('ArticleTile', () => {
-  test('renders the title, date, excerpt, and tags as a link to the article', () => {
-    const screen = render(<ArticleTile article={article} />);
+  test('renders the title, date, excerpt, and tags as a link to the article without an image', () => {
+    const screen = render(<ArticleTile article={articleWithoutImage} />);
 
     const link = screen.getByRole('link');
 
@@ -30,16 +40,33 @@ describe('ArticleTile', () => {
     expect(screen.getByText('A short excerpt about the article.')).toBeVisible();
     expect(screen.getByText('Developer experience')).toBeVisible();
     expect(screen.getByText('Refactoring')).toBeVisible();
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
 
   test('renders the title as an h2 heading', () => {
-    const screen = render(<ArticleTile article={article} />);
+    const screen = render(<ArticleTile article={articleWithoutImage} />);
 
     expect(screen.getByRole('heading', { level: 2, name: 'When I have time…' })).toBeVisible();
   });
 
-  test('has no axe violations', async () => {
-    const screen = render(<ArticleTile article={article} />);
+  test('renders a featured image when imageUrl is provided', () => {
+    const screen = render(<ArticleTile article={articleWithImage} />);
+
+    const image = screen.getByRole('img');
+
+    expect(image).toBeVisible();
+    expect(image).toHaveAttribute('src', 'https://cdn.example.com/featured-image.png');
+    expect(image).toHaveAttribute('alt', 'Article with image');
+  });
+
+  test('has no axe violations without an image', async () => {
+    const screen = render(<ArticleTile article={articleWithoutImage} />);
+
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('has no axe violations with an image', async () => {
+    const screen = render(<ArticleTile article={articleWithImage} />);
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });

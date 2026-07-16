@@ -5,4 +5,5 @@ export interface Article {
   publishedDate: string;
   tags: string[];
   excerpt: string;
+  imageUrl?: string;
 }
