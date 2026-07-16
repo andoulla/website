@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -27,17 +28,35 @@ interface SkillListItemProps {
 
 const SkillListItem = ({ skill, isHighlighted }: SkillListItemProps) => {
   const theme = useTheme();
+  // Frozen at the point the pointer entered the row — not tracked on every mousemove, so the
+  // tooltip sits near the cursor without chasing it as the pointer moves toward its links.
+  const [anchorPosition, setAnchorPosition] = useState<{ x: number; y: number } | null>(null);
+
+  const anchorElement = useMemo(() => {
+    if (anchorPosition === null) return undefined;
+    return { getBoundingClientRect: () => new DOMRect(anchorPosition.x, anchorPosition.y, 0, 0) };
+  }, [anchorPosition]);
 
   return (
     <ListItem disablePadding>
       <Tooltip
         title={<SkillTooltipContent skill={skill} />}
+        placement="right-start"
         slotProps={{
           tooltip: { sx: { bgcolor: 'transparent', p: 0, maxWidth: 'none' } },
+          popper: {
+            modifiers: [{ name: 'offset', options: { offset: [8, 12] } }],
+            // Falls back to MUI's default child-anchored position for keyboard focus, which
+            // never sets anchorPosition.
+            ...(anchorElement !== undefined ? { anchorEl: anchorElement } : {}),
+          },
         }}
       >
         <ListItemButton
           id={skillElementId(skill.skill)}
+          onMouseEnter={(event) => {
+            setAnchorPosition({ x: event.clientX, y: event.clientY });
+          }}
           sx={{
             borderRadius: 1,
             transition: 'background-color 0.4s ease',

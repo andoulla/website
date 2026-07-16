@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import type { TooltipContentProps } from 'recharts';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { Bar, BarChart, Cell, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import Box from '@mui/material/Box';
+import Popper from '@mui/material/Popper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
@@ -14,7 +14,10 @@ import { derivePresentCategories, type PresentCategory } from '@/utils/derivePre
 import { resolveSkillColourMain } from '@/utils/skillColour';
 import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
-import { CATEGORY_PATTERN_SHAPE_DEFINITIONS } from './SkillsBarChart.constants';
+import {
+  CATEGORY_PATTERN_SHAPE_DEFINITIONS,
+  type CategoryPatternShapeDefinition,
+} from './SkillsBarChart.constants';
 import {
   getCategoryPatternBackground,
   getCategoryPatternId,
@@ -27,12 +30,8 @@ const BAR_SIZE = 14;
 const CHART_PADDING = 64;
 const MIN_HEIGHT = 200;
 
-// Bridges Recharts tooltip payload → SkillTooltipContent props.
-const SkillBarTooltip = ({ active, payload }: TooltipContentProps) => {
-  if (!active || payload === undefined || payload.length === 0) return null;
-  const skill = payload[0].payload as SkillSummary;
-  return <SkillTooltipContent skill={skill} />;
-};
+// Grace period so the pointer can reach the tooltip's links before it closes.
+const CLOSE_GRACE_MS = 100;
 
 interface CategoryPatternDefinitionProps {
   category: PresentCategory;
@@ -48,8 +47,9 @@ const CategoryPatternDefinition = ({
   markColour,
 }: CategoryPatternDefinitionProps) => {
   const id = getCategoryPatternId(category.id);
-  const { width, height, patternTransform, lines, circle, ring } =
+  const shapeDefinition: CategoryPatternShapeDefinition =
     CATEGORY_PATTERN_SHAPE_DEFINITIONS[getCategoryPatternType(category.index)];
+  const { width, height, patternTransform, lines, circle, ring } = shapeDefinition;
 
   return (
     <pattern
@@ -101,7 +101,31 @@ export const SkillsBarChart = ({
 }: SkillsBarChartProps) => {
   const theme = useTheme();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+  // Frozen at the point the pointer entered the bar — not tracked on every mousemove, so the
+  // tooltip sits near the cursor without chasing it as the pointer moves toward its links.
+  const [anchorPosition, setAnchorPosition] = useState<{ x: number; y: number } | null>(null);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+
+  const anchorElement = useMemo(() => {
+    if (anchorPosition === null) return null;
+    return { getBoundingClientRect: () => new DOMRect(anchorPosition.x, anchorPosition.y, 0, 0) };
+  }, [anchorPosition]);
+
+  const cancelClose = useCallback(() => {
+    if (closeTimeoutRef.current !== null) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+  }, []);
+
+  const scheduleClose = useCallback(() => {
+    cancelClose();
+    closeTimeoutRef.current = setTimeout(() => {
+      setHoverIndex(null);
+      setAnchorPosition(null);
+    }, CLOSE_GRACE_MS);
+  }, [cancelClose]);
 
   const chartHeight = Math.max(MIN_HEIGHT, skills.length * BAR_HEIGHT + CHART_PADDING);
 
@@ -145,13 +169,6 @@ export const SkillsBarChart = ({
             tickLine={false}
             axisLine={false}
           />
-          <Tooltip
-            content={SkillBarTooltip}
-            cursor={{ fill: theme.palette.action.hover }}
-            // Recharts defaults the tooltip wrapper to `pointer-events: none` — override it so the
-            // "View on Resume"/recommendation links inside SkillTooltipContent are clickable.
-            wrapperStyle={{ pointerEvents: 'auto' }}
-          />
           {showPatterns && (
             <defs>
               {legendEntries.map(({ category, colour, markColour }) => (
@@ -171,12 +188,12 @@ export const SkillsBarChart = ({
             isAnimationActive={!prefersReducedMotion}
             animationDuration={400}
             animationEasing="ease-out"
-            onMouseEnter={(_data, index) => {
+            onMouseEnter={(_data, index, event) => {
+              cancelClose();
               setHoverIndex(index);
+              setAnchorPosition({ x: event.clientX, y: event.clientY });
             }}
-            onMouseLeave={() => {
-              setHoverIndex(null);
-            }}
+            onMouseLeave={scheduleClose}
           >
             {skills.map((skill, i) => {
               const isMatch = isBarMatch(skill, searchTerm);
@@ -198,6 +215,18 @@ export const SkillsBarChart = ({
           </Bar>
         </BarChart>
       </ResponsiveContainer>
+
+      <Popper
+        open={hoverIndex !== null}
+        anchorEl={anchorElement}
+        placement="right-start"
+        modifiers={[{ name: 'offset', options: { offset: [8, 12] } }]}
+        sx={{ zIndex: theme.zIndex.tooltip }}
+      >
+        <Box onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
+          {hoverIndex !== null && <SkillTooltipContent skill={skills[hoverIndex]} />}
+        </Box>
+      </Popper>
 
       {/* Legend — styled like a figure caption: muted text, pattern swatches vertically centred with labels */}
       <Box

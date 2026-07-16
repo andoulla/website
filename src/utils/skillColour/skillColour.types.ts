@@ -1,13 +1,6 @@
 // Hex colours outside MUI's named palette — see skillColour.constants.ts for why.
-export type CustomSkillColour =
-  | 'teal'
-  | 'green'
-  | 'plum'
-  | 'brown'
-  | 'gold'
-  | 'indigo'
-  | 'berry'
-  | 'secondary';
+export type CustomSkillColour = 'teal' | 'green' | 'plum' | 'brown' | 'gold' | 'indigo' | 'berry';
 
-// 'default' is the grey fallback for anything without a resolvable category colour.
-export type SkillColour = CustomSkillColour | 'default';
+// 'default' and 'secondary' are real MUI Chip palette keys — passed straight through, no hex
+// resolution needed.
+export type SkillColour = CustomSkillColour | 'default' | 'secondary';

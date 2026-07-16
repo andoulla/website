@@ -21,8 +21,6 @@ import { Skills } from './views/skills';
 // TODO: bug animation on timelineeventCard, don't hide the top card when scrolling upwards and have reached the top of the scroll area, also, for a normal mac scrensize the top card doesn't show until you scroll
 // TODO: add subsections in responsiblities for Atom
 
-// TODO: check how many skills are duplicated between tracks and consider removing
-
 // TODO: Add gnosisnet and NCR
 // TODO: add projects
 const App = () => {
