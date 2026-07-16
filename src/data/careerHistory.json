@@ -254,6 +254,47 @@
     "title": "Master of Science (MSc), Software Engineering"
   },
   {
+    "id": "gnosisnet-2009-09",
+    "type": "work",
+    "companyName": "GnosisNet Ltd",
+    "location": "London",
+    "startDate": "2009-09-01",
+    "endDate": "2011-08-01",
+    "responsibilities": [
+      {
+        "id": "gnosisnet-2009-09-r01",
+        "text": "Designed and developed Windows applications and components using Visual Studio 2005, VB.Net and Microsoft SQL Server 2005",
+        "skillIds": [
+          "api-design",
+          "application-architecture",
+          "database-design",
+          "server-side-development"
+        ]
+      },
+      {
+        "id": "gnosisnet-2009-09-r02",
+        "text": "Managed website content updates using HTML and the DotNetNuke platform",
+        "skillIds": ["server-side-development"]
+      },
+      {
+        "id": "gnosisnet-2009-09-r03",
+        "text": "Tested Windows applications and provided customer support with immediate troubleshooting",
+        "skillIds": ["integration-testing", "testing-strategy", "unit-testing"]
+      },
+      {
+        "id": "gnosisnet-2009-09-r04",
+        "text": "Prepared documentation including product proposals and software manuals",
+        "skillIds": ["technical-documentation"]
+      },
+      {
+        "id": "gnosisnet-2009-09-r05",
+        "text": "Marketed and presented company software, delivering end-user training and support",
+        "skillIds": ["developer-growth"]
+      }
+    ],
+    "title": "Programmer/Analyst"
+  },
+  {
     "id": "ncr-corporation-2008-07",
     "type": "internship",
     "companyName": "NCR Corporation",
