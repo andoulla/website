@@ -129,7 +129,7 @@ export const TimelineEventCard = ({
     const params = new URLSearchParams();
     event.skills.forEach((skill) => params.append(SKILL_PARAM, skill.name));
     params.set(VIEW_PARAM, 'barchart');
-    params.set(TRACK_PARAM, track.id);
+    params.set(TRACK_PARAM, String(track.id));
     void navigate(`/skills?${params.toString()}`);
   }, [navigate, event.skills, track.id]);
 
