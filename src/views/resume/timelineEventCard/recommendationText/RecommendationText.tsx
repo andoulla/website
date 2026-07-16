@@ -50,7 +50,13 @@ export const RecommendationText = ({
           </Avatar>
           <RecommendationByline recommendation={recommendation} />
         </Stack>
-        <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+        <Typography
+          sx={{
+            fontSize: '0.65625rem',
+            lineHeight: 1.8,
+            letterSpacing: '0.3px',
+          }}
+        >
           {`"${recommendation.text}"`}
         </Typography>
       </CardContent>
