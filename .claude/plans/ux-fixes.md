@@ -8,7 +8,7 @@ Progress checkbox in this file as part of each item's commit.
 
 - [x] 1. Persist theme + dark mode
 - [x] 2. Recommendation cards accessible
-- [ ] 3. 404 page
+- [x] 3. 404 page
 - [ ] 4. Contact links wrap
 - [ ] 5. Favicon, meta, per-route titles
 - [ ] 6. Scroll reset on navigation

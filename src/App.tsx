@@ -13,6 +13,7 @@ import { ThemeContextProvider } from './context/theme';
 import { CareerDataContextProvider } from './context/careerData';
 import { TrackContextProvider } from './context/track';
 import { Articles } from './views/articles';
+import { NotFound } from './views/notFound';
 import { Resume } from './views/resume';
 import { Skills } from './views/skills';
 
@@ -69,6 +70,7 @@ const App = () => {
             <Route path="/skills" element={<Skills />} />
           </Route>
           <Route path="/articles" element={<Articles />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </ThemeContextProvider>
