@@ -103,9 +103,19 @@
         ]
       },
       {
+        "id": "atom-learning-2021-01-r14",
+        "text": "Supported hiring for frontend and backend technical roles, contributing to recruitment planning and team growth.",
+        "skillIds": ["hiring-interviewing", "mentoring-coaching", "team-leadership"]
+      },
+      {
+        "id": "atom-learning-2021-01-r15",
+        "text": "Coordinated onboarding for new hires and existing team members, ensuring smooth transitions and knowledge sharing.",
+        "skillIds": ["team-onboarding", "process-improvement", "team-leadership"]
+      },
+      {
         "id": "atom-learning-2021-01-r13",
-        "text": "Progressed from Lead Developer to Senior Lead Developer.",
-        "skillIds": []
+        "text": "Progressed from Developer to Senior Lead Developer.",
+        "skillIds": ["developer-growth"]
       }
     ],
     "title": "Senior Lead Engineer"
@@ -222,6 +232,7 @@
         "text": "Led a team of 8–10 developers across London and Bratislava, managing planning, releases, stakeholder communication, onboarding and delivery, while remaining hands-on technically.",
         "skillIds": [
           "agile-delivery",
+          "developer-growth",
           "estimation-planning",
           "release-management",
           "stakeholder-management",
@@ -305,7 +316,7 @@
       {
         "id": "ncr-corporation-2008-07-r01",
         "text": "Created documentation and user manuals for computing projects in the development stage, tailored to different types of users",
-        "skillIds": []
+        "skillIds": ["technical-documentation"]
       }
     ],
     "title": "Software Developer Trainee"
