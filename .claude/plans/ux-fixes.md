@@ -11,7 +11,7 @@ Progress checkbox in this file as part of each item's commit.
 - [x] 3. 404 page
 - [x] 4. Contact links wrap
 - [x] 5. Favicon, meta, per-route titles
-- [ ] 6. Scroll reset on navigation
+- [x] 6. Scroll reset on navigation
 - [ ] 7. Track selector label
 - [ ] 8. Bar-chart tooltip on tap
 - [ ] 9. View-toggle tooltips

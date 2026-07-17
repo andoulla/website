@@ -9,6 +9,7 @@ import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { ErrorBoundary } from './components/errorBoundary';
 import { NavBar } from './components/navBar';
 import { PageContainer } from './components/pageContainer';
+import { ScrollToTop } from './components/scrollToTop';
 import { ThemeContextProvider } from './context/theme';
 import { CareerDataContextProvider } from './context/careerData';
 import { TrackContextProvider } from './context/track';
@@ -22,6 +23,7 @@ const App = () => {
     <ThemeContextProvider>
       <CssBaseline />
       <BrowserRouter>
+        <ScrollToTop />
         <NavBar />
         <Routes>
           <Route
