@@ -47,6 +47,9 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'Mariandi Stylianou' })).toBeVisible();
     expect(screen.getByText('Meridian Dynamics')).toBeVisible();
 
+    // Floating density toggle renders above every routed page (its input is visually hidden).
+    expect(screen.getByRole('switch', { name: 'Compact' })).toBeChecked();
+
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 

@@ -58,3 +58,6 @@ Object.defineProperty(window, 'matchMedia', {
 
 // jsdom does not implement scrollIntoView
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
+
+// jsdom does not implement scrollTo — stub it so ScrollToTop doesn't log a not-implemented error
+window.scrollTo = jest.fn();

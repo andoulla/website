@@ -1,8 +1,10 @@
 import {
   prefersDarkColourScheme,
   readStoredDarkMode,
+  readStoredDensity,
   readStoredThemeName,
   storeDarkMode,
+  storeDensity,
   storeThemeName,
 } from './ThemeContextProvider.helpers';
 
@@ -66,6 +68,28 @@ describe('ThemeContextProvider helpers', () => {
       window.localStorage.setItem('dark-mode', 'maybe');
 
       expect(readStoredDarkMode()).toBeUndefined();
+    });
+  });
+
+  describe('readStoredDensity', () => {
+    test('returns undefined when nothing is stored', () => {
+      expect(readStoredDensity()).toBeUndefined();
+    });
+
+    test('round-trips both stored densities', () => {
+      storeDensity('comfortable');
+
+      expect(readStoredDensity()).toBe('comfortable');
+
+      storeDensity('compact');
+
+      expect(readStoredDensity()).toBe('compact');
+    });
+
+    test('ignores an invalid stored value', () => {
+      window.localStorage.setItem('density', 'cosy');
+
+      expect(readStoredDensity()).toBeUndefined();
     });
   });
 

@@ -9,6 +9,13 @@ Every card is fully expanded; nothing is deferred.
 All decisions are resolved (Decided 1–4 below). Suggested order: density plumbing first,
 then A+E card collapse, then the F2 compact skills wall (it depends on the density flag).
 
+## Progress
+
+- [x] 1. Density plumbing — theme-level `density` + floating Compact switch (Decided 2)
+- [ ] 2. A+E card collapse by recency (Decided 1, 4)
+- [ ] 3. F2 compact skills wall (Decided 3)
+- [ ] 4. Density audit of Skills and Articles surfaces (Decided 2 follow-up)
+
 ## Decided 1 — A+E: progressive disclosure by section and by recency
 
 One expand mechanism (MUI `Collapse`), two triggers:
@@ -48,11 +55,12 @@ Implementation sketch:
   `createPurpleTheme(mode)` gain a density argument; compact shrinks the typography scale
   (current sizes become the Comfortable "larger font" mode), spacing unit, chip size, and
   card padding.
-- Toggle UI in the **NavBar settings menu** (`src/components/navBar/NavBar.tsx:103-130`):
-  a `menuitemradio` pair "Comfortable" / "Compact" with check marks, mirroring the existing
-  Light/Dark pair exactly (icons: `DensityMedium` / `DensitySmall`), in its own
-  divider-separated group below Light/Dark. NavBar renders on every page, so the control is
-  reachable everywhere.
+- Toggle UI: **floating button at the top of every page, just below the NavBar** (user's
+  call — not in the settings menu, and must not push page headers down). Own component
+  `src/components/densityToggle/`, mounted once in `App.tsx` inside a `position: relative`
+  wrapper around `<Routes>`; absolutely positioned top-right. Control is a small MUI
+  `Switch` labelled "Compact" (checked = compact, on by default), tooltip explains the
+  comfortable alternative.
 - Compact mode composes with A+E: collapsed-by-default cards + denser type.
 - References: Cloudscape density settings pattern
   (https://cloudscape.design/patterns/general/density-settings/), Material "Applying density"

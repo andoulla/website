@@ -1,9 +1,12 @@
+import type { Density } from '@/themes';
+
 import type { ThemeName } from './ThemeContextProvider.types';
 
 // Storage access wrapped in try/catch — localStorage can throw (e.g. private-mode Safari);
 // the preference then simply doesn't persist.
 const THEME_NAME_STORAGE_KEY = 'theme-name';
 const DARK_MODE_STORAGE_KEY = 'dark-mode';
+const DENSITY_STORAGE_KEY = 'density';
 
 export const readStoredThemeName = (): ThemeName | undefined => {
   try {
@@ -36,6 +39,23 @@ export const readStoredDarkMode = (): boolean | undefined => {
 export const storeDarkMode = (isDarkMode: boolean): void => {
   try {
     window.localStorage.setItem(DARK_MODE_STORAGE_KEY, String(isDarkMode));
+  } catch {
+    // Storage unavailable — nothing to do.
+  }
+};
+
+export const readStoredDensity = (): Density | undefined => {
+  try {
+    const stored = window.localStorage.getItem(DENSITY_STORAGE_KEY);
+    return stored === 'comfortable' || stored === 'compact' ? stored : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+export const storeDensity = (density: Density): void => {
+  try {
+    window.localStorage.setItem(DENSITY_STORAGE_KEY, density);
   } catch {
     // Storage unavailable — nothing to do.
   }

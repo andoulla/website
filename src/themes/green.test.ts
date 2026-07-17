@@ -3,7 +3,7 @@ import { darkTokens, lightTokens } from './tokens';
 
 describe('createGreenTheme', () => {
   test('applies light-mode tokens', () => {
-    const theme = createGreenTheme('light');
+    const theme = createGreenTheme('light', 'comfortable');
 
     expect(theme.palette.mode).toBe('light');
     expect(theme.palette.contrastThreshold).toBe(4.5);
@@ -14,7 +14,7 @@ describe('createGreenTheme', () => {
   });
 
   test('applies dark-mode tokens', () => {
-    const theme = createGreenTheme('dark');
+    const theme = createGreenTheme('dark', 'compact');
 
     expect(theme.palette.mode).toBe('dark');
     expect(theme.palette.background).toEqual(darkTokens.background);

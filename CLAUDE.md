@@ -67,7 +67,7 @@ suggestions report to gitignored `scripts/output/` — it NEVER writes to `src/d
 | Provider                    | Hook                     | Exposes                                                                                        |
 | --------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------- |
 | `CareerDataContextProvider` | `useCareerDataContext()` | `TimelineEventWithRecommendations[]` — suspends until loaded                                   |
-| `ThemeContextProvider`      | `useThemeContext()`      | `{ themeName, toggleTheme, isDarkMode, toggleDarkMode }`                                       |
+| `ThemeContextProvider`      | `useThemeContext()`      | `{ themeName, toggleTheme, isDarkMode, toggleDarkMode, density, toggleDensity }`               |
 | `TrackContextProvider`      | `useTrackContext()`      | `{ track, trackId, setTrackId }` — URL is source of truth (`?track=`, normalised to `general`) |
 
 ## Directory layout

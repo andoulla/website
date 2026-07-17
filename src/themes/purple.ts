@@ -1,12 +1,21 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
-import { baseTokens, darkTokens, lightTokens } from './tokens';
+import {
+  createDensityComponents,
+  createTypographyTokens,
+  darkTokens,
+  lightTokens,
+  spacingByDensity,
+} from './tokens';
+import type { Density } from './tokens';
 
-export const createPurpleTheme = (mode: 'light' | 'dark') => {
+export const createPurpleTheme = (mode: 'light' | 'dark', density: Density) => {
   const tokens = mode === 'light' ? lightTokens : darkTokens;
   return responsiveFontSizes(
     createTheme({
-      typography: baseTokens.typography,
+      spacing: spacingByDensity[density],
+      typography: createTypographyTokens(density),
+      components: createDensityComponents(density),
       palette: {
         mode,
         // WCAG small-text ratio — stops getContrastText picking sub-4.5:1 white text.
