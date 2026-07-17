@@ -27,7 +27,9 @@ describe('TrackFilter', () => {
     const user = userEvent.setup();
     const screen = renderTrackFilter('/skills?track=senior-engineer');
 
-    expect(screen.getByRole('combobox', { name: 'Track' })).toHaveTextContent('Senior Engineer');
+    expect(screen.getByRole('combobox', { name: 'Track' })).toHaveTextContent(
+      'Track: Senior Engineer'
+    );
 
     await user.click(screen.getByRole('combobox', { name: 'Track' }));
 
