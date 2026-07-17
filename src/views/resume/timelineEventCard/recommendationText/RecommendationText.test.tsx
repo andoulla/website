@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
 import { Recommendation } from '@/testing';
@@ -34,6 +35,22 @@ describe('RecommendationText', () => {
     const screen = render(<RecommendationText recommendation={recommendation} />);
 
     expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('opens the recommendation URL in a new tab on card click', async () => {
+    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
+    const user = userEvent.setup();
+    const screen = render(<RecommendationText recommendation={recommendation} />);
+
+    await user.click(screen.getByText('"Great work."'));
+
+    expect(openSpy).toHaveBeenCalledWith(
+      'https://www.linkedin.com/in/example/details/recommendations/',
+      '_blank',
+      'noopener,noreferrer'
+    );
+
+    openSpy.mockRestore();
   });
 
   test('exposes an id matching its recommendation, for deep-link scrolling', () => {

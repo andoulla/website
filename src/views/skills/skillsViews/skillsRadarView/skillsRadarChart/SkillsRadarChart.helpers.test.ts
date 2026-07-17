@@ -1,7 +1,14 @@
+import { createTheme } from '@mui/material/styles';
+
 import { SkillSummary } from '@/testing';
 import type { PresentCategory } from '@/utils/derivePresentCategories';
 
-import { aggregateSkillsByCategory } from './SkillsRadarChart.helpers';
+import {
+  aggregateSkillsByCategory,
+  formatAxisTick,
+  resolveDotColour,
+} from './SkillsRadarChart.helpers';
+import type { CategoryRadarPoint } from './SkillsRadarChart.types';
 
 const frontendCategory: PresentCategory = {
   id: 'frontend-development',
@@ -113,5 +120,36 @@ describe('aggregateSkillsByCategory', () => {
     );
 
     expect(result.find((point) => point.categoryId === 'leadership')?.isMatch).toBe(false);
+  });
+});
+
+describe('resolveDotColour', () => {
+  const frontendPoint: CategoryRadarPoint = {
+    categoryId: 'frontend-development',
+    categoryIndex: 0,
+    label: 'Frontend Development',
+    avgYears: 2.5,
+    skillCount: 2,
+    isMatch: true,
+  };
+
+  test('returns the category colour for a matching point', () => {
+    const theme = createTheme();
+
+    expect(resolveDotColour(frontendPoint, theme)).toBe('#00897B');
+  });
+
+  test('returns the disabled colour for a non-matching point', () => {
+    const theme = createTheme();
+
+    expect(resolveDotColour({ ...frontendPoint, isMatch: false }, theme)).toBe(
+      theme.palette.action.disabled
+    );
+  });
+});
+
+describe('formatAxisTick', () => {
+  test('suffixes the tick value with y', () => {
+    expect(formatAxisTick(5)).toBe('5y');
   });
 });

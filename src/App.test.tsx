@@ -1,4 +1,5 @@
 import { act, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
 import App from './App';
@@ -64,6 +65,31 @@ describe('App', () => {
 
     expect(screen.getByText('Whoops — my career history just rage-quit. Try again?')).toBeVisible();
     expect(screen.getByRole('button', { name: 'Refresh' })).toBeVisible();
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  test('reloads the page when the refresh button is clicked', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    mockLoadCareerHistory.mockRejectedValue(new Error('failed to load'));
+
+    const user = userEvent.setup();
+    const screen = await act(async () => {
+      const result = render(<App />);
+
+      await Promise.resolve();
+
+      return result;
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Refresh' }));
+
+    // location.reload is unforgeable in jsdom (not spyable); the attempted navigation surfaces
+    // as jsdom's not-implemented error on the console instead.
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'Not implemented: navigation (except hash changes)' })
+    );
 
     consoleErrorSpy.mockRestore();
   });

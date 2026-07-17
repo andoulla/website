@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
 import { Article } from '@/testing';
@@ -58,5 +58,61 @@ describe('Articles', () => {
     ).toBeVisible();
 
     expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('renders an error state when the fetch rejects with a non-Error value', async () => {
+    mockLoadArticles.mockRejectedValue('boom');
+
+    const screen = render(<Articles />);
+
+    expect(
+      await screen.findByText("Couldn't load articles right now. Please try again later.")
+    ).toBeVisible();
+  });
+
+  test('ignores articles that arrive after unmount', async () => {
+    let resolveArticles!: (articles: Article[]) => void;
+
+    mockLoadArticles.mockReturnValue(
+      new Promise((resolve) => {
+        resolveArticles = resolve;
+      })
+    );
+
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const screen = render(<Articles />);
+
+    screen.unmount();
+    resolveArticles([new Article().mock()]);
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  test('ignores a fetch failure that arrives after unmount', async () => {
+    let rejectArticles!: (error: Error) => void;
+
+    mockLoadArticles.mockReturnValue(
+      new Promise((_resolve, reject) => {
+        rejectArticles = reject;
+      })
+    );
+
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const screen = render(<Articles />);
+
+    screen.unmount();
+    rejectArticles(new Error('network down'));
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+
+    consoleErrorSpy.mockRestore();
   });
 });

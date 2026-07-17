@@ -16,9 +16,12 @@ import { visuallyHidden } from '@mui/utils';
 
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import type { PresentCategory } from '@/utils/derivePresentCategories';
-import { categoryColourFromIndex, resolveSkillColourMain } from '@/utils/skillColour';
 
-import { aggregateSkillsByCategory } from './SkillsRadarChart.helpers';
+import {
+  aggregateSkillsByCategory,
+  formatAxisTick,
+  resolveDotColour,
+} from './SkillsRadarChart.helpers';
 import type { CategoryRadarPoint } from './SkillsRadarChart.types';
 import { CategoryLegend } from './categoryLegend';
 import { CategoryTooltip } from './categoryTooltip';
@@ -48,15 +51,8 @@ export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadar
   // individually instead, so a non-matching axis still stands out.
   const renderDot = ({ cx, cy, payload }: DotItemDotProps) => {
     const point = payload as CategoryRadarPoint;
-    const colour = resolveSkillColourMain(categoryColourFromIndex(point.categoryIndex), theme);
     return (
-      <circle
-        key={point.categoryId}
-        cx={cx}
-        cy={cy}
-        r={5}
-        fill={point.isMatch ? colour : theme.palette.action.disabled}
-      />
+      <circle key={point.categoryId} cx={cx} cy={cy} r={5} fill={resolveDotColour(point, theme)} />
     );
   };
 
@@ -71,7 +67,7 @@ export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadar
           />
           <PolarRadiusAxis
             domain={[0, maxYears]}
-            tickFormatter={(v: number) => `${v}y`}
+            tickFormatter={formatAxisTick}
             tick={{ fontSize: 10, fill: theme.palette.text.secondary }}
           />
           <Tooltip content={CategoryTooltip} />

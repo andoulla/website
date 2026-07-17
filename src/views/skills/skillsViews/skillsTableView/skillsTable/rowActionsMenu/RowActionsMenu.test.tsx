@@ -50,6 +50,26 @@ describe('RowActionsMenu', () => {
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
+  test('closes the menu on Escape', async () => {
+    const user = userEvent.setup();
+    const screen = renderMenu({ skill: SKILL_NO_RECS });
+
+    await user.click(screen.getByRole('button', { name: 'React links' }));
+    await user.keyboard('{Escape}');
+
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+  });
+
+  test('closes the menu on recommendation item click', async () => {
+    const user = userEvent.setup();
+    const screen = renderMenu({ skill: SKILL_ONE_REC });
+
+    await user.click(screen.getByRole('button', { name: 'TypeScript links' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Recommendation' }));
+
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+  });
+
   test('renders "View on Resume" menu item with correct href', async () => {
     const user = userEvent.setup();
     const screen = renderMenu({ skill: SKILL_NO_RECS });

@@ -60,4 +60,22 @@ describe('joinCareerHistoryWithRecommendations', () => {
 
     expect(result).toMatchObject({ companyName: 'Acme Corp' });
   });
+
+  it('throws when a skill references an unknown jobId', () => {
+    const careerHistory = [new TimelineEvent().mock()];
+    const skill = new Skill().name('React').jobIds(['job-404']).mock();
+
+    expect(() => joinCareerHistoryWithRecommendations(careerHistory, [], [skill])).toThrow(
+      'skills.json: unknown jobId "job-404" on skill "React"'
+    );
+  });
+
+  it('throws when a skill references an unknown recommendationId', () => {
+    const careerHistory = [new TimelineEvent().mock()];
+    const skill = new Skill().name('React').recommendationIds(['rec-404']).mock();
+
+    expect(() => joinCareerHistoryWithRecommendations(careerHistory, [], [skill])).toThrow(
+      'skills.json: unknown recommendationId "rec-404" on skill "React"'
+    );
+  });
 });
