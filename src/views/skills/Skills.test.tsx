@@ -181,7 +181,7 @@ describe('Skills', () => {
 
       await user.click(screen.getByRole('button', { name: 'Graph view' }));
 
-      expect(screen.getByRole('checkbox', { name: 'Patterns' })).not.toBeChecked();
+      expect(screen.getByRole('checkbox', { name: 'Texture fills' })).not.toBeChecked();
     });
 
     test('hides the patterns checkbox outside graph view', async () => {
@@ -190,7 +190,7 @@ describe('Skills', () => {
 
       await user.click(screen.getByRole('button', { name: 'Table view' }));
 
-      expect(screen.queryByRole('checkbox', { name: 'Patterns' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('checkbox', { name: 'Texture fills' })).not.toBeInTheDocument();
     });
 
     test('checking the patterns checkbox updates its checked state', async () => {
@@ -198,9 +198,9 @@ describe('Skills', () => {
       const screen = await renderAndFlush();
 
       await user.click(screen.getByRole('button', { name: 'Graph view' }));
-      await user.click(screen.getByRole('checkbox', { name: 'Patterns' }));
+      await user.click(screen.getByRole('checkbox', { name: 'Texture fills' }));
 
-      expect(screen.getByRole('checkbox', { name: 'Patterns' })).toBeChecked();
+      expect(screen.getByRole('checkbox', { name: 'Texture fills' })).toBeChecked();
       expect(await axe(screen.container)).toHaveNoViolations();
     });
   });

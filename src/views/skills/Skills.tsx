@@ -181,20 +181,6 @@ const SkillsContent = () => {
           onSubCategoriesChange={setSelectedSubCategories}
         />
         <Stack direction="row" sx={{ alignItems: 'center', ml: 'auto' }}>
-          {viewMode === 'barchart' && (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showPatterns}
-                  onChange={(_e, checked) => {
-                    setShowPatterns(checked);
-                  }}
-                  size="small"
-                />
-              }
-              label="Patterns"
-            />
-          )}
           <ToggleButtonGroup
             value={viewMode}
             exclusive
@@ -223,6 +209,25 @@ const SkillsContent = () => {
           <CopyLinkButton />
         </Stack>
       </Stack>
+      {viewMode === 'barchart' && (
+        <Stack direction="row" sx={{ justifyContent: 'flex-end', mt: { xs: -1, sm: -2 }, mb: 1 }}>
+          {/* describeChild — keep "Texture fills" as the accessible name */}
+          <Tooltip title="Distinguish categories by texture as well as colour" describeChild>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={showPatterns}
+                  onChange={(_e, checked) => {
+                    setShowPatterns(checked);
+                  }}
+                  size="small"
+                />
+              }
+              label="Texture fills"
+            />
+          </Tooltip>
+        </Stack>
+      )}
       <SkillsViewContextProvider
         track={track}
         skills={skills}
