@@ -405,6 +405,18 @@ describe('Skills', () => {
 
       expect(screen.queryByText('3 matches hidden by filters')).not.toBeInTheDocument();
     });
+
+    test('shows a no-match hint when the search matches no skill at all', async () => {
+      const user = userEvent.setup();
+      const screen = await renderAndFlush();
+
+      await user.type(
+        screen.getByRole('textbox', { name: 'Search skills by name' }),
+        'not-a-skill'
+      );
+
+      expect(screen.getByText('No skills match your search')).toBeVisible();
+    });
   });
 
   describe('combined filters', () => {

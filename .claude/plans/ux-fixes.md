@@ -16,7 +16,7 @@ Progress checkbox in this file as part of each item's commit.
 - [x] 8. Bar-chart tooltip on tap
 - [x] 9. View-toggle tooltips
 - [x] 10. Texture fills label
-- [ ] 11. No-match search hint
+- [x] 11. No-match search hint
 - [ ] 12. Copy-link visible label + announcement
 - [ ] 13. Decorative article images
 - [ ] 14. Error fallback action line

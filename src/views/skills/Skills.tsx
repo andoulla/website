@@ -53,6 +53,17 @@ const renderSkillsView = (viewMode: ViewMode, showPatterns: boolean) => {
   return <SkillsTableView />;
 };
 
+const deriveSearchHint = (
+  searchTerm: string,
+  totalMatches: number,
+  hiddenMatchCount: number
+): string | undefined => {
+  if (searchTerm.trim() === '') return undefined;
+  if (totalMatches === 0) return 'No skills match your search';
+  if (hiddenMatchCount === 0) return undefined;
+  return `${hiddenMatchCount} match${hiddenMatchCount === 1 ? '' : 'es'} hidden by filters`;
+};
+
 const SkillsContent = () => {
   const careerHistory = useCareerDataContext();
   const { track } = useTrackContext();
@@ -120,19 +131,16 @@ const SkillsContent = () => {
     setSelectedSubCategories([]);
   }, [setSelectedCategories, setSelectedSubCategories]);
 
-  const hiddenMatchCount = useMemo(() => {
-    if (searchTerm.trim() === '') return 0;
-    const totalMatches = skills.filter((skill) => skillMatchesSearch(skill, searchTerm)).length;
+  const { totalMatches, hiddenMatchCount } = useMemo(() => {
+    if (searchTerm.trim() === '') return { totalMatches: 0, hiddenMatchCount: 0 };
+    const total = skills.filter((skill) => skillMatchesSearch(skill, searchTerm)).length;
     const visibleMatches = filteredSkills.filter((skill) =>
       skillMatchesSearch(skill, searchTerm)
     ).length;
-    return totalMatches - visibleMatches;
+    return { totalMatches: total, hiddenMatchCount: total - visibleMatches };
   }, [skills, filteredSkills, searchTerm]);
 
-  const searchHint =
-    hiddenMatchCount > 0
-      ? `${hiddenMatchCount} match${hiddenMatchCount === 1 ? '' : 'es'} hidden by filters`
-      : undefined;
+  const searchHint = deriveSearchHint(searchTerm, totalMatches, hiddenMatchCount);
 
   const [viewMode, setViewMode] = useSkillSearchUrl(
     VIEW_PARAM,
