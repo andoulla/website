@@ -43,7 +43,7 @@ Coverage is computed on every CI run and the result is written to a GitHub Gist 
 
 ## Pages
 
-Data loads asynchronously via React 19's `use()` hook under `Suspense`; the nav bar exposes a colour theme toggle (green / purple) and a light/dark mode toggle.
+Data loads asynchronously via React 19's `use()` hook under `Suspense`; the nav bar has a settings dropdown (tune icon) with colour theme (green / purple), light/dark mode, View Source, and Report a Problem.
 
 **Resume** (`/`)
 
