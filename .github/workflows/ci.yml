@@ -63,13 +63,23 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
-      - name: Upload coverage to Codecov
-        if: always()
-        uses: codecov/codecov-action@v7
-        with:
-          files: ./coverage/lcov.info
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
+      - name: Update coverage badge
+        if: github.ref == 'refs/heads/main'
+        env:
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          GIST_ID: ${{ secrets.GIST_ID }}
+        run: |
+          node -e "
+            const { total } = require('./coverage/coverage-summary.json');
+            const pct = total.statements.pct;
+            const color = pct >= 90 ? 'brightgreen' : pct >= 75 ? 'green' : pct >= 60 ? 'yellow' : 'red';
+            const shield = JSON.stringify({ schemaVersion: 1, label: 'coverage', message: pct + '%', color });
+            process.stdout.write(JSON.stringify({ files: { 'coverage.json': { content: shield } } }));
+          " | curl -sf -X PATCH \
+            "https://api.github.com/gists/$GIST_ID" \
+            -H "Authorization: token $GIST_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data-binary @-
 
       - name: Build
         run: yarn build
