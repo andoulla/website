@@ -9,7 +9,7 @@
         {
           "id": "core-technologies",
           "name": "Core Technologies",
-          "skillIds": ["javascript-es6", "typescript", "react", "nextjs", "html5", "css3"]
+          "skillIds": ["angular", "javascript-es6", "typescript", "react", "nextjs", "html5", "css3"]
         },
         {
           "id": "react-ecosystem",

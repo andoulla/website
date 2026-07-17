@@ -99,7 +99,7 @@
         {
           "id": "frontend",
           "name": "Frontend",
-          "skillIds": ["react", "nextjs", "redux", "html5", "css3"]
+          "skillIds": ["angular", "react", "nextjs", "redux", "html5", "css3"]
         }
       ]
     },
