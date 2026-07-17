@@ -13,6 +13,11 @@ global.fetch = (): Promise<Response> => {
   throw new Error('global.fetch is not implemented in tests — mock it with jest.spyOn.');
 };
 
+// Persisted preferences (e.g. theme) must not leak between tests.
+beforeEach(() => {
+  window.localStorage.clear();
+});
+
 global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}

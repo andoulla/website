@@ -1,8 +1,15 @@
 import { ThemeProvider } from '@mui/material/styles';
-import { createContext, use, useCallback, useMemo, useState } from 'react';
+import { createContext, use, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { createGreenTheme, createPurpleTheme } from '@/themes';
 
+import {
+  prefersDarkColourScheme,
+  readStoredDarkMode,
+  readStoredThemeName,
+  storeDarkMode,
+  storeThemeName,
+} from './ThemeContextProvider.helpers';
 import type {
   ThemeContextProviderProps,
   ThemeContextValue,
@@ -21,11 +28,23 @@ export const useThemeContext = (): ThemeContextValue => {
 
 export const ThemeContextProvider = ({
   children,
-  initialTheme = 'purple',
-  initialDarkMode = false,
+  initialTheme,
+  initialDarkMode,
 }: ThemeContextProviderProps) => {
-  const [themeName, setThemeName] = useState<ThemeName>(initialTheme);
-  const [isDarkMode, setIsDarkMode] = useState(initialDarkMode);
+  // Explicit props win, then the stored preference, then the default (system scheme for dark).
+  const [themeName, setThemeName] = useState<ThemeName>(
+    () => initialTheme ?? readStoredThemeName() ?? 'purple'
+  );
+  const [isDarkMode, setIsDarkMode] = useState(
+    () => initialDarkMode ?? readStoredDarkMode() ?? prefersDarkColourScheme()
+  );
+
+  useEffect(() => {
+    storeThemeName(themeName);
+  }, [themeName]);
+  useEffect(() => {
+    storeDarkMode(isDarkMode);
+  }, [isDarkMode]);
 
   const toggleTheme = useCallback(
     () => setThemeName((n) => (n === 'green' ? 'purple' : 'green')),

@@ -1,4 +1,5 @@
 import { fireEvent, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { ThemeContextProvider, useThemeContext } from './ThemeContextProvider';
 
@@ -85,5 +86,55 @@ describe('ThemeContextProvider', () => {
 
     expect(screen.getByText('purple')).toBeVisible();
     expect(screen.getByText('dark')).toBeVisible();
+  });
+
+  test('restores the persisted theme and dark mode', () => {
+    window.localStorage.setItem('theme-name', 'green');
+    window.localStorage.setItem('dark-mode', 'true');
+
+    const screen = render(
+      <ThemeContextProvider>
+        <ThemeDisplay />
+      </ThemeContextProvider>
+    );
+
+    expect(screen.getByText('green')).toBeVisible();
+    expect(screen.getByText('dark')).toBeVisible();
+  });
+
+  test('persists toggled theme and dark mode for the next mount', async () => {
+    const user = userEvent.setup();
+    const firstMount = render(
+      <ThemeContextProvider>
+        <ThemeDisplay />
+      </ThemeContextProvider>
+    );
+
+    await user.click(firstMount.getByRole('button', { name: 'toggle theme' }));
+    await user.click(firstMount.getByRole('button', { name: 'toggle dark mode' }));
+    firstMount.unmount();
+
+    const secondMount = render(
+      <ThemeContextProvider>
+        <ThemeDisplay />
+      </ThemeContextProvider>
+    );
+
+    expect(secondMount.getByText('green')).toBeVisible();
+    expect(secondMount.getByText('dark')).toBeVisible();
+  });
+
+  test('explicit props win over a persisted preference', () => {
+    window.localStorage.setItem('theme-name', 'green');
+    window.localStorage.setItem('dark-mode', 'true');
+
+    const screen = render(
+      <ThemeContextProvider initialTheme="purple" initialDarkMode={false}>
+        <ThemeDisplay />
+      </ThemeContextProvider>
+    );
+
+    expect(screen.getByText('purple')).toBeVisible();
+    expect(screen.getByText('light')).toBeVisible();
   });
 });

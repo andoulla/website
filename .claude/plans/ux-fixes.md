@@ -6,7 +6,7 @@ Progress checkbox in this file as part of each item's commit.
 
 ## Progress
 
-- [ ] 1. Persist theme + dark mode
+- [x] 1. Persist theme + dark mode
 - [ ] 2. Recommendation cards accessible
 - [ ] 3. 404 page
 - [ ] 4. Contact links wrap
