@@ -82,7 +82,7 @@ export const NavBar = () => {
           <Menu
             anchorEl={anchorEl}
             id="nav-menu"
-            MenuListProps={{ 'aria-label': 'Settings and links' }}
+            slotProps={{ list: { 'aria-label': 'Settings and links' } }}
             onClose={handleClose}
             open={isMenuOpen}
           >
