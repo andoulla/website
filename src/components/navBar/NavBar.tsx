@@ -1,15 +1,21 @@
+import { useState } from 'react';
+import BugReportIcon from '@mui/icons-material/BugReport';
+import CheckIcon from '@mui/icons-material/Check';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import PaletteIcon from '@mui/icons-material/Palette';
-import AppBar from '@mui/material/AppBar';
+import TuneIcon from '@mui/icons-material/Tune';
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Toolbar from '@mui/material/Toolbar';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import AppBar from '@mui/material/AppBar';
 import { NavLink, useSearchParams } from 'react-router-dom';
 
 import { useThemeContext } from '@/context/theme';
@@ -23,32 +29,19 @@ const navLinkStyle = ({ isActive }: { isActive: boolean }): React.CSSProperties 
   whiteSpace: 'nowrap',
 });
 
-const toggleButtonGroupSx = {
-  '& .MuiToggleButton-root': {
-    color: 'inherit',
-    borderColor: 'rgba(255,255,255,0.3)',
-    px: 1.5,
-    py: 0.25,
-    '&.Mui-selected': {
-      color: 'inherit',
-      backgroundColor: 'rgba(255,255,255,0.15)',
-    },
-    '&.Mui-selected:hover': {
-      backgroundColor: 'rgba(255,255,255,0.25)',
-    },
-  },
-} as const;
-
 export const NavBar = () => {
   const { themeName, toggleTheme, isDarkMode, toggleDarkMode } = useThemeContext();
   const nextTheme = themeName === 'green' ? 'purple' : 'green';
-  const theme = useTheme();
-  const isNarrow = useMediaQuery(theme.breakpoints.down('sm'));
   // Param read directly, not via useTrackContext — nav also renders outside the provider (/articles).
   const [searchParams] = useSearchParams();
   const rawTrackId = searchParams.get(TRACK_PARAM);
   const trackSearch =
     rawTrackId !== null && isTrackId(rawTrackId) ? `?${TRACK_PARAM}=${rawTrackId}` : '';
+
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const isMenuOpen = anchorEl !== null;
+  const handleOpen = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
+  const handleClose = () => setAnchorEl(null);
 
   return (
     <AppBar component="nav" position="static">
@@ -63,7 +56,7 @@ export const NavBar = () => {
         {/* Empty spacer mirrors the controls column's grid track so the nav links land in the
             true center of the toolbar, however wide the controls column ends up being. */}
         <Box />
-        <Stack direction="row" spacing={isNarrow ? 1.5 : 3} sx={{ justifySelf: 'center' }}>
+        <Stack direction="row" spacing={3} sx={{ justifySelf: 'center' }}>
           <NavLink to={`/${trackSearch}`} end style={navLinkStyle}>
             Home
           </NavLink>
@@ -74,33 +67,96 @@ export const NavBar = () => {
             Articles
           </NavLink>
         </Stack>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifySelf: 'end' }}>
+        <Box sx={{ justifySelf: 'end' }}>
           <IconButton
-            aria-label={`Switch to ${nextTheme} theme`}
+            aria-label="Open menu"
+            aria-controls={isMenuOpen ? 'nav-menu' : undefined}
+            aria-expanded={isMenuOpen ? 'true' : undefined}
+            aria-haspopup="true"
             color="inherit"
-            onClick={toggleTheme}
+            onClick={handleOpen}
             size="small"
           >
-            <PaletteIcon />
+            <TuneIcon />
           </IconButton>
-          <ToggleButtonGroup
-            aria-label="Color mode"
-            exclusive
-            onChange={(_, value: 'light' | 'dark' | null) => {
-              if (value !== null) toggleDarkMode();
-            }}
-            size="small"
-            sx={toggleButtonGroupSx}
-            value={isDarkMode ? 'dark' : 'light'}
+          <Menu
+            anchorEl={anchorEl}
+            id="nav-menu"
+            MenuListProps={{ 'aria-label': 'Settings and links' }}
+            onClose={handleClose}
+            open={isMenuOpen}
           >
-            <ToggleButton value="light" aria-label="Light">
-              {isNarrow ? <LightModeIcon fontSize="small" /> : 'Light'}
-            </ToggleButton>
-            <ToggleButton value="dark" aria-label="Dark">
-              {isNarrow ? <DarkModeIcon fontSize="small" /> : 'Dark'}
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </Stack>
+            <MenuItem
+              onClick={() => {
+                toggleTheme();
+                handleClose();
+              }}
+            >
+              <ListItemIcon>
+                <PaletteIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Switch to {nextTheme} theme</ListItemText>
+            </MenuItem>
+
+            <Divider />
+
+            <MenuItem
+              aria-checked={!isDarkMode}
+              onClick={() => {
+                if (isDarkMode) toggleDarkMode();
+                handleClose();
+              }}
+              role="menuitemradio"
+            >
+              <ListItemIcon>
+                <LightModeIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Light</ListItemText>
+              {!isDarkMode && <CheckIcon fontSize="small" sx={{ ml: 1 }} />}
+            </MenuItem>
+            <MenuItem
+              aria-checked={isDarkMode}
+              onClick={() => {
+                if (!isDarkMode) toggleDarkMode();
+                handleClose();
+              }}
+              role="menuitemradio"
+            >
+              <ListItemIcon>
+                <DarkModeIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Dark</ListItemText>
+              {isDarkMode && <CheckIcon fontSize="small" sx={{ ml: 1 }} />}
+            </MenuItem>
+
+            <Divider />
+
+            <MenuItem
+              component="a"
+              href="https://github.com/andoulla/website/"
+              onClick={handleClose}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <ListItemIcon>
+                <GitHubIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>View Source</ListItemText>
+            </MenuItem>
+            <MenuItem
+              component="a"
+              href="https://github.com/andoulla/website/issues/new"
+              onClick={handleClose}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <ListItemIcon>
+                <BugReportIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Report a Problem</ListItemText>
+            </MenuItem>
+          </Menu>
+        </Box>
       </Toolbar>
     </AppBar>
   );
