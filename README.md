@@ -37,9 +37,9 @@ A minimal React + TypeScript personal site, built entirely through AI pair-progr
 ## CI/CD
 
 - **[CI](.github/workflows/ci.yml)** — lint, format check, typecheck, test (with coverage), build. Runs on every PR to `main` and on push to `main`. Coverage output is uploaded as a workflow artifact and summarised in the job summary.
+  - Coverage percentage is written to a GitHub Gist on every push to `main` — the badge above reflects the current value.
 - **[Lighthouse CI](.github/workflows/lighthouse.yml)** — builds the app, serves it locally, and audits Performance, Accessibility, Best Practices, and SEO. Results are uploaded as a workflow artifact and to temporary public storage; it's informational and does not block merges.
-
-Coverage is computed on every CI run and the result is written to a GitHub Gist — the badge above reflects the current percentage on `main`. The Lighthouse badge reflects workflow pass/fail; full score reports are available as artifacts on each run.
+  - The badge reflects workflow pass/fail; full score reports are available as artifacts on each run.
 
 ## Pages
 
