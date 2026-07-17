@@ -25,7 +25,12 @@ const testTrack = new Track()
         {
           id: 'core-technologies',
           name: 'Core Technologies',
-          skillIds: ['react', 'docker'],
+          skillIds: ['react'],
+        },
+        {
+          id: 'tooling',
+          name: 'Tooling',
+          skillIds: ['docker'],
         },
       ],
     },
@@ -106,12 +111,21 @@ describe('SkillsTable', () => {
     expect(screen.getByText('Frontend Development')).toBeVisible();
   });
 
-  test('renders sub-category row when present', () => {
-    const screen = renderSkillsTable({
-      categoryGroups: buildCategoryGroups(SKILLS),
-    });
+  test('renders sub-category row when multiple sub-categories are present', () => {
+    const groups: CategoryGroup[] = [
+      {
+        category: testTrack.categories[0],
+        subGroups: [
+          { subCategory: testTrack.categories[0].subCategories[0], skills: [SKILLS[0]] },
+          { subCategory: testTrack.categories[0].subCategories[1], skills: [SKILLS[1]] },
+        ],
+        skills: SKILLS,
+      },
+    ];
+    const screen = renderSkillsTable({ categoryGroups: groups });
 
     expect(screen.getByText('Core Technologies')).toBeVisible();
+    expect(screen.getByText('Tooling')).toBeVisible();
   });
 
   test('applies a highlight background to the skill matching highlightedSkills', () => {

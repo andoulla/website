@@ -1,4 +1,4 @@
-import ErrorIcon from '@mui/icons-material/Error';
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -28,14 +28,31 @@ const App = () => {
               <ErrorBoundary
                 fallback={() => (
                   <PageContainer>
-                    <Stack sx={{ py: 8, alignItems: 'center', gap: 1.5 }}>
-                      <ErrorIcon color="error" fontSize="large" />
-                      <Typography color="text.secondary">
-                        Whoops — my career history just rage-quit. Try again?
-                      </Typography>
-                      <Button startIcon={<RefreshIcon />} onClick={() => window.location.reload()}>
-                        Refresh
-                      </Button>
+                    <Stack
+                      sx={{ minHeight: '70vh', justifyContent: 'center', alignItems: 'center' }}
+                    >
+                      <Stack
+                        sx={{
+                          alignItems: 'center',
+                          gap: 1.5,
+                          border: 1,
+                          borderColor: 'divider',
+                          borderRadius: 2,
+                          px: 6,
+                          py: 4,
+                        }}
+                      >
+                        <ManageSearchIcon fontSize="large" color="primary" />
+                        <Typography color="text.secondary">
+                          Whoops — my career history just rage-quit. Try again?
+                        </Typography>
+                        <Button
+                          startIcon={<RefreshIcon />}
+                          onClick={() => window.location.reload()}
+                        >
+                          Refresh
+                        </Button>
+                      </Stack>
                     </Stack>
                   </PageContainer>
                 )}
