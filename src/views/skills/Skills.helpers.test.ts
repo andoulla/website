@@ -120,7 +120,7 @@ describe('parseViewMode', () => {
   test('returns each recognised view mode', () => {
     expect(parseViewMode('barchart')).toBe('barchart');
     expect(parseViewMode('radar')).toBe('radar');
-    expect(parseViewMode('list')).toBe('list');
+    expect(parseViewMode('table')).toBe('table');
   });
 });
 
@@ -135,13 +135,13 @@ describe('reorderFilterParams', () => {
 
   test('puts track ahead of view ahead of category and subCategory', () => {
     const params = new URLSearchParams(
-      'subCategory=testing&category=frontend-development&view=list&track=general'
+      'subCategory=testing&category=frontend-development&view=table&track=general'
     );
 
     const result = reorderFilterParams(params);
 
     expect(result.toString()).toBe(
-      'track=general&view=list&category=frontend-development&subCategory=testing'
+      'track=general&view=table&category=frontend-development&subCategory=testing'
     );
   });
 

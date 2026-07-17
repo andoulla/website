@@ -1,17 +1,16 @@
 import { useEffect } from 'react';
-import Stack from '@mui/material/Stack';
 
-import { Section } from '@/components/section';
 import { hasSearchTerm } from '@/utils/hasSearchTerm';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 import { SkillsEmptyState } from '@/views/skills/skillsEmptyState';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
 
-import { skillElementId } from './SkillsListView.helpers';
-import { SkillItemsList } from './skillItemsList';
+import { skillElementId } from './SkillsTableView.helpers';
+import { SkillsTable } from './skillsTable';
+import type { CategoryGroup } from './SkillsTableView.types';
 
-export const SkillsListView = () => {
+export const SkillsTableView = () => {
   const {
     track,
     filteredSkills,
@@ -34,7 +33,7 @@ export const SkillsListView = () => {
     : filteredSkills.filter((skill) => skillMatchesSearch(skill, searchTerm));
 
   // Group by the active track's taxonomy; summaries keep their years-descending order.
-  const categoryGroups = track.categories
+  const categoryGroups: CategoryGroup[] = track.categories
     .map((category) => {
       const subGroups = category.subCategories
         .map((subCategory) => ({
@@ -59,23 +58,5 @@ export const SkillsListView = () => {
     );
   }
 
-  return (
-    <Stack spacing={2}>
-      {categoryGroups.map(({ category, subGroups, skills }) => (
-        <Section key={category.id} title={category.name}>
-          {subGroups.length > 1 ? (
-            <Stack spacing={1.5}>
-              {subGroups.map((group) => (
-                <Section key={group.subCategory.id} title={group.subCategory.name} titleLevel={3}>
-                  <SkillItemsList skills={group.skills} highlightedSkills={highlightedSkills} />
-                </Section>
-              ))}
-            </Stack>
-          ) : (
-            <SkillItemsList skills={skills} highlightedSkills={highlightedSkills} />
-          )}
-        </Section>
-      ))}
-    </Stack>
-  );
+  return <SkillsTable categoryGroups={categoryGroups} highlightedSkills={highlightedSkills} />;
 };

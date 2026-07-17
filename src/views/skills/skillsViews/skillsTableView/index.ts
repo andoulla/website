@@ -1,0 +1,1 @@
+export { SkillsTableView } from './SkillsTableView';

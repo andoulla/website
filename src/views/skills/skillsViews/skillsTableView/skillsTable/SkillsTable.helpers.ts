@@ -6,7 +6,6 @@ import { resolveSkillColourMain, skillShadeIndex } from '@/utils/skillColour';
 
 export const dotColour = (skill: SkillSummary, theme: Theme): string => {
   const { colour } = skill;
-  // Grey fallback returns flat, unshaded — shading only applies to a real, resolvable colour.
   if (colour === 'default') return theme.palette.grey[400];
   const { bg } = computeShadeColour(
     resolveSkillColourMain(colour, theme),

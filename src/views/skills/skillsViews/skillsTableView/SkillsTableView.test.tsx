@@ -9,7 +9,7 @@ import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 import { SkillsViewContextProvider } from '../SkillsViewContext';
 import type { SkillsViewContextValue } from '../SkillsViewContext.types';
 
-import { SkillsListView } from './SkillsListView';
+import { SkillsTableView } from './SkillsTableView';
 
 const testTrack = new Track()
   .categories([
@@ -73,7 +73,7 @@ const SKILLS = [
     .mock(),
 ];
 
-const renderListView = (overrides: Partial<SkillsViewContextValue> = {}) => {
+const renderTableView = (overrides: Partial<SkillsViewContextValue> = {}) => {
   const skills = overrides.skills ?? SKILLS;
   const selectedCategories = overrides.selectedCategories ?? [];
   const selectedSubCategories = overrides.selectedSubCategories ?? [];
@@ -90,48 +90,48 @@ const renderListView = (overrides: Partial<SkillsViewContextValue> = {}) => {
         onClearFilters={jest.fn()}
         {...overrides}
       >
-        <SkillsListView />
+        <SkillsTableView />
       </SkillsViewContextProvider>
     </MemoryRouter>
   );
 };
 
-describe('SkillsListView', () => {
+describe('SkillsTableView', () => {
   describe('render and grouping', () => {
-    test('renders a list item for each skill with name and years', async () => {
-      const screen = renderListView();
+    test('renders a table row for each skill with name and years', async () => {
+      const screen = renderTableView();
 
       expect(screen.getByText('React')).toBeVisible();
-      expect(screen.getByText('est. 4 years')).toBeVisible();
+      expect(screen.getByText('4 years')).toBeVisible();
       expect(screen.getByText('Team Leadership')).toBeVisible();
-      expect(screen.getByText('est. 3 years')).toBeVisible();
+      expect(screen.getByText('3 years')).toBeVisible();
       expect(screen.getByText('Mentoring')).toBeVisible();
-      expect(screen.getByText('est. 2 years')).toBeVisible();
+      expect(screen.getByText('2 years')).toBeVisible();
       expect(await axe(screen.container)).toHaveNoViolations();
     });
 
     test('renders "year" (singular) when a skill has exactly 1 year', () => {
       const skills = [new SkillSummary().id('docker').skill('Docker').years(1).mock()];
-      const screen = renderListView({ skills });
+      const screen = renderTableView({ skills });
 
-      expect(screen.getByText('est. 1 year')).toBeVisible();
+      expect(screen.getByText('1 year')).toBeVisible();
     });
 
-    test('renders category section headings from the track', () => {
-      const screen = renderListView();
+    test('renders category group rows from the track', () => {
+      const screen = renderTableView();
 
       expect(screen.getByText('Frontend Development')).toBeVisible();
       expect(screen.getByText('Leadership & Delivery')).toBeVisible();
       expect(screen.getByText('People & Stakeholders')).toBeVisible();
     });
 
-    test('does not render a section for a category with no skills', () => {
-      const screen = renderListView();
+    test('does not render a group row for a category with no skills', () => {
+      const screen = renderTableView();
 
       expect(screen.queryByText('Tooling')).not.toBeInTheDocument();
     });
 
-    test('groups skills into sub-category headings when a category has more than one sub-category present', () => {
+    test('groups skills into sub-category rows when a category has more than one sub-category present', () => {
       const skills = [
         new SkillSummary().mock(),
         new SkillSummary()
@@ -141,18 +141,18 @@ describe('SkillsListView', () => {
           .subCategoryName('Styling & UI')
           .mock(),
       ];
-      const screen = renderListView({ skills });
+      const screen = renderTableView({ skills });
 
       expect(screen.getByText('Core Technologies')).toBeVisible();
       expect(screen.getByText('Styling & UI')).toBeVisible();
     });
 
-    test('does not render a sub-category heading when a category has only one sub-category present', () => {
+    test('does not render a sub-category row when a category has only one sub-category present', () => {
       const skills = [
         new SkillSummary().mock(),
         new SkillSummary().id('typescript').skill('TypeScript').mock(),
       ];
-      const screen = renderListView({ skills });
+      const screen = renderTableView({ skills });
 
       expect(screen.queryByText('Core Technologies')).not.toBeInTheDocument();
     });
@@ -160,14 +160,14 @@ describe('SkillsListView', () => {
 
   describe('filtering', () => {
     test('hides skills outside the selected categories', () => {
-      const screen = renderListView({ selectedCategories: ['leadership'] });
+      const screen = renderTableView({ selectedCategories: ['leadership'] });
 
       expect(screen.getByText('Team Leadership')).toBeVisible();
       expect(screen.queryByText('React')).not.toBeInTheDocument();
     });
 
-    test('does not render a section for a category with no matching skills after filtering', () => {
-      const screen = renderListView({ selectedCategories: ['leadership'] });
+    test('does not render a group row for a category with no matching skills after filtering', () => {
+      const screen = renderTableView({ selectedCategories: ['leadership'] });
 
       expect(screen.queryByText('Frontend Development')).not.toBeInTheDocument();
       expect(screen.queryByText('People & Stakeholders')).not.toBeInTheDocument();
@@ -183,7 +183,7 @@ describe('SkillsListView', () => {
           .subCategoryName('Testing')
           .mock(),
       ];
-      const screen = renderListView({
+      const screen = renderTableView({
         skills,
         selectedSubCategories: ['testing'],
       });
@@ -195,23 +195,23 @@ describe('SkillsListView', () => {
 
   describe('search', () => {
     test('hides skills that do not match the search term', async () => {
-      const screen = renderListView({ searchTerm: 'rea' });
+      const screen = renderTableView({ searchTerm: 'rea' });
 
-      expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
+      expect(screen.getByText('React')).toBeVisible();
       expect(screen.queryByText('Team Leadership')).not.toBeInTheDocument();
       expect(screen.queryByText('Mentoring')).not.toBeInTheDocument();
       expect(await axe(screen.container)).toHaveNoViolations();
     });
 
-    test('does not render a section for a category with no matches after search', () => {
-      const screen = renderListView({ searchTerm: 'rea' });
+    test('does not render a group row for a category with no matches after search', () => {
+      const screen = renderTableView({ searchTerm: 'rea' });
 
       expect(screen.queryByText('Leadership & Delivery')).not.toBeInTheDocument();
       expect(screen.queryByText('People & Stakeholders')).not.toBeInTheDocument();
     });
 
     test('shows every skill for a single-character term, below the minimum match length', () => {
-      const screen = renderListView({ searchTerm: 'r' });
+      const screen = renderTableView({ searchTerm: 'r' });
 
       expect(screen.getByText('React')).toBeVisible();
       expect(screen.getByText('Team Leadership')).toBeVisible();
@@ -223,7 +223,7 @@ describe('SkillsListView', () => {
     test('shows the empty message and a Clear filters button when a category/subcategory filter excludes every skill', async () => {
       const user = userEvent.setup();
       const onClearFilters = jest.fn();
-      const screen = renderListView({
+      const screen = renderTableView({
         selectedCategories: ['tooling'],
         onClearFilters,
       });
@@ -237,7 +237,7 @@ describe('SkillsListView', () => {
     });
 
     test('hides the Clear filters button when the search term alone excludes every skill', () => {
-      const screen = renderListView({ searchTerm: 'nonexistent skill' });
+      const screen = renderTableView({ searchTerm: 'nonexistent skill' });
 
       expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
       expect(screen.queryByRole('button', { name: 'Clear filters' })).not.toBeInTheDocument();
@@ -246,23 +246,34 @@ describe('SkillsListView', () => {
 
   describe('highlight and scroll', () => {
     test('applies a highlight to the skill matching highlightedSkills', async () => {
-      const screen = renderListView({ highlightedSkills: ['React'] });
+      const screen = renderTableView({ highlightedSkills: ['React'] });
 
-      expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
+      const row = screen.getByText('React').closest('tr');
+
+      expect(row).toHaveStyle({
+        backgroundColor: expect.stringContaining('rgb'),
+      });
       expect(await axe(screen.container)).toHaveNoViolations();
     });
 
     test('applies a highlight to every skill matching multiple highlightedSkills', () => {
-      const screen = renderListView({ highlightedSkills: ['React', 'Mentoring'] });
+      const screen = renderTableView({ highlightedSkills: ['React', 'Mentoring'] });
 
-      expect(screen.getByRole('button', { name: 'React est. 4 years' })).toBeVisible();
-      expect(screen.getByRole('button', { name: 'Mentoring est. 2 years' })).toBeVisible();
+      const reactRow = screen.getByText('React').closest('tr');
+      const mentoringRow = screen.getByText('Mentoring').closest('tr');
+
+      expect(reactRow).toHaveStyle({
+        backgroundColor: expect.stringContaining('rgb'),
+      });
+      expect(mentoringRow).toHaveStyle({
+        backgroundColor: expect.stringContaining('rgb'),
+      });
     });
 
     test('scrolls the highlighted skill into view', () => {
       const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
 
-      renderListView({ highlightedSkills: ['React'] });
+      renderTableView({ highlightedSkills: ['React'] });
 
       expect(scrollIntoViewSpy).toHaveBeenCalledWith({ behavior: 'smooth', block: 'center' });
 
@@ -272,10 +283,10 @@ describe('SkillsListView', () => {
     test('scrolls to the first of several highlighted skills', () => {
       const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
 
-      const screen = renderListView({ highlightedSkills: ['Team Leadership', 'React'] });
+      const screen = renderTableView({ highlightedSkills: ['Team Leadership', 'React'] });
 
       expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
-      expect(screen.getByRole('button', { name: 'Team Leadership est. 3 years' })).toBeVisible();
+      expect(screen.getByText('Team Leadership')).toBeVisible();
 
       scrollIntoViewSpy.mockRestore();
     });
@@ -283,7 +294,7 @@ describe('SkillsListView', () => {
     test('does not scroll when there is no highlighted skill', () => {
       const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
 
-      renderListView();
+      renderTableView();
 
       expect(scrollIntoViewSpy).not.toHaveBeenCalled();
 

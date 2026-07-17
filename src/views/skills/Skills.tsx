@@ -40,7 +40,7 @@ import { SkillSearchBar } from './skillSearchBar';
 import { TrackFilter } from './trackFilter';
 import {
   SkillsGraphView,
-  SkillsListView,
+  SkillsTableView,
   SkillsRadarView,
   SkillsViewContextProvider,
 } from './skillsViews';
@@ -49,7 +49,7 @@ import { useSkillSearchUrl } from './useSkillSearchUrl';
 const renderSkillsView = (viewMode: ViewMode, showPatterns: boolean) => {
   if (viewMode === 'barchart') return <SkillsGraphView showPatterns={showPatterns} />;
   if (viewMode === 'radar') return <SkillsRadarView />;
-  return <SkillsListView />;
+  return <SkillsTableView />;
 };
 
 const SkillsContent = () => {
@@ -209,7 +209,7 @@ const SkillsContent = () => {
             <ToggleButton value="radar" aria-label="Radar view">
               <RadarIcon fontSize="small" />
             </ToggleButton>
-            <ToggleButton value="list" aria-label="List view">
+            <ToggleButton value="table" aria-label="Table view">
               <TableRowsIcon fontSize="small" />
             </ToggleButton>
           </ToggleButtonGroup>

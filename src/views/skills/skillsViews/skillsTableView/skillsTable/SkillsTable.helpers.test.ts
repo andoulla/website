@@ -4,7 +4,7 @@ import { SkillSummary } from '@/testing';
 import { computeShadeColour } from '@/utils/computeShadeColour';
 import { CUSTOM_COLOUR_HEX, skillShadeIndex } from '@/utils/skillColour';
 
-import { dotColour } from './SkillItemsList.helpers';
+import { dotColour } from './SkillsTable.helpers';
 
 const theme = createTheme();
 

@@ -1,12 +1,12 @@
 export type TrackId = 'lead' | 'senior-engineer' | 'general';
 
-interface TrackSubCategory {
+export interface TrackSubCategory {
   id: string;
   name: string;
   skillIds: string[];
 }
 
-interface TrackCategory {
+export interface TrackCategory {
   id: string;
   name: string;
   subCategories: TrackSubCategory[];
