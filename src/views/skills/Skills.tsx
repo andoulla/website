@@ -2,7 +2,7 @@ import { Suspense, useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import RadarIcon from '@mui/icons-material/Radar';
-import ViewListIcon from '@mui/icons-material/ViewList';
+import TableRowsIcon from '@mui/icons-material/TableRows';
 import Checkbox from '@mui/material/Checkbox';
 import CircularProgress from '@mui/material/CircularProgress';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -210,7 +210,7 @@ const SkillsContent = () => {
               <RadarIcon fontSize="small" />
             </ToggleButton>
             <ToggleButton value="list" aria-label="List view">
-              <ViewListIcon fontSize="small" />
+              <TableRowsIcon fontSize="small" />
             </ToggleButton>
           </ToggleButtonGroup>
           <CopyLinkButton />
