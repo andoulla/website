@@ -9,6 +9,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
 import { PageContainer } from '@/components/pageContainer';
@@ -203,15 +204,21 @@ const SkillsContent = () => {
             size="small"
             aria-label="View mode"
           >
-            <ToggleButton value="barchart" aria-label="Graph view">
-              <BarChartIcon fontSize="small" />
-            </ToggleButton>
-            <ToggleButton value="radar" aria-label="Radar view">
-              <RadarIcon fontSize="small" />
-            </ToggleButton>
-            <ToggleButton value="table" aria-label="Table view">
-              <TableChartIcon fontSize="small" />
-            </ToggleButton>
+            <Tooltip title="Graph view">
+              <ToggleButton value="barchart" aria-label="Graph view">
+                <BarChartIcon fontSize="small" />
+              </ToggleButton>
+            </Tooltip>
+            <Tooltip title="Radar view">
+              <ToggleButton value="radar" aria-label="Radar view">
+                <RadarIcon fontSize="small" />
+              </ToggleButton>
+            </Tooltip>
+            <Tooltip title="Table view">
+              <ToggleButton value="table" aria-label="Table view">
+                <TableChartIcon fontSize="small" />
+              </ToggleButton>
+            </Tooltip>
           </ToggleButtonGroup>
           <CopyLinkButton />
         </Stack>
