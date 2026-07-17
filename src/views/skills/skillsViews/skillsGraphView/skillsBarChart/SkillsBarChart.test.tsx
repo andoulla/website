@@ -91,5 +91,28 @@ describe('SkillsBarChart', () => {
         '/?skill=React&track=general'
       );
     });
+
+    test('opens the tooltip on click, for touch devices', async () => {
+      const user = userEvent.setup();
+      const screen = renderBarChart({ skills: SKILLS });
+      const [bar] = screen.container.querySelectorAll('g.recharts-bar-rectangle');
+
+      await user.click(bar);
+
+      expect(await screen.findByRole('link', { name: 'View on Resume' })).toBeVisible();
+    });
+
+    test('dismisses the tooltip on a click away from the chart', async () => {
+      const user = userEvent.setup();
+      const screen = renderBarChart({ skills: SKILLS });
+      const [bar] = screen.container.querySelectorAll('g.recharts-bar-rectangle');
+
+      await user.click(bar);
+      await screen.findByRole('link', { name: 'View on Resume' });
+
+      await user.click(document.body);
+
+      expect(screen.queryByRole('link', { name: 'View on Resume' })).not.toBeInTheDocument();
+    });
   });
 });

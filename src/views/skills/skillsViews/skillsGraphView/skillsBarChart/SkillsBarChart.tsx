@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { Bar, BarChart, Cell, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import Box from '@mui/material/Box';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Popper from '@mui/material/Popper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -129,6 +130,36 @@ export const SkillsBarChart = ({
     }, CLOSE_GRACE_MS);
   }, [cancelClose]);
 
+  const close = useCallback(() => {
+    cancelClose();
+    setHoverIndex(null);
+    setAnchorPosition(null);
+  }, [cancelClose]);
+
+  const openAt = useCallback(
+    (index: number, event: { clientX: number; clientY: number }) => {
+      cancelClose();
+      setHoverIndex(index);
+      setAnchorPosition({ x: event.clientX, y: event.clientY });
+    },
+    [cancelClose]
+  );
+
+  // Clicks/taps on a bar re-anchor the tooltip via the bar's own onClick — only clicks
+  // elsewhere dismiss it.
+  const handleClickAway = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      if (
+        event.target instanceof Element &&
+        event.target.closest('.recharts-bar-rectangle') !== null
+      ) {
+        return;
+      }
+      close();
+    },
+    [close]
+  );
+
   const chartHeight = Math.max(MIN_HEIGHT, skills.length * BAR_HEIGHT + CHART_PADDING);
 
   // Legend: one entry per category present, in track order. markColour is the pattern's
@@ -191,11 +222,14 @@ export const SkillsBarChart = ({
             animationDuration={400}
             animationEasing="ease-out"
             onMouseEnter={(_data, index, event) => {
-              cancelClose();
-              setHoverIndex(index);
-              setAnchorPosition({ x: event.clientX, y: event.clientY });
+              openAt(index, event);
             }}
             onMouseLeave={scheduleClose}
+            // Tap support: touch fires an emulated mouseenter then click on the same bar, so
+            // click always opens (never toggles) — dismissal is the click-away listener's job.
+            onClick={(_data, index, event) => {
+              openAt(index, event);
+            }}
           >
             {skills.map((skill, i) => {
               const isMatch = isBarMatch(skill, searchTerm);
@@ -228,9 +262,11 @@ export const SkillsBarChart = ({
         modifiers={[{ name: 'offset', options: { offset: [8, 12] } }]}
         sx={{ zIndex: theme.zIndex.tooltip }}
       >
-        <Box onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
-          {hoverIndex !== null && <SkillTooltipContent skill={skills[hoverIndex]} />}
-        </Box>
+        <ClickAwayListener onClickAway={handleClickAway}>
+          <Box onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
+            {hoverIndex !== null && <SkillTooltipContent skill={skills[hoverIndex]} />}
+          </Box>
+        </ClickAwayListener>
       </Popper>
 
       {/* Legend — styled like a figure caption: muted text, pattern swatches vertically centred with labels */}

@@ -13,7 +13,7 @@ Progress checkbox in this file as part of each item's commit.
 - [x] 5. Favicon, meta, per-route titles
 - [x] 6. Scroll reset on navigation
 - [x] 7. Track selector label
-- [ ] 8. Bar-chart tooltip on tap
+- [x] 8. Bar-chart tooltip on tap
 - [ ] 9. View-toggle tooltips
 - [ ] 10. Texture fills label
 - [ ] 11. No-match search hint
