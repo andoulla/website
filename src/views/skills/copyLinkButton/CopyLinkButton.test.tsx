@@ -51,6 +51,7 @@ describe('CopyLinkButton', () => {
     await user.click(screen.getByRole('button', { name: 'Copy filtered link' }));
 
     expect(await screen.findByRole('button', { name: 'Link copied' })).toBeVisible();
+    expect(screen.getByRole('status')).toHaveTextContent('Link copied');
   });
 
   test('shows a failed state when the clipboard write rejects', async () => {

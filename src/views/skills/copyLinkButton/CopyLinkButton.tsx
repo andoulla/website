@@ -3,8 +3,9 @@ import { useLocation } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ErrorIcon from '@mui/icons-material/Error';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import { visuallyHidden } from '@mui/utils';
 
 const RESET_DELAY_MS = 1500;
 
@@ -21,6 +22,12 @@ const LABEL_BY_STATUS: Record<CopyStatus, string> = {
   idle: 'Copy filtered link',
   copied: 'Link copied',
   failed: "Couldn't copy link",
+};
+
+const renderStatusIcon = (status: CopyStatus) => {
+  if (status === 'copied') return <CheckIcon fontSize="small" />;
+  if (status === 'failed') return <ErrorIcon fontSize="small" color="error" />;
+  return <ContentCopyIcon fontSize="small" />;
 };
 
 export const CopyLinkButton = () => {
@@ -41,12 +48,22 @@ export const CopyLinkButton = () => {
   };
 
   return (
-    <Tooltip title={LABEL_BY_STATUS[state.status]}>
-      <IconButton aria-label={LABEL_BY_STATUS[state.status]} onClick={handleClick} size="small">
-        {state.status === 'idle' && <ContentCopyIcon fontSize="small" />}
-        {state.status === 'copied' && <CheckIcon fontSize="small" />}
-        {state.status === 'failed' && <ErrorIcon fontSize="small" color="error" />}
-      </IconButton>
-    </Tooltip>
+    <>
+      <Button
+        variant="outlined"
+        color="inherit"
+        size="small"
+        startIcon={renderStatusIcon(state.status)}
+        onClick={handleClick}
+        // Match the 36px height and divider border of the other toolbar controls.
+        sx={{ height: 36, borderColor: 'divider' }}
+      >
+        {LABEL_BY_STATUS[state.status]}
+      </Button>
+      {/* role="status" — polite live region announcing the copy result to screen readers */}
+      <Box component="span" role="status" sx={visuallyHidden}>
+        {state.status === 'idle' ? '' : LABEL_BY_STATUS[state.status]}
+      </Box>
+    </>
   );
 };

@@ -188,7 +188,7 @@ const SkillsContent = () => {
           onCategoriesChange={setSelectedCategories}
           onSubCategoriesChange={setSelectedSubCategories}
         />
-        <Stack direction="row" sx={{ alignItems: 'center', ml: 'auto' }}>
+        <Stack direction="row" sx={{ alignItems: 'center', ml: 'auto', gap: 1 }}>
           <ToggleButtonGroup
             value={viewMode}
             exclusive
