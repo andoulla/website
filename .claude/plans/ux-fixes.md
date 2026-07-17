@@ -7,7 +7,7 @@ Progress checkbox in this file as part of each item's commit.
 ## Progress
 
 - [x] 1. Persist theme + dark mode
-- [ ] 2. Recommendation cards accessible
+- [x] 2. Recommendation cards accessible
 - [ ] 3. 404 page
 - [ ] 4. Contact links wrap
 - [ ] 5. Favicon, meta, per-route titles

@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
 import { Recommendation } from '@/testing';
@@ -15,20 +14,12 @@ const recommendation = new Recommendation()
   .mock();
 
 describe('RecommendationText', () => {
-  test('renders the text, attribution, author initials, posted date, and LinkedIn link', () => {
+  test('renders the text, attribution, author initials, and posted date', () => {
     const screen = render(<RecommendationText recommendation={recommendation} />);
 
     expect(screen.getByText('"Great work."')).toBeVisible();
     expect(screen.getByText('P.S.')).toBeVisible();
     expect(screen.getByText('P.S. · Engineering Manager · 15 Jan 2022')).toBeVisible();
-
-    const link = screen.getByRole('link', { name: 'View full recommendation on LinkedIn' });
-
-    expect(link).toBeVisible();
-    expect(link).toHaveAttribute(
-      'href',
-      'https://www.linkedin.com/in/example/details/recommendations/'
-    );
   });
 
   test('has no axe violations', async () => {
@@ -37,20 +28,19 @@ describe('RecommendationText', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('opens the recommendation URL in a new tab on card click', async () => {
-    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
-    const user = userEvent.setup();
+  test('links the whole card to the recommendation on LinkedIn in a new tab', () => {
     const screen = render(<RecommendationText recommendation={recommendation} />);
 
-    await user.click(screen.getByText('"Great work."'));
+    const link = screen.getByRole('link', { name: 'Recommendation from P.S. on LinkedIn' });
 
-    expect(openSpy).toHaveBeenCalledWith(
-      'https://www.linkedin.com/in/example/details/recommendations/',
-      '_blank',
-      'noopener,noreferrer'
+    expect(link).toBeVisible();
+    expect(link).toHaveAttribute(
+      'href',
+      'https://www.linkedin.com/in/example/details/recommendations/'
     );
-
-    openSpy.mockRestore();
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(link).toContainElement(screen.getByText('"Great work."'));
   });
 
   test('exposes an id matching its recommendation, for deep-link scrolling', () => {

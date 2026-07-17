@@ -19,16 +19,14 @@ describe('RecommendationByline', () => {
     expect(screen.getByText('15 Mar 2024', { exact: false })).toBeVisible();
   });
 
-  test('links to the recommendation URL on LinkedIn', () => {
+  test('renders no link of its own — the parent card is the LinkedIn link', () => {
     const recommendation = new Recommendation()
       .recommendationUrl('https://linkedin.com/in/example')
       .mock();
 
     const screen = render(<RecommendationByline recommendation={recommendation} />);
 
-    expect(
-      screen.getByRole('link', { name: 'View full recommendation on LinkedIn' })
-    ).toHaveAttribute('href', 'https://linkedin.com/in/example');
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
   });
 
   test('has no axe violations', async () => {
