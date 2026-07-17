@@ -9,6 +9,7 @@ import { PageContainer } from '@/components/pageContainer';
 
 export const NotFound = () => (
   <PageContainer>
+    <title>Page not found — Mariandi Stylianou</title>
     {/* Full remaining viewport below the nav bar (56px on xs, 64px from sm) minus the
         container's vertical padding, so the box sits dead centre of the visible page. */}
     <Stack

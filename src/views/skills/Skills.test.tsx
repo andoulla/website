@@ -58,6 +58,7 @@ describe('Skills', () => {
     test('renders the page heading and defaults to the radar view', async () => {
       const screen = await renderAndFlush();
 
+      expect(document.title).toBe('Skills — Mariandi Stylianou');
       expect(screen.getByRole('heading', { level: 1, name: 'Skills' })).toBeVisible();
       expect(screen.getByRole('cell', { name: 'Leadership & Delivery' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Table view' })).toBeVisible();

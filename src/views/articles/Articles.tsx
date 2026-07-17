@@ -99,6 +99,7 @@ export const Articles = () => {
 
   return (
     <PageContainer>
+      <title>Articles — Mariandi Stylianou</title>
       <Typography variant="h3" component="h1" sx={{ mb: 1.5 }}>
         Articles
       </Typography>

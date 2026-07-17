@@ -56,6 +56,7 @@ describe('Resume', () => {
   test('renders the name heading and every job once the data resolves', async () => {
     const screen = await renderResume(() => Promise.resolve(testCareerHistory));
 
+    expect(document.title).toBe('Mariandi Stylianou — Resume');
     expect(screen.getByRole('heading', { level: 1, name: 'Mariandi Stylianou' })).toBeVisible();
     expect(screen.getByText('Meridian Dynamics')).toBeVisible();
     expect(screen.getByText('Brightleaf Software')).toBeVisible();

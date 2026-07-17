@@ -17,6 +17,7 @@ describe('Articles', () => {
 
     const screen = render(<Articles />);
 
+    expect(document.title).toBe('Articles — Mariandi Stylianou');
     expect(screen.getByLabelText('Loading articles')).toBeVisible();
     expect(
       screen.getByText(

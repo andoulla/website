@@ -12,6 +12,7 @@ describe('NotFound', () => {
       </MemoryRouter>
     );
 
+    expect(document.title).toBe('Page not found — Mariandi Stylianou');
     expect(screen.getByText("This page doesn't exist.")).toBeVisible();
     expect(screen.getByRole('link', { name: 'Go to home' })).toHaveAttribute('href', '/');
     expect(await axe(screen.container)).toHaveNoViolations();

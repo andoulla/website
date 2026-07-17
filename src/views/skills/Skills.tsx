@@ -235,6 +235,7 @@ const SkillsContent = () => {
 export const Skills = () => {
   return (
     <PageContainer>
+      <title>Skills — Mariandi Stylianou</title>
       <Typography variant="h3" component="h1" sx={{ mb: { xs: 1.5, sm: 3 } }}>
         Skills
       </Typography>
