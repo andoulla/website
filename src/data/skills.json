@@ -4,7 +4,7 @@
     "name": "Engineering Leadership",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01", "elsevier-2016-08"],
+    "jobIds": ["atom-learning-2021-01", "capco-2012-12", "elsevier-2016-08"],
     "recommendationIds": []
   },
   {
@@ -190,6 +190,14 @@
     "type": "tech",
     "synonyms": ["Flowtype", "Facebook Flow"],
     "jobIds": ["moo-2017-01"],
+    "recommendationIds": []
+  },
+  {
+    "id": "angular",
+    "name": "Angular",
+    "type": "tech",
+    "synonyms": ["AngularJS", "Angular.js"],
+    "jobIds": ["capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -541,7 +549,7 @@
     "name": "Software Architecture",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01"],
+    "jobIds": ["atom-learning-2021-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
