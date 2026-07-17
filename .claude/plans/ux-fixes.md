@@ -19,7 +19,7 @@ Progress checkbox in this file as part of each item's commit.
 - [x] 11. No-match search hint
 - [x] 12. Copy-link visible label + announcement
 - [x] 13. Decorative article images
-- [ ] 14. Error fallback action line
+- [x] 14. Error fallback action line
 
 ## 1. Persist theme + dark mode, respect system colour scheme
 

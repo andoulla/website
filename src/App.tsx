@@ -49,6 +49,9 @@ const App = () => {
                         <Typography color="text.secondary">
                           Whoops — my career history just rage-quit. Try again?
                         </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Hit refresh to relaunch it — that usually does the trick.
+                        </Typography>
                         <Button
                           startIcon={<RefreshIcon />}
                           onClick={() => window.location.reload()}

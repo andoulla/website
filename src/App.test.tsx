@@ -64,6 +64,9 @@ describe('App', () => {
     });
 
     expect(screen.getByText('Whoops — my career history just rage-quit. Try again?')).toBeVisible();
+    expect(
+      screen.getByText('Hit refresh to relaunch it — that usually does the trick.')
+    ).toBeVisible();
     expect(screen.getByRole('button', { name: 'Refresh' })).toBeVisible();
 
     consoleErrorSpy.mockRestore();
