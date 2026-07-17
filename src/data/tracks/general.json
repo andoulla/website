@@ -51,7 +51,16 @@
         {
           "id": "core-technologies",
           "name": "Core Technologies",
-          "skillIds": ["angular", "javascript-es6", "typescript", "flow", "react", "nextjs", "html5", "css3"]
+          "skillIds": [
+            "angular",
+            "javascript-es6",
+            "typescript",
+            "flow",
+            "react",
+            "nextjs",
+            "html5",
+            "css3"
+          ]
         },
         {
           "id": "react-ecosystem",
