@@ -39,6 +39,7 @@
     "@mui/icons-material": "^9.1.1",
     "@mui/lab": "^9.0.0-beta.5",
     "@mui/material": "^9.1.1",
+    "@vercel/analytics": "^2.0.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.0",
