@@ -45,7 +45,8 @@ export const ArticleTile = memo(({ article }: ArticleTileProps) => {
           <CardMedia
             component="img"
             image={article.imageUrl}
-            alt={article.title}
+            // decorative — the adjacent heading already names the article
+            alt=""
             sx={{ height: 200, objectFit: 'cover' }}
           />
         )}

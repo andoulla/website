@@ -49,14 +49,15 @@ describe('ArticleTile', () => {
     expect(screen.getByRole('heading', { level: 2, name: 'When I have time…' })).toBeVisible();
   });
 
-  test('renders a featured image when imageUrl is provided', () => {
+  test('renders the featured image as decorative when imageUrl is provided', () => {
     const screen = render(<ArticleTile article={articleWithImage} />);
 
-    const image = screen.getByRole('img');
+    // alt="" gives the image the presentation role — decorative for screen readers.
+    const image = screen.getByRole('presentation');
 
     expect(image).toBeVisible();
     expect(image).toHaveAttribute('src', 'https://cdn.example.com/featured-image.png');
-    expect(image).toHaveAttribute('alt', 'Article with image');
+    expect(image).toHaveAttribute('alt', '');
   });
 
   test('has no axe violations without an image', async () => {
