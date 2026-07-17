@@ -68,7 +68,7 @@ const SkillRow = ({ skill, isHighlighted }: SkillRowProps) => {
           </Typography>
         )}
       </TableCell>
-      <TableCell align="right" sx={{ verticalAlign: 'top' }}>
+      <TableCell align="right" sx={{ verticalAlign: 'top', whiteSpace: 'nowrap' }}>
         {formatYears(skill.years)}
       </TableCell>
       <TableCell align="right" sx={{ verticalAlign: 'top' }}>
@@ -157,7 +157,9 @@ export const SkillsTable = ({ categoryGroups, highlightedSkills = [] }: SkillsTa
           <TableRow>
             <TableCell>Skill</TableCell>
             <TableCell>Companies</TableCell>
-            <TableCell align="right">Years</TableCell>
+            <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+              Years
+            </TableCell>
             <TableCell align="right">Links</TableCell>
           </TableRow>
         </TableHead>
