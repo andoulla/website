@@ -93,7 +93,7 @@ const GroupHeaderRow = ({
   return (
     <TableRow
       sx={{
-        bgcolor: isSubcategory ? 'transparent' : alpha(theme.palette.action.hover, 0.5),
+        bgcolor: alpha(theme.palette.primary.main, isSubcategory ? 0.08 : 0.16),
       }}
     >
       <TableCell
