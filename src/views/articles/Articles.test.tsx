@@ -2,6 +2,7 @@ import { act, render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
 import { Article } from '@/testing';
+import type { Article as ArticleType } from '@/types';
 import { loadArticles } from '@/utils/loadArticles';
 
 import { Articles } from './Articles';
@@ -71,7 +72,7 @@ describe('Articles', () => {
   });
 
   test('ignores articles that arrive after unmount', async () => {
-    let resolveArticles!: (articles: Article[]) => void;
+    let resolveArticles!: (articles: ArticleType[]) => void;
 
     mockLoadArticles.mockReturnValue(
       new Promise((resolve) => {

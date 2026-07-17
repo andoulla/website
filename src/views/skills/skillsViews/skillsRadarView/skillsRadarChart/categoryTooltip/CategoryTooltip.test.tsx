@@ -28,7 +28,7 @@ const renderTooltip = (active: boolean, payload: TooltipContentProps['payload'])
 
 describe('CategoryTooltip', () => {
   test('renders the category label and averaged years across its skills', async () => {
-    const screen = renderTooltip(true, [{ payload: frontendPoint }]);
+    const screen = renderTooltip(true, [{ payload: frontendPoint, graphicalItemId: 'radar' }]);
 
     expect(screen.getByText('Frontend Development')).toBeVisible();
     expect(screen.getByText('2.5 years avg across 3 skills')).toBeVisible();
@@ -37,14 +37,14 @@ describe('CategoryTooltip', () => {
 
   test('renders singular copy for a single year and single skill', () => {
     const screen = renderTooltip(true, [
-      { payload: { ...frontendPoint, avgYears: 1, skillCount: 1 } },
+      { payload: { ...frontendPoint, avgYears: 1, skillCount: 1 }, graphicalItemId: 'radar' },
     ]);
 
     expect(screen.getByText('1 year avg across 1 skill')).toBeVisible();
   });
 
   test('renders nothing when inactive', () => {
-    const screen = renderTooltip(false, [{ payload: frontendPoint }]);
+    const screen = renderTooltip(false, [{ payload: frontendPoint, graphicalItemId: 'radar' }]);
 
     expect(screen.container).toBeEmptyDOMElement();
   });
