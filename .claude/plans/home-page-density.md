@@ -14,7 +14,7 @@ then A+E card collapse, then the F2 compact skills wall (it depends on the densi
 - [x] 1. Density plumbing — theme-level `density` + floating Compact switch (Decided 2)
 - [x] 2. Card collapse — full body behind "Show details", single-responsibility exception,
      first card starts expanded (Decided 1, 4)
-- [ ] 3. F2 skills wall — inline caption list in both densities (Decided 3)
+- [x] 3. F2 skills wall — inline caption list in both densities (Decided 3)
 - [ ] 4. Slimmer recommendations — quote-strip restructure, then line-clamp (Decided 5)
 - [ ] 5. Density audit of Skills and Articles surfaces (Decided 2 follow-up)
 - [ ] 6. Job headlines — one-line summary per job, visible on collapsed cards (separate work,
@@ -80,6 +80,10 @@ Originally compact-only; user then decided the caption list looks fine and shoul
 **consistent across compact and comfortable** — chips are gone from resume cards entirely,
 and the card no longer reads the density context.
 
+Key skills additionally sit behind their **own second expander** ("Show key skills"/"Hide
+key skills") inside the expanded card body: `areSkillsExpanded = userSkillsExpanded ??
+hasHighlightedSkill`, so a `?skill=` deep link opens both the card and the skills section.
+
 **Deep-linking impact: none, provided each name renders as an inline `Link
 component="button"`** — outbound navigation is handler-based, not chip-based
 (`handleSkillClick` → `/skills?skill=…`, `handleCategoryClick` → `/skills?category=…`,
@@ -108,7 +112,14 @@ current whole-card `CardActionArea` link:
    `id={recommendationElementId(...)}` on the blockquote; highlight becomes
    `bgcolor: alpha(primary, 0.08)` + stronger left border (scroll logic in
    `TimelineEventCard.tsx` untouched). Grid layout in `TimelineEventCard.tsx` stays; gap → 1.
-2. **Line-clamp with expand-on-demand**: clamp quote text to 3 lines (compact) / 4
-   (comfortable) via `display: '-webkit-box'`, `WebkitLineClamp`, `WebkitBoxOrient:
-'vertical'`, `overflow: 'hidden'` + a local "more" toggle. Auto-unclamp when
-   `isHighlighted` so `?recommendation=` deep links show the full quote.
+2. **Line-clamp with inline "More/Less" toggle** (subagent-vetted): clamp quote text to
+   3 lines (compact) / 4 (comfortable) via `display: '-webkit-box'`, `WebkitLineClamp`,
+   `WebkitBoxOrient: 'vertical'`, `overflow: 'hidden'`. Reveal = small text `Button` with
+   `aria-expanded`, derived state `isClamped = !(userExpanded ?? isHighlighted)` (no
+   effects — mirrors the card pattern), so `?recommendation=` deep links auto-unclamp and
+   the user toggle wins. Clamp is visual-only: screen readers always get the full text.
+   All 11 quotes (384–844 chars) will clamp; LinkedIn can't substitute (all recs share one
+   generic URL). Optional later guard: show the toggle only when `text.length > ~200`
+   (char-count constant — never a `scrollHeight` effect, the setState-in-effect lint rule
+   forbids it). Rejected: click-anywhere quote (a11y/selection issues), dialog (modal for a
+   paragraph, hostile on deep link).

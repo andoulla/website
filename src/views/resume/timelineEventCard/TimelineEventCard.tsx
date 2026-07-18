@@ -84,14 +84,18 @@ export const TimelineEventCard = ({
     event.recommendations.some(
       (recommendation) => recommendation.id === highlightedRecommendationId
     );
-  const isMatch =
-    (highlightedSkillId !== undefined &&
-      event.skills.some((skill) => skill.id === highlightedSkillId)) ||
-    hasHighlightedRecommendation;
+  const hasHighlightedSkill =
+    highlightedSkillId !== undefined &&
+    event.skills.some((skill) => skill.id === highlightedSkillId);
+  const isMatch = hasHighlightedSkill || hasHighlightedRecommendation;
 
   // user toggle wins; otherwise deep-link matches and the first card render expanded
   const [userExpanded, setUserExpanded] = useState<boolean | null>(null);
   const isExpanded = userExpanded ?? (isMatch || startExpanded);
+
+  // key skills sit behind a second expander; a skill deep link opens it
+  const [userSkillsExpanded, setUserSkillsExpanded] = useState<boolean | null>(null);
+  const areSkillsExpanded = userSkillsExpanded ?? hasHighlightedSkill;
 
   const cardNodeRef = useRef<HTMLDivElement | null>(null);
   const setCardNode = useCallback(
@@ -240,57 +244,67 @@ export const TimelineEventCard = ({
           {hasSkills && (
             <>
               {(hasResponsibilities || hasTechStack) && <Divider sx={{ my: 2 }} />}
-              <Section title="Key Skills" titleLevel={4}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                  {skillGroups.map((group) => {
-                    const captionColour = resolveSkillColourMain(
-                      categoryColourFromIndex(group.category.index),
-                      theme
-                    );
-                    return (
-                      <Box
-                        key={group.category.id}
-                        sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
-                      >
-                        <Link
-                          component="button"
-                          type="button"
-                          variant="caption"
-                          underline="hover"
-                          onClick={() => handleCategoryClick(group.category.id)}
-                          sx={{
-                            fontWeight: 'medium',
-                            flexShrink: 0,
-                            color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
-                          }}
+              <Button
+                size="small"
+                aria-expanded={areSkillsExpanded}
+                startIcon={areSkillsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                onClick={() => setUserSkillsExpanded(!areSkillsExpanded)}
+              >
+                {areSkillsExpanded ? 'Hide key skills' : 'Show key skills'}
+              </Button>
+              <Collapse in={areSkillsExpanded} unmountOnExit>
+                <Section title="Key Skills" titleLevel={4}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                    {skillGroups.map((group) => {
+                      const captionColour = resolveSkillColourMain(
+                        categoryColourFromIndex(group.category.index),
+                        theme
+                      );
+                      return (
+                        <Box
+                          key={group.category.id}
+                          sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
                         >
-                          {`${group.category.name}:`}
-                        </Link>
-                        <Typography variant="caption" sx={{ lineHeight: 1.7 }}>
-                          {group.skills.map((skill, index) => (
-                            <Fragment key={skill.id}>
-                              {index > 0 && ', '}
-                              <Link
-                                component="button"
-                                type="button"
-                                variant="caption"
-                                underline="hover"
-                                onClick={() => handleSkillClick(skill.name)}
-                                sx={{ color: captionColour }}
-                              >
-                                {skill.name}
-                              </Link>
-                            </Fragment>
-                          ))}
-                        </Typography>
-                      </Box>
-                    );
-                  })}
-                </Box>
-                <Button size="small" onClick={handleViewAllSkillsClick} sx={{ mt: 1.5 }}>
-                  {"View this role's skills on the graph"}
-                </Button>
-              </Section>
+                          <Link
+                            component="button"
+                            type="button"
+                            variant="caption"
+                            underline="hover"
+                            onClick={() => handleCategoryClick(group.category.id)}
+                            sx={{
+                              fontWeight: 'medium',
+                              flexShrink: 0,
+                              color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
+                            }}
+                          >
+                            {`${group.category.name}:`}
+                          </Link>
+                          <Typography variant="caption" sx={{ lineHeight: 1.7 }}>
+                            {group.skills.map((skill, index) => (
+                              <Fragment key={skill.id}>
+                                {index > 0 && ', '}
+                                <Link
+                                  component="button"
+                                  type="button"
+                                  variant="caption"
+                                  underline="hover"
+                                  onClick={() => handleSkillClick(skill.name)}
+                                  sx={{ color: captionColour }}
+                                >
+                                  {skill.name}
+                                </Link>
+                              </Fragment>
+                            ))}
+                          </Typography>
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                  <Button size="small" onClick={handleViewAllSkillsClick} sx={{ mt: 1.5 }}>
+                    {"View this role's skills on the graph"}
+                  </Button>
+                </Section>
+              </Collapse>
             </>
           )}
           {hasRecommendations && (

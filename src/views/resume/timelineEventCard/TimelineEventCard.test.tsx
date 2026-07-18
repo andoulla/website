@@ -78,14 +78,15 @@ describe('TimelineEventCard', () => {
       wrapper: MemoryRouter,
     });
 
-    expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByRole('button', { name: 'Hide details' })).toHaveAttribute(
       'aria-expanded',
       'true'
     );
+    // key skills stay behind their own toggle even on the expanded first card
+    expect(screen.getByRole('button', { name: 'Show key skills' })).toBeVisible();
   });
 
-  test('"Show details" reveals the skills and toggles to "Hide details"', async () => {
+  test('"Show details" reveals the body and the key skills wait behind their own toggle', async () => {
     const user = userEvent.setup();
     const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
       wrapper: MemoryRouter,
@@ -93,9 +94,18 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
 
+    expect(screen.getByText('React, TypeScript')).toBeVisible();
+    expect(screen.queryByText('Engineering:')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Show key skills' })).toHaveAttribute(
+      'aria-expanded',
+      'false'
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Show key skills' }));
+
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByText('TypeScript')).toBeVisible();
-    expect(screen.getByRole('button', { name: 'Hide details' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: 'Hide key skills' })).toHaveAttribute(
       'aria-expanded',
       'true'
     );
@@ -126,6 +136,7 @@ describe('TimelineEventCard', () => {
     );
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
+    await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
     expect(screen.getByText('Engineering:')).toBeVisible();
     expect(screen.getByText('React')).toBeVisible();
@@ -141,6 +152,7 @@ describe('TimelineEventCard', () => {
     });
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
+    await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
     expect(screen.getByRole('button', { name: 'React' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'TypeScript' })).toBeVisible();
@@ -155,6 +167,7 @@ describe('TimelineEventCard', () => {
     });
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
+    await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
     expect(screen.getByRole('heading', { level: 3, name: 'Meridian Dynamics' })).toBeVisible();
 
@@ -262,6 +275,7 @@ describe('TimelineEventCard', () => {
     );
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
+    await user.click(screen.getByRole('button', { name: 'Show key skills' }));
     await user.click(screen.getByText('React'));
 
     expect(
@@ -279,6 +293,7 @@ describe('TimelineEventCard', () => {
     );
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
+    await user.click(screen.getByRole('button', { name: 'Show key skills' }));
     await user.click(screen.getByRole('button', { name: "View this role's skills on the graph" }));
 
     expect(
@@ -296,6 +311,7 @@ describe('TimelineEventCard', () => {
     );
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
+    await user.click(screen.getByRole('button', { name: 'Show key skills' }));
     await user.click(screen.getByRole('button', { name: 'Engineering:' }));
 
     expect(
@@ -313,6 +329,7 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.queryByRole('heading', { level: 4, name: 'Key Skills' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Show key skills' })).not.toBeInTheDocument();
     expect(
       screen.queryByRole('button', { name: "View this role's skills on the graph" })
     ).not.toBeInTheDocument();
@@ -373,6 +390,7 @@ describe('TimelineEventCard', () => {
 
       expect(screen.getByText('React')).toBeVisible();
       expect(screen.getByRole('button', { name: 'Hide details' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Hide key skills' })).toBeVisible();
     });
 
     test('scrolls into view when autoScrollToHighlight is true', () => {

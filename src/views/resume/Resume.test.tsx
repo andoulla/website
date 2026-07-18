@@ -101,6 +101,10 @@ describe('Resume', () => {
 
     // the first card starts expanded
     expect(screen.getByText('Built the design system')).toBeVisible();
+
+    // key skills sit behind their own toggle; the state persists across tab switches
+    await user.click(screen.getByRole('button', { name: 'Show key skills' }));
+
     expect(screen.getByText('React Hooks')).toBeVisible();
 
     await user.click(screen.getByRole('tab', { name: 'Lead / Engineering Manager' }));
