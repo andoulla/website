@@ -1,1 +1,0 @@
-export { isRecentEvent } from './isRecentEvent';

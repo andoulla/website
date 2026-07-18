@@ -12,26 +12,30 @@ then A+E card collapse, then the F2 compact skills wall (it depends on the densi
 ## Progress
 
 - [x] 1. Density plumbing — theme-level `density` + floating Compact switch (Decided 2)
-- [x] 2. A+E card collapse by recency (Decided 1, 4)
-- [ ] 3. F2 compact skills wall (Decided 3)
-- [ ] 4. Density audit of Skills and Articles surfaces (Decided 2 follow-up)
+- [x] 2. Card collapse — full body behind "Show details", single-responsibility exception,
+     first card starts expanded (Decided 1, 4)
+- [ ] 3. F2 skills wall — inline caption list in both densities (Decided 3)
+- [ ] 4. Slimmer recommendations — quote-strip restructure, then line-clamp (Decided 5)
+- [ ] 5. Density audit of Skills and Articles surfaces (Decided 2 follow-up)
+- [ ] 6. Job headlines — one-line summary per job, visible on collapsed cards (separate work,
+     needs new `headline` content authored per careerHistory entry)
 
-## Decided 1 — A+E: progressive disclosure by section and by recency
+## Decided 1 — full card collapse; first card starts expanded
 
-One expand mechanism (MUI `Collapse`), two triggers:
+Originally A+E by recency; refined by user calls: (a) collapsed cards hide responsibilities
+too; (b) exception — a card with exactly one responsibility keeps it visible when collapsed;
+(c) only the **first card** starts expanded on load (`startExpanded={index === 0}` from
+`Resume.tsx`, same shape as `startInView`) — the date-based `isRecentEvent` util is gone.
 
-- **Recent roles** = roles active within the last decade (`event.endDate === null` or
-  `endDate` within 10 years of today — derived from dates, not a fixed item count): render
-  header + responsibilities by default; tech stack, key skills, and recommendations sit
-  behind a per-card "Show more". Derivation lives in a small pure util (`src/utils/`, e.g.
-  `isRecentEvent(event, now)`) so it's testable.
-- **Older roles**: render the bare form (`TimelineEventCard.tsx:161-171` `isBare` branch) with
-  a "Show details" expander revealing the full card.
-- **Deep links** (`?skill=`, `?recommendation=`) must auto-expand the matched card: `isMatch`
-  is already computed at `TimelineEventCard.tsx:82-85` — initialise the expanded state from it
-  so the existing `scrollIntoView` (`:97-107`) lands on visible content.
-- Files: `TimelineEventCard.tsx` (+ constants/tests); `Resume.tsx` passes a recency flag
-  (it already passes `startInView={index === 0}` at `Resume.tsx:109` — same shape).
+- Every non-bare card collapses its body (responsibilities, tech stack, key skills,
+  recommendations) behind one "Show details"/"Hide details" `Button` (`aria-expanded`,
+  chevron icon) + MUI `Collapse` (`unmountOnExit`).
+- Single-responsibility cards render that responsibility above the `Collapse`; the expander
+  then only covers tech/skills/recommendations (and is omitted if there are none).
+- Expansion: `isExpanded = userExpanded ?? (isMatch || startExpanded)` — user toggle wins,
+  deep links (`?skill=`, `?recommendation=`) and first-card default expand (derived state, no
+  effect — the `react-hooks/set-state-in-effect` lint rule forbids the effect version).
+- Bare cards (nothing relevant to the track) are unchanged — header only, no expander.
 
 ## Decided 2 — density toggle: Compact vs Comfortable (current = larger font)
 
@@ -67,12 +71,14 @@ Implementation sketch:
   (https://m2.material.io/design/layout/applying-density.html), Salesforce Lightning density
   settings (https://developer.salesforce.com/blogs/2018/08/new-density-settings-for-the-lightning-experience-ui-in-winter-19).
 
-## Decided 3 — skills wall condenses via F2 (caption line) in compact mode
+## Decided 3 — skills wall renders as F2 caption lines in BOTH densities
 
-The grouped tag walls (`TimelineEventCard.tsx:226-259`) are a big block per card. In compact
-mode, replace the chips with a caption-style comma list per category, mirroring the Tech
-Stack line treatment (`:206-221`) and keeping the category link + colour. Comfortable mode
-keeps the current chips.
+The grouped tag walls were a big block per card. Replace the chips with a caption-style
+comma list per category, mirroring the Tech Stack line treatment and keeping the category
+link + colour (skill links tinted via `resolveSkillColourMain(categoryColourFromIndex(i))`).
+Originally compact-only; user then decided the caption list looks fine and should be
+**consistent across compact and comfortable** — chips are gone from resume cards entirely,
+and the card no longer reads the density context.
 
 **Deep-linking impact: none, provided each name renders as an inline `Link
 component="button"`** — outbound navigation is handler-based, not chip-based
@@ -87,3 +93,22 @@ nothing is lost there.
 Per-card expand/collapse state is React state only: no URL param, no storage. Deep links
 auto-expand a target card, and restored stale state would leave other cards open for the user
 to close.
+
+## Decided 5 — slimmer recommendations: quote-strip, then line-clamp
+
+Recommendations feel bulky (card-in-card chrome: outlined `Card` + grey fill + avatar +
+`CardActionArea` + generous padding, 11 recs of 384–844 chars, max 4 per job). Two stages,
+in order — the clamp needs the restructure first because a toggle can't nest inside the
+current whole-card `CardActionArea` link:
+
+1. **Quote-strip restructure** (`RecommendationText.tsx` + `recommendationByline/`):
+   drop `Card`/`CardActionArea`/avatar/hover-lift; render `Box component="blockquote"` with
+   `borderLeft` (2–3px, primary), `pl: 1.5`, `py: 0.5`, `m: 0`. The byline (initials · role ·
+   LinkedIn icon · date) becomes the outbound `Link` (`target="_blank"`). Keep
+   `id={recommendationElementId(...)}` on the blockquote; highlight becomes
+   `bgcolor: alpha(primary, 0.08)` + stronger left border (scroll logic in
+   `TimelineEventCard.tsx` untouched). Grid layout in `TimelineEventCard.tsx` stays; gap → 1.
+2. **Line-clamp with expand-on-demand**: clamp quote text to 3 lines (compact) / 4
+   (comfortable) via `display: '-webkit-box'`, `WebkitLineClamp`, `WebkitBoxOrient:
+'vertical'`, `overflow: 'hidden'` + a local "more" toggle. Auto-unclamp when
+   `isHighlighted` so `?recommendation=` deep links show the full quote.

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -16,11 +16,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { BulletList } from '@/components/bulletList';
 import { Section } from '@/components/section';
-import { TagList } from '@/components/tagList';
 import { TRACK_PARAM } from '@/context/track';
 import type { TimelineEventWithRecommendations, Track } from '@/types';
 import { MONTH_NAMES } from '@/utils/formatDate';
-import { categoryColourFromIndex, skillShadeIndex } from '@/utils/skillColour';
+import { categoryColourFromIndex, resolveSkillColourMain } from '@/utils/skillColour';
 import { CATEGORY_PARAM, SKILL_PARAM, VIEW_PARAM } from '@/utils/skillsUrlParams';
 
 import { RESPONSIBILITIES_LABEL_BY_TYPE } from './TimelineEventCard.constants';
@@ -44,8 +43,8 @@ export interface TimelineEventCardProps {
   startInView?: boolean;
   // For internships: auto-derived caption naming concurrent events (e.g. "Alongside X").
   overlapCaption?: string;
-  // recent: responsibilities stay visible, rest collapses; older: everything collapses
-  isRecent?: boolean;
+  // the first card starts expanded on load
+  startExpanded?: boolean;
 }
 
 const formatMonthYear = (isoDate: string): string => {
@@ -58,13 +57,6 @@ const formatDuration = (startDate: string, endDate: string | null): string => {
   return `${formatMonthYear(startDate)} – ${end}`;
 };
 
-const deriveToggleLabel = (isRecent: boolean, isExpanded: boolean): string => {
-  if (isRecent) {
-    return isExpanded ? 'Show less' : 'Show more';
-  }
-  return isExpanded ? 'Hide details' : 'Show details';
-};
-
 export const TimelineEventCard = ({
   event,
   track,
@@ -73,7 +65,7 @@ export const TimelineEventCard = ({
   autoScrollToHighlight,
   startInView,
   overlapCaption,
-  isRecent = true,
+  startExpanded = false,
 }: TimelineEventCardProps) => {
   const navigate = useNavigate();
   const duration = formatDuration(event.startDate, event.endDate);
@@ -97,9 +89,9 @@ export const TimelineEventCard = ({
       event.skills.some((skill) => skill.id === highlightedSkillId)) ||
     hasHighlightedRecommendation;
 
-  // user toggle wins; otherwise deep-link matches render expanded
+  // user toggle wins; otherwise deep-link matches and the first card render expanded
   const [userExpanded, setUserExpanded] = useState<boolean | null>(null);
-  const isExpanded = userExpanded ?? isMatch;
+  const isExpanded = userExpanded ?? (isMatch || startExpanded);
 
   const cardNodeRef = useRef<HTMLDivElement | null>(null);
   const setCardNode = useCallback(
@@ -161,7 +153,11 @@ export const TimelineEventCard = ({
   const hasRecommendations = event.recommendations.length > 0;
   // Nothing relevant to the active track — collapse to primary info only.
   const isBare = !hasResponsibilities && !hasTechStack && !hasSkills;
-  const hasCollapsibleContent = isRecent ? hasTechStack || hasSkills || hasRecommendations : true;
+  // exception: a lone responsibility stays visible when collapsed
+  const showsSingleResponsibility = event.responsibilities.length === 1;
+  const hasCollapsibleContent = showsSingleResponsibility
+    ? hasTechStack || hasSkills || hasRecommendations
+    : true;
 
   const cardHeader = (
     <CardHeader
@@ -221,9 +217,9 @@ export const TimelineEventCard = ({
     >
       {cardHeader}
       <CardContent>
-        {isRecent && responsibilitiesSection}
+        {showsSingleResponsibility && responsibilitiesSection}
         <Collapse in={isExpanded} unmountOnExit>
-          {!isRecent && responsibilitiesSection}
+          {!showsSingleResponsibility && responsibilitiesSection}
           {hasTechStack && (
             <>
               {hasResponsibilities && <Divider sx={{ my: 2 }} />}
@@ -246,33 +242,50 @@ export const TimelineEventCard = ({
               {(hasResponsibilities || hasTechStack) && <Divider sx={{ my: 2 }} />}
               <Section title="Key Skills" titleLevel={4}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                  {skillGroups.map((group) => (
-                    <Box
-                      key={group.category.id}
-                      sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
-                    >
-                      <Link
-                        component="button"
-                        type="button"
-                        variant="caption"
-                        underline="hover"
-                        onClick={() => handleCategoryClick(group.category.id)}
-                        sx={{
-                          fontWeight: 'medium',
-                          flexShrink: 0,
-                          color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
-                        }}
+                  {skillGroups.map((group) => {
+                    const captionColour = resolveSkillColourMain(
+                      categoryColourFromIndex(group.category.index),
+                      theme
+                    );
+                    return (
+                      <Box
+                        key={group.category.id}
+                        sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
                       >
-                        {`${group.category.name}:`}
-                      </Link>
-                      <TagList
-                        items={group.skills.map((skill) => skill.name)}
-                        onItemClick={handleSkillClick}
-                        getColour={() => categoryColourFromIndex(group.category.index)}
-                        getShadeIndex={skillShadeIndex}
-                      />
-                    </Box>
-                  ))}
+                        <Link
+                          component="button"
+                          type="button"
+                          variant="caption"
+                          underline="hover"
+                          onClick={() => handleCategoryClick(group.category.id)}
+                          sx={{
+                            fontWeight: 'medium',
+                            flexShrink: 0,
+                            color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
+                          }}
+                        >
+                          {`${group.category.name}:`}
+                        </Link>
+                        <Typography variant="caption" sx={{ lineHeight: 1.7 }}>
+                          {group.skills.map((skill, index) => (
+                            <Fragment key={skill.id}>
+                              {index > 0 && ', '}
+                              <Link
+                                component="button"
+                                type="button"
+                                variant="caption"
+                                underline="hover"
+                                onClick={() => handleSkillClick(skill.name)}
+                                sx={{ color: captionColour }}
+                              >
+                                {skill.name}
+                              </Link>
+                            </Fragment>
+                          ))}
+                        </Typography>
+                      </Box>
+                    );
+                  })}
                 </Box>
                 <Button size="small" onClick={handleViewAllSkillsClick} sx={{ mt: 1.5 }}>
                   {"View this role's skills on the graph"}
@@ -314,7 +327,7 @@ export const TimelineEventCard = ({
             onClick={() => setUserExpanded(!isExpanded)}
             sx={{ mt: 1 }}
           >
-            {deriveToggleLabel(isRecent, isExpanded)}
+            {isExpanded ? 'Hide details' : 'Show details'}
           </Button>
         )}
       </CardContent>

@@ -99,11 +99,8 @@ describe('Resume', () => {
       .mock();
     const screen = await renderResume(() => Promise.resolve([eventWithMixedSkills]));
 
+    // the first card starts expanded
     expect(screen.getByText('Built the design system')).toBeVisible();
-
-    // skills sit behind the card's expander; the card stays expanded across tab switches
-    await user.click(screen.getByRole('button', { name: 'Show more' }));
-
     expect(screen.getByText('React Hooks')).toBeVisible();
 
     await user.click(screen.getByRole('tab', { name: 'Lead / Engineering Manager' }));

@@ -83,7 +83,6 @@ suggestions report to gitignored `scripts/output/` — it NEVER writes to `src/d
 - [src/utils/](src/utils/) — pure utility functions
   - `calculateSkillYears` — derives `SkillSummary[]` from `TimelineEvent[]` + the active `Track` (track category order, years desc within category)
   - `filterEventsByTrack` — narrows each event's responsibilities/techStack/skills to the active track
-  - `isRecentEvent` — ongoing or ended within the last decade (drives resume card collapse depth)
   - `deriveSkillCategoryMap` — skillId → owning track category (used by resume card grouping)
   - `derivePresentCategories` — deduped, ordered categories present in a `SkillSummary[]`
   - `matchSkill` — synonym-aware lookup of a raw term against skill names/synonyms

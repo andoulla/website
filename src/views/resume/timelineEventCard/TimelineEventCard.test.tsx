@@ -56,7 +56,7 @@ const recommendationItem = new Recommendation()
   .mock();
 
 describe('TimelineEventCard', () => {
-  test('renders company details and responsibilities, with the rest behind "Show more"', () => {
+  test('renders company details and responsibilities, with the rest behind "Show details"', () => {
     const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
       wrapper: MemoryRouter,
     });
@@ -67,30 +67,42 @@ describe('TimelineEventCard', () => {
     ).toBeVisible();
     expect(screen.getByText('Lead frontend architecture')).toBeVisible();
     expect(screen.queryByText('React')).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Show more' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: 'Show details' })).toHaveAttribute(
       'aria-expanded',
       'false'
     );
   });
 
-  test('"Show more" reveals the skills and toggles to "Show less"', async () => {
+  test('startExpanded renders the card expanded with a "Hide details" toggle', () => {
+    const screen = render(<TimelineEventCard event={event} track={testTrack} startExpanded />, {
+      wrapper: MemoryRouter,
+    });
+
+    expect(screen.getByText('React')).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Hide details' })).toHaveAttribute(
+      'aria-expanded',
+      'true'
+    );
+  });
+
+  test('"Show details" reveals the skills and toggles to "Hide details"', async () => {
     const user = userEvent.setup();
     const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
       wrapper: MemoryRouter,
     });
 
-    await user.click(screen.getByRole('button', { name: 'Show more' }));
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.getByText('React')).toBeVisible();
     expect(screen.getByText('TypeScript')).toBeVisible();
-    expect(screen.getByRole('button', { name: 'Show less' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: 'Hide details' })).toHaveAttribute(
       'aria-expanded',
       'true'
     );
 
-    await user.click(screen.getByRole('button', { name: 'Show less' }));
+    await user.click(screen.getByRole('button', { name: 'Hide details' }));
 
-    expect(screen.getByRole('button', { name: 'Show more' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: 'Show details' })).toHaveAttribute(
       'aria-expanded',
       'false'
     );
@@ -113,7 +125,7 @@ describe('TimelineEventCard', () => {
       { wrapper: MemoryRouter }
     );
 
-    await user.click(screen.getByRole('button', { name: 'Show more' }));
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.getByText('Engineering:')).toBeVisible();
     expect(screen.getByText('React')).toBeVisible();
@@ -122,13 +134,27 @@ describe('TimelineEventCard', () => {
     expect(screen.queryByText('Kubernetes')).not.toBeInTheDocument();
   });
 
+  test('renders the key skills as an inline comma list of links, not chips', async () => {
+    const user = userEvent.setup();
+    const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+      wrapper: MemoryRouter,
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+    expect(screen.getByRole('button', { name: 'React' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'TypeScript' })).toBeVisible();
+    // TagList would render a ul
+    expect(screen.queryByRole('list')).not.toBeInTheDocument();
+  });
+
   test('places the company and its sections correctly in the heading hierarchy, responsibilities first', async () => {
     const user = userEvent.setup();
     const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
       wrapper: MemoryRouter,
     });
 
-    await user.click(screen.getByRole('button', { name: 'Show more' }));
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.getByRole('heading', { level: 3, name: 'Meridian Dynamics' })).toBeVisible();
 
@@ -155,7 +181,7 @@ describe('TimelineEventCard', () => {
       { wrapper: MemoryRouter }
     );
 
-    await user.click(screen.getByRole('button', { name: 'Show more' }));
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.getByRole('heading', { level: 4, name: 'Tech Stack' })).toBeVisible();
     expect(screen.getByText('Vite, Jest, Playwright')).toBeVisible();
@@ -182,7 +208,7 @@ describe('TimelineEventCard', () => {
       { wrapper: MemoryRouter }
     );
 
-    await user.click(screen.getByRole('button', { name: 'Show more' }));
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.getByText('Recommendations (1)')).toBeVisible();
     expect(screen.getByText('P.S. · Engineering Manager · 12 Jun 2023')).toBeVisible();
@@ -195,7 +221,7 @@ describe('TimelineEventCard', () => {
       wrapper: MemoryRouter,
     });
 
-    await user.click(screen.getByRole('button', { name: 'Show more' }));
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.queryByText('Recommendations')).not.toBeInTheDocument();
     expect(await axe(screen.container)).toHaveNoViolations();
@@ -235,7 +261,7 @@ describe('TimelineEventCard', () => {
       </MemoryRouter>
     );
 
-    await user.click(screen.getByRole('button', { name: 'Show more' }));
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByText('React'));
 
     expect(
@@ -252,7 +278,7 @@ describe('TimelineEventCard', () => {
       </MemoryRouter>
     );
 
-    await user.click(screen.getByRole('button', { name: 'Show more' }));
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: "View this role's skills on the graph" }));
 
     expect(
@@ -269,7 +295,7 @@ describe('TimelineEventCard', () => {
       </MemoryRouter>
     );
 
-    await user.click(screen.getByRole('button', { name: 'Show more' }));
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: 'Engineering:' }));
 
     expect(
@@ -284,7 +310,7 @@ describe('TimelineEventCard', () => {
       { wrapper: MemoryRouter }
     );
 
-    await user.click(screen.getByRole('button', { name: 'Show more' }));
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.queryByRole('heading', { level: 4, name: 'Key Skills' })).not.toBeInTheDocument();
     expect(
@@ -299,7 +325,7 @@ describe('TimelineEventCard', () => {
       { wrapper: MemoryRouter }
     );
 
-    await user.click(screen.getByRole('button', { name: 'Show more' }));
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.queryByRole('heading', { level: 4, name: 'Tech Stack' })).not.toBeInTheDocument();
   });
@@ -346,7 +372,7 @@ describe('TimelineEventCard', () => {
       );
 
       expect(screen.getByText('React')).toBeVisible();
-      expect(screen.getByRole('button', { name: 'Show less' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Hide details' })).toBeVisible();
     });
 
     test('scrolls into view when autoScrollToHighlight is true', () => {
@@ -443,7 +469,8 @@ describe('TimelineEventCard', () => {
     });
   });
 
-  test('renders multiple responsibilities as a bullet list', () => {
+  test('renders multiple responsibilities as a bullet list behind the expander', async () => {
+    const user = userEvent.setup();
     const screen = render(
       <TimelineEventCard
         event={{
@@ -458,6 +485,11 @@ describe('TimelineEventCard', () => {
       { wrapper: MemoryRouter }
     );
 
+    // only a lone responsibility stays visible when collapsed
+    expect(screen.queryByText('Lead frontend architecture')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
+
     const responsibilitiesHeading = screen.getByRole('heading', {
       level: 4,
       name: 'Responsibilities',
@@ -470,58 +502,6 @@ describe('TimelineEventCard', () => {
     expect(items).toHaveLength(2);
     expect(items[0]).toHaveTextContent('Lead frontend architecture');
     expect(items[1]).toHaveTextContent('Mentor engineers');
-  });
-
-  describe('older roles', () => {
-    const olderEvent = { ...event, startDate: '2010-01-01', endDate: '2012-06-30' };
-
-    test('collapses the whole body behind "Show details"', () => {
-      const screen = render(
-        <TimelineEventCard event={olderEvent} track={testTrack} isRecent={false} />,
-        { wrapper: MemoryRouter }
-      );
-
-      expect(screen.getByText('Meridian Dynamics')).toBeVisible();
-      expect(screen.queryByText('Lead frontend architecture')).not.toBeInTheDocument();
-      expect(screen.queryByText('React')).not.toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Show details' })).toHaveAttribute(
-        'aria-expanded',
-        'false'
-      );
-    });
-
-    test('"Show details" reveals the body and toggles to "Hide details"', async () => {
-      const user = userEvent.setup();
-      const screen = render(
-        <TimelineEventCard event={olderEvent} track={testTrack} isRecent={false} />,
-        { wrapper: MemoryRouter }
-      );
-
-      await user.click(screen.getByRole('button', { name: 'Show details' }));
-
-      expect(screen.getByText('Lead frontend architecture')).toBeVisible();
-      expect(screen.getByText('React')).toBeVisible();
-      expect(screen.getByRole('button', { name: 'Hide details' })).toHaveAttribute(
-        'aria-expanded',
-        'true'
-      );
-      expect(await axe(screen.container)).toHaveNoViolations();
-    });
-
-    test('a highlighted skill auto-expands an older role', () => {
-      const screen = render(
-        <TimelineEventCard
-          event={olderEvent}
-          track={testTrack}
-          isRecent={false}
-          highlightedSkillId="react"
-        />,
-        { wrapper: MemoryRouter }
-      );
-
-      expect(screen.getByText('Lead frontend architecture')).toBeVisible();
-      expect(screen.getByText('React')).toBeVisible();
-    });
   });
 
   describe('scroll-fade animation', () => {
