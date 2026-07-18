@@ -1,10 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import { alpha, useTheme } from '@mui/material/styles';
@@ -41,6 +44,8 @@ export interface TimelineEventCardProps {
   startInView?: boolean;
   // For internships: auto-derived caption naming concurrent events (e.g. "Alongside X").
   overlapCaption?: string;
+  // recent: responsibilities stay visible, rest collapses; older: everything collapses
+  isRecent?: boolean;
 }
 
 const formatMonthYear = (isoDate: string): string => {
@@ -53,6 +58,13 @@ const formatDuration = (startDate: string, endDate: string | null): string => {
   return `${formatMonthYear(startDate)} – ${end}`;
 };
 
+const deriveToggleLabel = (isRecent: boolean, isExpanded: boolean): string => {
+  if (isRecent) {
+    return isExpanded ? 'Show less' : 'Show more';
+  }
+  return isExpanded ? 'Hide details' : 'Show details';
+};
+
 export const TimelineEventCard = ({
   event,
   track,
@@ -61,6 +73,7 @@ export const TimelineEventCard = ({
   autoScrollToHighlight,
   startInView,
   overlapCaption,
+  isRecent = true,
 }: TimelineEventCardProps) => {
   const navigate = useNavigate();
   const duration = formatDuration(event.startDate, event.endDate);
@@ -83,6 +96,10 @@ export const TimelineEventCard = ({
     (highlightedSkillId !== undefined &&
       event.skills.some((skill) => skill.id === highlightedSkillId)) ||
     hasHighlightedRecommendation;
+
+  // user toggle wins; otherwise deep-link matches render expanded
+  const [userExpanded, setUserExpanded] = useState<boolean | null>(null);
+  const isExpanded = userExpanded ?? isMatch;
 
   const cardNodeRef = useRef<HTMLDivElement | null>(null);
   const setCardNode = useCallback(
@@ -141,8 +158,10 @@ export const TimelineEventCard = ({
   const hasResponsibilities = event.responsibilities.length > 0;
   const hasTechStack = event.techStack.length > 0;
   const hasSkills = event.skills.length > 0;
+  const hasRecommendations = event.recommendations.length > 0;
   // Nothing relevant to the active track — collapse to primary info only.
   const isBare = !hasResponsibilities && !hasTechStack && !hasSkills;
+  const hasCollapsibleContent = isRecent ? hasTechStack || hasSkills || hasRecommendations : true;
 
   const cardHeader = (
     <CardHeader
@@ -170,6 +189,24 @@ export const TimelineEventCard = ({
     );
   }
 
+  const responsibilitiesSection = hasResponsibilities && (
+    <Section title={RESPONSIBILITIES_LABEL_BY_TYPE[event.type]} titleLevel={4}>
+      {event.responsibilities.length === 1 ? (
+        <Typography
+          variant="body2"
+          sx={{
+            lineHeight: 1.7,
+            letterSpacing: '0.3px',
+          }}
+        >
+          {event.responsibilities[0].text}
+        </Typography>
+      ) : (
+        <BulletList items={event.responsibilities.map((responsibility) => responsibility.text)} />
+      )}
+    </Section>
+  );
+
   return (
     <Card
       ref={setCardNode}
@@ -184,103 +221,101 @@ export const TimelineEventCard = ({
     >
       {cardHeader}
       <CardContent>
-        {hasResponsibilities && (
-          <Section title={RESPONSIBILITIES_LABEL_BY_TYPE[event.type]} titleLevel={4}>
-            {event.responsibilities.length === 1 ? (
-              <Typography
-                variant="body2"
-                sx={{
-                  lineHeight: 1.7,
-                  letterSpacing: '0.3px',
-                }}
-              >
-                {event.responsibilities[0].text}
-              </Typography>
-            ) : (
-              <BulletList
-                items={event.responsibilities.map((responsibility) => responsibility.text)}
-              />
-            )}
-          </Section>
-        )}
-        {hasTechStack && (
-          <>
-            {hasResponsibilities && <Divider sx={{ my: 2 }} />}
-            <Section title="Tech Stack" titleLevel={4}>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{
-                  lineHeight: 1.7,
-                  letterSpacing: '0.3px',
-                }}
-              >
-                {event.techStack.map((skill) => skill.name).join(', ')}
-              </Typography>
-            </Section>
-          </>
-        )}
-        {hasSkills && (
-          <>
-            {(hasResponsibilities || hasTechStack) && <Divider sx={{ my: 2 }} />}
-            <Section title="Key Skills" titleLevel={4}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                {skillGroups.map((group) => (
-                  <Box
-                    key={group.category.id}
-                    sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
-                  >
-                    <Link
-                      component="button"
-                      type="button"
-                      variant="caption"
-                      underline="hover"
-                      onClick={() => handleCategoryClick(group.category.id)}
-                      sx={{
-                        fontWeight: 'medium',
-                        flexShrink: 0,
-                        color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
-                      }}
+        {isRecent && responsibilitiesSection}
+        <Collapse in={isExpanded} unmountOnExit>
+          {!isRecent && responsibilitiesSection}
+          {hasTechStack && (
+            <>
+              {hasResponsibilities && <Divider sx={{ my: 2 }} />}
+              <Section title="Tech Stack" titleLevel={4}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{
+                    lineHeight: 1.7,
+                    letterSpacing: '0.3px',
+                  }}
+                >
+                  {event.techStack.map((skill) => skill.name).join(', ')}
+                </Typography>
+              </Section>
+            </>
+          )}
+          {hasSkills && (
+            <>
+              {(hasResponsibilities || hasTechStack) && <Divider sx={{ my: 2 }} />}
+              <Section title="Key Skills" titleLevel={4}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                  {skillGroups.map((group) => (
+                    <Box
+                      key={group.category.id}
+                      sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
                     >
-                      {`${group.category.name}:`}
-                    </Link>
-                    <TagList
-                      items={group.skills.map((skill) => skill.name)}
-                      onItemClick={handleSkillClick}
-                      getColour={() => categoryColourFromIndex(group.category.index)}
-                      getShadeIndex={skillShadeIndex}
+                      <Link
+                        component="button"
+                        type="button"
+                        variant="caption"
+                        underline="hover"
+                        onClick={() => handleCategoryClick(group.category.id)}
+                        sx={{
+                          fontWeight: 'medium',
+                          flexShrink: 0,
+                          color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
+                        }}
+                      >
+                        {`${group.category.name}:`}
+                      </Link>
+                      <TagList
+                        items={group.skills.map((skill) => skill.name)}
+                        onItemClick={handleSkillClick}
+                        getColour={() => categoryColourFromIndex(group.category.index)}
+                        getShadeIndex={skillShadeIndex}
+                      />
+                    </Box>
+                  ))}
+                </Box>
+                <Button size="small" onClick={handleViewAllSkillsClick} sx={{ mt: 1.5 }}>
+                  {"View this role's skills on the graph"}
+                </Button>
+              </Section>
+            </>
+          )}
+          {hasRecommendations && (
+            <>
+              <Divider sx={{ my: 2 }} />
+              <Section title={`Recommendations (${event.recommendations.length})`} titleLevel={4}>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns:
+                      event.recommendations.length > 1
+                        ? { xs: '1fr', sm: 'repeat(2, 1fr)' }
+                        : '1fr',
+                    gap: 1.5,
+                  }}
+                >
+                  {event.recommendations.map((recommendation) => (
+                    <RecommendationText
+                      key={recommendation.id}
+                      recommendation={recommendation}
+                      isHighlighted={recommendation.id === highlightedRecommendationId}
                     />
-                  </Box>
-                ))}
-              </Box>
-              <Button size="small" onClick={handleViewAllSkillsClick} sx={{ mt: 1.5 }}>
-                {"View this role's skills on the graph"}
-              </Button>
-            </Section>
-          </>
-        )}
-        {event.recommendations.length > 0 && (
-          <>
-            <Divider sx={{ my: 2 }} />
-            <Section title={`Recommendations (${event.recommendations.length})`} titleLevel={4}>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns:
-                    event.recommendations.length > 1 ? { xs: '1fr', sm: 'repeat(2, 1fr)' } : '1fr',
-                  gap: 1.5,
-                }}
-              >
-                {event.recommendations.map((recommendation) => (
-                  <RecommendationText
-                    key={recommendation.id}
-                    recommendation={recommendation}
-                    isHighlighted={recommendation.id === highlightedRecommendationId}
-                  />
-                ))}
-              </Box>
-            </Section>
-          </>
+                  ))}
+                </Box>
+              </Section>
+            </>
+          )}
+        </Collapse>
+        {hasCollapsibleContent && (
+          <Button
+            size="small"
+            aria-expanded={isExpanded}
+            startIcon={isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            onClick={() => setUserExpanded(!isExpanded)}
+            sx={{ mt: 1 }}
+          >
+            {deriveToggleLabel(isRecent, isExpanded)}
+          </Button>
         )}
       </CardContent>
     </Card>

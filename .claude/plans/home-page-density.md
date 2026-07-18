@@ -12,7 +12,7 @@ then A+E card collapse, then the F2 compact skills wall (it depends on the densi
 ## Progress
 
 - [x] 1. Density plumbing — theme-level `density` + floating Compact switch (Decided 2)
-- [ ] 2. A+E card collapse by recency (Decided 1, 4)
+- [x] 2. A+E card collapse by recency (Decided 1, 4)
 - [ ] 3. F2 compact skills wall (Decided 3)
 - [ ] 4. Density audit of Skills and Articles surfaces (Decided 2 follow-up)
 

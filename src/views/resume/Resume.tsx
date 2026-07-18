@@ -20,6 +20,7 @@ import { tracks } from '@/data/tracks';
 import type { TrackId } from '@/types';
 import { deriveOverlapCaption } from '@/utils/deriveOverlapCaption';
 import { filterEventsByTrack } from '@/utils/filterEventsByTrack';
+import { isRecentEvent } from '@/utils/isRecentEvent';
 import { matchSkill } from '@/utils/matchSkill';
 
 import { ContactDetails } from './contactDetails';
@@ -46,6 +47,9 @@ const CareerTimeline = () => {
     () => filterEventsByTrack(careerHistory, track),
     [careerHistory, track]
   );
+
+  // stable "now" — recency must not flip between renders
+  const now = useMemo(() => new Date(), []);
 
   // Overlap caption for internships.
   const overlapCaptionByEventId = useMemo(
@@ -108,6 +112,7 @@ const CareerTimeline = () => {
               autoScrollToHighlight={index === matchIndex}
               startInView={index === 0}
               overlapCaption={overlapCaptionByEventId[event.id]}
+              isRecent={isRecentEvent(event, now)}
             />
           </TimelineContent>
         </TimelineItem>
