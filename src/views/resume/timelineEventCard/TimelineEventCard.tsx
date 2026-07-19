@@ -157,11 +157,6 @@ export const TimelineEventCard = ({
   const hasRecommendations = event.recommendations.length > 0;
   // Nothing relevant to the active track — collapse to primary info only.
   const isBare = !hasResponsibilities && !hasTechStack && !hasSkills;
-  // exception: a lone responsibility stays visible when collapsed
-  const showsSingleResponsibility = event.responsibilities.length === 1;
-  const hasCollapsibleContent = showsSingleResponsibility
-    ? hasTechStack || hasSkills || hasRecommendations
-    : true;
 
   const cardHeader = (
     <CardHeader
@@ -221,9 +216,8 @@ export const TimelineEventCard = ({
     >
       {cardHeader}
       <CardContent>
-        {showsSingleResponsibility && responsibilitiesSection}
         <Collapse in={isExpanded} unmountOnExit>
-          {!showsSingleResponsibility && responsibilitiesSection}
+          {responsibilitiesSection}
           {hasTechStack && (
             <>
               {hasResponsibilities && <Divider sx={{ my: 2 }} />}
@@ -333,17 +327,15 @@ export const TimelineEventCard = ({
             </>
           )}
         </Collapse>
-        {hasCollapsibleContent && (
-          <Button
-            size="small"
-            aria-expanded={isExpanded}
-            startIcon={isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            onClick={() => setUserExpanded(!isExpanded)}
-            sx={{ mt: 1 }}
-          >
-            {isExpanded ? 'Hide details' : 'Show details'}
-          </Button>
-        )}
+        <Button
+          size="small"
+          aria-expanded={isExpanded}
+          startIcon={isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          onClick={() => setUserExpanded(!isExpanded)}
+          sx={{ mt: 1 }}
+        >
+          {isExpanded ? 'Hide details' : 'Show details'}
+        </Button>
       </CardContent>
     </Card>
   );

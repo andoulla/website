@@ -12,8 +12,8 @@ then A+E card collapse, then the F2 compact skills wall (it depends on the densi
 ## Progress
 
 - [x] 1. Density plumbing — theme-level `density` + floating Compact switch (Decided 2)
-- [x] 2. Card collapse — full body behind "Show details", single-responsibility exception,
-     first card starts expanded (Decided 1, 4)
+- [x] 2. Card collapse — full body behind "Show details", first card starts expanded
+     (Decided 1, 4)
 - [x] 3. F2 skills wall — inline caption list in both densities (Decided 3)
 - [x] 4. Slimmer recommendations — quote-strip restructure, then line-clamp (Decided 5)
 - [ ] 5. Density audit of Skills and Articles surfaces (Decided 2 follow-up)
@@ -23,15 +23,12 @@ then A+E card collapse, then the F2 compact skills wall (it depends on the densi
 ## Decided 1 — full card collapse; first card starts expanded
 
 Originally A+E by recency; refined by user calls: (a) collapsed cards hide responsibilities
-too; (b) exception — a card with exactly one responsibility keeps it visible when collapsed;
-(c) only the **first card** starts expanded on load (`startExpanded={index === 0}` from
+too; (b) only the **first card** starts expanded on load (`startExpanded={index === 0}` from
 `Resume.tsx`, same shape as `startInView`) — the date-based `isRecentEvent` util is gone.
 
 - Every non-bare card collapses its body (responsibilities, tech stack, key skills,
   recommendations) behind one "Show details"/"Hide details" `Button` (`aria-expanded`,
   chevron icon) + MUI `Collapse` (`unmountOnExit`).
-- Single-responsibility cards render that responsibility above the `Collapse`; the expander
-  then only covers tech/skills/recommendations (and is omitted if there are none).
 - Expansion: `isExpanded = userExpanded ?? (isMatch || startExpanded)` — user toggle wins,
   deep links (`?skill=`, `?recommendation=`) and first-card default expand (derived state, no
   effect — the `react-hooks/set-state-in-effect` lint rule forbids the effect version).
