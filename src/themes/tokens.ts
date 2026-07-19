@@ -94,7 +94,7 @@ export const lightTokens = {
 } as const;
 
 export const darkTokens = {
-  // Softer than near-black — avoids the harsh/OLED-smear look of a true dark background.
-  background: { default: '#16181d', paper: '#1e2128' },
+  // Deep base + clearly lighter paper (1.30:1; ~1.5:1 with MUI's dark elevation overlay).
+  background: { default: '#121418', paper: '#262b34' },
   text: { primary: '#f1f5f9', disabled: '#64748b' },
 } as const;

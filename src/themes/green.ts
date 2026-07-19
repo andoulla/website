@@ -11,6 +11,15 @@ import type { Density } from './tokens';
 
 export const createGreenTheme = (mode: 'light' | 'dark', density: Density) => {
   const tokens = mode === 'light' ? lightTokens : darkTokens;
+  // Dark mode flips to light-toned accents with dark-ink text; every main ≥ 4.5:1 on both surfaces.
+  const primary =
+    mode === 'light'
+      ? { light: '#9DC46B', main: '#3B6D11', dark: '#27500A', contrastText: '#ffffff' }
+      : { light: '#C3DC9E', main: '#9DC46B', dark: '#729A3F', contrastText: '#1A2609' };
+  const secondary =
+    mode === 'light'
+      ? { light: '#B5B5AE', main: '#6E6E68', dark: '#2B2B28', contrastText: '#ffffff' }
+      : { light: '#C9CCC2', main: '#A9ADA2', dark: '#7A7E72', contrastText: '#1C1E18' };
   return responsiveFontSizes(
     createTheme({
       density,
@@ -21,18 +30,8 @@ export const createGreenTheme = (mode: 'light' | 'dark', density: Density) => {
         mode,
         // WCAG small-text ratio — stops getContrastText picking sub-4.5:1 white text.
         contrastThreshold: 4.5,
-        primary: {
-          light: '#9DC46B',
-          main: '#3B6D11',
-          dark: '#27500A',
-          contrastText: '#ffffff',
-        },
-        secondary: {
-          light: '#B5B5AE',
-          main: '#2B2B28',
-          dark: '#141412',
-          contrastText: '#ffffff',
-        },
+        primary,
+        secondary,
         background: tokens.background,
         text: {
           ...tokens.text,
