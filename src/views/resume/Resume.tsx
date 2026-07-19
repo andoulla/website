@@ -8,6 +8,7 @@ import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Suspense, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -26,7 +27,7 @@ import { ContactDetails } from './contactDetails';
 import { findMostRecentSkillMatchIndex } from './Resume.helpers';
 import { TimelineEventCard } from './timelineEventCard';
 import { TimelineEventSkeleton } from './timelineEventSkeleton';
-import { RoleIcon } from './roleIcons';
+import { LABEL_BY_TYPE, RoleIcon } from './roleIcons';
 
 const CareerTimeline = () => {
   const careerHistory = useCareerDataContext();
@@ -91,12 +92,16 @@ const CareerTimeline = () => {
       {visibleHistory.map((event, index) => (
         <TimelineItem key={event.id}>
           <TimelineSeparator>
-            <TimelineDot
-              color="primary"
-              variant={event.type === 'internship' ? 'outlined' : 'filled'}
-            >
-              <RoleIcon event={event} />
-            </TimelineDot>
+            <Tooltip title={LABEL_BY_TYPE[event.type]}>
+              {/* role="img" — the tooltip stamps its title as aria-label, prohibited on a bare span */}
+              <TimelineDot
+                role="img"
+                color="primary"
+                variant={event.type === 'internship' ? 'outlined' : 'filled'}
+              >
+                <RoleIcon event={event} />
+              </TimelineDot>
+            </Tooltip>
             {index < visibleHistory.length - 1 && <TimelineConnector />}
           </TimelineSeparator>
           <TimelineContent sx={{ pr: 0 }}>

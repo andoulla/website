@@ -61,6 +61,9 @@ describe('Resume', () => {
     expect(screen.getByText('Meridian Dynamics')).toBeVisible();
     expect(screen.getByText('Brightleaf Software')).toBeVisible();
     expect(screen.getByText('Harborview Digital')).toBeVisible();
+
+    // each timeline dot's tooltip explains its icon by event type
+    expect(screen.getAllByLabelText('Job')).toHaveLength(3);
   });
 
   test('renders a tab per track with General selected by default, normalising the url', async () => {

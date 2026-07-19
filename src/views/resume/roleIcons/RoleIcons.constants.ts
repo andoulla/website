@@ -17,6 +17,14 @@ export const ICON_BY_TYPE: Record<TimelineEvent['type'], SvgIconComponent> = {
   other: InfoOutlined,
 };
 
+/** Tooltip labels explaining each event type's timeline icon. */
+export const LABEL_BY_TYPE: Record<TimelineEvent['type'], string> = {
+  work: 'Job',
+  education: 'Education',
+  internship: 'Internship',
+  other: 'Other experience',
+};
+
 /** Institution logos, keyed by the timeline event's id, for education entries with a known logo. */
 export const LOGO_BY_EVENT_ID: Record<string, string> = {
   'city-st-georges-university-of-london-2011-09': cityStGeorgesLogo,
