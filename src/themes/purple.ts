@@ -13,6 +13,7 @@ export const createPurpleTheme = (mode: 'light' | 'dark', density: Density) => {
   const tokens = mode === 'light' ? lightTokens : darkTokens;
   return responsiveFontSizes(
     createTheme({
+      density,
       spacing: spacingByDensity[density],
       typography: createTypographyTokens(density),
       components: createDensityComponents(density),

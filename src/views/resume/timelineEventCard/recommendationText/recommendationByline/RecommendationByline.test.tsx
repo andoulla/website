@@ -19,14 +19,18 @@ describe('RecommendationByline', () => {
     expect(screen.getByText('15 Mar 2024', { exact: false })).toBeVisible();
   });
 
-  test('renders no link of its own — the parent card is the LinkedIn link', () => {
+  test('links to the recommendation on LinkedIn in a new tab', () => {
     const recommendation = new Recommendation()
       .recommendationUrl('https://linkedin.com/in/example')
       .mock();
 
     const screen = render(<RecommendationByline recommendation={recommendation} />);
 
-    expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    const link = screen.getByRole('link');
+
+    expect(link).toHaveAttribute('href', 'https://linkedin.com/in/example');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
   test('has no axe violations', async () => {

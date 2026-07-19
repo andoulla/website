@@ -318,7 +318,7 @@ export const TimelineEventCard = ({
                       event.recommendations.length > 1
                         ? { xs: '1fr', sm: 'repeat(2, 1fr)' }
                         : '1fr',
-                    gap: 1.5,
+                    gap: 1,
                   }}
                 >
                   {event.recommendations.map((recommendation) => (

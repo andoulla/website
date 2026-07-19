@@ -1,5 +1,5 @@
 import LinkedIn from '@mui/icons-material/LinkedIn';
-import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
 
 import type { Recommendation } from '@/types';
 import { formatDate } from '@/utils/formatDate';
@@ -8,12 +8,20 @@ export interface RecommendationBylineProps {
   recommendation: Recommendation;
 }
 
-// Decorative icon only — the whole recommendation card is the LinkedIn link.
+// the byline is the LinkedIn link-out; the icon is decorative
 export const RecommendationByline = ({ recommendation }: RecommendationBylineProps) => (
-  <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+  <Link
+    variant="caption"
+    color="text.secondary"
+    underline="hover"
+    href={recommendation.recommendationUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    sx={{ display: 'block' }}
+  >
     {recommendation.authorInitials} · {recommendation.authorRole.jobTitle}
     <LinkedIn aria-hidden="true" fontSize="inherit" sx={{ verticalAlign: 'middle', ml: 0.5 }} />
     {' · '}
     {formatDate(recommendation.postedDate)}
-  </Typography>
+  </Link>
 );

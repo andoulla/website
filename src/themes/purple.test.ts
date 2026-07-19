@@ -33,6 +33,8 @@ describe('createPurpleTheme', () => {
     expect(createTypographyTokens('compact').body1.fontSize).toBe('1rem');
     expect(comfortable.spacing(1)).toBe('8px');
     expect(compact.spacing(1)).toBe('7px');
+    expect(comfortable.density).toBe('comfortable');
+    expect(compact.density).toBe('compact');
     expect(comfortable.components?.MuiChip).toBeUndefined();
     expect(compact.components?.MuiChip?.defaultProps?.size).toBe('small');
   });

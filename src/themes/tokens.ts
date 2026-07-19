@@ -3,6 +3,16 @@ const bodyFontFamily = '"Inter", sans-serif';
 
 export type Density = 'comfortable' | 'compact';
 
+// expose the active density on the theme so components can read it via useTheme()
+declare module '@mui/material/styles' {
+  interface Theme {
+    density?: Density;
+  }
+  interface ThemeOptions {
+    density?: Density;
+  }
+}
+
 // Comfortable = the original larger-font scale; compact shrinks each role one step.
 const fontSizesByDensity = {
   comfortable: {

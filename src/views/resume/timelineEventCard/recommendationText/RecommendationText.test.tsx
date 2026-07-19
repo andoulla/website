@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
 import { Recommendation } from '@/testing';
@@ -14,56 +15,53 @@ const recommendation = new Recommendation()
   .mock();
 
 describe('RecommendationText', () => {
-  test('renders the text, attribution, author initials, and posted date', () => {
+  test('renders the quote and byline in a blockquote with a deep-link id', () => {
     const screen = render(<RecommendationText recommendation={recommendation} />);
 
     expect(screen.getByText('"Great work."')).toBeVisible();
     expect(screen.getByText('P.S.')).toBeVisible();
     expect(screen.getByText('P.S. · Engineering Manager · 15 Jan 2022')).toBeVisible();
+    expect(document.getElementById('recommendation-rec-1')).toBe(
+      screen.getByText('"Great work."').closest('blockquote')
+    );
   });
 
-  test('has no axe violations', async () => {
+  test('links the byline to the recommendation on LinkedIn in a new tab', () => {
     const screen = render(<RecommendationText recommendation={recommendation} />);
 
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
+    const link = screen.getByRole('link', { name: 'P.S. · Engineering Manager · 15 Jan 2022' });
 
-  test('links the whole card to the recommendation on LinkedIn in a new tab', () => {
-    const screen = render(<RecommendationText recommendation={recommendation} />);
-
-    const link = screen.getByRole('link', { name: 'Recommendation from P.S. on LinkedIn' });
-
-    expect(link).toBeVisible();
     expect(link).toHaveAttribute(
       'href',
       'https://www.linkedin.com/in/example/details/recommendations/'
     );
     expect(link).toHaveAttribute('target', '_blank');
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
-    expect(link).toContainElement(screen.getByText('"Great work."'));
   });
 
-  test('exposes an id matching its recommendation, for deep-link scrolling', () => {
+  test('starts clamped and toggles between More and Less', async () => {
+    const user = userEvent.setup();
     const screen = render(<RecommendationText recommendation={recommendation} />);
 
-    expect(document.getElementById('recommendation-rec-1')).toBe(
-      screen.getByText('"Great work."').closest('.MuiCard-root')
-    );
+    await user.click(screen.getByRole('button', { name: 'More' }));
+
+    expect(screen.getByRole('button', { name: 'Less' })).toHaveAttribute('aria-expanded', 'true');
+    expect(await axe(screen.container)).toHaveNoViolations();
+
+    await user.click(screen.getByRole('button', { name: 'Less' }));
+
+    expect(screen.getByRole('button', { name: 'More' })).toHaveAttribute('aria-expanded', 'false');
   });
 
-  test('applies an outline when isHighlighted is true', () => {
+  test('a highlighted recommendation starts unclamped', () => {
     const screen = render(<RecommendationText recommendation={recommendation} isHighlighted />);
 
-    expect(screen.getByText('"Great work."').closest('.MuiCard-root')).toHaveStyle({
-      outlineOffset: '2px',
-    });
+    expect(screen.getByRole('button', { name: 'Less' })).toHaveAttribute('aria-expanded', 'true');
   });
 
-  test('does not apply an outline by default', () => {
+  test('has no axe violations', async () => {
     const screen = render(<RecommendationText recommendation={recommendation} />);
 
-    expect(screen.getByText('"Great work."').closest('.MuiCard-root')).not.toHaveStyle({
-      outlineOffset: '2px',
-    });
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 });
