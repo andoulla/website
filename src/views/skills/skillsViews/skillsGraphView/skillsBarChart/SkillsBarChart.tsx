@@ -26,7 +26,8 @@ import {
   isBarMatch,
 } from './SkillsBarChart.helpers';
 
-const BAR_HEIGHT = 36;
+// compact rows pack the chart tighter
+const BAR_HEIGHT_BY_DENSITY = { comfortable: 36, compact: 30 } as const;
 const BAR_SIZE = 14;
 const CHART_PADDING = 64;
 const MIN_HEIGHT = 200;
@@ -160,7 +161,8 @@ export const SkillsBarChart = ({
     [close]
   );
 
-  const chartHeight = Math.max(MIN_HEIGHT, skills.length * BAR_HEIGHT + CHART_PADDING);
+  const barHeight = BAR_HEIGHT_BY_DENSITY[theme.density ?? 'compact'];
+  const chartHeight = Math.max(MIN_HEIGHT, skills.length * barHeight + CHART_PADDING);
 
   // Legend: one entry per category present, in track order. markColour is the pattern's
   // ink colour — high-contrast against the category colour so the texture reads at swatch size.

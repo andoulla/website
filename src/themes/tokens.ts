@@ -82,6 +82,9 @@ export const createDensityComponents = (density: Density) => {
     MuiCardContent: {
       styleOverrides: { root: { padding: 12, '&:last-child': { paddingBottom: 12 } } },
     },
+    MuiTableCell: {
+      styleOverrides: { sizeSmall: { padding: '4px 12px' } },
+    },
   };
 };
 

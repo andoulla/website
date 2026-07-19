@@ -16,9 +16,7 @@ then A+E card collapse, then the F2 compact skills wall (it depends on the densi
      (Decided 1, 4)
 - [x] 3. F2 skills wall — inline caption list in both densities (Decided 3)
 - [x] 4. Slimmer recommendations — quote-strip restructure, then line-clamp (Decided 5)
-- [ ] 5. Density audit of Skills and Articles surfaces (Decided 2 follow-up)
-- [ ] 6. Job headlines — one-line summary per job, visible on collapsed cards (separate work,
-     needs new `headline` content authored per careerHistory entry)
+- [x] 5. Density audit of Skills and Articles surfaces (Decided 2 follow-up)
 
 ## Decided 1 — full card collapse; first card starts expanded
 
