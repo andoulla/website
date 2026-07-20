@@ -19,8 +19,7 @@ import { Articles } from './views/articles';
 import { NotFound } from './views/notFound';
 import { Resume } from './views/resume';
 import { Skills } from './views/skills';
-// TODO: fix dark theme, the differnt dark shades are too close to eachother
-// todo: fix bug on recomendation hover
+
 // TODO?: job headlines — one-line summary per job, visible on collapsed resume cards
 // (needs a `headline` authored per careerHistory entry)
 const App = () => {
