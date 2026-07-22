@@ -437,6 +437,47 @@ describe('Skills', () => {
     });
   });
 
+  describe('time machine scrubber URL sync', () => {
+    test('shows the scrubber and omits the asOf param at the latest year by default', async () => {
+      const screen = await renderAndFlush();
+
+      expect(screen.getByText('See skills as they stood at any point in time')).toBeVisible();
+      expect(screen.getByRole('slider', { name: 'Career year' })).toHaveAttribute(
+        'aria-valuemin',
+        '2024'
+      );
+      expect(screen.getByText('search:track=general')).toBeVisible();
+    });
+
+    test('initializes the scrubber from the ?asOf= param and keeps it in the URL', async () => {
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?asOf=2025']
+      );
+
+      expect(screen.getByRole('slider', { name: 'Career year' })).toHaveAttribute(
+        'aria-valuenow',
+        '2025'
+      );
+      expect(screen.getByText('search:asOf=2025&track=general')).toBeVisible();
+    });
+
+    test('writes the committed year to the asOf param when the scrubber moves', async () => {
+      const user = userEvent.setup();
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?asOf=2024']
+      );
+      const slider = screen.getByRole('slider', { name: 'Career year' });
+
+      slider.focus();
+      await user.keyboard('{ArrowRight}');
+
+      expect(screen.getByText('search:track=general&asOf=2025')).toBeVisible();
+      expect(slider).toHaveAttribute('aria-valuenow', '2025');
+    });
+  });
+
   describe('accessibility', () => {
     test('has no axe violations on initial render', async () => {
       const screen = renderWithProvider(neverResolve);
