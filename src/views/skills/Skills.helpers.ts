@@ -36,8 +36,7 @@ export const parseSearch = (raw: string | null): string => raw ?? '';
 export const parseViewMode = (raw: string | null | undefined): ViewMode | null =>
   VIEW_MODES.includes(raw as ViewMode) ? (raw as ViewMode) : null;
 
-// Reads the `asOf` year param, clamped into [minYear, maxYear]; defaults to maxYear ("latest")
-// when absent or unparseable.
+// Reads the `asOf` year param, clamped into [minYear, maxYear]; defaults to maxYear ("latest").
 export const parseAsOfYear = (raw: string | null, minYear: number, maxYear: number): number => {
   if (raw === null) return maxYear;
   const parsed = Number.parseInt(raw, 10);
