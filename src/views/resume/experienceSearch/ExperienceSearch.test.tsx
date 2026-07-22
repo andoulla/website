@@ -158,10 +158,16 @@ describe('ExperienceSearch', () => {
 
     expect(screen.getByText('No matching experience…')).toBeVisible();
 
+    // Below the minimum length the no-match text stays hidden.
+    await user.clear(combobox);
+    await user.type(combobox, 'z');
+
+    expect(screen.queryByText('No matching experience…')).not.toBeInTheDocument();
+
     await user.clear(combobox);
 
     expect(combobox).toHaveValue('');
-    expect(screen.queryByText('Type at least 2 characters')).not.toBeInTheDocument();
+    expect(screen.queryByText('No matching experience…')).not.toBeInTheDocument();
   });
 
   test('navigates to the matching card per kind and clears the input', async () => {

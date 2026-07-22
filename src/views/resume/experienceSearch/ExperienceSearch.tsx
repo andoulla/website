@@ -7,6 +7,8 @@ import TextField from '@mui/material/TextField';
 import { useCareerDataContext } from '@/context/careerData';
 import { useTrackContext } from '@/context/track';
 import { filterEventsByTrack } from '@/utils/filterEventsByTrack';
+import { normaliseSearchTerm } from '@/utils/normaliseSearchTerm';
+import { MIN_SEARCH_TERM_LENGTH } from '@/utils/skillMatchesSearch';
 
 import {
   buildSearchResults,
@@ -22,11 +24,15 @@ export const ExperienceSearch = () => {
   const { track, trackId } = useTrackContext();
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState('');
+  const [open, setOpen] = useState(false);
 
   const options = useMemo(
     () => buildSearchResults(filterEventsByTrack(careerHistory, track)),
     [careerHistory, track]
   );
+
+  // Keep the dropdown (and its no-match text) shut until the query is long enough.
+  const hasEnoughInput = normaliseSearchTerm(inputValue).length >= MIN_SEARCH_TERM_LENGTH;
 
   return (
     <Autocomplete<SearchResult>
@@ -34,6 +40,9 @@ export const ExperienceSearch = () => {
       value={null}
       inputValue={inputValue}
       onInputChange={(_event, value) => setInputValue(value)}
+      open={open && hasEnoughInput}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
       groupBy={(option) => groupLabel(option.kind)}
       getOptionLabel={optionLabel}
       isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -55,6 +64,8 @@ export const ExperienceSearch = () => {
         mx: 'auto',
         mb: 4,
         '& .MuiAutocomplete-popupIndicatorOpen': { transform: 'none' },
+        // Slimmer than the default small size.
+        '& .MuiAutocomplete-inputRoot': { py: 0.25 },
       }}
       renderInput={(params) => (
         <TextField
