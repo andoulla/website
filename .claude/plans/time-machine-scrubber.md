@@ -97,8 +97,8 @@ const skills = useMemo(() => calculateSkillYears(cutoffHistory, track), [cutoffH
 **Verify:** user runs `yarn test` + manual drag check. (Never run tests myself.)
 
 **Progress:**
-- [ ] Worktree + branch `feat/time-machine-scrubber`
-- [ ] `deriveCareerHistoryAsOf` util + tests
+- [x] Worktree + branch `feat/time-machine-scrubber`
+- [x] `deriveCareerHistoryAsOf` util + tests
 - [ ] `AS_OF_PARAM` + `parseAsOfYear` + `PREFIX_PARAMS`
 - [ ] `TimeMachineSlider` component + tests
 - [ ] Wire cutoff state into `Skills.tsx` + slider row
