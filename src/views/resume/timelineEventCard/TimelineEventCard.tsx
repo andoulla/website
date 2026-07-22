@@ -37,6 +37,8 @@ export interface TimelineEventCardProps {
   // Canonical skill id — the resume view resolves raw ?skill= terms through matchSkill.
   highlightedSkillId?: string;
   highlightedRecommendationId?: string;
+  // Focus deep-link (?focus=): outlines + expands this exact card (roles, skill@job).
+  highlightedEventId?: string;
   autoScrollToHighlight?: boolean;
   // The first card is already visible on landing, so it should render in without waiting on the
   // IntersectionObserver's first callback — only cards below the fold need the scroll-triggered fade.
@@ -62,6 +64,7 @@ export const TimelineEventCard = ({
   track,
   highlightedSkillId,
   highlightedRecommendationId,
+  highlightedEventId,
   autoScrollToHighlight,
   startInView,
   overlapCaption,
@@ -87,7 +90,8 @@ export const TimelineEventCard = ({
   const hasHighlightedSkill =
     highlightedSkillId !== undefined &&
     event.skills.some((skill) => skill.id === highlightedSkillId);
-  const isMatch = hasHighlightedSkill || hasHighlightedRecommendation;
+  const isFocusMatch = highlightedEventId !== undefined && event.id === highlightedEventId;
+  const isMatch = hasHighlightedSkill || hasHighlightedRecommendation || isFocusMatch;
 
   // user toggle wins; otherwise deep-link matches and the first card render expanded
   const [userExpanded, setUserExpanded] = useState<boolean | null>(null);

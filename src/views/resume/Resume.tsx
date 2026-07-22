@@ -24,6 +24,7 @@ import { filterEventsByTrack } from '@/utils/filterEventsByTrack';
 import { matchSkill } from '@/utils/matchSkill';
 
 import { ContactDetails } from './contactDetails';
+import { FOCUS_PARAM, RECOMMENDATION_PARAM, SKILL_PARAM } from './Resume.constants';
 import { findMostRecentSkillMatchIndex } from './Resume.helpers';
 import { TimelineEventCard } from './timelineEventCard';
 import { TimelineEventSkeleton } from './timelineEventSkeleton';
@@ -33,8 +34,9 @@ const CareerTimeline = () => {
   const careerHistory = useCareerDataContext();
   const { track } = useTrackContext();
   const [searchParams] = useSearchParams();
-  const rawHighlightedSkill = searchParams.get('skill') ?? undefined;
-  const highlightedRecommendationId = searchParams.get('recommendation') ?? undefined;
+  const rawHighlightedSkill = searchParams.get(SKILL_PARAM) ?? undefined;
+  const highlightedRecommendationId = searchParams.get(RECOMMENDATION_PARAM) ?? undefined;
+  const focusEventId = searchParams.get(FOCUS_PARAM) ?? undefined;
 
   // Synonyms resolve to the canonical skill id; unresolved terms no-op.
   const highlightedSkillId = useMemo(
@@ -66,12 +68,16 @@ const CareerTimeline = () => {
         )
       );
     }
+    // Explicit focus wins over most-recent; a bare ?skill= still falls through below.
+    if (focusEventId !== undefined) {
+      return visibleHistory.findIndex((event) => event.id === focusEventId);
+    }
     if (highlightedSkillId !== undefined) {
       // A skill can span multiple jobs — scroll to the most recent, not just the first match.
       return findMostRecentSkillMatchIndex(visibleHistory, highlightedSkillId);
     }
     return -1;
-  }, [visibleHistory, highlightedSkillId, highlightedRecommendationId]);
+  }, [visibleHistory, highlightedSkillId, highlightedRecommendationId, focusEventId]);
 
   return (
     <Timeline
@@ -110,6 +116,7 @@ const CareerTimeline = () => {
               track={track}
               highlightedSkillId={highlightedSkillId}
               highlightedRecommendationId={highlightedRecommendationId}
+              highlightedEventId={focusEventId}
               autoScrollToHighlight={index === matchIndex}
               startInView={index === 0}
               overlapCaption={overlapCaptionByEventId[event.id]}
