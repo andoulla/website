@@ -23,35 +23,40 @@ const skillEntriesOf = (event: TimelineEventWithRecommendations) => [
   ...event.skills,
 ];
 
-// Skills → Roles → Recommendations, contiguous so Autocomplete's groupBy renders clean groups.
-export const buildSearchResults = (events: TimelineEventWithRecommendations[]): SearchResult[] => {
-  const skillResults: SearchResult[] = [...events].sort(byRecency).flatMap((event) =>
-    skillEntriesOf(event).map((skill) => ({
+// Group order matches the timeline: work first, then internships, education, and anything else.
+const TYPE_ORDER: Record<TimelineEventWithRecommendations['type'], number> = {
+  work: 0,
+  internship: 1,
+  education: 2,
+  other: 3,
+};
+
+const byTypeThenRecency = (
+  first: TimelineEventWithRecommendations,
+  second: TimelineEventWithRecommendations
+): number => {
+  const typeDelta = TYPE_ORDER[first.type] - TYPE_ORDER[second.type];
+  return typeDelta !== 0 ? typeDelta : byRecency(first, second);
+};
+
+// Ordered by event type then recency, so groupBy renders one contiguous block per type.
+export const buildSearchResults = (events: TimelineEventWithRecommendations[]): SearchResult[] =>
+  [...events].sort(byTypeThenRecency).flatMap((event): SearchResult[] => [
+    ...skillEntriesOf(event).map((skill) => ({
       kind: 'skill' as const,
       id: `skill:${skill.id}:${event.id}`,
       skillId: skill.id,
       skillName: skill.name,
       event,
-    }))
-  );
-
-  const roleResults: SearchResult[] = events.map((event) => ({
-    kind: 'role',
-    id: `role:${event.id}`,
-    event,
-  }));
-
-  const recommendationResults: SearchResult[] = events.flatMap((event) =>
-    event.recommendations.map((recommendation) => ({
+    })),
+    { kind: 'role' as const, id: `role:${event.id}`, event },
+    ...event.recommendations.map((recommendation) => ({
       kind: 'recommendation' as const,
       id: `rec:${recommendation.id}`,
       recommendation,
       event,
-    }))
-  );
-
-  return [...skillResults, ...roleResults, ...recommendationResults];
-};
+    })),
+  ]);
 
 const searchableText = (result: SearchResult): string[] => {
   switch (result.kind) {
@@ -121,13 +126,13 @@ export const optionLabel = (result: SearchResult): string => {
   }
 };
 
-export const groupLabel = (kind: SearchResult['kind']): 'Skills' | 'Roles' | 'Recommendations' => {
-  switch (kind) {
-    case 'skill':
-      return 'Skills';
-    case 'role':
-      return 'Roles';
-    case 'recommendation':
-      return 'Recommendations';
-  }
+const GROUP_LABEL_BY_TYPE: Record<TimelineEventWithRecommendations['type'], string> = {
+  work: 'Work Experience',
+  internship: 'Internships',
+  education: 'Education',
+  other: 'Other',
 };
+
+// Group by the event's type, so an education entry lands under Education, not a generic "Roles".
+export const groupLabel = (event: TimelineEventWithRecommendations): string =>
+  GROUP_LABEL_BY_TYPE[event.type];

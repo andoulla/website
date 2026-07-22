@@ -44,7 +44,7 @@ const reactSkill = new Skill().id('react').name('React').mock();
 const teamLeadershipSkill = new Skill().id('team-leadership').name('Team Leadership').mock();
 
 describe('ExperienceSearch', () => {
-  test('builds one option per job a skill spans, and labels the input accessibly', async () => {
+  test('surfaces skills from both the skills and tech-stack fields, one row per job', async () => {
     const careerHistory = [
       new TimelineEvent()
         .id('job-1')
@@ -53,17 +53,22 @@ describe('ExperienceSearch', () => {
         .endDate(null)
         .skills([reactSkill])
         .mock(),
+      // React is a tech, so the real loader files it under techStack — search must reach it too.
       new TimelineEvent()
         .id('job-2')
         .companyName('Brightleaf Software')
         .startDate('2020-01-01')
         .endDate('2021-01-01')
-        .skills([reactSkill])
+        .techStack([reactSkill])
         .mock(),
     ];
     const user = userEvent.setup();
     const screen = await renderSearch(careerHistory);
     const combobox = screen.getByRole('combobox', { name: 'Ask about my experience' });
+
+    // The dropdown arrow is replaced by a search icon.
+    expect(screen.getByTestId('SearchIcon')).toBeVisible();
+    expect(screen.queryByTestId('ArrowDropDownIcon')).not.toBeInTheDocument();
 
     await user.type(combobox, 'React');
 
@@ -75,6 +80,27 @@ describe('ExperienceSearch', () => {
       screen.getByRole('option', { name: 'React · Brightleaf Software · 2020–2021' })
     ).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('groups an entry under its event type, not a generic "Roles" heading', async () => {
+    const careerHistory = [
+      new TimelineEvent()
+        .id('uea')
+        .type('education')
+        .companyName('University of East Anglia')
+        .title('BSc Computer Science')
+        .startDate('2007-09-01')
+        .endDate('2010-06-01')
+        .mock(),
+    ];
+    const user = userEvent.setup();
+    const screen = await renderSearch(careerHistory);
+
+    await user.type(screen.getByRole('combobox'), 'Anglia');
+
+    expect(screen.getByText('Education')).toBeVisible();
+    expect(screen.queryByText('Roles')).not.toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'University of East Anglia' })).toBeVisible();
   });
 
   test('scopes options to the active track', async () => {

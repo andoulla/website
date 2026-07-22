@@ -43,7 +43,7 @@ export const ExperienceSearch = () => {
       open={open && hasEnoughInput}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
-      groupBy={(option) => groupLabel(option.kind)}
+      groupBy={(option) => groupLabel(option.event)}
       getOptionLabel={optionLabel}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       filterOptions={(available, state) =>

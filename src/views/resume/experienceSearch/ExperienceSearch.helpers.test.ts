@@ -59,17 +59,24 @@ const jobWithTechStack = new TimelineEvent()
   .techStack([typeScriptTech])
   .mock();
 
-describe('ExperienceSearch helpers', () => {
-  test('buildSearchResults yields one skill row per job and groups skills → roles → recommendations', () => {
-    const results = buildSearchResults([olderJob, currentJob, jobWithRecommendation]);
+const educationEvent = new TimelineEvent()
+  .id('uea')
+  .type('education')
+  .companyName('University of East Anglia')
+  .title('BSc Computer Science')
+  .startDate('2007-09-01')
+  .endDate('2010-06-01')
+  .mock();
 
-    expect(results.map((result) => result.kind)).toEqual([
-      'skill',
-      'skill',
-      'role',
-      'role',
-      'role',
-      'recommendation',
+describe('ExperienceSearch helpers', () => {
+  test('orders results by event type then recency, one contiguous block per type', () => {
+    // currentJob is work with a skill (2 rows); the education event contributes one role row.
+    const results = buildSearchResults([educationEvent, currentJob]);
+
+    expect(results.map((result) => groupLabel(result.event))).toEqual([
+      'Work Experience',
+      'Work Experience',
+      'Education',
     ]);
   });
 
@@ -154,9 +161,9 @@ describe('ExperienceSearch helpers', () => {
     expect(optionLabel(recRow)).toBe('J.D. · CTO');
   });
 
-  test('groupLabel maps each kind to a group heading', () => {
-    expect(groupLabel('skill')).toBe('Skills');
-    expect(groupLabel('role')).toBe('Roles');
-    expect(groupLabel('recommendation')).toBe('Recommendations');
+  test('groupLabel names the group after the event type', () => {
+    expect(groupLabel(new TimelineEvent().type('work').mock())).toBe('Work Experience');
+    expect(groupLabel(new TimelineEvent().type('education').mock())).toBe('Education');
+    expect(groupLabel(new TimelineEvent().type('other').mock())).toBe('Other');
   });
 });
