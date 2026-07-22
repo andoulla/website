@@ -6,6 +6,7 @@ import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import { timelineOppositeContentClasses } from '@mui/lab/TimelineOppositeContent';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import Box from '@mui/material/Box';
+import Skeleton from '@mui/material/Skeleton';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Tooltip from '@mui/material/Tooltip';
@@ -24,6 +25,7 @@ import { filterEventsByTrack } from '@/utils/filterEventsByTrack';
 import { matchSkill } from '@/utils/matchSkill';
 
 import { ContactDetails } from './contactDetails';
+import { ExperienceSearch } from './experienceSearch';
 import { FOCUS_PARAM, RECOMMENDATION_PARAM, SKILL_PARAM } from './Resume.constants';
 import { findMostRecentSkillMatchIndex } from './Resume.helpers';
 import { TimelineEventCard } from './timelineEventCard';
@@ -141,6 +143,13 @@ export const Resume = () => {
         </Typography>
         <ContactDetails />
       </Box>
+      <Suspense
+        fallback={
+          <Skeleton variant="rounded" height={40} sx={{ maxWidth: 480, mx: 'auto', mb: 4 }} />
+        }
+      >
+        <ExperienceSearch />
+      </Suspense>
       <Tabs
         value={trackId}
         onChange={(_event, next: TrackId) => {
