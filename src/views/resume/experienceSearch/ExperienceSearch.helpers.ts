@@ -17,10 +17,16 @@ const byRecency = (
   return second.startDate.localeCompare(first.startDate);
 };
 
+// Tech and skills are split across two fields by type; search both.
+const skillEntriesOf = (event: TimelineEventWithRecommendations) => [
+  ...event.techStack,
+  ...event.skills,
+];
+
 // Skills → Roles → Recommendations, contiguous so Autocomplete's groupBy renders clean groups.
 export const buildSearchResults = (events: TimelineEventWithRecommendations[]): SearchResult[] => {
   const skillResults: SearchResult[] = [...events].sort(byRecency).flatMap((event) =>
-    event.skills.map((skill) => ({
+    skillEntriesOf(event).map((skill) => ({
       kind: 'skill' as const,
       id: `skill:${skill.id}:${event.id}`,
       skillId: skill.id,
@@ -50,7 +56,7 @@ export const buildSearchResults = (events: TimelineEventWithRecommendations[]): 
 const searchableText = (result: SearchResult): string[] => {
   switch (result.kind) {
     case 'skill': {
-      const skill = result.event.skills.find((entry) => entry.id === result.skillId);
+      const skill = skillEntriesOf(result.event).find((entry) => entry.id === result.skillId);
       return [result.skillName, ...(skill?.synonyms ?? [])];
     }
     case 'role':

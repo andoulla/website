@@ -43,6 +43,22 @@ const jobWithRecommendation = new TimelineEvent()
   .recommendations([recommendation])
   .mock();
 
+const typeScriptTech = new Skill()
+  .id('typescript')
+  .name('TypeScript')
+  .type('tech')
+  .synonyms(['ts'])
+  .mock();
+
+const jobWithTechStack = new TimelineEvent()
+  .id('job-4')
+  .companyName('Initech')
+  .title('Developer')
+  .startDate('2020-01-01')
+  .endDate(null)
+  .techStack([typeScriptTech])
+  .mock();
+
 describe('ExperienceSearch helpers', () => {
   test('buildSearchResults yields one skill row per job and groups skills → roles → recommendations', () => {
     const results = buildSearchResults([olderJob, currentJob, jobWithRecommendation]);
@@ -74,6 +90,15 @@ describe('ExperienceSearch helpers', () => {
     expect(matchesQuery(skillRow, 'rea')).toBe(true);
     expect(matchesQuery(skillRow, 'reactjs')).toBe(true);
     expect(matchesQuery(skillRow, 'r')).toBe(false);
+    expect(matchesQuery(skillRow, 'python')).toBe(false);
+  });
+
+  test('builds skill rows from tech-stack entries and matches them on name and synonyms', () => {
+    const [skillRow] = buildSearchResults([jobWithTechStack]);
+
+    expect(skillRow.id).toBe('skill:typescript:job-4');
+    expect(matchesQuery(skillRow, 'typescript')).toBe(true);
+    expect(matchesQuery(skillRow, 'ts')).toBe(true);
     expect(matchesQuery(skillRow, 'python')).toBe(false);
   });
 

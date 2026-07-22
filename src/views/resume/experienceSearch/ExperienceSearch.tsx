@@ -49,7 +49,9 @@ export const ExperienceSearch = () => {
         void navigate(resultTo(selected, trackId));
       }}
       noOptionsText={isBelowThreshold ? 'Type at least 2 characters' : 'No matching experience…'}
-      sx={{ maxWidth: 480, mx: 'auto', mb: 4 }}
+      size="small"
+      fullWidth
+      sx={{ maxWidth: 720, mx: 'auto', mb: 4 }}
       renderInput={(params) => (
         <TextField
           {...params}

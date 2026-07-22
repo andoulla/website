@@ -145,7 +145,7 @@ export const Resume = () => {
       </Box>
       <Suspense
         fallback={
-          <Skeleton variant="rounded" height={40} sx={{ maxWidth: 480, mx: 'auto', mb: 4 }} />
+          <Skeleton variant="rounded" height={40} sx={{ maxWidth: 720, mx: 'auto', mb: 4 }} />
         }
       >
         <ExperienceSearch />
