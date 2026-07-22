@@ -1,13 +1,14 @@
 # Ask About My Experience (Resume view)
 
 Branch: `feat/ask-about-my-experience` · own worktree · small incremental commits.
-Parallel-safe with `feat/time-machine-scrubber` (disjoint files; only *reads* `SKILL_PARAM`).
+Parallel-safe with `feat/time-machine-scrubber` (disjoint files; only _reads_ `SKILL_PARAM`).
 
 **Context:** an inline, offline "ask about my experience" search on `/` spanning Skills · Roles ·
 Recommendations, with grouped, previewed results in an anchored dropdown **inline under the
 input, no modal/overlay**. Each result is a clickable link to a specific timeline card.
 
 **Key interaction — per-job results:**
+
 - A skill held across N jobs → **N separate result rows**, one per job — the user picks which role
   to view. No auto-jump-to-most-recent.
 - Every row is a link; clicking navigates to that exact card (and highlights the skill on it).
@@ -16,11 +17,23 @@ input, no modal/overlay**. Each result is a clickable link to a specific timelin
 modal — grouped headers (`groupBy`) + preview rows render right under the box.
 
 **Result model — `experienceSearch/ExperienceSearch.types.ts`:**
+
 ```ts
 export type SearchResult =
-  | { kind: 'skill'; id: string; skillId: string; skillName: string; event: TimelineEventWithRecommendations }
+  | {
+      kind: 'skill';
+      id: string;
+      skillId: string;
+      skillName: string;
+      event: TimelineEventWithRecommendations;
+    }
   | { kind: 'role'; id: string; event: TimelineEventWithRecommendations }
-  | { kind: 'recommendation'; id: string; recommendation: Recommendation; event: TimelineEventWithRecommendations };
+  | {
+      kind: 'recommendation';
+      id: string;
+      recommendation: Recommendation;
+      event: TimelineEventWithRecommendations;
+    };
 // id unique per row: `skill:${skillId}:${eventId}` | `role:${eventId}` | `rec:${recId}`
 ```
 
@@ -28,13 +41,14 @@ export type SearchResult =
 (`src/utils/filterEventsByTrack`) so each event's `skills`/`recommendations` are track-narrowed.
 
 **Helpers — `experienceSearch/ExperienceSearch.helpers.ts`:**
+
 - `buildSearchResults(events): SearchResult[]` — per event: one `role`; one `skill` per
   `event.skills` (yields per-job rows); one `recommendation` per `event.recommendations`.
   Pre-sorted skill→role→recommendation so `groupBy` is contiguous; within Skills, order by job
   recency.
 - `matchesQuery(result, query): boolean` — reuse `normaliseSearchTerm`, `MIN_SEARCH_TERM_LENGTH = 2`;
   skill → name + synonyms, role → `companyName` + `title`, recommendation → `authorRole.jobTitle`
-  + `text` (+ `authorInitials`).
+  - `text` (+ `authorInitials`).
 - `resultTo(result, trackId): string` — link target, all param values `encodeURIComponent`-d
   (matches `TimelineEventCard.tsx:125`): skill → `/?track=<id>&skill=<name>&focus=<eventId>`;
   role → `/?track=<id>&focus=<eventId>`; recommendation → `/?track=<id>&recommendation=<recId>`.
@@ -48,6 +62,7 @@ input, placeholder "Ask about my experience…", dynamic `noOptionsText` ("Type 
 characters" under threshold, else "No matching experience…").
 
 **New `?focus=<eventId>` deep-link (in `CareerTimeline`, `Resume.tsx`):**
+
 - Roles + a specific skill@job need to scroll to a chosen event — no existing param does that.
 - `FOCUS_PARAM = 'focus'` in new `src/views/resume/Resume.constants.ts` (+ resume param literals),
   so `skillsUrlParams.ts` stays untouched (parallel-safe).
@@ -66,6 +81,7 @@ characters" under threshold, else "No matching experience…").
 `height={40}`, small max-width). Place between header `Box` (`:136`) and `Tabs` (`:137`).
 
 **Tests:**
+
 - `ExperienceSearch.test.tsx` — 3 tests: options build + track scope (skill in 2 jobs → 2 rows,
   rerender on track switch); filtering across all 3 kinds + no-match `noOptionsText`; navigation
   per kind (skill→`?skill=&focus=`, role→`?focus=`, rec→`?recommendation=`) + input clears.
@@ -75,6 +91,7 @@ characters" under threshold, else "No matching experience…").
   no skill/rec match.
 
 **Files:**
+
 - `src/views/resume/experienceSearch/` (new: `ExperienceSearch.tsx`, `.helpers.ts`, `.types.ts`,
   `.test.tsx`, `index.ts`)
 - `src/views/resume/Resume.constants.ts` (new)
@@ -83,6 +100,7 @@ characters" under threshold, else "No matching experience…").
 - `src/views/resume/timelineEventCard/TimelineEventCard.tsx` — `highlightedEventId` prop + `isMatch` fold
 
 **Edge cases:**
+
 - `filterEventsByTrack` keeps every event (`:3,14`) → `?focus=` always resolves. Skill highlight
   may vanish on a later track switch; card still focuses. Acceptable.
 - Under-threshold query → dynamic `noOptionsText` ("Type at least 2 characters").
@@ -95,11 +113,12 @@ characters" under threshold, else "No matching experience…").
 **Verify:** user runs `yarn test` + manual check. (Never run tests myself.)
 
 **Progress:**
-- [ ] Worktree + branch `feat/ask-about-my-experience`
-- [ ] `Resume.constants.ts` (`FOCUS_PARAM` + resume param literals)
-- [ ] `?focus=` handling in `CareerTimeline` (matchIndex priority + `highlightedEventId`)
-- [ ] `TimelineEventCard` `highlightedEventId` prop + `isMatch` fold + test
-- [ ] `ExperienceSearch` types + helpers (build/match/resultTo/groupLabel)
-- [ ] `ExperienceSearch` component + `Suspense` placement in `Resume.tsx`
-- [ ] `ExperienceSearch.test.tsx` + `Resume.test.tsx` focus test
-- [ ] User verification (manual + `yarn test`)
+
+- [x] Worktree + branch `feat/ask-about-my-experience`
+- [x] `Resume.constants.ts` (`FOCUS_PARAM` + resume param literals)
+- [x] `?focus=` handling in `CareerTimeline` (matchIndex priority + `highlightedEventId`)
+- [x] `TimelineEventCard` `highlightedEventId` prop + `isMatch` fold + test
+- [x] `ExperienceSearch` types + helpers (build/match/resultTo/groupLabel)
+- [x] `ExperienceSearch` component + `Suspense` placement in `Resume.tsx`
+- [x] `ExperienceSearch.test.tsx` + `Resume.test.tsx` focus test
+- [x] User verification (manual + `yarn test`)
