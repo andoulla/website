@@ -79,6 +79,7 @@ export const matchesQuery = (result: SearchResult, query: string): boolean => {
   const normalisedQuery = normaliseSearchTerm(query);
   if (normalisedQuery.length < MIN_SEARCH_TERM_LENGTH) return false;
 
+  // Substring match, so partial terms (e.g. "jav" → JavaScript) hit.
   return searchableText(result).some((text) => normaliseSearchTerm(text).includes(normalisedQuery));
 };
 

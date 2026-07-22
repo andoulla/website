@@ -6,8 +6,6 @@ import TextField from '@mui/material/TextField';
 import { useCareerDataContext } from '@/context/careerData';
 import { useTrackContext } from '@/context/track';
 import { filterEventsByTrack } from '@/utils/filterEventsByTrack';
-import { normaliseSearchTerm } from '@/utils/normaliseSearchTerm';
-import { MIN_SEARCH_TERM_LENGTH } from '@/utils/skillMatchesSearch';
 
 import {
   buildSearchResults,
@@ -29,8 +27,6 @@ export const ExperienceSearch = () => {
     [careerHistory, track]
   );
 
-  const isBelowThreshold = normaliseSearchTerm(inputValue).length < MIN_SEARCH_TERM_LENGTH;
-
   return (
     <Autocomplete<SearchResult>
       options={options}
@@ -48,7 +44,7 @@ export const ExperienceSearch = () => {
         setInputValue('');
         void navigate(resultTo(selected, trackId));
       }}
-      noOptionsText={isBelowThreshold ? 'Type at least 2 characters' : 'No matching experience…'}
+      noOptionsText="No matching experience…"
       size="small"
       fullWidth
       sx={{ maxWidth: 720, mx: 'auto', mb: 4 }}

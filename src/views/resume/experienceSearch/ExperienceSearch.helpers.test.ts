@@ -84,13 +84,28 @@ describe('ExperienceSearch helpers', () => {
     ]);
   });
 
-  test('matchesQuery matches a skill on its name and synonyms, above the length threshold', () => {
+  test('matchesQuery partial-matches a skill on its name and synonyms, above the length threshold', () => {
     const [skillRow] = buildSearchResults([olderJob]);
 
     expect(matchesQuery(skillRow, 'rea')).toBe(true);
     expect(matchesQuery(skillRow, 'reactjs')).toBe(true);
     expect(matchesQuery(skillRow, 'r')).toBe(false);
     expect(matchesQuery(skillRow, 'python')).toBe(false);
+  });
+
+  test('matchesQuery partial-matches "jav" and "js" against a JavaScript skill', () => {
+    const javaScriptTech = new Skill()
+      .id('javascript-es6')
+      .name('JavaScript (ES6+)')
+      .type('tech')
+      .synonyms(['JavaScript', 'JS', 'ECMAScript'])
+      .mock();
+    const jobWithJavaScript = new TimelineEvent().id('job-5').techStack([javaScriptTech]).mock();
+    const [skillRow] = buildSearchResults([jobWithJavaScript]);
+
+    expect(matchesQuery(skillRow, 'jav')).toBe(true);
+    expect(matchesQuery(skillRow, 'js')).toBe(true);
+    expect(matchesQuery(skillRow, 'script')).toBe(true);
   });
 
   test('builds skill rows from tech-stack entries and matches them on name and synonyms', () => {

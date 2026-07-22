@@ -107,7 +107,7 @@ describe('ExperienceSearch', () => {
     expect(senior.getByText('No matching experience…')).toBeVisible();
   });
 
-  test('filters across skills, roles, and recommendations, and guides the query length', async () => {
+  test('partial-matches across skills, roles, and recommendations, and shows a no-match message', async () => {
     const careerHistory = [
       new TimelineEvent()
         .id('job-1')
@@ -132,7 +132,7 @@ describe('ExperienceSearch', () => {
     const screen = await renderSearch(careerHistory);
     const combobox = screen.getByRole('combobox');
 
-    await user.type(combobox, 'React');
+    await user.type(combobox, 'Rea');
 
     expect(
       screen.getByRole('option', { name: 'React · Meridian Dynamics · 2022–Present' })
@@ -159,14 +159,9 @@ describe('ExperienceSearch', () => {
     expect(screen.getByText('No matching experience…')).toBeVisible();
 
     await user.clear(combobox);
-    await user.type(combobox, 'z');
-
-    expect(screen.getByText('Type at least 2 characters')).toBeVisible();
-
-    await user.clear(combobox);
 
     expect(combobox).toHaveValue('');
-    expect(screen.getByText('Type at least 2 characters')).toBeVisible();
+    expect(screen.queryByText('Type at least 2 characters')).not.toBeInTheDocument();
   });
 
   test('navigates to the matching card per kind and clears the input', async () => {
