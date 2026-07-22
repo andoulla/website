@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { TimeMachineSlider } from './TimeMachineSlider';
@@ -32,7 +32,10 @@ describe('TimeMachineSlider', () => {
     );
     const slider = screen.getByRole('slider', { name: 'Career year' });
 
-    slider.focus();
+    // Focus via act — a raw slider.focus() updates MUI's internal state outside React's batching.
+    act(() => {
+      slider.focus();
+    });
     await user.keyboard('{ArrowRight}');
 
     expect(onCommit).toHaveBeenCalledWith(2020);

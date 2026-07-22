@@ -470,7 +470,10 @@ describe('Skills', () => {
       );
       const slider = screen.getByRole('slider', { name: 'Career year' });
 
-      slider.focus();
+      // Focus via act — a raw slider.focus() updates MUI's internal state outside React's batching.
+      act(() => {
+        slider.focus();
+      });
       await user.keyboard('{ArrowRight}');
 
       expect(screen.getByText('search:track=general&asOf=2025')).toBeVisible();
