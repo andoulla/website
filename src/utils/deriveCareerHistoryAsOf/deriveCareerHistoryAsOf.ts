@@ -3,9 +3,7 @@ import type { Skill, TimelineEvent, Track } from '@/types';
 
 const toIsoDate = (date: Date): string => date.toISOString().slice(0, 10);
 
-// Narrows career history to what was true on cutoffDate: events not yet started are dropped, and
-// events still running (or ending later) have their endDate clamped to the cutoff so downstream
-// duration maths counts time only up to that point.
+// History as of cutoffDate: drop not-yet-started events; clamp still-running/later endDates to it.
 export const deriveCareerHistoryAsOf = (
   careerHistory: TimelineEvent[],
   cutoffDate: Date
@@ -33,8 +31,7 @@ const trackContributingEventIds = (track: Track, allSkills: Skill[]): Set<string
   return eventIds;
 };
 
-// Year span for the scrubber: from the earliest track-relevant job to the current year. Range is
-// track-scoped so the slider covers only years the active track actually has experience in.
+// Scrubber year span: earliest track-relevant job → current year. Track-scoped.
 export const deriveCareerYearRange = (
   careerHistory: TimelineEvent[],
   track: Track,
