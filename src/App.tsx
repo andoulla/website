@@ -21,7 +21,7 @@ import { Resume } from './views/resume';
 import { Skills } from './views/skills';
 
 // TODO?: job headlines — one-line summary per job, visible on collapsed resume cards
-// (needs a `headline` authored per careerHistory entry)
+
 const App = () => {
   return (
     <ThemeContextProvider>
