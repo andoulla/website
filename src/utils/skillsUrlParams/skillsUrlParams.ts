@@ -3,5 +3,6 @@ export const SUBCATEGORY_PARAM = 'subCategory';
 export const SEARCH_PARAM = 'search';
 export const VIEW_PARAM = 'view';
 export const SKILL_PARAM = 'skill';
+export const AS_OF_PARAM = 'asOf';
 
 export const VIEW_MODES = ['barchart', 'radar', 'table'] as const;
