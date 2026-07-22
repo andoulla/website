@@ -231,4 +231,68 @@ describe('Resume', () => {
 
     scrollIntoViewSpy.mockRestore();
   });
+
+  test('focus param scrolls to the chosen job, overriding the most-recent skill match', async () => {
+    const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
+    const reactSkill = new Skill().id('react').name('React').mock();
+    // job-2 is the current, most-recent role; ?focus= pins to the older job-1 instead.
+    const careerHistoryWithSharedSkill = [
+      new TimelineEvent()
+        .id('job-1')
+        .companyName('Meridian Dynamics')
+        .startDate('2021-04-01')
+        .endDate('2022-04-01')
+        .skills([reactSkill])
+        .mock(),
+      new TimelineEvent()
+        .id('job-2')
+        .companyName('Brightleaf Software')
+        .startDate('2023-04-01')
+        .endDate(null)
+        .skills([reactSkill])
+        .mock(),
+    ];
+
+    const screen = await renderResume(
+      () => Promise.resolve(careerHistoryWithSharedSkill),
+      [{ pathname: '/', search: '?skill=React&focus=job-1' }]
+    );
+
+    expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+    expect(scrollIntoViewSpy.mock.instances[0]).toBe(
+      screen.getByText('Meridian Dynamics').closest('.MuiCard-root')
+    );
+
+    scrollIntoViewSpy.mockRestore();
+  });
+
+  test('focus alone outlines and expands the target card even when it is not the first', async () => {
+    const careerHistory = [
+      new TimelineEvent()
+        .id('job-1')
+        .companyName('Meridian Dynamics')
+        .startDate('2021-04-01')
+        .endDate('2022-04-01')
+        .mock(),
+      new TimelineEvent()
+        .id('job-2')
+        .companyName('Brightleaf Software')
+        .startDate('2023-04-01')
+        .endDate(null)
+        .responsibilities([
+          new Responsibility().id('job-2-r01').text('Shipped the checkout flow').mock(),
+        ])
+        .mock(),
+    ];
+
+    const screen = await renderResume(
+      () => Promise.resolve(careerHistory),
+      [{ pathname: '/', search: '?focus=job-2' }]
+    );
+
+    expect(screen.getByText('Brightleaf Software').closest('.MuiCard-root')).toHaveStyle({
+      outlineOffset: '2px',
+    });
+    expect(screen.getByText('Shipped the checkout flow')).toBeVisible();
+  });
 });

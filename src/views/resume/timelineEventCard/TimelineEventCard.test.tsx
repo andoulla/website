@@ -397,6 +397,29 @@ describe('TimelineEventCard', () => {
       expect(screen.getByRole('button', { name: 'Hide key skills' })).toBeVisible();
     });
 
+    test('outlines and expands when highlightedEventId matches the event, with no skill or recommendation match', () => {
+      const screen = render(
+        <TimelineEventCard event={event} track={testTrack} highlightedEventId="job-1" />,
+        { wrapper: MemoryRouter }
+      );
+
+      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
+        outlineOffset: '2px',
+      });
+      expect(screen.getByRole('button', { name: 'Hide details' })).toBeVisible();
+    });
+
+    test('does not apply an outline when highlightedEventId matches a different event', () => {
+      const screen = render(
+        <TimelineEventCard event={event} track={testTrack} highlightedEventId="job-2" />,
+        { wrapper: MemoryRouter }
+      );
+
+      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).not.toHaveStyle({
+        outlineOffset: '2px',
+      });
+    });
+
     test('scrolls into view when autoScrollToHighlight is true', () => {
       const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
 
