@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
@@ -47,7 +48,14 @@ export const ExperienceSearch = () => {
       noOptionsText="No matching experience…"
       size="small"
       fullWidth
-      sx={{ maxWidth: 720, mx: 'auto', mb: 4 }}
+      // Swap the dropdown arrow for a search icon; don't let it flip when the list opens.
+      popupIcon={<SearchIcon />}
+      sx={{
+        maxWidth: 720,
+        mx: 'auto',
+        mb: 4,
+        '& .MuiAutocomplete-popupIndicatorOpen': { transform: 'none' },
+      }}
       renderInput={(params) => (
         <TextField
           {...params}
