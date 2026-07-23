@@ -16,11 +16,14 @@ import { PageContainer } from '@/components/pageContainer';
 import { useCareerDataContext } from '@/context/careerData';
 import { useTrackContext } from '@/context/track';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
+import { deriveAllSkills } from '@/utils/deriveAllSkills';
+import { deriveCareerYearRange } from '@/utils/deriveCareerYearRange';
 import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 import { matchSkill } from '@/utils/matchSkill';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 import {
+  AS_OF_PARAM,
   CATEGORY_PARAM,
   SEARCH_PARAM,
   SKILL_PARAM,
@@ -29,15 +32,18 @@ import {
 } from '@/utils/skillsUrlParams';
 
 import {
+  parseAsOfYear,
   parseCategoryIds,
   parseSearch,
   parseSubCategoryIds,
   parseViewMode,
+  scopeRecommendationsAsOf,
 } from './Skills.helpers';
 import type { ViewMode } from './Skills.types';
 import { CopyLinkButton } from './copyLinkButton';
 import { SkillFilterBar, type SkillFilterOption } from './skillFilterBar';
 import { SkillSearchBar } from './skillSearchBar';
+import { TimeMachineSlider } from './timeMachineSlider';
 import { TrackFilter } from './trackFilter';
 import {
   SkillsGraphView,
@@ -67,7 +73,33 @@ const deriveSearchHint = (
 const SkillsContent = () => {
   const careerHistory = useCareerDataContext();
   const { track } = useTrackContext();
-  const skills = useMemo(() => calculateSkillYears(careerHistory, track), [careerHistory, track]);
+
+  const allSkills = useMemo(() => deriveAllSkills(careerHistory), [careerHistory]);
+
+  const { minYear, maxYear } = useMemo(
+    () => deriveCareerYearRange(careerHistory, track, allSkills),
+    [careerHistory, track, allSkills]
+  );
+  const [cutoffYear, setCutoffYear] = useSkillSearchUrl(
+    AS_OF_PARAM,
+    useCallback((raw) => parseAsOfYear(raw, minYear, maxYear), [minYear, maxYear]),
+    // maxYear is "latest" — omit it from the URL.
+    (next) => (next === maxYear ? null : String(next))
+  );
+  // Latest → now; past year → its Dec 31.
+  const asOfDate = useMemo(
+    () => (cutoffYear === maxYear ? new Date() : new Date(`${cutoffYear}-12-31`)),
+    [cutoffYear, maxYear]
+  );
+  const skills = useMemo(
+    () =>
+      scopeRecommendationsAsOf(
+        calculateSkillYears(careerHistory, track, allSkills, asOfDate),
+        careerHistory,
+        asOfDate
+      ),
+    [careerHistory, track, allSkills, asOfDate]
+  );
 
   const [searchParams] = useSearchParams();
   const highlightedSkillsKey = JSON.stringify(searchParams.getAll(SKILL_PARAM));
@@ -217,6 +249,14 @@ const SkillsContent = () => {
           <CopyLinkButton />
         </Stack>
       </Stack>
+      {minYear < maxYear && (
+        <TimeMachineSlider
+          year={cutoffYear}
+          minYear={minYear}
+          maxYear={maxYear}
+          onCommit={setCutoffYear}
+        />
+      )}
       {viewMode === 'barchart' && (
         <Stack direction="row" sx={{ justifyContent: 'flex-end', mt: { xs: -1, sm: -2 }, mb: 1 }}>
           {/* describeChild — keep "Texture fills" as the accessible name */}

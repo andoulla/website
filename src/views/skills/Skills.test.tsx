@@ -5,16 +5,31 @@ import { MemoryRouter, useSearchParams } from 'react-router-dom';
 
 import { CareerDataContextProvider } from '@/context/careerData';
 import { TrackContextProvider } from '@/context/track';
-import { TimelineEvent } from '@/testing';
+import { Skill, TimelineEvent } from '@/testing';
 
 import { Skills } from './Skills';
 
+// Skill ids are real — track taxonomy isn't mockable.
 const CAREER_HISTORY = [
   new TimelineEvent()
-    .id('atom-learning-2021-01')
+    .id('job-1')
     .companyName('Acme')
     .startDate('2024-01-01')
     .endDate('2026-07-02')
+    .skills([
+      new Skill().id('team-leadership').name('Team Leadership').jobIds(['job-1']).mock(),
+      new Skill()
+        .id('javascript-es6')
+        .name('JavaScript (ES6+)')
+        .synonyms(['JavaScript'])
+        .jobIds(['job-1'])
+        .mock(),
+      new Skill().id('typescript').name('TypeScript').jobIds(['job-1']).mock(),
+      new Skill().id('react').name('React').jobIds(['job-1']).mock(),
+      new Skill().id('react-hooks').name('React Hooks').jobIds(['job-1']).mock(),
+      new Skill().id('react-query').name('React Query').jobIds(['job-1']).mock(),
+      new Skill().id('jest').name('Jest').jobIds(['job-1']).mock(),
+    ])
     .mock(),
 ];
 
@@ -82,6 +97,12 @@ describe('Skills', () => {
           name: 'Filter skills by category and subcategory, currently: All',
         })
       ).toBeVisible();
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('has no axe violations while loading', async () => {
+      const screen = renderWithProvider(neverResolve);
+
       expect(await axe(screen.container)).toHaveNoViolations();
     });
   });
@@ -437,11 +458,47 @@ describe('Skills', () => {
     });
   });
 
-  describe('accessibility', () => {
-    test('has no axe violations on initial render', async () => {
-      const screen = renderWithProvider(neverResolve);
+  describe('time slider URL sync', () => {
+    test('shows the time slider and omits the asOf param at the latest year by default', async () => {
+      const screen = await renderAndFlush();
 
-      expect(await axe(screen.container)).toHaveNoViolations();
+      expect(screen.getByText('See skills as they stood at any point in time')).toBeVisible();
+      expect(screen.getByRole('slider', { name: 'Career year' })).toHaveAttribute(
+        'aria-valuemin',
+        '2024'
+      );
+      expect(screen.getByText('search:track=general')).toBeVisible();
+    });
+
+    test('initializes the time slider from the ?asOf= param and keeps it in the URL', async () => {
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?asOf=2025']
+      );
+
+      expect(screen.getByRole('slider', { name: 'Career year' })).toHaveAttribute(
+        'aria-valuenow',
+        '2025'
+      );
+      expect(screen.getByText('search:asOf=2025&track=general')).toBeVisible();
+    });
+
+    test('writes the committed year to the asOf param when the time slider moves', async () => {
+      const user = userEvent.setup();
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?asOf=2024']
+      );
+      const slider = screen.getByRole('slider', { name: 'Career year' });
+
+      // Focus via act — a raw slider.focus() updates MUI's internal state outside React's batching.
+      act(() => {
+        slider.focus();
+      });
+      await user.keyboard('{ArrowRight}');
+
+      expect(screen.getByText('search:track=general&asOf=2025')).toBeVisible();
+      expect(slider).toHaveAttribute('aria-valuenow', '2025');
     });
   });
 });

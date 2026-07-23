@@ -1,6 +1,13 @@
 import { TRACK_PARAM } from '@/context/track';
-import type { Track } from '@/types';
-import { CATEGORY_PARAM, SUBCATEGORY_PARAM, VIEW_MODES, VIEW_PARAM } from '@/utils/skillsUrlParams';
+import type { TimelineEventWithRecommendations, Track } from '@/types';
+import type { SkillSummary } from '@/utils/calculateSkillYears';
+import {
+  AS_OF_PARAM,
+  CATEGORY_PARAM,
+  SUBCATEGORY_PARAM,
+  VIEW_MODES,
+  VIEW_PARAM,
+} from '@/utils/skillsUrlParams';
 
 import type { ViewMode } from './Skills.types';
 
@@ -30,7 +37,33 @@ export const parseSearch = (raw: string | null): string => raw ?? '';
 export const parseViewMode = (raw: string | null | undefined): ViewMode | null =>
   VIEW_MODES.includes(raw as ViewMode) ? (raw as ViewMode) : null;
 
-const PREFIX_PARAMS = [TRACK_PARAM, VIEW_PARAM, CATEGORY_PARAM, SUBCATEGORY_PARAM];
+// Reads the `asOf` year param, clamped into [minYear, maxYear]; defaults to maxYear ("latest").
+export const parseAsOfYear = (raw: string | null, minYear: number, maxYear: number): number => {
+  if (raw === null || !/^\d+$/.test(raw)) return maxYear;
+  const parsed = Number.parseInt(raw, 10);
+  return Math.min(Math.max(parsed, minYear), maxYear);
+};
+
+// Drops recommendation links that postdate the asOf cutoff.
+export const scopeRecommendationsAsOf = (
+  skills: SkillSummary[],
+  careerHistory: TimelineEventWithRecommendations[],
+  asOfDate: Date
+): SkillSummary[] => {
+  const validRecommendationIds = new Set(
+    careerHistory
+      .flatMap((event) => event.recommendations)
+      .filter((recommendation) => new Date(recommendation.postedDate) <= asOfDate)
+      .map((recommendation) => recommendation.id)
+  );
+
+  return skills.map((skill) => ({
+    ...skill,
+    recommendationIds: skill.recommendationIds.filter((id) => validRecommendationIds.has(id)),
+  }));
+};
+
+const PREFIX_PARAMS = [TRACK_PARAM, VIEW_PARAM, CATEGORY_PARAM, SUBCATEGORY_PARAM, AS_OF_PARAM];
 
 // Keeps `track` ahead of `view` ahead of `category` ahead of `subCategory` in the URL,
 // regardless of set order.

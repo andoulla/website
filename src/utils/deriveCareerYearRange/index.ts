@@ -1,0 +1,1 @@
+export { deriveCareerYearRange } from './deriveCareerYearRange';
