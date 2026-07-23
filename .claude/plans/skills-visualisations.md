@@ -18,7 +18,9 @@
 
 ## Execution
 
-- Worktree per agent under `website/.claude/worktrees/`, both off `feat/skills-viz`. Disjoint files → clean merge.
+- Two worktrees under `website/.claude/worktrees/`, both branched off `feat/skills-viz` (after Phase 0):
+  Agent A → `skills-viz-a/` on branch `feat/skills-viz-a`; Agent B → `skills-viz-b/` on `feat/skills-viz-b`.
+  Disjoint files → clean merge back into `feat/skills-viz`.
 - Commit as we go (Conventional Commits).
 - Verification is the user's — never run typecheck/lint/tests/dev. Walk changes one at a time.
 
@@ -45,9 +47,9 @@
     (no separate `VIEW_CAPTIONS`).
   - Zero-prop view components; barchart-only `showPatterns` stays a documented exception — lift it into a
     small state/context so `SkillsGraphView` reads it, keeping the map render uniform.
-  - **Slimmer on mobile:** in the toggle `.map()`, tighten `'& .MuiToggleButton-root': { px: { xs: 0.75,
-sm: 1.25 } }` + drop icon size a notch on `xs` (`useMediaQuery(theme.breakpoints.down('sm'))`); all 5
-    stay visible (no wrap/menu), no 320px overflow.
+  - **Slimmer on mobile:** in the toggle `.map()`, tighten button padding on `xs` (via
+    `'& .MuiToggleButton-root'` `px`) and drop icon size a notch on `xs`
+    (`useMediaQuery(theme.breakpoints.down('sm'))`); all 5 stay visible (no wrap/menu), no 320px overflow.
   - Captions (parallel, user-value, sentence case — no mechanics like "longest bars first"):
     - barchart → "How many years I've spent on each skill"
     - radar → "Where my experience is concentrated across areas"
@@ -170,9 +172,9 @@ sm: 1.25 } }` + drop icon size a notch on `xs` (`useMediaQuery(theme.breakpoints
 
 - Consumes `SkillSummary.type` (Phase 0).
 - **Data:** new `src/utils/deriveSkillTypeSplit/` → `{tech,skill,techPct}`.
-- **UX:** extract a prop-driven `SkillTypeMeter` component (2-segment bar via styled `Box`/`LinearProgress`
-  - counts + `Tooltip`), rendered in the `SkillsStatBar` beside `RecommendationStat` (below caption, not the
-    control bar — see Phase 0); reflects `filteredSkills`+search. Table: `tech`/`skill` `Chip` per `SkillRow`.
+- **UX:** extract a prop-driven `SkillTypeMeter` component — a 2-segment bar (styled `Box`/`LinearProgress`)
+  with counts and a `Tooltip` — rendered in the `SkillsStatBar` beside `RecommendationStat` (below the caption,
+  not the control bar — see Phase 0); reflects `filteredSkills`+search. Table: `tech`/`skill` `Chip` per `SkillRow`.
 - **Edge cases:** all one type → one full segment (no div-by-zero); 0 skills → hide meter; tracks filters.
 - **a11y:** meter `role="img"` + `aria-label` ("62% technical, 38% non-technical"); chips carry text.
 - **Tests:** `deriveSkillTypeSplit.test.ts` (mixed/all-tech/all-soft/empty). `SkillTypeMeter.test.tsx`
