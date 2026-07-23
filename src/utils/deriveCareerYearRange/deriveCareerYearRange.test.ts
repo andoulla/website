@@ -29,7 +29,7 @@ describe('deriveCareerYearRange', () => {
 
     const range = deriveCareerYearRange(careerHistory, track, allSkills, new Date('2026-07-22'));
 
-    // minYear from a Jan-1 startDate — pins UTC-safe year extraction, timezone-independent.
+    // Jan-1 startDate — pins UTC-safe year extraction.
     expect(range).toEqual({ minYear: 2015, maxYear: 2026 });
   });
 });

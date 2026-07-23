@@ -5,16 +5,31 @@ import { MemoryRouter, useSearchParams } from 'react-router-dom';
 
 import { CareerDataContextProvider } from '@/context/careerData';
 import { TrackContextProvider } from '@/context/track';
-import { TimelineEvent } from '@/testing';
+import { Skill, TimelineEvent } from '@/testing';
 
 import { Skills } from './Skills';
 
+// Skill ids are real (track taxonomy isn't mockable); mapping content is synthetic.
 const CAREER_HISTORY = [
   new TimelineEvent()
-    .id('atom-learning-2021-01')
+    .id('job-1')
     .companyName('Acme')
     .startDate('2024-01-01')
     .endDate('2026-07-02')
+    .skills([
+      new Skill().id('team-leadership').name('Team Leadership').jobIds(['job-1']).mock(),
+      new Skill()
+        .id('javascript-es6')
+        .name('JavaScript (ES6+)')
+        .synonyms(['JavaScript'])
+        .jobIds(['job-1'])
+        .mock(),
+      new Skill().id('typescript').name('TypeScript').jobIds(['job-1']).mock(),
+      new Skill().id('react').name('React').jobIds(['job-1']).mock(),
+      new Skill().id('react-hooks').name('React Hooks').jobIds(['job-1']).mock(),
+      new Skill().id('react-query').name('React Query').jobIds(['job-1']).mock(),
+      new Skill().id('jest').name('Jest').jobIds(['job-1']).mock(),
+    ])
     .mock(),
 ];
 

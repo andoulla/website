@@ -26,7 +26,7 @@ export const deriveCareerYearRange = (
 ): { minYear: number; maxYear: number } => {
   const contributingEventIds = trackContributingEventIds(track, allSkills);
 
-  // getUTCFullYear — startDate is a date-only ISO string, parsed as UTC midnight.
+  // UTC-safe year extraction — startDate is date-only.
   const startYears = careerHistory
     .filter((event) => contributingEventIds.has(event.id))
     .map((event) => new Date(event.startDate).getUTCFullYear());

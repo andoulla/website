@@ -1,0 +1,1 @@
+export { deriveAllSkills } from './deriveAllSkills';

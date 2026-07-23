@@ -16,6 +16,7 @@ import { PageContainer } from '@/components/pageContainer';
 import { useCareerDataContext } from '@/context/careerData';
 import { useTrackContext } from '@/context/track';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
+import { deriveAllSkills } from '@/utils/deriveAllSkills';
 import { deriveCareerYearRange } from '@/utils/deriveCareerYearRange';
 import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
@@ -72,9 +73,11 @@ const SkillsContent = () => {
   const careerHistory = useCareerDataContext();
   const { track } = useTrackContext();
 
+  const allSkills = useMemo(() => deriveAllSkills(careerHistory), [careerHistory]);
+
   const { minYear, maxYear } = useMemo(
-    () => deriveCareerYearRange(careerHistory, track),
-    [careerHistory, track]
+    () => deriveCareerYearRange(careerHistory, track, allSkills),
+    [careerHistory, track, allSkills]
   );
   const [cutoffYear, setCutoffYear] = useSkillSearchUrl(
     AS_OF_PARAM,
@@ -82,14 +85,14 @@ const SkillsContent = () => {
     // maxYear is "latest" — omit it from the URL.
     (next) => (next === maxYear ? null : String(next))
   );
-  // "Latest" uses the real current instant; a past year clips to its Dec 31.
+  // Latest → now; past year → its Dec 31.
   const asOfDate = useMemo(
     () => (cutoffYear === maxYear ? new Date() : new Date(`${cutoffYear}-12-31`)),
     [cutoffYear, maxYear]
   );
   const skills = useMemo(
-    () => calculateSkillYears(careerHistory, track, undefined, asOfDate),
-    [careerHistory, track, asOfDate]
+    () => calculateSkillYears(careerHistory, track, allSkills, asOfDate),
+    [careerHistory, track, allSkills, asOfDate]
   );
 
   const [searchParams] = useSearchParams();
