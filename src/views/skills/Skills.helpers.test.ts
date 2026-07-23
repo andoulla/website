@@ -1,6 +1,7 @@
 import { Recommendation, SkillSummary, TimelineEvent, Track } from '@/testing';
 
 import {
+  parseAsOfYear,
   parseCategoryIds,
   parseSearch,
   parseSubCategoryIds,
@@ -172,6 +173,32 @@ describe('reorderFilterParams', () => {
     const result = reorderFilterParams(params);
 
     expect(result.toString()).toBe('category=frontend-development&skill=React&skill=TypeScript');
+  });
+});
+
+describe('parseAsOfYear', () => {
+  test('returns maxYear when the param is null', () => {
+    expect(parseAsOfYear(null, 2015, 2026)).toBe(2026);
+  });
+
+  test('returns the value when it is within range', () => {
+    expect(parseAsOfYear('2020', 2015, 2026)).toBe(2020);
+  });
+
+  test('clamps a value below minYear', () => {
+    expect(parseAsOfYear('2000', 2015, 2026)).toBe(2015);
+  });
+
+  test('clamps a value above maxYear', () => {
+    expect(parseAsOfYear('2099', 2015, 2026)).toBe(2026);
+  });
+
+  test('returns maxYear for a non-numeric value', () => {
+    expect(parseAsOfYear('2020abc', 2015, 2026)).toBe(2026);
+  });
+
+  test('returns maxYear for a decimal value', () => {
+    expect(parseAsOfYear('2020.9', 2015, 2026)).toBe(2026);
   });
 });
 
