@@ -20,7 +20,7 @@ recomputes skill-years as-of that year, track-aware. Additive — no `?asOf=` me
 - `deriveCareerYearRange(careerHistory, track, today = new Date()): { minYear, maxYear }` —
   `minYear` = earliest `startDate` year among events that contribute a skill in `track`;
   `maxYear` = `today.getFullYear()`. Track-scoped, recomputes on track switch.
-- + test file + `index.ts`.
+- - test file + `index.ts`.
 
 **Wire into `SkillsContent` (`src/views/skills/Skills.tsx`):**
 
