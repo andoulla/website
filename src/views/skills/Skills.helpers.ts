@@ -1,5 +1,6 @@
 import { TRACK_PARAM } from '@/context/track';
-import type { Track } from '@/types';
+import type { TimelineEventWithRecommendations, Track } from '@/types';
+import type { SkillSummary } from '@/utils/calculateSkillYears';
 import {
   AS_OF_PARAM,
   CATEGORY_PARAM,
@@ -42,6 +43,25 @@ export const parseAsOfYear = (raw: string | null, minYear: number, maxYear: numb
   const parsed = Number.parseInt(raw, 10);
   if (Number.isNaN(parsed)) return maxYear;
   return Math.min(Math.max(parsed, minYear), maxYear);
+};
+
+// Drops recommendation links that postdate the asOf cutoff.
+export const scopeRecommendationsAsOf = (
+  skills: SkillSummary[],
+  careerHistory: TimelineEventWithRecommendations[],
+  asOfDate: Date
+): SkillSummary[] => {
+  const validRecommendationIds = new Set(
+    careerHistory
+      .flatMap((event) => event.recommendations)
+      .filter((recommendation) => new Date(recommendation.postedDate) <= asOfDate)
+      .map((recommendation) => recommendation.id)
+  );
+
+  return skills.map((skill) => ({
+    ...skill,
+    recommendationIds: skill.recommendationIds.filter((id) => validRecommendationIds.has(id)),
+  }));
 };
 
 const PREFIX_PARAMS = [TRACK_PARAM, VIEW_PARAM, CATEGORY_PARAM, SUBCATEGORY_PARAM, AS_OF_PARAM];

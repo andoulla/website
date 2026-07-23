@@ -37,6 +37,7 @@ import {
   parseSearch,
   parseSubCategoryIds,
   parseViewMode,
+  scopeRecommendationsAsOf,
 } from './Skills.helpers';
 import type { ViewMode } from './Skills.types';
 import { CopyLinkButton } from './copyLinkButton';
@@ -91,7 +92,12 @@ const SkillsContent = () => {
     [cutoffYear, maxYear]
   );
   const skills = useMemo(
-    () => calculateSkillYears(careerHistory, track, allSkills, asOfDate),
+    () =>
+      scopeRecommendationsAsOf(
+        calculateSkillYears(careerHistory, track, allSkills, asOfDate),
+        careerHistory,
+        asOfDate
+      ),
     [careerHistory, track, allSkills, asOfDate]
   );
 

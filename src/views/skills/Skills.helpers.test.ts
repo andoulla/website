@@ -1,4 +1,4 @@
-import { Track } from '@/testing';
+import { Recommendation, SkillSummary, TimelineEvent, Track } from '@/testing';
 
 import {
   parseCategoryIds,
@@ -6,6 +6,7 @@ import {
   parseSubCategoryIds,
   parseViewMode,
   reorderFilterParams,
+  scopeRecommendationsAsOf,
 } from './Skills.helpers';
 
 const testTrack = new Track()
@@ -171,5 +172,24 @@ describe('reorderFilterParams', () => {
     const result = reorderFilterParams(params);
 
     expect(result.toString()).toBe('category=frontend-development&skill=React&skill=TypeScript');
+  });
+});
+
+describe('scopeRecommendationsAsOf', () => {
+  test('keeps a recommendation posted on or before the cutoff, drops one posted after', () => {
+    const careerHistory = [
+      new TimelineEvent()
+        .id('job-1')
+        .recommendations([
+          new Recommendation().id('early').postedDate('2020-06-01').mock(),
+          new Recommendation().id('late').postedDate('2021-06-01').mock(),
+        ])
+        .mock(),
+    ];
+    const skills = [new SkillSummary().recommendationIds(['early', 'late']).mock()];
+
+    const result = scopeRecommendationsAsOf(skills, careerHistory, new Date('2020-12-31'));
+
+    expect(result[0].recommendationIds).toEqual(['early']);
   });
 });
