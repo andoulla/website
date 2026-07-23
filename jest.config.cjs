@@ -5,15 +5,15 @@ module.exports = {
   modulePathIgnorePatterns: ['<rootDir>/.claude/worktrees/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   coverageReporters: ['text', 'text-summary', 'json-summary', 'lcov', 'html'],
-  transformIgnorePatterns: ['/node_modules/(?!@vercel/speed-insights)'],
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
-    '^.+\\.(js|jsx|mjs)$': 'ts-jest',
   },
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '\\.(jpg|jpeg|png|svg|gif|webp)$': '<rootDir>/jest/fileMock.cjs',
+    '^@vercel/analytics/react$': '<rootDir>/jest/vercelAnalyticsMock.cjs',
+    '^@vercel/speed-insights/react$': '<rootDir>/jest/vercelSpeedInsightsMock.cjs',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
 };
