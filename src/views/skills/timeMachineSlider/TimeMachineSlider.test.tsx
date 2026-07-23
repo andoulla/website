@@ -4,25 +4,38 @@ import userEvent from '@testing-library/user-event';
 import { TimeMachineSlider } from './TimeMachineSlider';
 
 describe('TimeMachineSlider', () => {
-  test('renders the caption and an accessible slider, hiding "Present" below the max year', () => {
+  test('renders an accessible slider marked with the selected year, hiding "Present" below the max year', () => {
     const screen = render(
       <TimeMachineSlider year={2019} minYear={2015} maxYear={2026} onCommit={jest.fn()} />
     );
     const slider = screen.getByRole('slider', { name: 'Career year' });
 
-    expect(screen.getByText('See skills as they stood at any point in time')).toBeVisible();
-    // excludes the value-label bubble
-    expect(screen.getByText('2019', { selector: '[aria-live="polite"]' })).toBeVisible();
     expect(slider).toHaveAttribute('aria-valuenow', '2019');
+    // the selected year sits below the slider as its mark label
+    expect(screen.getByText('2019')).toBeVisible();
     expect(screen.queryByText('Present')).not.toBeInTheDocument();
   });
 
-  test('shows "Present" at the max year, including to assistive tech', () => {
+  test('explains the slider in a popover opened from the info button', async () => {
+    const user = userEvent.setup();
+    const screen = render(
+      <TimeMachineSlider year={2019} minYear={2015} maxYear={2026} onCommit={jest.fn()} />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'About the time slider' }));
+
+    expect(
+      screen.getByText(
+        'Rewind the years to see which skills were in play, and how much experience each had, at any point in time.'
+      )
+    ).toBeVisible();
+  });
+
+  test('surfaces "Present" to assistive tech at the max year', () => {
     const screen = render(
       <TimeMachineSlider year={2026} minYear={2015} maxYear={2026} onCommit={jest.fn()} />
     );
 
-    expect(screen.getByText('Present', { selector: '[aria-live="polite"]' })).toBeVisible();
     expect(screen.getByRole('slider', { name: 'Career year' })).toHaveAttribute(
       'aria-valuetext',
       'Present'

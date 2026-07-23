@@ -19,7 +19,7 @@ interface CopyState {
 const IDLE_STATE: CopyState = { status: 'idle' };
 
 const LABEL_BY_STATUS: Record<CopyStatus, string> = {
-  idle: 'Copy filtered link',
+  idle: 'Share link',
   copied: 'Link copied',
   failed: "Couldn't copy link",
 };

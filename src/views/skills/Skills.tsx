@@ -203,11 +203,13 @@ const SkillsContent = () => {
       <Stack
         direction="row"
         sx={{
-          mb: { xs: 1.5, sm: 3 },
+          mb: { xs: 2.5, sm: 4 },
+          pb: { xs: 1.5, sm: 2 },
+          borderBottom: 1,
+          borderColor: 'divider',
           flexWrap: 'wrap',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 1,
+          gap: { xs: 1.5, sm: 2 },
         }}
       >
         <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
@@ -220,7 +222,17 @@ const SkillsContent = () => {
           onCategoriesChange={setSelectedCategories}
           onSubCategoriesChange={setSelectedSubCategories}
         />
-        <Stack direction="row" sx={{ alignItems: 'center', ml: 'auto', gap: 1 }}>
+        {minYear < maxYear && (
+          <TimeMachineSlider
+            year={cutoffYear}
+            minYear={minYear}
+            maxYear={maxYear}
+            onCommit={setCutoffYear}
+            sx={{ flexGrow: 1, flexBasis: { xs: '100%', md: 220 }, minWidth: { md: 200 } }}
+          />
+        )}
+        <Stack direction="row" sx={{ alignItems: 'center', ml: 'auto', gap: 1.5 }}>
+          <CopyLinkButton />
           <ToggleButtonGroup
             value={viewMode}
             exclusive
@@ -246,17 +258,8 @@ const SkillsContent = () => {
               </ToggleButton>
             </Tooltip>
           </ToggleButtonGroup>
-          <CopyLinkButton />
         </Stack>
       </Stack>
-      {minYear < maxYear && (
-        <TimeMachineSlider
-          year={cutoffYear}
-          minYear={minYear}
-          maxYear={maxYear}
-          onCommit={setCutoffYear}
-        />
-      )}
       {viewMode === 'barchart' && (
         <Stack direction="row" sx={{ justifyContent: 'flex-end', mt: { xs: -1, sm: -2 }, mb: 1 }}>
           {/* describeChild — keep "Texture fills" as the accessible name */}

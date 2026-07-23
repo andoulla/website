@@ -462,7 +462,6 @@ describe('Skills', () => {
     test('shows the time slider and omits the asOf param at the latest year by default', async () => {
       const screen = await renderAndFlush();
 
-      expect(screen.getByText('See skills as they stood at any point in time')).toBeVisible();
       expect(screen.getByRole('slider', { name: 'Career year' })).toHaveAttribute(
         'aria-valuemin',
         '2024'

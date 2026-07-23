@@ -25,7 +25,7 @@ describe('CopyLinkButton', () => {
   test('renders with no axe violations', async () => {
     const screen = renderCopyLinkButton();
 
-    expect(screen.getByRole('button', { name: 'Copy filtered link' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Share link' })).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
@@ -36,7 +36,7 @@ describe('CopyLinkButton', () => {
     mockClipboard(writeText);
     const screen = renderCopyLinkButton();
 
-    await user.click(screen.getByRole('button', { name: 'Copy filtered link' }));
+    await user.click(screen.getByRole('button', { name: 'Share link' }));
 
     expect(writeText).toHaveBeenCalledWith('http://localhost/skills?category=engineering');
   });
@@ -48,7 +48,7 @@ describe('CopyLinkButton', () => {
     mockClipboard(writeText);
     const screen = renderCopyLinkButton();
 
-    await user.click(screen.getByRole('button', { name: 'Copy filtered link' }));
+    await user.click(screen.getByRole('button', { name: 'Share link' }));
 
     expect(await screen.findByRole('button', { name: 'Link copied' })).toBeVisible();
     expect(screen.getByRole('status')).toHaveTextContent('Link copied');
@@ -61,7 +61,7 @@ describe('CopyLinkButton', () => {
     mockClipboard(writeText);
     const screen = renderCopyLinkButton();
 
-    await user.click(screen.getByRole('button', { name: 'Copy filtered link' }));
+    await user.click(screen.getByRole('button', { name: 'Share link' }));
 
     expect(await screen.findByRole('button', { name: "Couldn't copy link" })).toBeVisible();
   });
@@ -74,7 +74,7 @@ describe('CopyLinkButton', () => {
     mockClipboard(writeText);
     const screen = renderCopyLinkButton();
 
-    await user.click(screen.getByRole('button', { name: 'Copy filtered link' }));
+    await user.click(screen.getByRole('button', { name: 'Share link' }));
     expect(await screen.findByRole('button', { name: 'Link copied' })).toBeVisible();
 
     clearTimeoutSpy.mockClear();
@@ -97,14 +97,14 @@ describe('CopyLinkButton', () => {
     mockClipboard(writeText);
     const screen = renderCopyLinkButton();
 
-    await user.click(screen.getByRole('button', { name: 'Copy filtered link' }));
+    await user.click(screen.getByRole('button', { name: 'Share link' }));
     expect(await screen.findByRole('button', { name: 'Link copied' })).toBeVisible();
 
     act(() => {
       jest.advanceTimersByTime(1500);
     });
 
-    expect(await screen.findByRole('button', { name: 'Copy filtered link' })).toBeVisible();
+    expect(await screen.findByRole('button', { name: 'Share link' })).toBeVisible();
 
     jest.useRealTimers();
   });

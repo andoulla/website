@@ -101,10 +101,10 @@ const GroupHeaderRow = ({
         scope="rowgroup"
         colSpan={colSpan}
         sx={{
-          py: isSubcategory ? 1 : 1.5,
+          py: isSubcategory ? 0.5 : 0.75,
           pl: isSubcategory ? 4 : 2,
           fontWeight: isSubcategory ? 500 : 600,
-          fontSize: isSubcategory ? '0.9rem' : '1rem',
+          fontSize: isSubcategory ? '0.8rem' : '0.9rem',
           borderBottom: isSubcategory ? '1px solid' : undefined,
           borderColor: isSubcategory ? theme.palette.divider : undefined,
         }}
