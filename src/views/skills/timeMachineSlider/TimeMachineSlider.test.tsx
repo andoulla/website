@@ -11,17 +11,22 @@ describe('TimeMachineSlider', () => {
     const slider = screen.getByRole('slider', { name: 'Career year' });
 
     expect(screen.getByText('See skills as they stood at any point in time')).toBeVisible();
-    expect(screen.getByText('2019')).toBeVisible();
+    // valueLabelDisplay="auto" renders a second, duplicate "2019" bubble on the thumb.
+    expect(screen.getByText('2019', { selector: '[aria-live="polite"]' })).toBeVisible();
     expect(slider).toHaveAttribute('aria-valuenow', '2019');
     expect(screen.queryByText('Present')).not.toBeInTheDocument();
   });
 
-  test('shows "Present" at the max year', () => {
+  test('shows "Present" at the max year, including to assistive tech', () => {
     const screen = render(
       <TimeMachineSlider year={2026} minYear={2015} maxYear={2026} onCommit={jest.fn()} />
     );
 
-    expect(screen.getByText('Present')).toBeVisible();
+    expect(screen.getByText('Present', { selector: '[aria-live="polite"]' })).toBeVisible();
+    expect(screen.getByRole('slider', { name: 'Career year' })).toHaveAttribute(
+      'aria-valuetext',
+      'Present'
+    );
   });
 
   test('commits the new year when the slider settles on a step', async () => {

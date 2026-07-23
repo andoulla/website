@@ -53,6 +53,8 @@ export const TimeMachineSlider = ({ year, minYear, maxYear, onCommit }: TimeMach
         step={1}
         marks={marks}
         aria-label="Career year"
+        valueLabelDisplay="auto"
+        getAriaValueText={formatYear}
         onChange={(_event, value) => {
           setIsDragging(true);
           setLiveYear(single(value));
