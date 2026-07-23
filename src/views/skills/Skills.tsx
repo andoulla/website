@@ -16,7 +16,7 @@ import { PageContainer } from '@/components/pageContainer';
 import { useCareerDataContext } from '@/context/careerData';
 import { useTrackContext } from '@/context/track';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
-import { deriveCareerYearRange } from '@/utils/deriveCareerHistoryAsOf';
+import { deriveCareerYearRange } from '@/utils/deriveCareerYearRange';
 import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 import { matchSkill } from '@/utils/matchSkill';

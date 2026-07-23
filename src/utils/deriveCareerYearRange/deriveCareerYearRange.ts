@@ -1,23 +1,6 @@
 import { skills as defaultSkills } from '@/data/skills';
 import type { Skill, TimelineEvent, Track } from '@/types';
 
-const toIsoDate = (date: Date): string => date.toISOString().slice(0, 10);
-
-// Narrows career history to what was true on cutoffDate.
-export const deriveCareerHistoryAsOf = (
-  careerHistory: TimelineEvent[],
-  cutoffDate: Date
-): TimelineEvent[] =>
-  careerHistory.flatMap((event) => {
-    // Drop events that had not started yet on the cutoff.
-    if (new Date(event.startDate) > cutoffDate) return [];
-
-    // Clamp still-running (or later-ending) events to the cutoff so durations stop there.
-    const endsAfterCutoff = event.endDate === null || new Date(event.endDate) > cutoffDate;
-
-    return [{ ...event, endDate: endsAfterCutoff ? toIsoDate(cutoffDate) : event.endDate }];
-  });
-
 // The set of event ids that contribute at least one skill in the active track.
 const trackContributingEventIds = (track: Track, allSkills: Skill[]): Set<string> => {
   const trackSkillIds = new Set(
@@ -43,13 +26,14 @@ export const deriveCareerYearRange = (
 ): { minYear: number; maxYear: number } => {
   const contributingEventIds = trackContributingEventIds(track, allSkills);
 
+  // getUTCFullYear — startDate is a date-only ISO string, parsed as UTC midnight.
   const startYears = careerHistory
     .filter((event) => contributingEventIds.has(event.id))
-    .map((event) => new Date(event.startDate).getFullYear());
+    .map((event) => new Date(event.startDate).getUTCFullYear());
 
   // Upper bound is the present — the slider's top position means "up to today".
   const maxYear = today.getFullYear();
-  const minYear = startYears.length > 0 ? Math.min(...startYears) : maxYear;
+  const minYear = startYears.length > 0 ? Math.min(...startYears, maxYear) : maxYear;
 
   return { minYear, maxYear };
 };
