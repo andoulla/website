@@ -8,11 +8,13 @@ recomputes skill-years as-of that year, track-aware. Additive — no `?asOf=` me
 (defaults to `maxYear`); the chart is year-granular (see edge cases).
 
 **Why not modify `calculateSkillYears` directly:**
+
 - `durationYears` (`src/utils/calculateSkillYears/calculateSkillYears.ts:7`) only clips
   open-ended events at `today` — a closed event ending after the cutoff isn't clipped.
 - Fix: feed it a pre-clipped `TimelineEvent[]`, not a changed function. Keeps frozen logic intact.
 
 **New util `src/utils/deriveCareerHistoryAsOf/`:**
+
 - `deriveCareerHistoryAsOf(careerHistory, cutoffDate): TimelineEvent[]` — drop events starting
   after cutoff; clamp `endDate` to cutoff when null or later than cutoff.
 - `deriveCareerYearRange(careerHistory, track, today = new Date()): { minYear, maxYear }` —
@@ -21,6 +23,7 @@ recomputes skill-years as-of that year, track-aware. Additive — no `?asOf=` me
 - + test file + `index.ts`.
 
 **Wire into `SkillsContent` (`src/views/skills/Skills.tsx`):**
+
 ```ts
 const { minYear, maxYear } = useMemo(
   () => deriveCareerYearRange(careerHistory, track),
@@ -38,27 +41,31 @@ const cutoffHistory = useMemo(
 );
 const skills = useMemo(() => calculateSkillYears(cutoffHistory, track), [cutoffHistory, track]);
 ```
+
 - Downstream (`filteredSkills`, all 3 views via `SkillsViewContextProvider`) unchanged — cutoff
   flows through to barchart/radar/table automatically.
 
 **URL param:**
+
 - Add `AS_OF_PARAM = 'asOf'` to `src/utils/skillsUrlParams/skillsUrlParams.ts:5`.
 - Add `parseAsOfYear(raw, minYear, maxYear)` to `Skills.helpers.ts` (style of `parseViewMode`,
   line 30) — clamps to range, defaults to `maxYear`.
 - Add `AS_OF_PARAM` to `PREFIX_PARAMS` (`Skills.helpers.ts:33`).
 
 **New component `src/views/skills/timeMachineSlider/`:**
+
 - `TimeMachineSlider.tsx` — props `{ year, minYear, maxYear, onCommit }`. MUI `Slider`,
   `valueLabelDisplay="auto"`, discrete integer `step={1}`, year `marks`, `aria-label="Career year"`,
   "Present" label when `year === maxYear`.
 - **Stepped search:** local state tracks the thumb's year live (label follows drag), but the
   committed year — what re-derives the chart and writes `?asOf=` — fires only on
   `onChangeCommitted` (settled step / release), so dragging doesn't re-search per intermediate year.
-- + test + `index.ts`.
+- - test + `index.ts`.
 - Mount as new full-width row in `Skills.tsx`, below the filter `Stack` (`:171-219`), same slot
   pattern as the "Texture fills" row (`:220-238`) — always visible, not gated to one view mode.
 
 **Caption / visibility:**
+
 - Caption above the slider: `Typography variant="caption" color="text.secondary"` — "See skills
   as they stood at any point in time." Always visible, low visual weight.
 
@@ -66,6 +73,7 @@ const skills = useMemo(() => calculateSkillYears(cutoffHistory, track), [cutoffH
 (`isAnimationActive`, `animationDuration={400}`).
 
 **Tests:**
+
 - `deriveCareerHistoryAsOf.test.ts` — 2 tests: (1) one multi-event fixture (before / straddling /
   after / exactly-on / open-ended) asserted in a single `toEqual`; (2) `deriveCareerYearRange`
   track-scoped range, `minYear` excludes an out-of-track early event, `maxYear` from injected
@@ -76,6 +84,7 @@ const skills = useMemo(() => calculateSkillYears(cutoffHistory, track), [cutoffH
   clips + round-trips; pre-first-skill year → `skillsEmptyState`; committing a step updates chart.
 
 **Files:**
+
 - `src/utils/deriveCareerHistoryAsOf/` (new: `.ts`, `.test.ts`, `index.ts`)
 - `src/utils/skillsUrlParams/skillsUrlParams.ts` — add `AS_OF_PARAM`
 - `src/views/skills/Skills.helpers.ts` — add `parseAsOfYear`, extend `PREFIX_PARAMS`
@@ -83,6 +92,7 @@ const skills = useMemo(() => calculateSkillYears(cutoffHistory, track), [cutoffH
 - `src/views/skills/timeMachineSlider/` (new: `.tsx`, `.test.tsx`, `index.ts`)
 
 **Edge cases:**
+
 - Empty skills at an early cutoff → render `skillsEmptyState` (not a blank chart).
 - Invalid/out-of-range `?asOf=` → `parseAsOfYear` defaults to `maxYear` (NaN/absent) or clamps to
   `[minYear, maxYear]`; `=== maxYear` omits the param.
@@ -97,6 +107,7 @@ const skills = useMemo(() => calculateSkillYears(cutoffHistory, track), [cutoffH
 **Verify:** user runs `yarn test` + manual drag check. (Never run tests myself.)
 
 **Progress:**
+
 - [x] Worktree + branch `feat/time-machine-scrubber`
 - [x] `deriveCareerHistoryAsOf` util + tests
 - [x] `AS_OF_PARAM` + `parseAsOfYear` + `PREFIX_PARAMS`
