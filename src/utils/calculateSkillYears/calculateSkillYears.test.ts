@@ -113,6 +113,18 @@ describe('calculateSkillYears', () => {
       expect(react?.years).toBeCloseTo(2, 0);
     });
 
+    test('clips a closed endDate that is after asOf', () => {
+      const result = calculateSkillYears(
+        [new TimelineEvent().id('j1').startDate('2024-07-02').endDate('2027-01-01').mock()],
+        testTrack,
+        [new Skill().jobIds(['j1']).mock()],
+        TODAY
+      );
+      const react = result.find((summary) => summary.skill === 'React');
+
+      expect(react?.years).toBeCloseTo(2, 0);
+    });
+
     test('rounds years to one decimal place at a rounding boundary', () => {
       const result = calculateSkillYears(
         [new TimelineEvent().id('j1').startDate('2020-01-01').endDate('2021-01-19').mock()],

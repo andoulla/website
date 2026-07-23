@@ -16,7 +16,7 @@ import { PageContainer } from '@/components/pageContainer';
 import { useCareerDataContext } from '@/context/careerData';
 import { useTrackContext } from '@/context/track';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
-import { deriveCareerHistoryAsOf, deriveCareerYearRange } from '@/utils/deriveCareerHistoryAsOf';
+import { deriveCareerYearRange } from '@/utils/deriveCareerHistoryAsOf';
 import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
 import { matchSkill } from '@/utils/matchSkill';
@@ -82,12 +82,15 @@ const SkillsContent = () => {
     // maxYear is "latest" — omit it from the URL.
     (next) => (next === maxYear ? null : String(next))
   );
-  // Year-based cutoff: Dec 31 of the selected year.
-  const cutoffHistory = useMemo(
-    () => deriveCareerHistoryAsOf(careerHistory, new Date(`${cutoffYear}-12-31`)),
-    [careerHistory, cutoffYear]
+  // "Latest" uses the real current instant; a past year clips to its Dec 31.
+  const asOfDate = useMemo(
+    () => (cutoffYear === maxYear ? new Date() : new Date(`${cutoffYear}-12-31`)),
+    [cutoffYear, maxYear]
   );
-  const skills = useMemo(() => calculateSkillYears(cutoffHistory, track), [cutoffHistory, track]);
+  const skills = useMemo(
+    () => calculateSkillYears(careerHistory, track, undefined, asOfDate),
+    [careerHistory, track, asOfDate]
+  );
 
   const [searchParams] = useSearchParams();
   const highlightedSkillsKey = JSON.stringify(searchParams.getAll(SKILL_PARAM));

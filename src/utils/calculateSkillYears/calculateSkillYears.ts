@@ -4,9 +4,11 @@ import { categoryColourFromIndex } from '@/utils/skillColour';
 
 import type { SkillCompanyYears, SkillSummary } from './calculateSkillYears.types';
 
-const durationYears = (startDate: string, endDate: string | null, today: Date): number => {
+// Clips both open-ended and overrunning end dates to asOf.
+const durationYears = (startDate: string, endDate: string | null, asOf: Date): number => {
   const start = new Date(startDate);
-  const end = endDate !== null ? new Date(endDate) : today;
+  const end =
+    endDate !== null ? new Date(Math.min(new Date(endDate).getTime(), asOf.getTime())) : asOf;
   return (end.getTime() - start.getTime()) / (365.25 * 24 * 60 * 60 * 1000);
 };
 
@@ -18,14 +20,14 @@ interface SkillYears {
 const calculateYearsForSkill = (
   skill: Skill,
   eventById: Map<string, TimelineEvent>,
-  today: Date
+  asOf: Date
 ): SkillYears => {
   const companyYearsMap = new Map<string, number>();
 
   const years = skill.jobIds.reduce((total, jobId) => {
     const event = eventById.get(jobId);
     if (event === undefined) return total;
-    const jobYears = durationYears(event.startDate, event.endDate, today);
+    const jobYears = durationYears(event.startDate, event.endDate, asOf);
     const priorYears = companyYearsMap.get(event.companyName) ?? 0;
     companyYearsMap.set(event.companyName, priorYears + jobYears);
     return total + jobYears;
@@ -45,7 +47,7 @@ export const calculateSkillYears = (
   track: Track,
   allSkills: Skill[] = defaultSkills,
   // A fresh Date() per call — callers must memoize, or every render re-triggers a new instant.
-  today: Date = new Date()
+  asOf: Date = new Date()
 ): SkillSummary[] => {
   const eventById = new Map(careerHistory.map((event) => [event.id, event]));
   const skillById = new Map(allSkills.map((skill) => [skill.id, skill]));
@@ -56,7 +58,7 @@ export const calculateSkillYears = (
         const skill = skillById.get(skillId);
         if (skill === undefined) return [];
 
-        const { years, companyYears } = calculateYearsForSkill(skill, eventById, today);
+        const { years, companyYears } = calculateYearsForSkill(skill, eventById, asOf);
         if (years <= 0) return [];
 
         return [
