@@ -6,6 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 
 import { DensityToggle } from './components/densityToggle';
@@ -88,6 +89,7 @@ const App = () => {
         </Box>
       </BrowserRouter>
       <Analytics />
+      <SpeedInsights />
     </ThemeContextProvider>
   );
 };

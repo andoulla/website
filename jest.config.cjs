@@ -13,6 +13,7 @@ module.exports = {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '\\.(jpg|jpeg|png|svg|gif|webp)$': '<rootDir>/jest/fileMock.cjs',
     '^@vercel/analytics/react$': '<rootDir>/jest/vercelAnalyticsMock.cjs',
+    '^@vercel/speed-insights/react$': '<rootDir>/jest/vercelSpeedInsightsMock.cjs',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
 };
