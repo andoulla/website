@@ -12,6 +12,7 @@ module.exports = {
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '\\.(jpg|jpeg|png|svg|gif|webp)$': '<rootDir>/jest/fileMock.cjs',
+    '^@vercel/analytics/react$': '<rootDir>/jest/vercelAnalyticsMock.cjs',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
 };

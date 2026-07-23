@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { Analytics } from '@vercel/analytics/react';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 
 import { DensityToggle } from './components/densityToggle';
@@ -86,6 +87,7 @@ const App = () => {
           </Routes>
         </Box>
       </BrowserRouter>
+      <Analytics />
     </ThemeContextProvider>
   );
 };
