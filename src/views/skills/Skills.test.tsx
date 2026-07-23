@@ -33,6 +33,8 @@ const CAREER_HISTORY = [
     .mock(),
 ];
 
+const neverResolve = () => new Promise<typeof CAREER_HISTORY>(() => undefined);
+
 const SearchParamsDisplay = () => {
   const [searchParams] = useSearchParams();
   return <span>{`search:${searchParams.toString()}`}</span>;
@@ -95,6 +97,12 @@ describe('Skills', () => {
           name: 'Filter skills by category and subcategory, currently: All',
         })
       ).toBeVisible();
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('has no axe violations while loading', async () => {
+      const screen = renderWithProvider(neverResolve);
+
       expect(await axe(screen.container)).toHaveNoViolations();
     });
   });
