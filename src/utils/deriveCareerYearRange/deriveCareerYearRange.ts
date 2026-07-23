@@ -1,17 +1,14 @@
 import { skills as defaultSkills } from '@/data/skills';
 import type { Skill, TimelineEvent, Track } from '@/types';
+import { trackSkillIds } from '@/utils/trackSkillIds';
 
 // The set of event ids that contribute at least one skill in the active track.
 const trackContributingEventIds = (track: Track, allSkills: Skill[]): Set<string> => {
-  const trackSkillIds = new Set(
-    track.categories.flatMap((category) =>
-      category.subCategories.flatMap((subCategory) => subCategory.skillIds)
-    )
-  );
+  const skillIds = trackSkillIds(track);
 
   const eventIds = new Set<string>();
   allSkills.forEach((skill) => {
-    if (!trackSkillIds.has(skill.id)) return;
+    if (!skillIds.has(skill.id)) return;
     skill.jobIds.forEach((jobId) => eventIds.add(jobId));
   });
   return eventIds;
