@@ -11,7 +11,7 @@ describe('TimeMachineSlider', () => {
     const slider = screen.getByRole('slider', { name: 'Career year' });
 
     expect(screen.getByText('See skills as they stood at any point in time')).toBeVisible();
-    // disambiguates from the value-label bubble
+    // excludes the value-label bubble
     expect(screen.getByText('2019', { selector: '[aria-live="polite"]' })).toBeVisible();
     expect(slider).toHaveAttribute('aria-valuenow', '2019');
     expect(screen.queryByText('Present')).not.toBeInTheDocument();
