@@ -9,7 +9,7 @@ import { Skill, TimelineEvent } from '@/testing';
 
 import { Skills } from './Skills';
 
-// Skill ids are real (track taxonomy isn't mockable); mapping content is synthetic.
+// Skill ids are real — track taxonomy isn't mockable.
 const CAREER_HISTORY = [
   new TimelineEvent()
     .id('job-1')
