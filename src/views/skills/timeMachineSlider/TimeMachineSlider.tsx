@@ -16,9 +16,12 @@ export const TimeMachineSlider = ({ year, minYear, maxYear, onCommit }: TimeMach
   // Thumb tracks live; parent updates on commit only.
   const [liveYear, setLiveYear] = useState(year);
 
+  // Suppresses the resync below while the user is mid-drag.
+  const [isDragging, setIsDragging] = useState(false);
+
   // Resync on external year change (URL load, track switch) via adjust-during-render.
   const [committedYear, setCommittedYear] = useState(year);
-  if (year !== committedYear) {
+  if (year !== committedYear && !isDragging) {
     setCommittedYear(year);
     setLiveYear(year);
   }
@@ -50,8 +53,14 @@ export const TimeMachineSlider = ({ year, minYear, maxYear, onCommit }: TimeMach
         step={1}
         marks={marks}
         aria-label="Career year"
-        onChange={(_event, value) => setLiveYear(single(value))}
-        onChangeCommitted={(_event, value) => onCommit(single(value))}
+        onChange={(_event, value) => {
+          setIsDragging(true);
+          setLiveYear(single(value));
+        }}
+        onChangeCommitted={(_event, value) => {
+          setIsDragging(false);
+          onCommit(single(value));
+        }}
       />
     </Stack>
   );
