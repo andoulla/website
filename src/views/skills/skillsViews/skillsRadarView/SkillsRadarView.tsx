@@ -1,7 +1,6 @@
-import Alert from '@mui/material/Alert';
-
 import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { SkillsEmptyState } from '@/views/skills/skillsEmptyState';
+import { SkillsNoData } from '@/views/skills/skillsNoData';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
 
@@ -18,7 +17,7 @@ export const SkillsRadarView = () => {
   } = useSkillsViewContext();
 
   if (skills.length === 0) {
-    return <Alert severity="info">No skill data available.</Alert>;
+    return <SkillsNoData />;
   }
 
   if (filteredSkills.length === 0) {

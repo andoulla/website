@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import Alert from '@mui/material/Alert';
 
 import { deriveCareerYearRange } from '@/utils/deriveCareerYearRange';
 import { deriveSkillGrowth } from '@/utils/deriveSkillGrowth';
+import { SkillsNoData } from '@/views/skills/skillsNoData';
 
 import { useSkillsCareerContext } from '../SkillsCareerContext';
 import { useSkillsViewContext } from '../SkillsViewContext';
@@ -21,7 +21,7 @@ export const SkillsGrowthView = () => {
   );
 
   if (skills.length === 0 || growth.points.length === 0) {
-    return <Alert severity="info">No skill data available.</Alert>;
+    return <SkillsNoData />;
   }
 
   return <SkillsGrowthChart growth={growth} minYear={minYear} maxYear={maxYear} />;
