@@ -31,7 +31,8 @@ export const deriveRadialLayout = (
   categories.forEach((category, categoryIndex) => {
     const categoryNodes = byCategory.get(category) ?? [];
     const centreAngle = (2 * Math.PI * categoryIndex) / numCategories;
-    const subArc = Math.PI / numCategories;
+    // Use 85% of each category's allocated arc so nodes spread without overlapping.
+    const subArc = ((2 * Math.PI) / numCategories) * 0.85;
 
     categoryNodes.forEach((node, nodeIndex) => {
       let angle: number;

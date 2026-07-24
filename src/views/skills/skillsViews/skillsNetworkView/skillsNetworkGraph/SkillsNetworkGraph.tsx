@@ -16,6 +16,7 @@ import { resolveSkillColourMain } from '@/utils/skillColour';
 import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
 const SVG_SIZE = 600;
+const SVG_PADDING = 50;
 const NODE_RADIUS_MIN = 6;
 const NODE_RADIUS_MAX = 20;
 const EDGE_OPACITY_MIN = 0.1;
@@ -23,7 +24,9 @@ const EDGE_OPACITY_MAX = 0.9;
 const EDGE_WIDTH_MIN = 0.5;
 const EDGE_WIDTH_MAX = 3;
 
-const toSvgCoord = (norm: number): number => ((norm + 1) / 2) * SVG_SIZE;
+// Maps normalised [-1,1] to [SVG_PADDING, SVG_SIZE - SVG_PADDING], leaving room for labels.
+const toSvgCoord = (norm: number): number =>
+  SVG_PADDING + ((norm + 1) / 2) * (SVG_SIZE - 2 * SVG_PADDING);
 
 const clamp = (value: number, min: number, max: number): number =>
   Math.min(max, Math.max(min, value));
@@ -117,7 +120,7 @@ export const SkillsNetworkGraph = ({
   return (
     <Stack spacing={2}>
       <Box sx={{ width: '100%', position: 'relative' }}>
-        <svg viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`} width="100%">
+        <svg viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`} width="100%" overflow="visible">
           {/* Edges drawn first so nodes appear on top */}
           {edges.map((edge) => {
             const source = positionById.get(edge.source);
@@ -172,6 +175,17 @@ export const SkillsNetworkGraph = ({
             const cx = toSvgCoord(node.x);
             const cy = toSvgCoord(node.y);
 
+            // Label radiates outward from circle centre so it clears the node.
+            const centerX = SVG_SIZE / 2;
+            const centerY = SVG_SIZE / 2;
+            const dx = cx - centerX;
+            const dy = cy - centerY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const labelOffset = radius + 10;
+            const lx = dist > 0 ? cx + (dx / dist) * labelOffset : cx;
+            const ly = dist > 0 ? cy + (dy / dist) * labelOffset : cy - labelOffset;
+            const textAnchor = dx > 15 ? 'start' : dx < -15 ? 'end' : 'middle';
+
             return (
               <g key={node.id}>
                 <circle
@@ -191,18 +205,19 @@ export const SkillsNetworkGraph = ({
                   onMouseEnter={() => setHoveredNodeId(node.id)}
                   onMouseLeave={() => setHoveredNodeId(null)}
                 />
-                {isHovered && (
-                  <text
-                    x={cx}
-                    y={cy - radius - 4}
-                    textAnchor="middle"
-                    fontSize={11}
-                    fill={theme.palette.text.primary}
-                    style={{ pointerEvents: 'none', userSelect: 'none' }}
-                  >
-                    {node.id}
-                  </text>
-                )}
+                <text
+                  x={lx}
+                  y={ly}
+                  textAnchor={textAnchor}
+                  dominantBaseline="middle"
+                  fontSize={isHovered ? 11 : 10}
+                  fontWeight={isHovered ? 600 : 400}
+                  fill={theme.palette.text.secondary}
+                  opacity={isDimmed ? 0.2 : 1}
+                  style={{ pointerEvents: 'none', userSelect: 'none' }}
+                >
+                  {node.id}
+                </text>
               </g>
             );
           })}
