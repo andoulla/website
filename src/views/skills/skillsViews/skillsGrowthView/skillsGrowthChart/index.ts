@@ -1,0 +1,1 @@
+export { SkillsGrowthChart } from './SkillsGrowthChart';

@@ -44,7 +44,7 @@ import { SkillFilterBar, type SkillFilterOption } from './skillFilterBar';
 import { SkillSearchBar } from './skillSearchBar';
 import { TimeMachineSlider } from './timeMachineSlider';
 import { TrackFilter } from './trackFilter';
-import { SkillsViewContextProvider } from './skillsViews';
+import { SkillsCareerContextProvider, SkillsViewContextProvider } from './skillsViews';
 import { useSkillSearchUrl } from './useSkillSearchUrl';
 
 const deriveSearchHint = (
@@ -268,19 +268,21 @@ const SkillsContent = () => {
       <Typography variant="body2" color="text.secondary" sx={{ mb: { xs: 1.5, sm: 2 } }}>
         {VIEW_OPTIONS[viewMode].caption}
       </Typography>
-      <SkillsViewContextProvider
-        track={track}
-        skills={skills}
-        filteredSkills={filteredSkills}
-        selectedCategories={selectedCategories}
-        selectedSubCategories={selectedSubCategories}
-        highlightedSkills={highlightedSkills}
-        searchTerm={searchTerm}
-        showPatterns={showPatterns}
-        onClearFilters={clearFilters}
-      >
-        <ActiveView />
-      </SkillsViewContextProvider>
+      <SkillsCareerContextProvider careerHistory={careerHistory}>
+        <SkillsViewContextProvider
+          track={track}
+          skills={skills}
+          filteredSkills={filteredSkills}
+          selectedCategories={selectedCategories}
+          selectedSubCategories={selectedSubCategories}
+          highlightedSkills={highlightedSkills}
+          searchTerm={searchTerm}
+          showPatterns={showPatterns}
+          onClearFilters={clearFilters}
+        >
+          <ActiveView />
+        </SkillsViewContextProvider>
+      </SkillsCareerContextProvider>
     </>
   );
 };
