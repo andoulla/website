@@ -4,7 +4,6 @@ import type { TimelineEvent } from '@/types';
 
 import type { SkillsCareerContextProviderProps } from './SkillsCareerContext.types';
 
-// careerHistory for network/growth only, kept out of SkillsViewContext.
 const SkillsCareerContext = createContext<TimelineEvent[] | null>(null);
 
 export const useSkillsCareerContext = (): TimelineEvent[] => {
