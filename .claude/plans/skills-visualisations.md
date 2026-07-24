@@ -36,7 +36,8 @@
 
 - **View enum** — `skillsUrlParams.ts`: `VIEW_MODES = [...,'network','growth']`. `ViewMode`/`parseViewMode` derive automatically.
 - **View list (`VIEW_OPTIONS`) — one place per view (removes the 3-site edit):** new
-  `src/views/skills/viewOptions/` → `VIEW_OPTIONS: Record<ViewMode, {icon,label,caption,Component}>`.
+  `src/views/skills/viewOptions/` → `VIEW_OPTIONS: Record<ViewMode, ViewOption>` where
+  `ViewOption = {icon: ReactNode, label: string, caption: string, Component: ComponentType}` (named in `.types.ts`).
   Lives in the views layer (holds components/icons → can't sit in utils `skillsUrlParams`; `VIEW_MODES`
   stays there as the `ViewMode` type + URL-validation source). The typed `Record<ViewMode,…>` forces every
   view to declare all four fields → no drift when a view is added. `Skills.tsx` reads it everywhere:
@@ -84,16 +85,19 @@
 ### Feature 1 — Co-occurrence network
 
 - **Data:** new `src/utils/deriveSkillCoOccurrence/`. Walks `responsibility.skillIds`; unordered pairs →
-  edge weights; node weight = bullet count. Returns `{nodes:{id,weight}[], edges:{source,target,weight}[]}`.
-  For colour/category/name, read the `SkillSummary` already in context (keyed by id) — **no** parallel
-  skillId→category map (`deriveSkillCategoryMap` exists if ever needed).
+  edge counts; per-skill bullet count → node. Named types in `deriveSkillCoOccurrence.types.ts`:
+  `SkillNode = {id, occurrences}` (bullet count — NOT "weight"), `SkillEdge = {source, target, weight}`
+  (co-occurrence count; `source`/`target` match d3-force), `SkillCoOccurrence = {nodes: SkillNode[],
+edges: SkillEdge[]}`. For colour/category/name, read the `SkillSummary` already in context (keyed by id)
+  — **no** parallel skillId→category map (`deriveSkillCategoryMap` exists if ever needed).
 - **Dep:** add `d3-force` + `@types/d3-force` (Recharts has no node-link chart). Reads `careerHistory` from
   `useSkillsCareerContext()` + skills/search/filters from `useSkillsViewContext()` (NOT
   `useCareerDataContext()` — keeps tests Suspense-free, see Phase 0).
 - **Single responsibility (split layout from render):** extract the d3-force simulation into a pure
   `useForceLayout(nodes, edges)` hook (co-located `skillsNetworkGraph/useForceLayout.ts`) that returns
-  positioned nodes/edges — fixed seed, deterministic, no DOM. The graph component stays render-only (SVG
-  `<circle>`/`<line>` in a `<Box>` + hover/click/keyboard). Layout is then unit-testable without rendering.
+  `PositionedNode[]` (`= SkillNode & {x, y}`) + edges — fixed seed, deterministic, no DOM. Return the
+  narrow `{x, y}` shape, NOT d3's mutated node (don't leak `vx`/`vy`/`index`). The graph component stays
+  render-only (SVG `<circle>`/`<line>` in a `<Box>` + hover/click/keyboard) — layout unit-testable without rendering.
 - **UX:** node radius ∝ years; edge width ∝ weight; colour via `resolveSkillColourMain(skill.colour)`.
   Hover → neighbours full-opacity, rest dim (bar-chart idiom); click → `Popper` + `SkillTooltipContent`
   (reuse). Search dims non-matches; category filter restricts nodes. Isolated skills at periphery.
@@ -115,15 +119,17 @@
 
 ### Feature 3 — Career growth curve
 
-- **Data:** new `src/utils/deriveSkillGrowth/`. Skill acquired date = earliest `startDate` of its `jobIds`;
-  sort asc; cumulative unique-skill points `{date,count}`. Job markers `{date,companyName}` from events with a start date.
+- **Data:** new `src/utils/deriveSkillGrowth/`. Skill acquired year = year of earliest `startDate` among its
+  `jobIds`; sort asc; cumulative unique-skill points `SkillGrowthPoint = {year, count}` (year, NOT an
+  ambiguous `date` — matches the axis domain's `minYear`/`maxYear`). Job markers `{year, companyName}` from
+  events with a start date. Types in `deriveSkillGrowth.types.ts`.
   View derives via `useMemo` off `careerHistory` (from `useSkillsCareerContext()`) + `skills` (from
   `useSkillsViewContext()`) — no direct careerData read (Phase 0).
   **Reuse (DRY):** skill→job membership via `trackSkillIds(track)` + an `eventById` map (same join
   `calculateSkillYears` uses) — don't re-derive; x-axis span from `deriveCareerYearRange(careerHistory, track, …, today)`
   → `{minYear,maxYear}` (don't recompute career span); axis/marker date labels via `formatDate`/`formatYears`
   (no new date formatter).
-- **Recharts (no new dep):** `AreaChart`+`Area` (stepped), `XAxis`(time, domain from `deriveCareerYearRange`),
+- **Recharts (no new dep):** `AreaChart`+`Area` (stepped), `XAxis` (numeric `year`, domain `[minYear, maxYear]` from `deriveCareerYearRange`),
   `YAxis`, `CartesianGrid`, `Tooltip`, `ResponsiveContainer`, `ReferenceLine` (dashed markers). Reduced-motion gates animation.
 - **UX:** x = career span → today, y = cumulative skills; gradient fill; company on hover.
   **Track-scoped, filter-agnostic** (driven by `skills`, not filtered); caption states it.
@@ -147,8 +153,10 @@
 ### Feature 2 — Recommendation-backed skills
 
 - **Data:** `recommendationIds` exists. New `src/utils/getRecommendationsByIds/` →
-  `getRecommendationsByIds(ids, recommendations = defaultRecommendations)` → `{authorInitials,authorRole,text}[]`;
-  preserve order, drop missing ids. **Injectable param** (mirrors `calculateSkillYears`'s `allSkills = defaultSkills`)
+  `getRecommendationsByIds(ids, recommendations = defaultRecommendations)`: returns the existing
+  **`Recommendation[]`** (filtered to `ids`, in id order, missing dropped) — reuse the type, don't invent a
+  flat `{authorInitials,authorRole,text}` shape (`authorRole` is `{jobTitle}` in the data); the popover
+  truncates `text` at render. **Injectable param** (mirrors `calculateSkillYears`'s `allSkills = defaultSkills`)
   so the test injects `Recommendation` builders instead of asserting against real data.
 - **UX:**
   - Table `SkillRow` name cell: `Badge`+`FormatQuoteIcon`+count; click → `Popover` of snippets
@@ -171,7 +179,8 @@
 ### Feature 4 — Tech vs. soft-skill balance
 
 - Consumes `SkillSummary.type` (Phase 0).
-- **Data:** new `src/utils/deriveSkillTypeSplit/` → `{tech,skill,techPct}`.
+- **Data:** new `src/utils/deriveSkillTypeSplit/` → `SkillTypeSplit = {techCount, skillCount, techPct}`
+  (Count suffix — a bare `skill` field reads as a skill object, not a number). Type in `.types.ts`.
 - **UX:** extract a prop-driven `SkillTypeMeter` component — a 2-segment bar (styled `Box`/`LinearProgress`)
   with counts and a `Tooltip` — rendered in the `SkillsStatBar` beside `RecommendationStat` (below the caption,
   not the control bar — see Phase 0); reflects `filteredSkills`+search. Table: `tech`/`skill` `Chip` per `SkillRow`.
@@ -185,7 +194,8 @@
 
 ## Phase 2 — Feature 5: Cross-track diff (serial, post-merge)
 
-- **Data:** new `src/utils/deriveTrackDiff/` → per skill: `only-a`|`only-b`|`both-same-category`|`both-moved`.
+- **Data:** new `src/utils/deriveTrackDiff/` → per skill a named `TrackDiffStatus` union (`.types.ts`):
+  `'only-a'|'only-b'|'both-same-category'|'both-moved'`.
   **Compose, don't re-traverse (DRY):** membership via `trackSkillIds(trackA)`/`trackSkillIds(trackB)`
   (→ only-a / only-b / both); for `both`, compare `deriveSkillCategoryMap(trackA)` vs
   `deriveSkillCategoryMap(trackB)` category ids (same → `both-same-category`, differ → `both-moved`).
