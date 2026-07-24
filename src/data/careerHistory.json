@@ -25,7 +25,7 @@
       },
       {
         "id": "atom-learning-2021-01-r03",
-        "text": "Took ownership of in-flight projects and drove them to completion, including a create-assessment flow refactor and the simplification of the feature-flag infrastructure supporting the OMR features.",
+        "text": "Taking ownership of in-flight projects and driving them to completion, including a refactor of the create-assessment flow and simplification of the feature-flag infrastructure supporting OMR features.",
         "skillIds": ["refactoring", "technical-debt-management"]
       },
       {
@@ -40,23 +40,24 @@
       },
       {
         "id": "atom-learning-2021-01-r05",
-        "text": "Established domain-specific shared apps and migrated features and components out of a broader shared workspace to improve team ownership and reduce complexity.",
+        "text": "Set up domain-specific shared workspace apps and migrated features and components out of a broader shared workspace to improve team ownership and reduce complexity.",
         "skillIds": ["application-architecture", "component-architecture", "domain-driven-design"]
       },
       {
         "id": "atom-learning-2021-01-r06",
-        "text": "Led the home domain team of  4-6 engineers across frontend, backend and data, owned all apps in the B2C domain.",
+        "text": "Managed the home domain team of  4-6 engineers across frontend, backend and data; owned all of the 3 apps in the B2C domain.",
         "skillIds": ["cross-functional-collaboration", "engineering-leadership", "team-leadership"]
       },
       {
         "id": "atom-learning-2021-01-r07",
-        "text": "Increased code quality KPI across all three applications from around 50% to over 80% through hands-on delivery and roadmap alignment",
+        "text": "Increased code quality KPIs across all three applications from around 50% to over 80% through hands-on delivery and roadmap alignment",
         "skillIds": ["clean-code", "coding-standards", "continuous-improvement", "roadmap-planning"]
       },
       {
         "id": "atom-learning-2021-01-r08",
-        "text": "Reduced weekly manual testing from a full-team effort to a single person by redefining the testing strategy and coordinating a robust Playwright end-to-end suite, while keeping strong unit and integration coverage.",
+        "text": "Coordinated migration from Cypress to Playwright; Reduced weekly manual testing from a full-team effort to a single person by redefining the testing strategy and coordinating a robust end-to-end Playwright suite, while maintaining strong unit and integration coverage.",
         "skillIds": [
+          "cypress",
           "integration-testing",
           "playwright",
           "process-improvement",
@@ -65,13 +66,8 @@
         ]
       },
       {
-        "id": "atom-learning-2021-01-r09",
-        "text": "Coordinated migration of the existing E2E suite from Cypress to Playwright.",
-        "skillIds": ["cypress", "playwright"]
-      },
-      {
         "id": "atom-learning-2021-01-r10",
-        "text": "Led the Assessments team to deliver a scalable assessment management platform, decoupled the assessment app from the legacy system, and introduced testing to the school apps.",
+        "text": "Led the Assessments team in the B2B domain to deliver a scalable assessment management platform, decoupled the assessment app from the legacy system, and introduced testing to the school apps.",
         "skillIds": [
           "scalability",
           "software-architecture",
@@ -92,7 +88,7 @@
       },
       {
         "id": "atom-learning-2021-01-r12",
-        "text": "Founded and later co-led the Frontend Guild, driving coding standards, code quality improvements, deprecation of the old design system, documentation improvements, mentoring, and planning for visual regression testing with Playwright and Argos.",
+        "text": "Founded and ran the Frontend Guild, managing the backlog and driving coding standards, code quality improvements, deprecation of the old design system, documentation improvements, mentoring, and planning for visual regression testing with Playwright and Argos.",
         "skillIds": [
           "clean-code",
           "coding-standards",
@@ -142,7 +138,7 @@
       },
       {
         "id": "moo-2017-01-r02",
-        "text": "Led a performance audit of the bespoke editor, investigated bottlenecks, shaped the backlog and ran prioritisation meetings; this work delivered a 16% reduction in bundle size and a 6-point Lighthouse improvement.",
+        "text": "Drove a performance audit of the bespoke editor, investigated bottlenecks, shaped the backlog and ran prioritisation meetings; this work delivered a 16% reduction in bundle size and a 6-point Lighthouse improvement.",
         "skillIds": [
           "debugging",
           "frontend-performance-optimisation",
@@ -152,23 +148,28 @@
       },
       {
         "id": "moo-2017-01-r03",
-        "text": "Drove the migration from LESS to Sass and helped deliver a 6-month refactor to make the editor responsive ahead of schedule.",
-        "skillIds": ["css3", "refactoring", "responsive-design"]
+        "text": "Owned the migration from LESS to Sass.",
+        "skillIds": ["css3", "refactoring"]
       },
       {
-        "id": "moo-2017-01-r04",
-        "text": "Improved team onboarding by replacing the previous process with a leaner approach centred on pairing and focused introductions.",
-        "skillIds": ["mentoring-coaching", "process-improvement", "team-onboarding"]
+        "id": "moo-2017-01-r08",
+        "text": "Delivered a 6-month refactor to make the bespoke product editor responsive on mobile devices; the project was delivered ahead of schedule.",
+        "skillIds": ["refactoring", "responsive-design"]
       },
       {
         "id": "moo-2017-01-r05",
-        "text": "Delivered features for the bespoke B2B platform and contributed to a new checkout experience for sample packs.",
+        "text": "Developed features for the bespoke B2B platform and contributed to a new checkout experience for sample packs.",
         "skillIds": ["agile-delivery", "business-logic"]
       },
       {
         "id": "moo-2017-01-r06",
         "text": "Drove adoption of the design system in the B2B editor to improve brand compliance.",
         "skillIds": ["component-libraries", "design-systems"]
+      },
+      {
+        "id": "moo-2017-01-r04",
+        "text": "Improved team onboarding by replacing the previous process with a leaner approach centred on pairing and focused introductions.",
+        "skillIds": ["mentoring-coaching", "process-improvement", "team-onboarding"]
       },
       {
         "id": "moo-2017-01-r07",
@@ -209,7 +210,7 @@
     "responsibilities": [
       {
         "id": "capco-2012-12-r01",
-        "text": "Progressed through multiple roles while delivering internal products and client-facing prototypes across web, API and mobile platforms.",
+        "text": "Progressed through multiple levels while delivering internal products and client-facing prototypes across web, API and mobile platforms.",
         "skillIds": ["agile-delivery", "api-design", "server-side-development"]
       },
       {
@@ -224,7 +225,7 @@
       },
       {
         "id": "capco-2012-12-r04",
-        "text": "Worked across four internal projects, including two production web applications, an API and a mobile app nearing global launch.",
+        "text": "Owned across four internal projects, including two production web applications, an API and a mobile app nearing global launch.",
         "skillIds": ["rest-apis", "server-side-development"]
       },
       {
