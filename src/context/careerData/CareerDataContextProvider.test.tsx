@@ -13,6 +13,7 @@ const mockLoadCareerHistory = jest.mocked(loadCareerHistory);
 
 function CareerHistoryConsumer() {
   const [firstEvent] = useCareerDataContext();
+
   return <p>{firstEvent.companyName}</p>;
 }
 
@@ -31,6 +32,7 @@ class TestErrorBoundary extends Component<{ children: ReactNode }, ErrorBoundary
     if (this.state.error !== null) {
       return <p>Error: {this.state.error.message}</p>;
     }
+
     return this.props.children;
   }
 }

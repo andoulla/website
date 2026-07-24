@@ -51,11 +51,13 @@ export interface TimelineEventCardProps {
 
 const formatMonthYear = (isoDate: string): string => {
   const [year, month] = isoDate.split('-');
+
   return `${MONTH_NAMES[Number(month) - 1]} ${year}`;
 };
 
 const formatDuration = (startDate: string, endDate: string | null): string => {
   const end = endDate === null ? 'Present' : formatMonthYear(endDate);
+
   return `${formatMonthYear(startDate)} – ${end}`;
 };
 
@@ -105,7 +107,9 @@ export const TimelineEventCard = ({
   const setCardNode = useCallback(
     (node: HTMLDivElement | null): (() => void) | void => {
       const cleanup = ref(node);
+
       cardNodeRef.current = node;
+
       return cleanup;
     },
     [ref]
@@ -113,13 +117,17 @@ export const TimelineEventCard = ({
 
   useEffect(() => {
     if (autoScrollToHighlight !== true) return;
+
     if (highlightedRecommendationId !== undefined) {
       const recommendationNode = document.getElementById(
         recommendationElementId(highlightedRecommendationId)
       );
+
       recommendationNode?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
       return;
     }
+
     cardNodeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [autoScrollToHighlight, highlightedRecommendationId]);
 
@@ -144,6 +152,7 @@ export const TimelineEventCard = ({
   const handleViewAllSkillsClick = useCallback(() => {
     // Repeated params, not comma-joined — a skill name could contain a comma.
     const params = new URLSearchParams();
+
     event.skills.forEach((skill) => params.append(SKILL_PARAM, skill.name));
     params.set(VIEW_PARAM, 'barchart');
     params.set(TRACK_PARAM, String(track.id));
@@ -258,6 +267,7 @@ export const TimelineEventCard = ({
                         categoryColourFromIndex(group.category.index),
                         theme
                       );
+
                       return (
                         <Box
                           key={group.category.id}

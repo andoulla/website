@@ -10,6 +10,7 @@ export interface RoleIconProps {
 
 export const RoleIcon = ({ event }: RoleIconProps) => {
   const logo = LOGO_BY_EVENT_ID[event.id];
+
   if (logo !== undefined) {
     return (
       <Box
@@ -22,5 +23,6 @@ export const RoleIcon = ({ event }: RoleIconProps) => {
   }
 
   const Icon = ICON_BY_TYPE[event.type];
+
   return <Icon fontSize="small" />;
 };

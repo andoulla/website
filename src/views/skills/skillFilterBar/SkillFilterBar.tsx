@@ -34,6 +34,7 @@ export const SkillFilterBar = ({
     const nextCategories = isSelected
       ? selectedCategories.filter((selectedCategory) => selectedCategory !== categoryId)
       : [...selectedCategories, categoryId];
+
     onCategoriesChange(nextCategories);
 
     // Drop subcategories of a just-deselected category.
@@ -52,7 +53,9 @@ export const SkillFilterBar = ({
 
     const nextSubCategories = selectedSubCategories.filter((subCategoryId) => {
       if (isSelected && subCategoriesForToggledCategory.includes(subCategoryId)) return false;
+
       if (validSubCategories !== null && !validSubCategories.has(subCategoryId)) return false;
+
       return true;
     });
 

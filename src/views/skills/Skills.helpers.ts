@@ -15,18 +15,22 @@ import type { ViewMode } from './Skills.types';
 // stale ids from another track self-clean on switch.
 export const parseCategoryIds = (raw: string | null, track: Track): string[] => {
   if (raw === null || raw.length === 0) return [];
+
   const knownIds = new Set(track.categories.map((category) => category.id));
+
   return raw.split(',').filter((id) => knownIds.has(id));
 };
 
 // Reads the comma-separated `subCategory` URL param, dropping ids unknown to the active track.
 export const parseSubCategoryIds = (raw: string | null, track: Track): string[] => {
   if (raw === null || raw.length === 0) return [];
+
   const knownIds = new Set(
     track.categories.flatMap((category) =>
       category.subCategories.map((subCategory) => subCategory.id)
     )
   );
+
   return raw.split(',').filter((id) => knownIds.has(id));
 };
 
@@ -40,7 +44,9 @@ export const parseViewMode = (raw: string | null | undefined): ViewMode | null =
 // Reads the `asOf` year param, clamped into [minYear, maxYear]; defaults to maxYear ("latest").
 export const parseAsOfYear = (raw: string | null, minYear: number, maxYear: number): number => {
   if (raw === null || !/^\d+$/.test(raw)) return maxYear;
+
   const parsed = Number.parseInt(raw, 10);
+
   return Math.min(Math.max(parsed, minYear), maxYear);
 };
 
@@ -73,6 +79,7 @@ export const reorderFilterParams = (params: URLSearchParams): URLSearchParams =>
   // Set the prefix params first, in their fixed order, when present.
   for (const key of PREFIX_PARAMS) {
     const value = params.get(key);
+
     if (value !== null) ordered.set(key, value);
   }
 

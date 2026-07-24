@@ -1,8 +1,5 @@
 import { Suspense, useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import RadarIcon from '@mui/icons-material/Radar';
-import TableChartIcon from '@mui/icons-material/TableChart';
 import Checkbox from '@mui/material/Checkbox';
 import CircularProgress from '@mui/material/CircularProgress';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -28,9 +25,11 @@ import {
   SEARCH_PARAM,
   SKILL_PARAM,
   SUBCATEGORY_PARAM,
+  VIEW_MODES,
   VIEW_PARAM,
 } from '@/utils/skillsUrlParams';
 
+import { VIEW_OPTIONS } from './Skills.constants';
 import {
   parseAsOfYear,
   parseCategoryIds,
@@ -45,19 +44,8 @@ import { SkillFilterBar, type SkillFilterOption } from './skillFilterBar';
 import { SkillSearchBar } from './skillSearchBar';
 import { TimeMachineSlider } from './timeMachineSlider';
 import { TrackFilter } from './trackFilter';
-import {
-  SkillsGraphView,
-  SkillsTableView,
-  SkillsRadarView,
-  SkillsViewContextProvider,
-} from './skillsViews';
+import { SkillsCareerContextProvider, SkillsViewContextProvider } from './skillsViews';
 import { useSkillSearchUrl } from './useSkillSearchUrl';
-
-const renderSkillsView = (viewMode: ViewMode, showPatterns: boolean) => {
-  if (viewMode === 'barchart') return <SkillsGraphView showPatterns={showPatterns} />;
-  if (viewMode === 'radar') return <SkillsRadarView />;
-  return <SkillsTableView />;
-};
 
 const deriveSearchHint = (
   searchTerm: string,
@@ -65,8 +53,11 @@ const deriveSearchHint = (
   hiddenMatchCount: number
 ): string | undefined => {
   if (searchTerm.trim() === '') return undefined;
+
   if (totalMatches === 0) return 'No skills match your search';
+
   if (hiddenMatchCount === 0) return undefined;
+
   return `${hiddenMatchCount} match${hiddenMatchCount === 1 ? '' : 'es'} hidden by filters`;
 };
 
@@ -165,10 +156,12 @@ const SkillsContent = () => {
 
   const { totalMatches, hiddenMatchCount } = useMemo(() => {
     if (searchTerm.trim() === '') return { totalMatches: 0, hiddenMatchCount: 0 };
+
     const total = skills.filter((skill) => skillMatchesSearch(skill, searchTerm)).length;
     const visibleMatches = filteredSkills.filter((skill) =>
       skillMatchesSearch(skill, searchTerm)
     ).length;
+
     return { totalMatches: total, hiddenMatchCount: total - visibleMatches };
   }, [skills, filteredSkills, searchTerm]);
 
@@ -183,6 +176,8 @@ const SkillsContent = () => {
 
   const [showPatterns, setShowPatterns] = useState(false);
 
+  const ActiveView = VIEW_OPTIONS[viewMode].Component;
+
   const categories = useMemo(() => derivePresentCategories(skills), [skills]);
 
   // Active track's subcategories, narrowed to those with at least one present summary.
@@ -192,7 +187,9 @@ const SkillsContent = () => {
         const presentSubCategories = category.subCategories
           .filter((subCategory) => skills.some((skill) => skill.subCategoryId === subCategory.id))
           .map(({ id, name }) => ({ id, name }));
+
         if (presentSubCategories.length > 0) acc[category.id] = presentSubCategories;
+
         return acc;
       }, {}),
     [track, skills]
@@ -241,22 +238,18 @@ const SkillsContent = () => {
             }}
             size="small"
             aria-label="View mode"
+            sx={{
+              '& .MuiToggleButton-root': { px: { xs: 0.75, sm: 1.25 } },
+              '& .MuiSvgIcon-root': { fontSize: { xs: '1.1rem', sm: '1.25rem' } },
+            }}
           >
-            <Tooltip title="Graph view">
-              <ToggleButton value="barchart" aria-label="Graph view">
-                <BarChartIcon fontSize="small" />
-              </ToggleButton>
-            </Tooltip>
-            <Tooltip title="Radar view">
-              <ToggleButton value="radar" aria-label="Radar view">
-                <RadarIcon fontSize="small" />
-              </ToggleButton>
-            </Tooltip>
-            <Tooltip title="Table view">
-              <ToggleButton value="table" aria-label="Table view">
-                <TableChartIcon fontSize="small" />
-              </ToggleButton>
-            </Tooltip>
+            {VIEW_MODES.map((mode) => (
+              <Tooltip key={mode} title={VIEW_OPTIONS[mode].label}>
+                <ToggleButton value={mode} aria-label={VIEW_OPTIONS[mode].label}>
+                  {VIEW_OPTIONS[mode].icon}
+                </ToggleButton>
+              </Tooltip>
+            ))}
           </ToggleButtonGroup>
         </Stack>
       </Stack>
@@ -279,18 +272,24 @@ const SkillsContent = () => {
           </Tooltip>
         </Stack>
       )}
-      <SkillsViewContextProvider
-        track={track}
-        skills={skills}
-        filteredSkills={filteredSkills}
-        selectedCategories={selectedCategories}
-        selectedSubCategories={selectedSubCategories}
-        highlightedSkills={highlightedSkills}
-        searchTerm={searchTerm}
-        onClearFilters={clearFilters}
-      >
-        {renderSkillsView(viewMode, showPatterns)}
-      </SkillsViewContextProvider>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: { xs: 1.5, sm: 2 } }}>
+        {VIEW_OPTIONS[viewMode].caption}
+      </Typography>
+      <SkillsCareerContextProvider careerHistory={careerHistory}>
+        <SkillsViewContextProvider
+          track={track}
+          skills={skills}
+          filteredSkills={filteredSkills}
+          selectedCategories={selectedCategories}
+          selectedSubCategories={selectedSubCategories}
+          highlightedSkills={highlightedSkills}
+          searchTerm={searchTerm}
+          showPatterns={showPatterns}
+          onClearFilters={clearFilters}
+        >
+          <ActiveView />
+        </SkillsViewContextProvider>
+      </SkillsCareerContextProvider>
     </>
   );
 };

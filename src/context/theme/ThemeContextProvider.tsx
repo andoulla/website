@@ -23,9 +23,11 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export const useThemeContext = (): ThemeContextValue => {
   const ctx = use(ThemeContext);
+
   if (ctx === null) {
     throw new Error('useThemeContext must be used within a ThemeContextProvider');
   }
+
   return ctx;
 };
 
@@ -68,6 +70,7 @@ export const ThemeContextProvider = ({
 
   const muiTheme = useMemo(() => {
     const mode = isDarkMode ? 'dark' : 'light';
+
     return themeName === 'green'
       ? createGreenTheme(mode, density)
       : createPurpleTheme(mode, density);

@@ -23,6 +23,7 @@ const toSkill = (skill: RawSkill): Skill => {
   if (id === undefined || id === '') {
     throw new Error(`skills.json: missing id on skill "${name}"`);
   }
+
   if (!isValidType(type)) {
     throw new Error(`skills.json: unrecognised type "${type}" on skill "${name}"`);
   }
@@ -38,17 +39,22 @@ const assertUniqueIdentity = (allSkills: Skill[]): void => {
 
   for (const skill of allSkills) {
     const existingId = seenIds.get(skill.id);
+
     if (existingId !== undefined) {
       throw new Error(`skills.json: duplicate id "${skill.id}"`);
     }
+
     seenIds.set(skill.id, skill.name);
 
     const tokens = new Set([skill.name, ...skill.synonyms].map((token) => token.toLowerCase()));
+
     for (const token of tokens) {
       const owner = seenTokens.get(token);
+
       if (owner !== undefined) {
         throw new Error(`skills.json: "${token}" appears on both "${owner}" and "${skill.name}"`);
       }
+
       seenTokens.set(token, skill.name);
     }
   }

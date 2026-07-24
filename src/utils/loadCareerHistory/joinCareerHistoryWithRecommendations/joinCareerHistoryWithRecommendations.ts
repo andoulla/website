@@ -20,6 +20,7 @@ export const joinCareerHistoryWithRecommendations = (
         throw new Error(`skills.json: unknown jobId "${jobId}" on skill "${skill.name}"`);
       }
     }
+
     for (const recId of skill.recommendationIds) {
       if (!recommendationIds.has(recId)) {
         throw new Error(

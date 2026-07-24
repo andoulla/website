@@ -9,6 +9,7 @@ const durationYears = (startDate: string, endDate: string | null, asOf: Date): n
   const start = new Date(startDate);
   const end =
     endDate !== null ? new Date(Math.min(new Date(endDate).getTime(), asOf.getTime())) : asOf;
+
   return (end.getTime() - start.getTime()) / (365.25 * 24 * 60 * 60 * 1000);
 };
 
@@ -26,10 +27,14 @@ const calculateYearsForSkill = (
 
   const years = skill.jobIds.reduce((total, jobId) => {
     const event = eventById.get(jobId);
+
     if (event === undefined) return total;
+
     const jobYears = durationYears(event.startDate, event.endDate, asOf);
     const priorYears = companyYearsMap.get(event.companyName) ?? 0;
+
     companyYearsMap.set(event.companyName, priorYears + jobYears);
+
     return total + jobYears;
   }, 0);
 
@@ -56,15 +61,18 @@ export const calculateSkillYears = (
     const categorySummaries = category.subCategories.flatMap((subCategory) =>
       subCategory.skillIds.flatMap((skillId) => {
         const skill = skillById.get(skillId);
+
         if (skill === undefined) return [];
 
         const { years, companyYears } = calculateYearsForSkill(skill, eventById, asOf);
+
         if (years <= 0) return [];
 
         return [
           {
             id: skill.id,
             skill: skill.name,
+            type: skill.type,
             years,
             categoryId: category.id,
             categoryName: category.name,

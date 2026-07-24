@@ -51,6 +51,7 @@ export const ExperienceSearch = () => {
       }
       onChange={(_event, selected) => {
         if (selected === null) return;
+
         setInputValue('');
         void navigate(resultTo(selected, trackId));
       }}

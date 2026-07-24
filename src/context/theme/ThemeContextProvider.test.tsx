@@ -6,6 +6,7 @@ import { ThemeContextProvider, useThemeContext } from './ThemeContextProvider';
 function ThemeDisplay() {
   const { themeName, toggleTheme, isDarkMode, toggleDarkMode, density, toggleDensity } =
     useThemeContext();
+
   return (
     <>
       <span>{themeName}</span>

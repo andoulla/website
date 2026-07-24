@@ -23,7 +23,9 @@ export const SkillsTableView = () => {
 
   useEffect(() => {
     if (highlightedSkills.length === 0) return;
+
     const el = document.getElementById(skillElementId(highlightedSkills[0]));
+
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [highlightedSkills]);
 
@@ -41,6 +43,7 @@ export const SkillsTableView = () => {
           skills: searchedSkills.filter((skill) => skill.subCategoryId === subCategory.id),
         }))
         .filter((group) => group.skills.length > 0);
+
       return {
         category,
         subGroups,

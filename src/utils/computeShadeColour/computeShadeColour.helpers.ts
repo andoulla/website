@@ -22,5 +22,6 @@ export const computeShadeColour = (
   // JS `%` preserves sign, so normalise a negative index into the positive range.
   const adjustment = SHADE_ADJUSTMENTS[((shadeIndex % len) + len) % len];
   const bg = adjustment >= 0 ? lighten(main, adjustment) : darken(main, -adjustment);
+
   return { bg, textColour: getContrastText(bg) };
 };

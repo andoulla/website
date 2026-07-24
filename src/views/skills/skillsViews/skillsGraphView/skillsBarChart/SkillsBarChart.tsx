@@ -113,6 +113,7 @@ export const SkillsBarChart = ({
 
   const anchorElement = useMemo(() => {
     if (anchorPosition === null) return null;
+
     return { getBoundingClientRect: () => new DOMRect(anchorPosition.x, anchorPosition.y, 0, 0) };
   }, [anchorPosition]);
 
@@ -156,6 +157,7 @@ export const SkillsBarChart = ({
       ) {
         return;
       }
+
       close();
     },
     [close]
@@ -168,6 +170,7 @@ export const SkillsBarChart = ({
   // ink colour — high-contrast against the category colour so the texture reads at swatch size.
   const legendEntries = derivePresentCategories(skills).map((category) => {
     const colour = resolveSkillColourMain(category.colour, theme);
+
     return {
       category,
       colour,
@@ -238,6 +241,7 @@ export const SkillsBarChart = ({
               const isHovered = i === hoverIndex && isMatch;
               const isHighlighted = highlightedSkills.includes(skill.skill);
               const colour = resolveSkillColourMain(skill.colour, theme);
+
               return (
                 <Cell
                   key={skill.id}

@@ -11,16 +11,19 @@ export class Responsibility {
 
   id(id: string): this {
     this.data = { ...this.data, id };
+
     return this;
   }
 
   text(text: string): this {
     this.data = { ...this.data, text };
+
     return this;
   }
 
   skillIds(skillIds: string[]): this {
     this.data = { ...this.data, skillIds };
+
     return this;
   }
 

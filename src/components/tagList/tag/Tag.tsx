@@ -24,6 +24,7 @@ export const Tag = memo(({ children, colour, shadeIndex, variant, onClick }: Tag
       shadeIndex,
       theme.palette.getContrastText
     );
+
     return (
       <Chip
         size="small"
@@ -38,6 +39,7 @@ export const Tag = memo(({ children, colour, shadeIndex, variant, onClick }: Tag
   // go through Chip's `color` prop — resolve to a flat background instead.
   if (colour !== undefined && isCustomSkillColour(colour)) {
     const resolved = resolveSkillColourMain(colour, theme);
+
     return (
       <Chip
         size="small"

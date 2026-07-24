@@ -1,0 +1,1 @@
+export { SkillsNoData } from './SkillsNoData';

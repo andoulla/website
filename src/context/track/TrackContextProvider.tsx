@@ -11,9 +11,11 @@ const TrackContext = createContext<TrackContextValue | null>(null);
 
 export const useTrackContext = (): TrackContextValue => {
   const ctx = use(TrackContext);
+
   if (ctx === null) {
     throw new Error('useTrackContext must be used within a TrackContextProvider');
   }
+
   return ctx;
 };
 
@@ -30,7 +32,9 @@ export const TrackContextProvider = ({ children }: TrackContextProviderProps) =>
       setSearchParams(
         (params) => {
           const nextParams = new URLSearchParams(params);
+
           nextParams.set(TRACK_PARAM, DEFAULT_TRACK_ID);
+
           return nextParams;
         },
         { replace: true }
@@ -41,6 +45,7 @@ export const TrackContextProvider = ({ children }: TrackContextProviderProps) =>
   // Refs keep setTrackId stable — react-router rebuilds setSearchParams on every param change.
   const trackIdRef = useRef(trackId);
   const setSearchParamsRef = useRef(setSearchParams);
+
   useEffect(() => {
     trackIdRef.current = trackId;
     setSearchParamsRef.current = setSearchParams;
@@ -51,18 +56,23 @@ export const TrackContextProvider = ({ children }: TrackContextProviderProps) =>
     if (next === trackIdRef.current) {
       return;
     }
+
     setSearchParamsRef.current((params) => {
       const nextParams = new URLSearchParams(params);
+
       nextParams.set(TRACK_PARAM, next);
+
       return nextParams;
     });
   }, []);
 
   const track = useMemo(() => {
     const activeTrack = tracks.find((candidate) => candidate.id === trackId);
+
     if (activeTrack === undefined) {
       throw new Error(`No track data for id "${trackId}"`);
     }
+
     return activeTrack;
   }, [trackId]);
 

@@ -11,6 +11,7 @@ const DENSITY_STORAGE_KEY = 'density';
 export const readStoredThemeName = (): ThemeName | undefined => {
   try {
     const stored = window.localStorage.getItem(THEME_NAME_STORAGE_KEY);
+
     return stored === 'green' || stored === 'purple' ? stored : undefined;
   } catch {
     return undefined;
@@ -28,8 +29,11 @@ export const storeThemeName = (themeName: ThemeName): void => {
 export const readStoredDarkMode = (): boolean | undefined => {
   try {
     const stored = window.localStorage.getItem(DARK_MODE_STORAGE_KEY);
+
     if (stored === 'true') return true;
+
     if (stored === 'false') return false;
+
     return undefined;
   } catch {
     return undefined;
@@ -47,6 +51,7 @@ export const storeDarkMode = (isDarkMode: boolean): void => {
 export const readStoredDensity = (): Density | undefined => {
   try {
     const stored = window.localStorage.getItem(DENSITY_STORAGE_KEY);
+
     return stored === 'comfortable' || stored === 'compact' ? stored : undefined;
   } catch {
     return undefined;

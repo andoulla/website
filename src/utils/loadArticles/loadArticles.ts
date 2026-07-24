@@ -27,6 +27,7 @@ export const loadArticles = (): Promise<Article[]> => {
     cachedArticles = null;
     throw error;
   });
+
   return cachedArticles;
 };
 

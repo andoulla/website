@@ -1,19 +1,15 @@
 import { useMemo } from 'react';
-import Alert from '@mui/material/Alert';
 
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 import { sortMatchesFirst } from '@/utils/sortMatchesFirst';
 import { SkillsEmptyState } from '@/views/skills/skillsEmptyState';
+import { SkillsNoData } from '@/views/skills/skillsNoData';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
 
 import { SkillsBarChart } from './skillsBarChart';
 
-export interface SkillsGraphViewProps {
-  showPatterns?: boolean;
-}
-
-export const SkillsGraphView = ({ showPatterns = true }: SkillsGraphViewProps) => {
+export const SkillsGraphView = () => {
   const {
     skills,
     filteredSkills,
@@ -21,6 +17,7 @@ export const SkillsGraphView = ({ showPatterns = true }: SkillsGraphViewProps) =
     selectedCategories,
     selectedSubCategories,
     highlightedSkills,
+    showPatterns,
     onClearFilters,
   } = useSkillsViewContext();
 
@@ -31,12 +28,13 @@ export const SkillsGraphView = ({ showPatterns = true }: SkillsGraphViewProps) =
     const searchSorted = sortMatchesFirst(alphabetical, (skill) =>
       skillMatchesSearch(skill, searchTerm)
     );
+
     // Float a highlighted skill (arrived at via a Resume deep link) above everything else.
     return sortMatchesFirst(searchSorted, (skill) => highlightedSkills.includes(skill.skill));
   }, [filteredSkills, searchTerm, highlightedSkills]);
 
   if (skills.length === 0) {
-    return <Alert severity="info">No skill data available.</Alert>;
+    return <SkillsNoData />;
   }
 
   if (sortedSkills.length === 0) {

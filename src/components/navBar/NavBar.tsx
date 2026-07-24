@@ -104,6 +104,7 @@ export const NavBar = () => {
               aria-checked={!isDarkMode}
               onClick={() => {
                 if (isDarkMode) toggleDarkMode();
+
                 handleClose();
               }}
               role="menuitemradio"
@@ -118,6 +119,7 @@ export const NavBar = () => {
               aria-checked={isDarkMode}
               onClick={() => {
                 if (!isDarkMode) toggleDarkMode();
+
                 handleClose();
               }}
               role="menuitemradio"

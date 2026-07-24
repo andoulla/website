@@ -13,7 +13,9 @@ const byRecency = (
   second: TimelineEventWithRecommendations
 ): number => {
   if (first.endDate === null && second.endDate !== null) return -1;
+
   if (first.endDate !== null && second.endDate === null) return 1;
+
   return second.startDate.localeCompare(first.startDate);
 };
 
@@ -36,6 +38,7 @@ const byTypeThenRecency = (
   second: TimelineEventWithRecommendations
 ): number => {
   const typeDelta = TYPE_ORDER[first.type] - TYPE_ORDER[second.type];
+
   return typeDelta !== 0 ? typeDelta : byRecency(first, second);
 };
 
@@ -62,6 +65,7 @@ const searchableText = (result: SearchResult): string[] => {
   switch (result.kind) {
     case 'skill': {
       const skill = skillEntriesOf(result.event).find((entry) => entry.id === result.skillId);
+
       return [result.skillName, ...(skill?.synonyms ?? [])];
     }
     case 'role':
@@ -82,6 +86,7 @@ const searchableText = (result: SearchResult): string[] => {
 
 export const matchesQuery = (result: SearchResult, query: string): boolean => {
   const normalisedQuery = normaliseSearchTerm(query);
+
   if (normalisedQuery.length < MIN_SEARCH_TERM_LENGTH) return false;
 
   // Substring match, so partial terms (e.g. "jav" → JavaScript) hit.
@@ -91,6 +96,7 @@ export const matchesQuery = (result: SearchResult, query: string): boolean => {
 // Fresh query (track + one param) so no stale skill/focus stacks up.
 export const resultTo = (result: SearchResult, trackId: string): string => {
   const params = new URLSearchParams();
+
   params.set(TRACK_PARAM, trackId);
 
   switch (result.kind) {
@@ -112,6 +118,7 @@ export const resultTo = (result: SearchResult, trackId: string): string => {
 const formatYearRange = (event: TimelineEventWithRecommendations): string => {
   const startYear = event.startDate.slice(0, 4);
   const endYear = event.endDate === null ? 'Present' : event.endDate.slice(0, 4);
+
   return `${startYear}–${endYear}`;
 };
 

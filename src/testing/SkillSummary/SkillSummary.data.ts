@@ -3,6 +3,7 @@ import type { SkillSummary } from '@/utils/calculateSkillYears';
 export const defaultSkillSummary: SkillSummary = {
   id: 'react',
   skill: 'React',
+  type: 'tech',
   years: 1,
   categoryId: 'frontend-development',
   categoryName: 'Frontend Development',

@@ -10,15 +10,18 @@ export const matchSkill = (
   allSkills: Skill[] = defaultSkills
 ): MatchSkillResult | null => {
   const normalisedTerm = normalise(term);
+
   if (normalisedTerm === '') return null;
 
   const nameMatch = allSkills.find((skill) => normalise(skill.name) === normalisedTerm);
+
   if (nameMatch !== undefined) {
     return { skill: nameMatch, matchedOn: 'name', matchedTerm: nameMatch.name };
   }
 
   for (const skill of allSkills) {
     const matchedSynonym = skill.synonyms.find((synonym) => normalise(synonym) === normalisedTerm);
+
     if (matchedSynonym !== undefined) {
       return { skill, matchedOn: 'synonym', matchedTerm: matchedSynonym };
     }

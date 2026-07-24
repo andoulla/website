@@ -11,36 +11,43 @@ export class Article {
 
   id(id: string): this {
     this.data = { ...this.data, id };
+
     return this;
   }
 
   title(title: string): this {
     this.data = { ...this.data, title };
+
     return this;
   }
 
   link(link: string): this {
     this.data = { ...this.data, link };
+
     return this;
   }
 
   publishedDate(publishedDate: string): this {
     this.data = { ...this.data, publishedDate };
+
     return this;
   }
 
   tags(tags: string[]): this {
     this.data = { ...this.data, tags };
+
     return this;
   }
 
   excerpt(excerpt: string): this {
     this.data = { ...this.data, excerpt };
+
     return this;
   }
 
   imageUrl(imageUrl: string): this {
     this.data = { ...this.data, imageUrl };
+
     return this;
   }
 

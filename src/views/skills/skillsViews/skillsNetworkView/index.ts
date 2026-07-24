@@ -1,0 +1,1 @@
+export { SkillsNetworkView } from './SkillsNetworkView';

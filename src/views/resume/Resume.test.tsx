@@ -12,6 +12,7 @@ import { Resume } from './Resume';
 
 const LocationDisplay = () => {
   const location = useLocation();
+
   return <span>{`location:${location.pathname}${location.search}`}</span>;
 };
 
@@ -40,6 +41,7 @@ async function renderResume(
     );
     await Promise.resolve();
   });
+
   return result;
 }
 

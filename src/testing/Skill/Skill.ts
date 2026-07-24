@@ -11,31 +11,37 @@ export class Skill {
 
   id(id: string): this {
     this.data = { ...this.data, id };
+
     return this;
   }
 
   name(name: string): this {
     this.data = { ...this.data, name };
+
     return this;
   }
 
   type(type: SkillEntryType): this {
     this.data = { ...this.data, type };
+
     return this;
   }
 
   synonyms(synonyms: string[]): this {
     this.data = { ...this.data, synonyms };
+
     return this;
   }
 
   jobIds(jobIds: string[]): this {
     this.data = { ...this.data, jobIds };
+
     return this;
   }
 
   recommendationIds(recommendationIds: string[]): this {
     this.data = { ...this.data, recommendationIds };
+
     return this;
   }
 

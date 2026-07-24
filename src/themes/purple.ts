@@ -20,6 +20,7 @@ export const createPurpleTheme = (mode: 'light' | 'dark', density: Density) => {
     mode === 'light'
       ? { light: '#E3D3DD', main: '#6E6470', dark: '#3A1F35', contrastText: '#ffffff' }
       : { light: '#D0BFC9', main: '#AE95A6', dark: '#7E6577', contrastText: '#241A20' };
+
   return responsiveFontSizes(
     createTheme({
       density,

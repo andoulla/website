@@ -9,6 +9,7 @@ import { TimelineEventCard } from './TimelineEventCard';
 
 const LocationDisplay = () => {
   const location = useLocation();
+
   return <span>{`location:${location.pathname}${location.search}`}</span>;
 };
 

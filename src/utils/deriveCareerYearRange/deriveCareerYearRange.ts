@@ -7,10 +7,13 @@ const trackContributingEventIds = (track: Track, allSkills: Skill[]): Set<string
   const skillIds = trackSkillIds(track);
 
   const eventIds = new Set<string>();
+
   allSkills.forEach((skill) => {
     if (!skillIds.has(skill.id)) return;
+
     skill.jobIds.forEach((jobId) => eventIds.add(jobId));
   });
+
   return eventIds;
 };
 
