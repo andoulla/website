@@ -1,0 +1,1 @@
+export { getRecommendationsByIds } from './getRecommendationsByIds';

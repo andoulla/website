@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { Bar, BarChart, Cell, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, Cell, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import type { LabelProps } from 'recharts';
 import Box from '@mui/material/Box';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Popper from '@mui/material/Popper';
@@ -31,6 +32,23 @@ const BAR_HEIGHT_BY_DENSITY = { comfortable: 36, compact: 30 } as const;
 const BAR_SIZE = 14;
 const CHART_PADDING = 64;
 const MIN_HEIGHT = 200;
+
+// Renders a small filled circle at the right end of a bar for recommendation-backed skills.
+// The content function receives the bar's bounding box via viewBox; CartesianViewBoxRequired
+// is identified by the presence of 'x', distinguishing it from PolarViewBoxRequired.
+const renderRecommendationDot = (props: LabelProps) => {
+  const { viewBox, value } = props;
+
+  if (viewBox === undefined || !('x' in viewBox)) return null;
+
+  const count = typeof value === 'number' ? value : 0;
+
+  if (count === 0) return null;
+
+  const { x, y, width, height } = viewBox;
+
+  return <circle cx={x + width} cy={y + height / 2} r={4} fill="currentColor" opacity={0.6} />;
+};
 
 // Grace period so the pointer can reach the tooltip's links before it closes.
 const CLOSE_GRACE_MS = 100;
@@ -257,6 +275,10 @@ export const SkillsBarChart = ({
                 />
               );
             })}
+            <LabelList
+              valueAccessor={(entry) => (entry.payload as SkillSummary).recommendationIds.length}
+              content={(props: LabelProps) => renderRecommendationDot(props)}
+            />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
