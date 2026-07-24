@@ -98,7 +98,7 @@
     "name": "Estimation & Planning",
     "type": "skill",
     "synonyms": ["Sprint Planning", "Roadmap Prioritisation"],
-    "jobIds": ["capco-2012-12", "elsevier-2016-08", "moo-2017-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "elsevier-2016-08", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -114,7 +114,7 @@
     "name": "Prioritisation",
     "type": "skill",
     "synonyms": ["Prioritization"],
-    "jobIds": ["moo-2017-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -173,7 +173,7 @@
     "name": "JavaScript (ES6+)",
     "type": "tech",
     "synonyms": ["JavaScript", "JS", "ECMAScript"],
-    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "elsevier-2016-08", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -229,7 +229,7 @@
     "name": "CSS3",
     "type": "tech",
     "synonyms": ["CSS", "CSS-in-JS", "CSS in JS", "Sass", "SCSS", "Less"],
-    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "elsevier-2016-08", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -317,7 +317,7 @@
     "name": "Frontend Performance Optimisation",
     "type": "skill",
     "synonyms": ["Frontend Performance Optimization"],
-    "jobIds": ["moo-2017-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -325,7 +325,7 @@
     "name": "Node.js",
     "type": "tech",
     "synonyms": ["Node", "NodeJS"],
-    "jobIds": ["capco-2012-12"],
+    "jobIds": ["atom-learning-2021-01", "elsevier-2016-08", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -349,7 +349,7 @@
     "name": "REST APIs",
     "type": "tech",
     "synonyms": ["REST", "RESTful APIs"],
-    "jobIds": ["capco-2012-12"],
+    "jobIds": ["atom-learning-2021-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -397,7 +397,7 @@
     "name": "Business Logic",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["moo-2017-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -549,7 +549,7 @@
     "name": "Software Architecture",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01", "capco-2012-12"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -658,7 +658,7 @@
     "name": "Technical Debt Management",
     "type": "skill",
     "synonyms": ["Tech Debt"],
-    "jobIds": ["atom-learning-2021-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -674,7 +674,7 @@
     "name": "Clean Code",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -690,7 +690,7 @@
     "name": "Coding Standards",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -706,7 +706,7 @@
     "name": "Technical Documentation",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01"],
+    "jobIds": ["atom-learning-2021-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -730,7 +730,7 @@
     "name": "Unit Testing",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -738,7 +738,7 @@
     "name": "Integration Testing",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -786,7 +786,7 @@
     "name": "Agile Engineering Practices",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["moo-2017-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "elsevier-2016-08", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -794,7 +794,7 @@
     "name": "Continuous Improvement",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -810,7 +810,7 @@
     "name": "Process Improvement",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -846,11 +846,19 @@
     "recommendationIds": []
   },
   {
+    "id": "bitbucket",
+    "name": "Bitbucket",
+    "type": "tech",
+    "synonyms": [],
+    "jobIds": ["capco-2012-12"],
+    "recommendationIds": []
+  },
+  {
     "id": "jira",
     "name": "Jira",
     "type": "tech",
     "synonyms": ["JIRA"],
-    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -858,7 +866,7 @@
     "name": "Confluence",
     "type": "tech",
     "synonyms": [],
-    "jobIds": ["moo-2017-01"],
+    "jobIds": ["moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -874,7 +882,7 @@
     "name": "npm",
     "type": "tech",
     "synonyms": ["Npm", "NPM", "Node Package Manager"],
-    "jobIds": ["moo-2017-01"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -898,7 +906,7 @@
     "name": "Webpack",
     "type": "tech",
     "synonyms": [],
-    "jobIds": ["moo-2017-01"],
+    "jobIds": ["moo-2017-01", "capco-2012-12"],
     "recommendationIds": []
   },
   {
@@ -929,8 +937,8 @@
     "id": "debugging",
     "name": "Debugging",
     "type": "skill",
-    "synonyms": [],
-    "jobIds": ["moo-2017-01"],
+    "synonyms": ["Troubleshooting"],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "elsevier-2016-08", "capco-2012-12"],
     "recommendationIds": []
   },
   {

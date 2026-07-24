@@ -21,20 +21,22 @@
       {
         "id": "atom-learning-2021-01-r02",
         "text": "Currently leading a team of 6 engineers across frontend and backend on high-impact school assessment flows, with a focus on stability and reliability in critical assessment-taking journeys.",
-        "skillIds": ["engineering-leadership", "team-leadership"]
+        "skillIds": ["debugging", "engineering-leadership", "team-leadership"]
       },
       {
         "id": "atom-learning-2021-01-r03",
         "text": "Taking ownership of in-flight projects and driving them to completion, including a refactor of the create-assessment flow and simplification of the feature-flag infrastructure supporting OMR features.",
-        "skillIds": ["refactoring", "technical-debt-management"]
+        "skillIds": ["nodejs", "refactoring", "technical-debt-management"]
       },
       {
         "id": "atom-learning-2021-01-r04",
         "text": "Coordinated the delivery of a new B2B payment system, including redefining requirements and aligning stakeholders across product, sales, finance and engineering.",
         "skillIds": [
           "agile-delivery",
+          "business-logic",
           "cross-functional-collaboration",
           "product-collaboration",
+          "rest-apis",
           "stakeholder-management"
         ]
       },
@@ -51,12 +53,19 @@
       {
         "id": "atom-learning-2021-01-r07",
         "text": "Increased code quality KPIs across all three applications from around 50% to over 80% through hands-on delivery and roadmap alignment",
-        "skillIds": ["clean-code", "coding-standards", "continuous-improvement", "roadmap-planning"]
+        "skillIds": [
+          "clean-code",
+          "coding-standards",
+          "continuous-improvement",
+          "estimation-planning",
+          "roadmap-planning"
+        ]
       },
       {
         "id": "atom-learning-2021-01-r08",
         "text": "Coordinated migration from Cypress to Playwright; Reduced weekly manual testing from a full-team effort to a single person by redefining the testing strategy and coordinating a robust end-to-end Playwright suite, while maintaining strong unit and integration coverage.",
         "skillIds": [
+          "agile-engineering-practices",
           "cypress",
           "integration-testing",
           "playwright",
@@ -95,6 +104,7 @@
           "design-systems",
           "mentoring-coaching",
           "playwright",
+          "prioritisation",
           "technical-documentation"
         ]
       },
@@ -133,13 +143,15 @@
           "cross-functional-collaboration",
           "design-systems",
           "frontend-performance-optimisation",
-          "product-collaboration"
+          "product-collaboration",
+          "software-architecture"
         ]
       },
       {
         "id": "moo-2017-01-r02",
         "text": "Drove a performance audit of the bespoke editor, investigated bottlenecks, shaped the backlog and ran prioritisation meetings; this work delivered a 16% reduction in bundle size and a 6-point Lighthouse improvement.",
         "skillIds": [
+          "continuous-improvement",
           "debugging",
           "frontend-performance-optimisation",
           "performance-optimisation",
@@ -149,7 +161,7 @@
       {
         "id": "moo-2017-01-r03",
         "text": "Owned the migration from LESS to Sass.",
-        "skillIds": ["css3", "refactoring"]
+        "skillIds": ["css3", "refactoring", "technical-debt-management"]
       },
       {
         "id": "moo-2017-01-r08",
@@ -191,6 +203,7 @@
         "id": "elsevier-2016-08-r01",
         "text": "Led the Mendeley Data team, taking ownership of recruitment, supporting day-to-day team operations, and contributing to estimation and planning for upcoming work using Agile methodologies.",
         "skillIds": [
+          "agile-engineering-practices",
           "engineering-leadership",
           "estimation-planning",
           "hiring-interviewing",
@@ -221,7 +234,16 @@
       {
         "id": "capco-2012-12-r03",
         "text": "Delivered a client prototype end-to-end as the sole developer and contributed to client visualisation work on the MEAN stack.",
-        "skillIds": ["expressjs", "mongodb", "nodejs", "server-side-development"]
+        "skillIds": [
+          "css3",
+          "debugging",
+          "expressjs",
+          "mongodb",
+          "nodejs",
+          "npm",
+          "server-side-development",
+          "webpack"
+        ]
       },
       {
         "id": "capco-2012-12-r04",
@@ -233,8 +255,13 @@
         "text": "Led a team of 8–10 developers across London and Bratislava, managing planning, releases, stakeholder communication, onboarding and delivery, while remaining hands-on technically.",
         "skillIds": [
           "agile-delivery",
+          "agile-engineering-practices",
+          "continuous-improvement",
           "developer-growth",
           "estimation-planning",
+          "jira",
+          "prioritisation",
+          "process-improvement",
           "release-management",
           "stakeholder-management",
           "team-leadership",

@@ -157,7 +157,17 @@
         {
           "id": "tools",
           "name": "Tools",
-          "skillIds": ["git", "github", "gitlab", "npm", "vite", "webpack", "eslint", "prettier"]
+          "skillIds": [
+            "bitbucket",
+            "git",
+            "github",
+            "gitlab",
+            "npm",
+            "vite",
+            "webpack",
+            "eslint",
+            "prettier"
+          ]
         },
         {
           "id": "collaboration",

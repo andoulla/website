@@ -230,7 +230,7 @@
         {
           "id": "version-control",
           "name": "Version Control",
-          "skillIds": ["git", "github", "gitlab"]
+          "skillIds": ["bitbucket", "git", "github", "gitlab"]
         },
         {
           "id": "project-management",
