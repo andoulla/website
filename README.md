@@ -34,6 +34,14 @@ A minimal React + TypeScript personal site, built entirely through AI pair-progr
 - `yarn typecheck` — run TypeScript type checking
 - `yarn draft:mappings` — report-only draft of responsibility/recommendation → skill mappings (writes to gitignored `scripts/output/`, never to `src/data/`)
 
+## Skill mappings
+
+Each résumé bullet/recommendation is linked to skills via `skillIds` (on the row in `src/data/careerHistory.json`) and `skill.jobIds` (in `src/data/skills.json`). The flow:
+
+1. **Draft** — `yarn draft:mappings` embeds text + skills and reports likely matches to gitignored `scripts/output/`. Suggestion-only; it never edits `src/data/`.
+2. **Semantic-merge** — a human/Claude applies accepted rows by hand (the embedding pass is lossy, so committed mappings are richer than it suggests) and commits.
+3. **Freeze** — committed mappings are frozen: only **new or edited** bullets get (re)mapped; existing arrays are never reshuffled. Ordering is fixed (`skillIds`/`recommendationIds` alphabetical, `jobIds` in career order), so re-deriving unchanged rows is a zero diff.
+
 ## CI/CD
 
 - **[CI](.github/workflows/ci.yml)** — lint, format check, typecheck, test (with coverage), build. Runs on every PR to `main` and on push to `main`. Coverage output is uploaded as a workflow artifact and summarised in the job summary.
