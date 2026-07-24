@@ -79,11 +79,23 @@ describe('Skills', () => {
       expect(screen.getByRole('button', { name: 'Table view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Graph view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Radar view' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Network view' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Growth view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Radar view' })).toHaveAttribute(
         'aria-pressed',
         'true'
       );
+      expect(screen.getByText('Where my experience is concentrated across areas')).toBeVisible();
       expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('switches to a new view and shows its caption', async () => {
+      const user = userEvent.setup();
+      const screen = await renderAndFlush();
+
+      await user.click(screen.getByRole('button', { name: 'Growth view' }));
+
+      expect(screen.getByText('How my skill set has grown across my career')).toBeVisible();
     });
 
     test('shows the filter bar in table view as well as graph view', async () => {

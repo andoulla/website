@@ -4,6 +4,7 @@ export type {
   SkillsViewContextValue,
 } from './SkillsViewContext.types';
 export { SkillsGraphView } from './skillsGraphView';
-export type { SkillsGraphViewProps } from './skillsGraphView';
 export { SkillsTableView } from './skillsTableView';
 export { SkillsRadarView } from './skillsRadarView';
+export { SkillsNetworkView } from './skillsNetworkView';
+export { SkillsGrowthView } from './skillsGrowthView';

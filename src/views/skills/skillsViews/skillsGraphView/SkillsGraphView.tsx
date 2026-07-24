@@ -9,11 +9,7 @@ import { useSkillsViewContext } from '../SkillsViewContext';
 
 import { SkillsBarChart } from './skillsBarChart';
 
-export interface SkillsGraphViewProps {
-  showPatterns?: boolean;
-}
-
-export const SkillsGraphView = ({ showPatterns = true }: SkillsGraphViewProps) => {
+export const SkillsGraphView = () => {
   const {
     skills,
     filteredSkills,
@@ -21,6 +17,7 @@ export const SkillsGraphView = ({ showPatterns = true }: SkillsGraphViewProps) =
     selectedCategories,
     selectedSubCategories,
     highlightedSkills,
+    showPatterns,
     onClearFilters,
   } = useSkillsViewContext();
 

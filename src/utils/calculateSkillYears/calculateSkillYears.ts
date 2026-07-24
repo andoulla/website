@@ -65,6 +65,7 @@ export const calculateSkillYears = (
           {
             id: skill.id,
             skill: skill.name,
+            type: skill.type,
             years,
             categoryId: category.id,
             categoryName: category.name,

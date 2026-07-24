@@ -1,3 +1,4 @@
+import type { SkillType } from '@/types';
 import type {
   SkillCompanyYears,
   SkillSummary as SkillSummaryData,
@@ -20,6 +21,11 @@ export class SkillSummary {
 
   skill(skill: string): this {
     this.data = { ...this.data, skill };
+    return this;
+  }
+
+  type(type: SkillType): this {
+    this.data = { ...this.data, type };
     return this;
   }
 

@@ -24,6 +24,7 @@ export const SkillsViewContextProvider = ({
   selectedSubCategories,
   highlightedSkills = [],
   searchTerm,
+  showPatterns = false,
   onClearFilters,
 }: SkillsViewContextProviderProps) => {
   const value = useMemo<SkillsViewContextValue>(
@@ -35,6 +36,7 @@ export const SkillsViewContextProvider = ({
       selectedSubCategories,
       highlightedSkills,
       searchTerm,
+      showPatterns,
       onClearFilters,
     }),
     [
@@ -45,6 +47,7 @@ export const SkillsViewContextProvider = ({
       selectedSubCategories,
       highlightedSkills,
       searchTerm,
+      showPatterns,
       onClearFilters,
     ]
   );

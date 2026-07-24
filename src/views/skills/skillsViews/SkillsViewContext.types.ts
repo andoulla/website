@@ -11,13 +11,16 @@ export interface SkillsViewContextValue {
   selectedSubCategories: string[];
   highlightedSkills: string[];
   searchTerm: string;
+  // Barchart texture toggle, lifted so views stay zero-prop.
+  showPatterns: boolean;
   onClearFilters: () => void;
 }
 
 export interface SkillsViewContextProviderProps extends Omit<
   SkillsViewContextValue,
-  'highlightedSkills'
+  'highlightedSkills' | 'showPatterns'
 > {
   highlightedSkills?: string[];
+  showPatterns?: boolean;
   children: ReactNode;
 }
