@@ -1,4 +1,11 @@
+import { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
+import Popover from '@mui/material/Popover';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -6,12 +13,14 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import { alpha, useTheme } from '@mui/material/styles';
 
+import { TRACK_PARAM, useTrackContext } from '@/context/track';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { formatYears } from '@/utils/formatYears';
+import { getRecommendationsByIds } from '@/utils/getRecommendationsByIds';
 import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
 import { skillElementId } from '../SkillsTableView.helpers';
@@ -30,8 +39,19 @@ interface SkillRowProps {
   isHighlighted: boolean;
 }
 
+const renderTypeLabel = (type: SkillSummary['type']): string => {
+  if (type === 'tech') return 'tech';
+
+  return 'non-technical';
+};
+
 const SkillRow = ({ skill, isHighlighted }: SkillRowProps) => {
   const theme = useTheme();
+  const { trackId } = useTrackContext();
+  const [recAnchorEl, setRecAnchorEl] = useState<HTMLElement | null>(null);
+
+  const recCount = skill.recommendationIds.length;
+  const recommendations = getRecommendationsByIds(skill.recommendationIds);
 
   return (
     <TableRow
@@ -45,9 +65,55 @@ const SkillRow = ({ skill, isHighlighted }: SkillRowProps) => {
       }}
     >
       <TableCell sx={{ verticalAlign: 'top' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
           <CategoryColourDot colour={dotColour(skill, theme)} />
           {skill.skill}
+          <Chip label={renderTypeLabel(skill.type)} size="small" variant="outlined" />
+          {recCount > 0 && (
+            <>
+              <IconButton
+                size="small"
+                aria-label={`${recCount} recommendation${recCount === 1 ? '' : 's'}`}
+                onClick={(event) => {
+                  setRecAnchorEl(event.currentTarget);
+                }}
+              >
+                <Badge badgeContent={recCount} color="primary">
+                  <FormatQuoteIcon fontSize="small" />
+                </Badge>
+              </IconButton>
+              <Popover
+                open={recAnchorEl !== null}
+                anchorEl={recAnchorEl}
+                onClose={() => {
+                  setRecAnchorEl(null);
+                }}
+              >
+                <Box sx={{ p: 2, maxWidth: 360 }}>
+                  {recommendations.map((rec) => (
+                    <Box key={rec.id} sx={{ mb: 2, '&:last-child': { mb: 0 } }}>
+                      <Typography variant="subtitle2">
+                        {rec.authorInitials} — {rec.authorRole.jobTitle}
+                      </Typography>
+                      <Typography variant="body2" sx={{ mt: 0.5, mb: 0.5 }}>
+                        {rec.text.length > 120 ? `${rec.text.slice(0, 120)}…` : rec.text}
+                      </Typography>
+                      <Link
+                        component={RouterLink}
+                        to={`/?recommendation=${encodeURIComponent(rec.id)}&${TRACK_PARAM}=${trackId}`}
+                        variant="body2"
+                        onClick={() => {
+                          setRecAnchorEl(null);
+                        }}
+                      >
+                        View on Resume
+                      </Link>
+                    </Box>
+                  ))}
+                </Box>
+              </Popover>
+            </>
+          )}
         </Box>
       </TableCell>
       <TableCell sx={{ verticalAlign: 'top' }}>

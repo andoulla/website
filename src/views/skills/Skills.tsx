@@ -42,6 +42,7 @@ import type { ViewMode } from './Skills.types';
 import { CopyLinkButton } from './copyLinkButton';
 import { SkillFilterBar, type SkillFilterOption } from './skillFilterBar';
 import { SkillSearchBar } from './skillSearchBar';
+import { SkillsStatBar } from './skillsStatBar';
 import { TimeMachineSlider } from './timeMachineSlider';
 import { TrackFilter } from './trackFilter';
 import { SkillsCareerContextProvider, SkillsViewContextProvider } from './skillsViews';
@@ -275,6 +276,7 @@ const SkillsContent = () => {
       <Typography variant="body2" color="text.secondary" sx={{ mb: { xs: 1.5, sm: 2 } }}>
         {VIEW_OPTIONS[viewMode].caption}
       </Typography>
+      <SkillsStatBar skills={skills} filteredSkills={filteredSkills} />
       <SkillsCareerContextProvider careerHistory={careerHistory}>
         <SkillsViewContextProvider
           track={track}
