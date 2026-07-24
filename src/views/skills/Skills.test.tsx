@@ -37,6 +37,7 @@ const neverResolve = () => new Promise<typeof CAREER_HISTORY>(() => undefined);
 
 const SearchParamsDisplay = () => {
   const [searchParams] = useSearchParams();
+
   return <span>{`search:${searchParams.toString()}`}</span>;
 };
 

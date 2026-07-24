@@ -35,6 +35,7 @@ export const TimeMachineSlider = ({
 
   // Resync on external year change (URL load, track switch) via adjust-during-render.
   const [committedYear, setCommittedYear] = useState(year);
+
   if (year !== committedYear && !isDragging) {
     setCommittedYear(year);
     setLiveYear(year);

@@ -11,9 +11,11 @@ const CareerDataContext = createContext<CareerHistoryPromise | null>(null);
 
 export const useCareerDataContext = () => {
   const promise = use(CareerDataContext);
+
   if (promise === null) {
     throw new Error('useCareerDataContext must be used within a CareerDataContextProvider');
   }
+
   return use(promise);
 };
 

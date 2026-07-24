@@ -17,6 +17,7 @@ careerHistoryData.forEach((event) => {
     if (seenResponsibilityIds.has(responsibility.id)) {
       throw new Error(`careerHistory.json: duplicate responsibility id "${responsibility.id}"`);
     }
+
     seenResponsibilityIds.add(responsibility.id);
 
     responsibility.skillIds.forEach((skillId) => {

@@ -5,6 +5,7 @@ describe('loadCareerHistory', () => {
     const careerHistory = await loadCareerHistory();
 
     expect(careerHistory.length).toBeGreaterThan(0);
+
     for (const event of careerHistory) {
       expect(Array.isArray(event.recommendations)).toBe(true);
       expect(Array.isArray(event.techStack)).toBe(true);

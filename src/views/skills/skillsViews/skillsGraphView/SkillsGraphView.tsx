@@ -28,6 +28,7 @@ export const SkillsGraphView = () => {
     const searchSorted = sortMatchesFirst(alphabetical, (skill) =>
       skillMatchesSearch(skill, searchTerm)
     );
+
     // Float a highlighted skill (arrived at via a Resume deep link) above everything else.
     return sortMatchesFirst(searchSorted, (skill) => highlightedSkills.includes(skill.skill));
   }, [filteredSkills, searchTerm, highlightedSkills]);

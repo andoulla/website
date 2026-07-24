@@ -20,6 +20,7 @@ export const createGreenTheme = (mode: 'light' | 'dark', density: Density) => {
     mode === 'light'
       ? { light: '#B5B5AE', main: '#6E6E68', dark: '#2B2B28', contrastText: '#ffffff' }
       : { light: '#C9CCC2', main: '#A9ADA2', dark: '#7A7E72', contrastText: '#1C1E18' };
+
   return responsiveFontSizes(
     createTheme({
       density,

@@ -13,8 +13,7 @@ import {
   SkillsTableView,
 } from './skillsViews';
 
-// One entry per view: icon, tooltip/aria label, caption, and the component to render.
-// Adding a view = one entry here (typed Record forces all four fields).
+// One entry per view; typed Record forces every view to declare all fields.
 export const VIEW_OPTIONS: Record<ViewMode, ViewOption> = {
   barchart: {
     icon: <BarChartIcon fontSize="small" />,

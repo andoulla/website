@@ -9,9 +9,11 @@ const SkillsViewContext = createContext<SkillsViewContextValue | null>(null);
 
 export const useSkillsViewContext = (): SkillsViewContextValue => {
   const ctx = useContext(SkillsViewContext);
+
   if (ctx === null) {
     throw new Error('useSkillsViewContext must be used within a SkillsViewContextProvider');
   }
+
   return ctx;
 };
 

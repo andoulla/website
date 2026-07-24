@@ -53,8 +53,11 @@ const deriveSearchHint = (
   hiddenMatchCount: number
 ): string | undefined => {
   if (searchTerm.trim() === '') return undefined;
+
   if (totalMatches === 0) return 'No skills match your search';
+
   if (hiddenMatchCount === 0) return undefined;
+
   return `${hiddenMatchCount} match${hiddenMatchCount === 1 ? '' : 'es'} hidden by filters`;
 };
 
@@ -153,10 +156,12 @@ const SkillsContent = () => {
 
   const { totalMatches, hiddenMatchCount } = useMemo(() => {
     if (searchTerm.trim() === '') return { totalMatches: 0, hiddenMatchCount: 0 };
+
     const total = skills.filter((skill) => skillMatchesSearch(skill, searchTerm)).length;
     const visibleMatches = filteredSkills.filter((skill) =>
       skillMatchesSearch(skill, searchTerm)
     ).length;
+
     return { totalMatches: total, hiddenMatchCount: total - visibleMatches };
   }, [skills, filteredSkills, searchTerm]);
 
@@ -182,7 +187,9 @@ const SkillsContent = () => {
         const presentSubCategories = category.subCategories
           .filter((subCategory) => skills.some((skill) => skill.subCategoryId === subCategory.id))
           .map(({ id, name }) => ({ id, name }));
+
         if (presentSubCategories.length > 0) acc[category.id] = presentSubCategories;
+
         return acc;
       }, {}),
     [track, skills]

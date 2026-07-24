@@ -26,7 +26,9 @@ const LABEL_BY_STATUS: Record<CopyStatus, string> = {
 
 const renderStatusIcon = (status: CopyStatus) => {
   if (status === 'copied') return <CheckIcon fontSize="small" />;
+
   if (status === 'failed') return <ErrorIcon fontSize="small" color="error" />;
+
   return <ContentCopyIcon fontSize="small" />;
 };
 
@@ -36,7 +38,9 @@ export const CopyLinkButton = () => {
 
   useEffect(() => {
     if (state.status === 'idle') return;
+
     const timer = setTimeout(() => setState(IDLE_STATE), RESET_DELAY_MS);
+
     return () => clearTimeout(timer);
   }, [state]);
 

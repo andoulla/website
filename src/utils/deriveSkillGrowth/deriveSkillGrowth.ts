@@ -14,13 +14,17 @@ export const deriveSkillGrowth = (
 
   // Earliest year each skill was used; skills with no known job are excluded.
   const countByYear = new Map<number, number>();
+
   skills.forEach((skill) => {
     const years = skill.jobIds
       .map((jobId) => eventById.get(jobId))
       .filter((event): event is TimelineEvent => event !== undefined)
       .map(startYear);
+
     if (years.length === 0) return;
+
     const acquiredYear = Math.min(...years);
+
     countByYear.set(acquiredYear, (countByYear.get(acquiredYear) ?? 0) + 1);
   });
 
@@ -29,6 +33,7 @@ export const deriveSkillGrowth = (
     .sort((yearA, yearB) => yearA - yearB)
     .map((year) => {
       cumulative += countByYear.get(year) ?? 0;
+
       return { year, count: cumulative };
     });
 

@@ -9,6 +9,7 @@ import { TrackFilter } from './TrackFilter';
 
 const SearchParamsDisplay = () => {
   const [searchParams] = useSearchParams();
+
   return <span>{`search:${searchParams.toString()}`}</span>;
 };
 

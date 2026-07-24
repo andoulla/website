@@ -7,6 +7,7 @@ const rangesOverlap = (
 ): boolean => {
   const eventEnd = event.endDate !== null ? new Date(event.endDate) : today;
   const otherEnd = other.endDate !== null ? new Date(other.endDate) : today;
+
   return new Date(event.startDate) <= otherEnd && new Date(other.startDate) <= eventEnd;
 };
 

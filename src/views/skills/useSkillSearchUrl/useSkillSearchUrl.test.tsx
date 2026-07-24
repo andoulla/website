@@ -8,6 +8,7 @@ const wrapper = (initialEntries: string[]) => {
   const Wrapper = ({ children }: { children: ReactNode }) => (
     <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
   );
+
   return Wrapper;
 };
 
@@ -40,6 +41,7 @@ describe('useSkillSearchUrl', () => {
       () => {
         const [value, setValue] = useSkillSearchUrl('term', parseString, serializeString);
         const [searchParams] = useSearchParams();
+
         return { value, setValue, searchParams };
       },
       { wrapper: wrapper(['/skills']) }
@@ -58,6 +60,7 @@ describe('useSkillSearchUrl', () => {
       () => {
         const [value, setValue] = useSkillSearchUrl('term', parseString, serializeString);
         const [searchParams] = useSearchParams();
+
         return { value, setValue, searchParams };
       },
       { wrapper: wrapper(['/skills?term=react']) }
@@ -75,6 +78,7 @@ describe('useSkillSearchUrl', () => {
       () => {
         const [value] = useSkillSearchUrl('skill', parseList, serializeList);
         const [, setSearchParams] = useSearchParams();
+
         return { value, setSearchParams };
       },
       { wrapper: wrapper(['/skills?skill=react']) }
@@ -87,6 +91,7 @@ describe('useSkillSearchUrl', () => {
         const next = new URLSearchParams(previous);
 
         next.set('view', 'list');
+
         return next;
       });
     });

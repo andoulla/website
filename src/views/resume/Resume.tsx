@@ -70,14 +70,17 @@ const CareerTimeline = () => {
         )
       );
     }
+
     // Explicit focus wins over most-recent; a bare ?skill= still falls through below.
     if (focusEventId !== undefined) {
       return visibleHistory.findIndex((event) => event.id === focusEventId);
     }
+
     if (highlightedSkillId !== undefined) {
       // A skill can span multiple jobs — scroll to the most recent, not just the first match.
       return findMostRecentSkillMatchIndex(visibleHistory, highlightedSkillId);
     }
+
     return -1;
   }, [visibleHistory, highlightedSkillId, highlightedRecommendationId, focusEventId]);
 

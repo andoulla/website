@@ -6,7 +6,9 @@ const isMoreRecent = (
   current: TimelineEventWithRecommendations
 ): boolean => {
   if (candidate.endDate === null && current.endDate !== null) return true;
+
   if (candidate.endDate !== null && current.endDate === null) return false;
+
   return candidate.startDate > current.startDate;
 };
 
@@ -20,6 +22,7 @@ export const findMostRecentSkillMatchIndex = (
 
   events.forEach((event, index) => {
     if (!event.skills.some((skill) => skill.id === skillId)) return;
+
     if (bestIndex === -1 || isMoreRecent(event, events[bestIndex])) bestIndex = index;
   });
 

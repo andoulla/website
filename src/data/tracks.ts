@@ -46,12 +46,14 @@ const toTrack = (rawTrack: RawTrack, fileName: string): Track => {
     if (seenCategoryIds.has(category.id)) {
       throw new Error(`${fileName}: duplicate category id "${category.id}"`);
     }
+
     seenCategoryIds.add(category.id);
 
     category.subCategories.forEach((subCategory) => {
       if (seenSubCategoryIds.has(subCategory.id)) {
         throw new Error(`${fileName}: duplicate subCategory id "${subCategory.id}"`);
       }
+
       seenSubCategoryIds.add(subCategory.id);
 
       subCategory.skillIds.forEach((skillId) => {
@@ -60,9 +62,11 @@ const toTrack = (rawTrack: RawTrack, fileName: string): Track => {
             `${fileName}: unknown skillId "${skillId}" in subCategory "${subCategory.id}"`
           );
         }
+
         if (seenSkillIds.has(skillId)) {
           throw new Error(`${fileName}: skillId "${skillId}" appears more than once`);
         }
+
         seenSkillIds.add(skillId);
       });
     });
@@ -97,5 +101,6 @@ tracks.forEach((track) => {
   if (seenTrackIds.has(track.id)) {
     throw new Error(`tracks: duplicate track id "${track.id}"`);
   }
+
   seenTrackIds.add(track.id);
 });

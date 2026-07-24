@@ -5,6 +5,7 @@ const mockGetContrastText = jest.fn().mockReturnValue('#ffffff');
 // MUI's lighten/darken return "rgb(r, g, b)" strings; sum the channels as a brightness proxy.
 const rgbSum = (colour: string) => {
   const channels = colour.match(/\d+/g)?.map(Number) ?? [];
+
   return channels.reduce((sum, n) => sum + n, 0);
 };
 

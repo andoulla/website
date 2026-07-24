@@ -49,6 +49,7 @@ const fontSizesByDensity = {
 
 export const createTypographyTokens = (density: Density) => {
   const sizes = fontSizesByDensity[density];
+
   return {
     fontFamily: bodyFontFamily,
     h1: { fontFamily: headingFontFamily, fontWeight: 800, fontSize: sizes.h1, lineHeight: 1.2 },
@@ -77,6 +78,7 @@ export const spacingByDensity: Record<Density, number> = { comfortable: 8, compa
 // Compact tightens component defaults; comfortable keeps MUI's own.
 export const createDensityComponents = (density: Density) => {
   if (density === 'comfortable') return {};
+
   return {
     MuiChip: { defaultProps: { size: 'small' as const } },
     MuiCardContent: {

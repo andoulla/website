@@ -20,8 +20,11 @@ export const groupSkillsByCategory = (skills: Skill[], track: Track): SkillCateg
 
   skills.forEach((skill) => {
     const category = categoryBySkillId.get(skill.id);
+
     if (category === undefined) return;
+
     const group = groupsByCategoryId.get(category.id);
+
     if (group === undefined) {
       groupsByCategoryId.set(category.id, { category, skills: [skill] });
     } else {

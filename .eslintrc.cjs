@@ -61,15 +61,20 @@ module.exports = {
         '@typescript-eslint/no-unsafe-assignment': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
-        'padding-line-between-statements': [
-          'error',
-          { blankLine: 'always', prev: ['const', 'let', 'var'], next: 'expression' },
-        ],
       },
     },
   ],
   rules: {
     'prettier/prettier': 'error',
+    // Blank lines around returns, declarations, and control flow.
+    'padding-line-between-statements': [
+      'error',
+      { blankLine: 'always', prev: '*', next: 'return' },
+      { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+      { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
+      { blankLine: 'always', prev: '*', next: ['if', 'for', 'while', 'switch', 'try'] },
+      { blankLine: 'always', prev: ['if', 'for', 'while', 'switch', 'try'], next: '*' },
+    ],
     'react/react-in-jsx-scope': 'off',
     'react/no-unknown-property': 'error',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],

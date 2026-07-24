@@ -13,8 +13,10 @@ export const extractImageUrl = (html: string): string | undefined => {
     const height = img.getAttribute('height');
     const src = img.getAttribute('src') ?? '';
     const isTrackingPixel = (width === '1' && height === '1') || src.includes('medium.com/_/stat');
+
     return !isTrackingPixel;
   });
+
   return featuredImg?.getAttribute('src') ?? undefined;
 };
 

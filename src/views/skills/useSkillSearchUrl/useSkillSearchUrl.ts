@@ -18,11 +18,13 @@ export const useSkillSearchUrl = <T>(
         (prev) => {
           const params = new URLSearchParams(prev);
           const nextRaw = serialize(next);
+
           if (nextRaw !== null) {
             params.set(key, nextRaw);
           } else {
             params.delete(key);
           }
+
           return reorderFilterParams(params);
         },
         { replace: true }

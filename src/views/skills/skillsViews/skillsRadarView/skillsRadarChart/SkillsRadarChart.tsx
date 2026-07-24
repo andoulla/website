@@ -48,6 +48,7 @@ export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadar
   // individually instead, so a non-matching axis still stands out.
   const renderDot = ({ cx, cy, payload }: DotItemDotProps) => {
     const point = payload as CategoryRadarPoint;
+
     return (
       <circle key={point.categoryId} cx={cx} cy={cy} r={5} fill={resolveDotColour(point, theme)} />
     );

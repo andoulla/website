@@ -15,11 +15,13 @@ export const useInView = <T extends Element>(
       const observer = new IntersectionObserver(
         (entries) => {
           const [entry] = entries;
+
           // Toggle on every crossing (not just the first) so cards fade both in and out.
           setIsInView(entry.isIntersecting);
         },
         { threshold, rootMargin }
       );
+
       observer.observe(node);
 
       // React 19 ref-callback cleanup: runs when the node unmounts or the ref changes.

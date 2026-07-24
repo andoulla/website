@@ -44,6 +44,7 @@ const SetTrackIdIdentityProbe = () => {
           const nextParams = new URLSearchParams(params);
 
           nextParams.set('view', 'list');
+
           return nextParams;
         });
       }}

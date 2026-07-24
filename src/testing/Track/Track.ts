@@ -11,16 +11,19 @@ export class Track {
 
   id(id: TrackId): this {
     this.data = { ...this.data, id };
+
     return this;
   }
 
   label(label: string): this {
     this.data = { ...this.data, label };
+
     return this;
   }
 
   categories(categories: TrackType['categories']): this {
     this.data = { ...this.data, categories };
+
     return this;
   }
 

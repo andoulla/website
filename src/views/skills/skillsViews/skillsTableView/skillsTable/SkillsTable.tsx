@@ -144,6 +144,7 @@ export const SkillsTable = ({ categoryGroups, highlightedSkills = [] }: SkillsTa
           isHighlighted: highlightedSkills.includes(skill.skill),
         })),
       ]);
+
       return [categoryRow, ...subCategoryRows];
     }
 
@@ -168,11 +169,13 @@ export const SkillsTable = ({ categoryGroups, highlightedSkills = [] }: SkillsTa
             if (row.type === 'category') {
               return <GroupHeaderRow key={row.key} label={row.category.name} />;
             }
+
             if (row.type === 'subcategory') {
               return (
                 <GroupHeaderRow key={row.key} label={row.subCategory.name} variant="subcategory" />
               );
             }
+
             return <SkillRow key={row.key} skill={row.skill} isHighlighted={row.isHighlighted} />;
           })}
         </TableBody>

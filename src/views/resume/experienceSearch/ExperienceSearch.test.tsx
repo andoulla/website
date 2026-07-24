@@ -13,6 +13,7 @@ import { ExperienceSearch } from './ExperienceSearch';
 
 const LocationDisplay = () => {
   const location = useLocation();
+
   return <span>{`location:${location.pathname}${location.search}`}</span>;
 };
 
