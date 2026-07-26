@@ -80,7 +80,7 @@ describe('Skills', () => {
       expect(screen.getByRole('button', { name: 'Table view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Graph view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Radar view' })).toBeVisible();
-      expect(screen.getByRole('button', { name: 'Network view' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Treemap view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Growth view' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Radar view' })).toHaveAttribute(
         'aria-pressed',

@@ -253,9 +253,12 @@ const SkillsContent = () => {
           </ToggleButtonGroup>
         </Stack>
       </Stack>
-      {viewMode === 'barchart' && (
-        <Stack direction="row" sx={{ justifyContent: 'flex-end', mt: { xs: -1, sm: -2 }, mb: 1 }}>
-          {/* describeChild — keep "Texture fills" as the accessible name */}
+      <Stack direction="row" sx={{ alignItems: 'center', mb: { xs: 1.5, sm: 2 }, minHeight: 38 }}>
+        <Typography variant="h6" component="p" color="text.secondary" sx={{ flexGrow: 1 }}>
+          {VIEW_OPTIONS[viewMode].caption}
+        </Typography>
+        {(viewMode === 'barchart' || viewMode === 'treemap') && (
+          // describeChild — keep "Texture fills" as the accessible name
           <Tooltip title="Distinguish categories by texture as well as colour" describeChild>
             <FormControlLabel
               control={
@@ -270,11 +273,8 @@ const SkillsContent = () => {
               label="Texture fills"
             />
           </Tooltip>
-        </Stack>
-      )}
-      <Typography variant="body2" color="text.secondary" sx={{ mb: { xs: 1.5, sm: 2 } }}>
-        {VIEW_OPTIONS[viewMode].caption}
-      </Typography>
+        )}
+      </Stack>
       <SkillsCareerContextProvider careerHistory={careerHistory}>
         <SkillsViewContextProvider
           track={track}

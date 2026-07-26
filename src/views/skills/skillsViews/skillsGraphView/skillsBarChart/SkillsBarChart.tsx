@@ -11,18 +11,15 @@ import { visuallyHidden } from '@mui/utils';
 
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
-import { derivePresentCategories, type PresentCategory } from '@/utils/derivePresentCategories';
+import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { resolveSkillColourMain } from '@/utils/skillColour';
 import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
-import {
-  CATEGORY_PATTERN_SHAPE_DEFINITIONS,
-  type CategoryPatternShapeDefinition,
-} from './SkillsBarChart.constants';
+import { CategoryPatternDefinition } from '../../categoryPattern';
+
 import {
   getCategoryPatternBackground,
   getCategoryPatternId,
-  getCategoryPatternType,
   isBarMatch,
 } from './SkillsBarChart.helpers';
 
@@ -34,61 +31,6 @@ const MIN_HEIGHT = 200;
 
 // Grace period so the pointer can reach the tooltip's links before it closes.
 const CLOSE_GRACE_MS = 100;
-
-interface CategoryPatternDefinitionProps {
-  category: PresentCategory;
-  colour: string;
-  markColour: string;
-}
-
-// SVG <pattern> for a category's bar fill — mirrors getCategoryPatternBackground's CSS look.
-// Rendered inside <defs>, which Recharts passes straight through into the chart's <svg>.
-const CategoryPatternDefinition = ({
-  category,
-  colour,
-  markColour,
-}: CategoryPatternDefinitionProps) => {
-  const id = getCategoryPatternId(category.id);
-  const shapeDefinition: CategoryPatternShapeDefinition =
-    CATEGORY_PATTERN_SHAPE_DEFINITIONS[getCategoryPatternType(category.index)];
-  const { width, height, patternTransform, lines, circle, ring } = shapeDefinition;
-
-  return (
-    <pattern
-      id={id}
-      patternUnits="userSpaceOnUse"
-      width={width}
-      height={height}
-      patternTransform={patternTransform}
-    >
-      <rect width={width} height={height} fill={colour} />
-      {lines.map((line) => (
-        <line
-          key={`${line.x1}-${line.y1}-${line.x2}-${line.y2}`}
-          x1={line.x1}
-          y1={line.y1}
-          x2={line.x2}
-          y2={line.y2}
-          stroke={markColour}
-          strokeWidth={line.strokeWidth}
-        />
-      ))}
-      {circle !== undefined && (
-        <circle cx={circle.cx} cy={circle.cy} r={circle.r} fill={markColour} />
-      )}
-      {ring !== undefined && (
-        <circle
-          cx={ring.cx}
-          cy={ring.cy}
-          r={ring.r}
-          fill="none"
-          stroke={markColour}
-          strokeWidth={ring.strokeWidth}
-        />
-      )}
-    </pattern>
-  );
-};
 
 interface SkillsBarChartProps {
   skills: SkillSummary[];

@@ -24,8 +24,8 @@ describe('deriveSkillGrowth', () => {
       { year: 2021, count: 3 },
     ]);
     expect(markers).toEqual([
-      { year: 2018, companyName: 'Acme' },
-      { year: 2021, companyName: 'Globex' },
+      { year: 2018, startDate: '2018-01-01', companyName: 'Acme' },
+      { year: 2021, startDate: '2021-01-01', companyName: 'Globex' },
     ]);
   });
 

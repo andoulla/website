@@ -5,6 +5,7 @@ export interface SkillGrowthPoint {
 
 export interface SkillGrowthMarker {
   year: number;
+  startDate: string;
   companyName: string;
 }
 

@@ -50,7 +50,7 @@
     "name": "Developer Growth",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01", "capco-2012-12"],
+    "jobIds": ["atom-learning-2021-01", "capco-2012-12", "gnosisnet-2009-09"],
     "recommendationIds": []
   },
   {
@@ -313,11 +313,17 @@
     "recommendationIds": []
   },
   {
-    "id": "frontend-performance-optimisation",
-    "name": "Frontend Performance Optimisation",
+    "id": "frontend-development",
+    "name": "Front-end Development",
     "type": "skill",
-    "synonyms": ["Frontend Performance Optimization"],
-    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
+    "synonyms": [],
+    "jobIds": [
+      "atom-learning-2021-01",
+      "moo-2017-01",
+      "elsevier-2016-08",
+      "capco-2012-12",
+      "gnosisnet-2009-09"
+    ],
     "recommendationIds": []
   },
   {
@@ -405,7 +411,7 @@
     "name": "Server-side Development",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["capco-2012-12"],
+    "jobIds": ["capco-2012-12", "gnosisnet-2009-09"],
     "recommendationIds": []
   },
   {
@@ -429,7 +435,7 @@
     "name": "Application Architecture",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01"],
+    "jobIds": ["atom-learning-2021-01", "gnosisnet-2009-09"],
     "recommendationIds": []
   },
   {
@@ -485,7 +491,7 @@
     "name": "Database Design",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["capco-2012-12", "gnosisnet-2009-09"],
     "recommendationIds": []
   },
   {
@@ -501,7 +507,7 @@
     "name": "SQL",
     "type": "tech",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["gnosisnet-2009-09"],
     "recommendationIds": []
   },
   {
@@ -625,8 +631,13 @@
     "id": "performance-optimisation",
     "name": "Performance Optimisation",
     "type": "skill",
-    "synonyms": ["Performance Optimization", "Perf"],
-    "jobIds": ["moo-2017-01"],
+    "synonyms": [
+      "Frontend Performance Optimisation",
+      "Frontend Performance Optimization",
+      "Perf",
+      "Performance Optimization"
+    ],
+    "jobIds": ["atom-learning-2021-01", "moo-2017-01"],
     "recommendationIds": []
   },
   {
@@ -706,7 +717,12 @@
     "name": "Technical Documentation",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01", "capco-2012-12"],
+    "jobIds": [
+      "atom-learning-2021-01",
+      "capco-2012-12",
+      "gnosisnet-2009-09",
+      "ncr-corporation-2008-07"
+    ],
     "recommendationIds": []
   },
   {
@@ -938,7 +954,13 @@
     "name": "Debugging",
     "type": "skill",
     "synonyms": ["Troubleshooting"],
-    "jobIds": ["atom-learning-2021-01", "moo-2017-01", "elsevier-2016-08", "capco-2012-12"],
+    "jobIds": [
+      "atom-learning-2021-01",
+      "moo-2017-01",
+      "elsevier-2016-08",
+      "capco-2012-12",
+      "gnosisnet-2009-09"
+    ],
     "recommendationIds": []
   },
   {
