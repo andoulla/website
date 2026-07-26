@@ -6,7 +6,10 @@ import type { SkillGrowth, SkillGrowthMarker, SkillGrowthPoint } from './deriveS
 const startYear = (event: TimelineEvent): number => new Date(event.startDate).getUTCFullYear();
 
 const startFraction = (event: TimelineEvent): number => {
-  const d = new Date(event.startDate);
+  const raw = new Date(event.startDate);
+  // day ≤ 10 → snap to 1st of month so near-month-start dates align with the reference line
+  const d =
+    raw.getUTCDate() <= 10 ? new Date(Date.UTC(raw.getUTCFullYear(), raw.getUTCMonth(), 1)) : raw;
   const year = d.getUTCFullYear();
   const startOfYear = Date.UTC(year, 0, 1);
   const startOfNextYear = Date.UTC(year + 1, 0, 1);

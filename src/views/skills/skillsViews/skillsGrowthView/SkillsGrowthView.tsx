@@ -15,7 +15,7 @@ export const SkillsGrowthView = () => {
 
   // Track-scoped, filter-agnostic: driven by the full track skill set, not filteredSkills.
   const growth = useMemo(() => deriveSkillGrowth(careerHistory, skills), [careerHistory, skills]);
-  const { minYear, maxYear } = useMemo(
+  const { maxYear } = useMemo(
     () => deriveCareerYearRange(careerHistory, track),
     [careerHistory, track]
   );
@@ -24,5 +24,5 @@ export const SkillsGrowthView = () => {
     return <SkillsNoData />;
   }
 
-  return <SkillsGrowthChart growth={growth} minYear={minYear} maxYear={maxYear} />;
+  return <SkillsGrowthChart growth={growth} maxYear={maxYear} />;
 };

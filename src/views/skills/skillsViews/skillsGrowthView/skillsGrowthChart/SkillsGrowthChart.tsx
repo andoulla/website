@@ -48,24 +48,21 @@ const MarkerLabel = ({ viewBox, value, fill }: MarkerLabelProps) => {
 
 interface SkillsGrowthChartProps {
   growth: SkillGrowth;
-  minYear: number;
   maxYear: number;
 }
 
-export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChartProps) => {
+export const SkillsGrowthChart = ({ growth, maxYear }: SkillsGrowthChartProps) => {
   const theme = useTheme();
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const lineColour = theme.palette.primary.main;
 
-  // include non-track markers (e.g. NCR, GnosisNet) even if their skills aren't in the active track
-  const allYears = [
-    minYear,
-    ...growth.points.map((p) => Math.floor(p.year)),
-    ...growth.markers.map((m) => m.year),
-  ];
-  const dataMinYear = Math.min(...allYears);
+  const dataMinYear =
+    growth.points.length > 0 ? Math.floor(growth.points[0].year) : Math.floor(maxYear);
   const domainMax = Math.max(maxYear, dataMinYear + 1);
-  const markers = growth.markers.filter((marker) => marker.year <= domainMax);
+  // only show markers that fall within the chart domain
+  const markers = growth.markers.filter(
+    (marker) => marker.year >= dataMinYear && marker.year <= domainMax
+  );
 
   // sentinel: extends plateau to today (stepAfter stops at last data point otherwise)
   const lastPoint = growth.points[growth.points.length - 1];
@@ -76,14 +73,15 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
 
   const yearTicks = Array.from({ length: domainMax - dataMinYear + 1 }, (_, i) => dataMinYear + i);
 
-  // fractional year; min +0.1 so tooltip snaps post-step
+  // fractional year; day ≤ 10 → snapped to month start (matches startFraction in deriveSkillGrowth)
   const markerX = (startDate: string, year: number): number => {
-    const d = new Date(startDate);
+    const raw = new Date(startDate);
+    const d =
+      raw.getUTCDate() <= 10 ? new Date(Date.UTC(raw.getUTCFullYear(), raw.getUTCMonth(), 1)) : raw;
     const startOfYear = Date.UTC(year, 0, 1);
     const startOfNextYear = Date.UTC(year + 1, 0, 1);
-    const fraction = (d.getTime() - startOfYear) / (startOfNextYear - startOfYear);
 
-    return Math.max(year + fraction, year + 0.1);
+    return year + (d.getTime() - startOfYear) / (startOfNextYear - startOfYear);
   };
 
   return (
