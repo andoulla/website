@@ -57,9 +57,7 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const lineColour = theme.palette.primary.main;
 
-  // Extend the floor to include all career markers and data points, not just
-  // track-contributing events — so early-career companies (e.g. NCR, GnosisNet)
-  // appear even if their skills aren't in the active track.
+  // include non-track markers (e.g. NCR, GnosisNet) even if their skills aren't in the active track
   const allYears = [
     minYear,
     ...growth.points.map((p) => p.year),
@@ -69,8 +67,7 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
   const domainMax = Math.max(maxYear, dataMinYear + 1);
   const markers = growth.markers.filter((marker) => marker.year <= domainMax);
 
-  // Recharts stepAfter terminates at the last data point — append a sentinel so the
-  // plateau extends to today rather than stopping at the last skill-acquisition year.
+  // sentinel: extends plateau to today (stepAfter stops at last data point otherwise)
   const lastPoint = growth.points[growth.points.length - 1];
   const chartPoints =
     lastPoint !== undefined && lastPoint.year < domainMax
@@ -78,6 +75,16 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
       : growth.points;
 
   const yearTicks = Array.from({ length: domainMax - dataMinYear + 1 }, (_, i) => dataMinYear + i);
+
+  // fractional year; min +0.1 so tooltip snaps post-step
+  const markerX = (startDate: string, year: number): number => {
+    const d = new Date(startDate);
+    const startOfYear = Date.UTC(year, 0, 1);
+    const startOfNextYear = Date.UTC(year + 1, 0, 1);
+    const fraction = (d.getTime() - startOfYear) / (startOfNextYear - startOfYear);
+
+    return Math.max(year + fraction, year + 0.1);
+  };
 
   return (
     <Stack spacing={1}>
@@ -110,7 +117,7 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
           {markers.map((marker) => (
             <ReferenceLine
               key={`${marker.year}-${marker.companyName}`}
-              x={marker.year + 0.5}
+              x={markerX(marker.startDate, marker.year)}
               stroke={theme.palette.text.disabled}
               strokeDasharray="4 4"
               label={<MarkerLabel value={marker.companyName} fill={theme.palette.text.secondary} />}

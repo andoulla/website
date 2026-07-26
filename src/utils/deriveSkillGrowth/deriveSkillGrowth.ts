@@ -40,7 +40,11 @@ export const deriveSkillGrowth = (
   // Career steps (exclude education) → dashed markers, earliest first.
   const markers: SkillGrowthMarker[] = careerHistory
     .filter((event) => event.type !== 'education')
-    .map((event) => ({ year: startYear(event), companyName: event.companyName }))
+    .map((event) => ({
+      year: startYear(event),
+      startDate: event.startDate,
+      companyName: event.companyName,
+    }))
     .sort((markerA, markerB) => markerA.year - markerB.year);
 
   return { points, markers };
