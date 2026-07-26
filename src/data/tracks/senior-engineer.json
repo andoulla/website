@@ -121,6 +121,7 @@
             "code-reviews",
             "refactoring",
             "clean-code",
+            "coding-standards",
             "design-reviews",
             "technical-documentation"
           ]
@@ -151,7 +152,10 @@
             "scrum",
             "continuous-improvement",
             "ci-cd-awareness",
-            "developer-experience"
+            "developer-experience",
+            "estimation-planning",
+            "prioritisation",
+            "developer-growth"
           ]
         },
         {
@@ -166,7 +170,8 @@
             "vite",
             "webpack",
             "eslint",
-            "prettier"
+            "prettier",
+            "debugging"
           ]
         },
         {
