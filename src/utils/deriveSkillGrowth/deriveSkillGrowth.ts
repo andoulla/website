@@ -5,6 +5,18 @@ import type { SkillGrowth, SkillGrowthMarker, SkillGrowthPoint } from './deriveS
 
 const startYear = (event: TimelineEvent): number => new Date(event.startDate).getUTCFullYear();
 
+const startFraction = (event: TimelineEvent): number => {
+  const raw = new Date(event.startDate);
+  // day ≤ 10 → snap to 1st of month so near-month-start dates align with the reference line
+  const d =
+    raw.getUTCDate() <= 10 ? new Date(Date.UTC(raw.getUTCFullYear(), raw.getUTCMonth(), 1)) : raw;
+  const year = d.getUTCFullYear();
+  const startOfYear = Date.UTC(year, 0, 1);
+  const startOfNextYear = Date.UTC(year + 1, 0, 1);
+
+  return year + (d.getTime() - startOfYear) / (startOfNextYear - startOfYear);
+};
+
 // Cumulative unique skills by the year each was first used, plus company-change markers.
 export const deriveSkillGrowth = (
   careerHistory: TimelineEvent[],
@@ -12,18 +24,17 @@ export const deriveSkillGrowth = (
 ): SkillGrowth => {
   const eventById = new Map(careerHistory.map((event) => [event.id, event]));
 
-  // Earliest year each skill was used; skills with no known job are excluded.
+  // Earliest fractional year each skill was used; skills with no known job are excluded.
   const countByYear = new Map<number, number>();
 
   skills.forEach((skill) => {
-    const years = skill.jobIds
+    const events = skill.jobIds
       .map((jobId) => eventById.get(jobId))
-      .filter((event): event is TimelineEvent => event !== undefined)
-      .map(startYear);
+      .filter((event): event is TimelineEvent => event !== undefined);
 
-    if (years.length === 0) return;
+    if (events.length === 0) return;
 
-    const acquiredYear = Math.min(...years);
+    const acquiredYear = Math.min(...events.map(startFraction));
 
     countByYear.set(acquiredYear, (countByYear.get(acquiredYear) ?? 0) + 1);
   });
@@ -40,7 +51,11 @@ export const deriveSkillGrowth = (
   // Career steps (exclude education) → dashed markers, earliest first.
   const markers: SkillGrowthMarker[] = careerHistory
     .filter((event) => event.type !== 'education')
-    .map((event) => ({ year: startYear(event), companyName: event.companyName }))
+    .map((event) => ({
+      year: startYear(event),
+      startDate: event.startDate,
+      companyName: event.companyName,
+    }))
     .sort((markerA, markerB) => markerA.year - markerB.year);
 
   return { points, markers };

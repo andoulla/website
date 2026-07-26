@@ -19,27 +19,75 @@ import type { SkillGrowth } from '@/utils/deriveSkillGrowth';
 const CHART_HEIGHT = 360;
 const FILL_ID = 'skill-growth-fill';
 
+type MarkerLabelProps = {
+  value: string;
+  fill: string;
+  viewBox?: { x: number; y: number; width: number; height: number };
+};
+
+const MarkerLabel = ({ viewBox, value, fill }: MarkerLabelProps) => {
+  if (viewBox === undefined) return null;
+
+  const px = viewBox.x + 3;
+  const py = viewBox.y + 4;
+
+  return (
+    <text
+      x={px}
+      y={py}
+      textAnchor="start"
+      fontSize={11.5}
+      fill={fill}
+      transform={`rotate(90, ${px}, ${py})`}
+      style={{ pointerEvents: 'none', userSelect: 'none' }}
+    >
+      {value}
+    </text>
+  );
+};
+
 interface SkillsGrowthChartProps {
   growth: SkillGrowth;
-  minYear: number;
   maxYear: number;
 }
 
-export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChartProps) => {
+export const SkillsGrowthChart = ({ growth, maxYear }: SkillsGrowthChartProps) => {
   const theme = useTheme();
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const lineColour = theme.palette.primary.main;
 
-  // Keep a non-zero domain even if the range collapses to a single year.
-  const domainMax = Math.max(maxYear, minYear + 1);
+  const dataMinYear =
+    growth.points.length > 0 ? Math.floor(growth.points[0].year) : Math.floor(maxYear);
+  const domainMax = Math.max(maxYear, dataMinYear + 1);
+  // only show markers that fall within the chart domain
   const markers = growth.markers.filter(
-    (marker) => marker.year >= minYear && marker.year <= domainMax
+    (marker) => marker.year >= dataMinYear && marker.year <= domainMax
   );
+
+  // sentinel: extends plateau to today (stepAfter stops at last data point otherwise)
+  const lastPoint = growth.points[growth.points.length - 1];
+  const chartPoints =
+    lastPoint !== undefined && lastPoint.year < domainMax
+      ? [...growth.points, { year: domainMax, count: lastPoint.count }]
+      : growth.points;
+
+  const yearTicks = Array.from({ length: domainMax - dataMinYear + 1 }, (_, i) => dataMinYear + i);
+
+  // fractional year; day ≤ 10 → snapped to month start (matches startFraction in deriveSkillGrowth)
+  const markerX = (startDate: string, year: number): number => {
+    const raw = new Date(startDate);
+    const d =
+      raw.getUTCDate() <= 10 ? new Date(Date.UTC(raw.getUTCFullYear(), raw.getUTCMonth(), 1)) : raw;
+    const startOfYear = Date.UTC(year, 0, 1);
+    const startOfNextYear = Date.UTC(year + 1, 0, 1);
+
+    return year + (d.getTime() - startOfYear) / (startOfNextYear - startOfYear);
+  };
 
   return (
     <Stack spacing={1}>
       <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-        <AreaChart data={growth.points} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
+        <AreaChart data={chartPoints} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
           <defs>
             <linearGradient id={FILL_ID} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={lineColour} stopOpacity={0.35} />
@@ -50,7 +98,8 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
           <XAxis
             type="number"
             dataKey="year"
-            domain={[minYear, domainMax]}
+            domain={[dataMinYear, domainMax]}
+            ticks={yearTicks}
             allowDecimals={false}
             tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
             axisLine={{ stroke: theme.palette.divider }}
@@ -62,19 +111,14 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
             axisLine={{ stroke: theme.palette.divider }}
             tickLine={{ stroke: theme.palette.divider }}
           />
-          <Tooltip />
+          <Tooltip labelFormatter={(label) => Math.floor(Number(label))} />
           {markers.map((marker) => (
             <ReferenceLine
               key={`${marker.year}-${marker.companyName}`}
-              x={marker.year}
+              x={markerX(marker.startDate, marker.year)}
               stroke={theme.palette.text.disabled}
               strokeDasharray="4 4"
-              label={{
-                value: marker.companyName,
-                position: 'insideTopRight',
-                fontSize: 10,
-                fill: theme.palette.text.secondary,
-              }}
+              label={<MarkerLabel value={marker.companyName} fill={theme.palette.text.secondary} />}
             />
           ))}
           <Area
@@ -102,7 +146,7 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
         <tbody>
           {growth.points.map((point) => (
             <tr key={point.year}>
-              <td>{point.year}</td>
+              <td>{Math.floor(point.year)}</td>
               <td>{point.count}</td>
             </tr>
           ))}

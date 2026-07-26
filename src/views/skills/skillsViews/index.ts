@@ -7,5 +7,5 @@ export { SkillsCareerContextProvider, useSkillsCareerContext } from './SkillsCar
 export { SkillsGraphView } from './skillsGraphView';
 export { SkillsTableView } from './skillsTableView';
 export { SkillsRadarView } from './skillsRadarView';
-export { SkillsNetworkView } from './skillsNetworkView';
+export { SkillsTreemapView } from './skillsTreemapView';
 export { SkillsGrowthView } from './skillsGrowthView';
