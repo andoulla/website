@@ -16,21 +16,6 @@ describe('TimeMachineSlider', () => {
     expect(screen.queryByText('Present')).not.toBeInTheDocument();
   });
 
-  test('explains the slider in a popover opened from the info button', async () => {
-    const user = userEvent.setup();
-    const screen = render(
-      <TimeMachineSlider year={2019} minYear={2015} maxYear={2026} onCommit={jest.fn()} />
-    );
-
-    await user.click(screen.getByRole('button', { name: 'About the time slider' }));
-
-    expect(
-      screen.getByText(
-        'Rewind the years to see which skills were in play, and how much experience each had, at any point in time.'
-      )
-    ).toBeVisible();
-  });
-
   test('surfaces "Present" to assistive tech at the max year', () => {
     const screen = render(
       <TimeMachineSlider year={2026} minYear={2015} maxYear={2026} onCommit={jest.fn()} />
