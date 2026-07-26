@@ -19,6 +19,33 @@ import type { SkillGrowth } from '@/utils/deriveSkillGrowth';
 const CHART_HEIGHT = 360;
 const FILL_ID = 'skill-growth-fill';
 
+type MarkerLabelProps = {
+  value: string;
+  fill: string;
+  viewBox?: { x: number; y: number; width: number; height: number };
+};
+
+const MarkerLabel = ({ viewBox, value, fill }: MarkerLabelProps) => {
+  if (viewBox === undefined) return null;
+
+  const px = viewBox.x + 3;
+  const py = viewBox.y + 4;
+
+  return (
+    <text
+      x={px}
+      y={py}
+      textAnchor="start"
+      fontSize={10}
+      fill={fill}
+      transform={`rotate(90, ${px}, ${py})`}
+      style={{ pointerEvents: 'none', userSelect: 'none' }}
+    >
+      {value}
+    </text>
+  );
+};
+
 interface SkillsGrowthChartProps {
   growth: SkillGrowth;
   minYear: number;
@@ -42,10 +69,18 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
   const domainMax = Math.max(maxYear, dataMinYear + 1);
   const markers = growth.markers.filter((marker) => marker.year <= domainMax);
 
+  // Recharts stepAfter terminates at the last data point — append a sentinel so the
+  // plateau extends to today rather than stopping at the last skill-acquisition year.
+  const lastPoint = growth.points[growth.points.length - 1];
+  const chartPoints =
+    lastPoint !== undefined && lastPoint.year < domainMax
+      ? [...growth.points, { year: domainMax, count: lastPoint.count }]
+      : growth.points;
+
   return (
     <Stack spacing={1}>
       <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-        <AreaChart data={growth.points} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
+        <AreaChart data={chartPoints} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
           <defs>
             <linearGradient id={FILL_ID} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={lineColour} stopOpacity={0.35} />
@@ -75,12 +110,7 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
               x={marker.year}
               stroke={theme.palette.text.disabled}
               strokeDasharray="4 4"
-              label={{
-                value: marker.companyName,
-                position: 'insideTopRight',
-                fontSize: 10,
-                fill: theme.palette.text.secondary,
-              }}
+              label={<MarkerLabel value={marker.companyName} fill={theme.palette.text.secondary} />}
             />
           ))}
           <Area
