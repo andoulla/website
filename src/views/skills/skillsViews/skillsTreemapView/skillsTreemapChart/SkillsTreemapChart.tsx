@@ -17,10 +17,17 @@ import {
   getCategoryPatternId,
 } from '../../categoryPattern';
 
-const CHART_HEIGHT = 420;
+const CHART_HEIGHT = 600;
 const LABEL_MIN_WIDTH = 48;
 const LABEL_MIN_HEIGHT = 28;
-const YEARS_MIN_HEIGHT = 48;
+const CELL_PADDING_X = 6;
+const TEXT_FONT_SIZE = 11;
+const TEXT_LINE_HEIGHT = 14;
+const YEARS_FONT_SIZE = 10;
+const YEARS_LINE_HEIGHT = 13;
+const YEARS_GAP = 4;
+// Approximate character width for bold 11px — used for greedy word-wrap.
+const APPROX_CHAR_WIDTH = 6.5;
 
 type TreemapTooltipProps = {
   active?: boolean;
@@ -49,14 +56,14 @@ const TreemapTooltip = ({ active, payload }: TreemapTooltipProps) => {
       <Typography variant="body2" fontWeight={600}>
         {data.name}
       </Typography>
-      {data.subCategoryName !== undefined && (
-        <Typography variant="caption" display="block" color="text.secondary">
-          {data.subCategoryName}
-        </Typography>
-      )}
-      <Typography variant="caption" display="block">
-        {data.size.toFixed(1)} years
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5, mt: 0.25 }}>
+        {data.subCategoryName !== undefined && (
+          <Typography variant="caption" color="text.secondary">
+            {data.subCategoryName}
+          </Typography>
+        )}
+        <Typography variant="caption">{data.size.toFixed(1)} years</Typography>
+      </Box>
     </Box>
   );
 };
@@ -68,6 +75,28 @@ type CellRenderProps = {
   height: number;
   name: string;
   value: number;
+};
+
+// Greedy word-wrap: splits text into lines that fit within maxWidth pixels.
+const wrapText = (text: string, maxWidth: number): string[] => {
+  const words = text.split(' ');
+  const lines: string[] = [];
+  let current = '';
+
+  for (const word of words) {
+    const candidate = current.length > 0 ? `${current} ${word}` : word;
+
+    if (candidate.length * APPROX_CHAR_WIDTH > maxWidth && current.length > 0) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = candidate;
+    }
+  }
+
+  if (current.length > 0) lines.push(current);
+
+  return lines;
 };
 
 // Extracted outside component to avoid react/prop-types false positives on render fn.
@@ -84,30 +113,38 @@ const makeCellRenderer = (
     const colour = colourByName.get(name) ?? '#9e9e9e';
     const patternId = patternIdByName?.get(name);
     const fill = patternId !== undefined ? `url(#${patternId})` : colour;
+
     const showName = width >= LABEL_MIN_WIDTH && height >= LABEL_MIN_HEIGHT;
-    const showYears = height >= YEARS_MIN_HEIGHT;
+    const lines = showName ? wrapText(name, width - CELL_PADDING_X * 2) : [];
+    const nameBlockHeight = lines.length * TEXT_LINE_HEIGHT;
+    const showYears = showName && height >= nameBlockHeight + YEARS_GAP + YEARS_LINE_HEIGHT + 8;
+
     const label = value === 1 ? '1 yr' : `${value.toFixed(1)} yrs`;
+    const totalContentHeight = nameBlockHeight + (showYears ? YEARS_GAP + YEARS_LINE_HEIGHT : 0);
+    const contentStartY = y + (height - totalContentHeight) / 2 + TEXT_LINE_HEIGHT;
 
     return (
       <g>
         <rect x={x + 1} y={y + 1} width={width - 2} height={height - 2} fill={fill} rx={3} />
-        {showName && (
+        {showName &&
+          lines.map((line, lineIndex) => (
+            <text
+              key={`${name}-${lineIndex}`}
+              x={x + CELL_PADDING_X}
+              y={contentStartY + lineIndex * TEXT_LINE_HEIGHT}
+              fontSize={TEXT_FONT_SIZE}
+              fontWeight={600}
+              fill={textColour}
+              style={{ pointerEvents: 'none', userSelect: 'none' }}
+            >
+              {line}
+            </text>
+          ))}
+        {showYears && (
           <text
-            x={x + 6}
-            y={y + (showYears ? height / 2 - 6 : height / 2)}
-            fontSize={11}
-            fontWeight={600}
-            fill={textColour}
-            style={{ pointerEvents: 'none', userSelect: 'none' }}
-          >
-            {name}
-          </text>
-        )}
-        {showName && showYears && (
-          <text
-            x={x + 6}
-            y={y + height / 2 + 10}
-            fontSize={10}
+            x={x + CELL_PADDING_X}
+            y={contentStartY + nameBlockHeight + YEARS_GAP}
+            fontSize={YEARS_FONT_SIZE}
             fill={textColour}
             opacity={0.8}
             style={{ pointerEvents: 'none', userSelect: 'none' }}
