@@ -1,1 +1,0 @@
-export { SkillsNetworkGraph } from './SkillsNetworkGraph';

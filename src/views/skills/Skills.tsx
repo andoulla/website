@@ -272,11 +272,7 @@ const SkillsContent = () => {
           </Tooltip>
         </Stack>
       )}
-      <Typography
-        variant="caption"
-        color="text.secondary"
-        sx={{ mb: { xs: 1.5, sm: 2 }, display: 'block', fontStyle: 'italic' }}
-      >
+      <Typography variant="h6" component="p" color="text.secondary" sx={{ mb: { xs: 1.5, sm: 2 } }}>
         {VIEW_OPTIONS[viewMode].caption}
       </Typography>
       <SkillsCareerContextProvider careerHistory={careerHistory}>

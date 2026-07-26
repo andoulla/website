@@ -1,0 +1,1 @@
+export { SkillsTreemapChart } from './SkillsTreemapChart';

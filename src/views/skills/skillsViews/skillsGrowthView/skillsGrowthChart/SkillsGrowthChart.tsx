@@ -30,11 +30,17 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const lineColour = theme.palette.primary.main;
 
-  // Keep a non-zero domain even if the range collapses to a single year.
-  const domainMax = Math.max(maxYear, minYear + 1);
-  const markers = growth.markers.filter(
-    (marker) => marker.year >= minYear && marker.year <= domainMax
-  );
+  // Extend the floor to include all career markers and data points, not just
+  // track-contributing events — so early-career companies (e.g. NCR, GnosisNet)
+  // appear even if their skills aren't in the active track.
+  const allYears = [
+    minYear,
+    ...growth.points.map((p) => p.year),
+    ...growth.markers.map((m) => m.year),
+  ];
+  const dataMinYear = Math.min(...allYears);
+  const domainMax = Math.max(maxYear, dataMinYear + 1);
+  const markers = growth.markers.filter((marker) => marker.year <= domainMax);
 
   return (
     <Stack spacing={1}>
@@ -50,7 +56,7 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
           <XAxis
             type="number"
             dataKey="year"
-            domain={[minYear, domainMax]}
+            domain={[dataMinYear, domainMax]}
             allowDecimals={false}
             tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
             axisLine={{ stroke: theme.palette.divider }}

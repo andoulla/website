@@ -1,5 +1,5 @@
 import BarChartIcon from '@mui/icons-material/BarChart';
-import HubIcon from '@mui/icons-material/Hub';
+import GridViewIcon from '@mui/icons-material/GridView';
 import RadarIcon from '@mui/icons-material/Radar';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -8,9 +8,9 @@ import type { ViewMode, ViewOption } from './Skills.types';
 import {
   SkillsGraphView,
   SkillsGrowthView,
-  SkillsNetworkView,
   SkillsRadarView,
   SkillsTableView,
+  SkillsTreemapView,
 } from './skillsViews';
 
 // One entry per view; typed Record forces every view to declare all fields.
@@ -33,11 +33,11 @@ export const VIEW_OPTIONS: Record<ViewMode, ViewOption> = {
     caption: 'Every skill grouped by area, with the companies behind it',
     Component: SkillsTableView,
   },
-  network: {
-    icon: <HubIcon fontSize="small" />,
-    label: 'Network view',
-    caption: "Which skills I've used together, and how often",
-    Component: SkillsNetworkView,
+  treemap: {
+    icon: <GridViewIcon fontSize="small" />,
+    label: 'Treemap view',
+    caption: "Where I've spent the most time, by skill area",
+    Component: SkillsTreemapView,
   },
   growth: {
     icon: <TrendingUpIcon fontSize="small" />,
