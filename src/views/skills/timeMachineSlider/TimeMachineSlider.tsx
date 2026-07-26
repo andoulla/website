@@ -1,11 +1,7 @@
 import { useState } from 'react';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import IconButton from '@mui/material/IconButton';
-import Popover from '@mui/material/Popover';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 import type { SxProps, Theme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 
 // SxProps without its array/function members: the object form callers pass, safe to spread.
 type SxObject = Exclude<SxProps<Theme>, readonly unknown[] | ((theme: Theme) => unknown)>;
@@ -40,8 +36,6 @@ export const TimeMachineSlider = ({
     setCommittedYear(year);
     setLiveYear(year);
   }
-
-  const [infoAnchor, setInfoAnchor] = useState<HTMLElement | null>(null);
 
   const formatYear = (value: number): string => (value === maxYear ? 'Present' : String(value));
 
@@ -82,26 +76,6 @@ export const TimeMachineSlider = ({
           onCommit(single(value));
         }}
       />
-      <IconButton
-        size="small"
-        aria-label="About the time slider"
-        onClick={(event) => setInfoAnchor(event.currentTarget)}
-        sx={{ p: 0.25, color: 'text.secondary' }}
-      >
-        <InfoOutlinedIcon sx={{ fontSize: 16 }} />
-      </IconButton>
-      <Popover
-        open={infoAnchor !== null}
-        anchorEl={infoAnchor}
-        onClose={() => setInfoAnchor(null)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <Typography variant="body2" sx={{ p: 1.5, maxWidth: 240 }}>
-          Rewind the years to see which skills were in play, and how much experience each had, at
-          any point in time.
-        </Typography>
-      </Popover>
     </Stack>
   );
 };
