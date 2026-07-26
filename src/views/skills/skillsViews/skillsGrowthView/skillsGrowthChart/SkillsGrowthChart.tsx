@@ -60,7 +60,7 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
   // include non-track markers (e.g. NCR, GnosisNet) even if their skills aren't in the active track
   const allYears = [
     minYear,
-    ...growth.points.map((p) => p.year),
+    ...growth.points.map((p) => Math.floor(p.year)),
     ...growth.markers.map((m) => m.year),
   ];
   const dataMinYear = Math.min(...allYears);
@@ -113,7 +113,7 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
             axisLine={{ stroke: theme.palette.divider }}
             tickLine={{ stroke: theme.palette.divider }}
           />
-          <Tooltip />
+          <Tooltip labelFormatter={(label) => Math.floor(Number(label))} />
           {markers.map((marker) => (
             <ReferenceLine
               key={`${marker.year}-${marker.companyName}`}
@@ -148,7 +148,7 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
         <tbody>
           {growth.points.map((point) => (
             <tr key={point.year}>
-              <td>{point.year}</td>
+              <td>{Math.floor(point.year)}</td>
               <td>{point.count}</td>
             </tr>
           ))}
