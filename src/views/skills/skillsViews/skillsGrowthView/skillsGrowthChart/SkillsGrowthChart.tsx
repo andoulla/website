@@ -36,7 +36,7 @@ const MarkerLabel = ({ viewBox, value, fill }: MarkerLabelProps) => {
       x={px}
       y={py}
       textAnchor="start"
-      fontSize={10}
+      fontSize={11.5}
       fill={fill}
       transform={`rotate(90, ${px}, ${py})`}
       style={{ pointerEvents: 'none', userSelect: 'none' }}
@@ -77,6 +77,8 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
       ? [...growth.points, { year: domainMax, count: lastPoint.count }]
       : growth.points;
 
+  const yearTicks = Array.from({ length: domainMax - dataMinYear + 1 }, (_, i) => dataMinYear + i);
+
   return (
     <Stack spacing={1}>
       <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
@@ -92,6 +94,7 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
             type="number"
             dataKey="year"
             domain={[dataMinYear, domainMax]}
+            ticks={yearTicks}
             allowDecimals={false}
             tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
             axisLine={{ stroke: theme.palette.divider }}
@@ -107,7 +110,7 @@ export const SkillsGrowthChart = ({ growth, minYear, maxYear }: SkillsGrowthChar
           {markers.map((marker) => (
             <ReferenceLine
               key={`${marker.year}-${marker.companyName}`}
-              x={marker.year}
+              x={marker.year + 0.5}
               stroke={theme.palette.text.disabled}
               strokeDasharray="4 4"
               label={<MarkerLabel value={marker.companyName} fill={theme.palette.text.secondary} />}
