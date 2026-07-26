@@ -1,1 +1,0 @@
-export { SkillsTreemapCell } from './SkillsTreemapCell';
