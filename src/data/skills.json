@@ -50,7 +50,7 @@
     "name": "Developer Growth",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01", "capco-2012-12"],
+    "jobIds": ["atom-learning-2021-01", "capco-2012-12", "gnosisnet-2009-09"],
     "recommendationIds": []
   },
   {
@@ -435,7 +435,7 @@
     "name": "Application Architecture",
     "type": "skill",
     "synonyms": [],
-    "jobIds": ["atom-learning-2021-01"],
+    "jobIds": ["atom-learning-2021-01", "gnosisnet-2009-09"],
     "recommendationIds": []
   },
   {
@@ -491,7 +491,7 @@
     "name": "Database Design",
     "type": "skill",
     "synonyms": [],
-    "jobIds": [],
+    "jobIds": ["capco-2012-12", "gnosisnet-2009-09"],
     "recommendationIds": []
   },
   {
