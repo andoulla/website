@@ -11,10 +11,55 @@ import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { resolveSkillColourMain } from '@/utils/skillColour';
 import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
+import {
+  CategoryPatternDefinition,
+  getCategoryPatternBackground,
+  getCategoryPatternId,
+} from '../../categoryPattern';
+
 const CHART_HEIGHT = 420;
 const LABEL_MIN_WIDTH = 48;
 const LABEL_MIN_HEIGHT = 28;
 const YEARS_MIN_HEIGHT = 48;
+
+type TreemapTooltipProps = {
+  active?: boolean;
+  payload?: Array<{ payload?: { name: string; size: number; subCategoryName?: string } }>;
+};
+
+const TreemapTooltip = ({ active, payload }: TreemapTooltipProps) => {
+  if (active !== true || payload === undefined || payload.length === 0) return null;
+
+  const data = payload[0]?.payload;
+
+  if (data === undefined) return null;
+
+  return (
+    <Box
+      sx={{
+        bgcolor: 'background.paper',
+        border: 1,
+        borderColor: 'divider',
+        borderRadius: 1,
+        px: 1.5,
+        py: 1,
+        boxShadow: 2,
+      }}
+    >
+      <Typography variant="body2" fontWeight={600}>
+        {data.name}
+      </Typography>
+      {data.subCategoryName !== undefined && (
+        <Typography variant="caption" display="block" color="text.secondary">
+          {data.subCategoryName}
+        </Typography>
+      )}
+      <Typography variant="caption" display="block">
+        {data.size.toFixed(1)} years
+      </Typography>
+    </Box>
+  );
+};
 
 type CellRenderProps = {
   x: number;
@@ -26,13 +71,19 @@ type CellRenderProps = {
 };
 
 // Extracted outside component to avoid react/prop-types false positives on render fn.
-const makeCellRenderer = (colourByName: Map<string, string>, textColour: string) =>
+const makeCellRenderer = (
+  colourByName: Map<string, string>,
+  patternIdByName: Map<string, string> | null,
+  textColour: string
+) =>
   function CellRenderer(rawProps: unknown): React.ReactElement | null {
     const { x, y, width, height, name, value } = rawProps as CellRenderProps;
 
     if (width <= 0 || height <= 0) return null;
 
-    const fill = colourByName.get(name) ?? '#9e9e9e';
+    const colour = colourByName.get(name) ?? '#9e9e9e';
+    const patternId = patternIdByName?.get(name);
+    const fill = patternId !== undefined ? `url(#${patternId})` : colour;
     const showName = width >= LABEL_MIN_WIDTH && height >= LABEL_MIN_HEIGHT;
     const showYears = height >= YEARS_MIN_HEIGHT;
     const label = value === 1 ? '1 yr' : `${value.toFixed(1)} yrs`;
@@ -70,9 +121,10 @@ const makeCellRenderer = (colourByName: Map<string, string>, textColour: string)
 
 interface SkillsTreemapChartProps {
   skills: SkillSummary[];
+  showPatterns?: boolean;
 }
 
-export const SkillsTreemapChart = ({ skills }: SkillsTreemapChartProps) => {
+export const SkillsTreemapChart = ({ skills, showPatterns = false }: SkillsTreemapChartProps) => {
   const theme = useTheme();
 
   const colourByName = useMemo(
@@ -82,19 +134,56 @@ export const SkillsTreemapChart = ({ skills }: SkillsTreemapChartProps) => {
   );
 
   const treeData = useMemo(
-    () => skills.map((skill) => ({ name: skill.skill, size: skill.years })),
+    () =>
+      skills.map((skill) => ({
+        name: skill.skill,
+        size: skill.years,
+        subCategoryName: skill.subCategoryName,
+      })),
     [skills]
   );
 
-  const legendCategories = useMemo(() => derivePresentCategories(skills), [skills]);
+  const legendEntries = useMemo(
+    () =>
+      derivePresentCategories(skills).map((category) => {
+        const colour = resolveSkillColourMain(category.colour, theme);
+
+        return { category, colour, markColour: theme.palette.getContrastText(colour) };
+      }),
+    [skills, theme]
+  );
+
+  const patternIdByName = useMemo(
+    () =>
+      showPatterns
+        ? new Map(skills.map((skill) => [skill.skill, getCategoryPatternId(skill.categoryId)]))
+        : null,
+    [skills, showPatterns]
+  );
 
   const renderCell = useMemo(
-    () => makeCellRenderer(colourByName, theme.palette.common.white),
-    [colourByName, theme.palette.common.white]
+    () => makeCellRenderer(colourByName, patternIdByName, theme.palette.common.white),
+    [colourByName, patternIdByName, theme.palette.common.white]
   );
 
   return (
     <Stack spacing={2}>
+      {/* Hidden SVG carries <defs> so url(#id) pattern refs resolve across the chart SVG. */}
+      {showPatterns && (
+        <svg width={0} height={0} style={{ position: 'absolute' }}>
+          <defs>
+            {legendEntries.map(({ category, colour, markColour }) => (
+              <CategoryPatternDefinition
+                key={category.id}
+                category={category}
+                colour={colour}
+                markColour={markColour}
+                markOpacity={0.35}
+              />
+            ))}
+          </defs>
+        </svg>
+      )}
       <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
         <Treemap
           data={treeData}
@@ -103,7 +192,7 @@ export const SkillsTreemapChart = ({ skills }: SkillsTreemapChartProps) => {
           content={renderCell}
           isAnimationActive={false}
         >
-          <Tooltip formatter={(val: number) => [`${val.toFixed(1)} years`]} />
+          <Tooltip content={<TreemapTooltip />} />
         </Treemap>
       </ResponsiveContainer>
 
@@ -111,9 +200,17 @@ export const SkillsTreemapChart = ({ skills }: SkillsTreemapChartProps) => {
         aria-hidden="true"
         sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 2 }}
       >
-        {legendCategories.map((category) => (
+        {legendEntries.map(({ category, colour, markColour }) => (
           <Box key={category.id} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-            <CategoryColourDot colour={resolveSkillColourMain(category.colour, theme)} />
+            <CategoryColourDot
+              shape="square"
+              colour={colour}
+              background={
+                showPatterns
+                  ? getCategoryPatternBackground(category.index, colour, markColour)
+                  : undefined
+              }
+            />
             <Typography variant="caption" color="text.secondary">
               {category.name}
             </Typography>

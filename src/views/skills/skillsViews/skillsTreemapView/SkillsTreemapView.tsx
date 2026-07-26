@@ -6,8 +6,14 @@ import { useSkillsViewContext } from '../SkillsViewContext';
 import { SkillsTreemapChart } from './skillsTreemapChart';
 
 export const SkillsTreemapView = () => {
-  const { skills, filteredSkills, selectedCategories, selectedSubCategories, onClearFilters } =
-    useSkillsViewContext();
+  const {
+    skills,
+    filteredSkills,
+    selectedCategories,
+    selectedSubCategories,
+    showPatterns,
+    onClearFilters,
+  } = useSkillsViewContext();
 
   if (skills.length === 0) {
     return <SkillsNoData />;
@@ -22,5 +28,5 @@ export const SkillsTreemapView = () => {
     );
   }
 
-  return <SkillsTreemapChart skills={filteredSkills} />;
+  return <SkillsTreemapChart skills={filteredSkills} showPatterns={showPatterns} />;
 };
