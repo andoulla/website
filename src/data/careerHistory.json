@@ -142,7 +142,8 @@
           "component-architecture",
           "cross-functional-collaboration",
           "design-systems",
-          "frontend-performance-optimisation",
+          "frontend-development",
+          "performance-optimisation",
           "product-collaboration",
           "software-architecture"
         ]
@@ -153,7 +154,6 @@
         "skillIds": [
           "continuous-improvement",
           "debugging",
-          "frontend-performance-optimisation",
           "performance-optimisation",
           "prioritisation"
         ]
@@ -307,6 +307,7 @@
           "api-design",
           "application-architecture",
           "database-design",
+          "frontend-development",
           "server-side-development"
         ]
       },
