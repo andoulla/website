@@ -1,5 +1,6 @@
 import { TRACK_PARAM } from '@/context/track';
 import type { TimelineEventWithRecommendations } from '@/types';
+import { compareByRecency } from '@/utils/compareByRecency';
 import { normaliseSearchTerm } from '@/utils/normaliseSearchTerm';
 import { MIN_SEARCH_TERM_LENGTH } from '@/utils/skillMatchesSearch';
 import { SKILL_PARAM } from '@/utils/skillsUrlParams';
@@ -7,18 +8,6 @@ import { SKILL_PARAM } from '@/utils/skillsUrlParams';
 import { FOCUS_PARAM, RECOMMENDATION_PARAM } from '../Resume.constants';
 
 import type { SearchResult } from './ExperienceSearch.types';
-
-// Current job (endDate null) first, then later start date first.
-const byRecency = (
-  first: TimelineEventWithRecommendations,
-  second: TimelineEventWithRecommendations
-): number => {
-  if (first.endDate === null && second.endDate !== null) return -1;
-
-  if (first.endDate !== null && second.endDate === null) return 1;
-
-  return second.startDate.localeCompare(first.startDate);
-};
 
 // Tech and skills are split across two fields by type; search both.
 const skillEntriesOf = (event: TimelineEventWithRecommendations) => [
@@ -40,7 +29,7 @@ const byTypeThenRecency = (
 ): number => {
   const typeDelta = TYPE_ORDER[first.type] - TYPE_ORDER[second.type];
 
-  return typeDelta !== 0 ? typeDelta : byRecency(first, second);
+  return typeDelta !== 0 ? typeDelta : compareByRecency(first, second);
 };
 
 // Ordered by event type then recency, so groupBy renders one contiguous block per type.
