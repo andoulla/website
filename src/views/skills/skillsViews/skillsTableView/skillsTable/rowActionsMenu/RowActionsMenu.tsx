@@ -5,8 +5,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import { useTrackContext } from '@/context/track';
-import { SKILL_PARAM } from '@/utils/skillsUrlParams';
+import { TRACK_PARAM, useTrackContext } from '@/context/track';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 
 export interface RowActionsMenuProps {
@@ -16,7 +15,6 @@ export interface RowActionsMenuProps {
 export const RowActionsMenu = ({ skill }: RowActionsMenuProps) => {
   const { trackId } = useTrackContext();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const skillTo = `/?${SKILL_PARAM}=${encodeURIComponent(skill.skill)}&track=${trackId}`;
 
   return (
     <>
@@ -38,7 +36,7 @@ export const RowActionsMenu = ({ skill }: RowActionsMenuProps) => {
       >
         <MenuItem
           component={RouterLink}
-          to={skillTo}
+          to={`/?skill=${encodeURIComponent(skill.skill)}&${TRACK_PARAM}=${trackId}`}
           onClick={() => {
             setAnchorEl(null);
           }}

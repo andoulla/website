@@ -7,8 +7,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
-import { useTrackContext } from '@/context/track';
-import { buildSkillResumeLinks } from '@/utils/buildResumeLinks';
+import { TRACK_PARAM, useTrackContext } from '@/context/track';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { formatYears } from '@/utils/formatYears';
 
@@ -19,10 +18,6 @@ interface SkillTooltipContentProps {
 export const SkillTooltipContent = ({ skill }: SkillTooltipContentProps) => {
   const theme = useTheme();
   const { trackId } = useTrackContext();
-  const { skillTo, recommendationLinks } = buildSkillResumeLinks(
-    { name: skill.skill, recommendationIds: skill.recommendationIds },
-    trackId
-  );
 
   return (
     <Paper
@@ -61,23 +56,23 @@ export const SkillTooltipContent = ({ skill }: SkillTooltipContentProps) => {
       <Divider sx={{ my: 1 }} />
       <Link
         component={RouterLink}
-        to={skillTo}
+        to={`/?skill=${encodeURIComponent(skill.skill)}&${TRACK_PARAM}=${trackId}`}
         variant="body2"
         underline="none"
         sx={{ display: 'block' }}
       >
         View on Resume
       </Link>
-      {recommendationLinks.map(({ to, label }) => (
+      {skill.recommendationIds.map((recommendationId, index) => (
         <Link
-          key={to}
+          key={recommendationId}
           component={RouterLink}
-          to={to}
+          to={`/?recommendation=${encodeURIComponent(recommendationId)}&${TRACK_PARAM}=${trackId}`}
           variant="body2"
           underline="none"
           sx={{ display: 'block', mt: 0.5 }}
         >
-          {label}
+          {skill.recommendationIds.length === 1 ? 'Recommendation' : `Recommendation ${index + 1}`}
         </Link>
       ))}
     </Paper>
