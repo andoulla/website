@@ -1,4 +1,5 @@
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { deriveSkillTypeSplit } from '@/utils/deriveSkillTypeSplit';
@@ -19,7 +20,10 @@ export const SkillsStatBar = ({ filteredSkills }: SkillsStatBarProps) => {
   if (recommendationCount === 0 && split.techCount + split.skillCount === 0) return null;
 
   return (
-    <Stack direction="row" spacing={2} sx={{ mb: 1 }}>
+    <Stack direction="row" spacing={2} sx={{ mt: 0, mb: { xs: 1.5, sm: 2 }, alignItems: 'center' }}>
+      <Typography variant="body2" color="text.secondary">
+        At a glance
+      </Typography>
       <RecommendationStat count={recommendationCount} />
       <SkillTypeMeter split={split} />
     </Stack>

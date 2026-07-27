@@ -1,4 +1,5 @@
-import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 
 interface Props {
@@ -13,5 +14,12 @@ export const RecommendationStat = ({ count }: Props) => {
       ? '1 skill backed by a recommendation'
       : `${count} skills backed by recommendations`;
 
-  return <Chip icon={<FormatQuoteIcon />} label={label} size="small" variant="outlined" />;
+  return (
+    <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
+      <FormatQuoteIcon fontSize="small" color="action" />
+      <Typography variant="body2" color="text.secondary">
+        {label}
+      </Typography>
+    </Stack>
+  );
 };

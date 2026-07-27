@@ -254,7 +254,7 @@ const SkillsContent = () => {
           </ToggleButtonGroup>
         </Stack>
       </Stack>
-      <Stack direction="row" sx={{ alignItems: 'center', mb: { xs: 1.5, sm: 2 }, minHeight: 38 }}>
+      <Stack direction="row" sx={{ alignItems: 'center', mb: 0.5, minHeight: 38 }}>
         <Typography variant="h6" component="p" color="text.secondary" sx={{ flexGrow: 1 }}>
           {VIEW_OPTIONS[viewMode].caption}
         </Typography>
