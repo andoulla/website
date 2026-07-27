@@ -36,6 +36,7 @@ export const SkillsViewContextProvider = ({
       filteredSkills,
       selectedCategories,
       selectedSubCategories,
+      hasActiveFilters: selectedCategories.length > 0 || selectedSubCategories.length > 0,
       highlightedSkills,
       searchTerm,
       showPatterns,

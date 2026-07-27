@@ -14,8 +14,7 @@ export const SkillsGraphView = () => {
     skills,
     filteredSkills,
     searchTerm,
-    selectedCategories,
-    selectedSubCategories,
+    hasActiveFilters,
     highlightedSkills,
     showPatterns,
     onClearFilters,
@@ -38,12 +37,7 @@ export const SkillsGraphView = () => {
   }
 
   if (sortedSkills.length === 0) {
-    return (
-      <SkillsEmptyState
-        hasActiveFilters={selectedCategories.length > 0 || selectedSubCategories.length > 0}
-        onClearFilters={onClearFilters}
-      />
-    );
+    return <SkillsEmptyState hasActiveFilters={hasActiveFilters} onClearFilters={onClearFilters} />;
   }
 
   return (

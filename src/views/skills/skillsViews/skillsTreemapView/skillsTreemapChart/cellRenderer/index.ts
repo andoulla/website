@@ -1,0 +1,1 @@
+export { makeCellRenderer } from './CellRenderer';

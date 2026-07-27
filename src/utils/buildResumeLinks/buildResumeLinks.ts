@@ -1,4 +1,4 @@
-import { TRACK_PARAM } from '@/context/track';
+const TRACK_PARAM = 'track';
 
 export type ResumeSkillLink = { to: string; label: string };
 
