@@ -2,8 +2,9 @@ import { TRACK_PARAM } from '@/context/track';
 import type { TimelineEventWithRecommendations } from '@/types';
 import { normaliseSearchTerm } from '@/utils/normaliseSearchTerm';
 import { MIN_SEARCH_TERM_LENGTH } from '@/utils/skillMatchesSearch';
+import { SKILL_PARAM } from '@/utils/skillsUrlParams';
 
-import { FOCUS_PARAM, RECOMMENDATION_PARAM, SKILL_PARAM } from '../Resume.constants';
+import { FOCUS_PARAM, RECOMMENDATION_PARAM } from '../Resume.constants';
 
 import type { SearchResult } from './ExperienceSearch.types';
 
