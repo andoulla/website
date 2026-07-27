@@ -7,26 +7,15 @@ import { useSkillsViewContext } from '../SkillsViewContext';
 import { SkillsRadarChart } from './skillsRadarChart';
 
 export const SkillsRadarView = () => {
-  const {
-    skills,
-    filteredSkills,
-    searchTerm,
-    selectedCategories,
-    selectedSubCategories,
-    onClearFilters,
-  } = useSkillsViewContext();
+  const { skills, filteredSkills, searchTerm, hasActiveFilters, onClearFilters } =
+    useSkillsViewContext();
 
   if (skills.length === 0) {
     return <SkillsNoData />;
   }
 
   if (filteredSkills.length === 0) {
-    return (
-      <SkillsEmptyState
-        hasActiveFilters={selectedCategories.length > 0 || selectedSubCategories.length > 0}
-        onClearFilters={onClearFilters}
-      />
-    );
+    return <SkillsEmptyState hasActiveFilters={hasActiveFilters} onClearFilters={onClearFilters} />;
   }
 
   // Unfiltered skills keep the axis set stable across filters.
