@@ -16,7 +16,7 @@ export interface RowActionsMenuProps {
 export const RowActionsMenu = ({ skill }: RowActionsMenuProps) => {
   const { trackId } = useTrackContext();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const skillTo = `/?${SKILL_PARAM}=${encodeURIComponent(skill.skill)}&track=${trackId}`;
+  const skillLink = `/?${SKILL_PARAM}=${encodeURIComponent(skill.skill)}&track=${trackId}`;
 
   return (
     <>
@@ -38,7 +38,7 @@ export const RowActionsMenu = ({ skill }: RowActionsMenuProps) => {
       >
         <MenuItem
           component={RouterLink}
-          to={skillTo}
+          to={skillLink}
           onClick={() => {
             setAnchorEl(null);
           }}

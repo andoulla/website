@@ -1,13 +1,13 @@
 import { buildSkillResumeLinks } from './buildResumeLinks';
 
 describe('buildSkillResumeLinks', () => {
-  test('builds skillTo with encoded skill name and trackId', () => {
-    const { skillTo } = buildSkillResumeLinks(
+  test('builds skillLink with encoded skill name and trackId', () => {
+    const { skillLink } = buildSkillResumeLinks(
       { name: 'Team Leadership', recommendationIds: [] },
       'general'
     );
 
-    expect(skillTo).toBe('/?skill=Team%20Leadership&track=general');
+    expect(skillLink).toBe('/?skill=Team%20Leadership&track=general');
   });
 
   test('returns empty recommendationLinks when there are no recommendation IDs', () => {

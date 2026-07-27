@@ -18,7 +18,7 @@ interface SkillTooltipContentProps {
 
 export const SkillTooltipContent = ({ skill, trackId }: SkillTooltipContentProps) => {
   const theme = useTheme();
-  const { skillTo, recommendationLinks } = buildSkillResumeLinks(
+  const { skillLink, recommendationLinks } = buildSkillResumeLinks(
     { name: skill.skill, recommendationIds: skill.recommendationIds },
     trackId
   );
@@ -60,7 +60,7 @@ export const SkillTooltipContent = ({ skill, trackId }: SkillTooltipContentProps
       <Divider sx={{ my: 1 }} />
       <Link
         component={RouterLink}
-        to={skillTo}
+        to={skillLink}
         variant="body2"
         underline="none"
         sx={{ display: 'block' }}
