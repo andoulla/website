@@ -3,6 +3,7 @@ import { Recommendation, SkillSummary, TimelineEvent, Track } from '@/testing';
 import {
   parseAsOfYear,
   parseCategoryIds,
+  parseCompareTrackId,
   parseSearch,
   parseSubCategoryIds,
   parseViewMode,
@@ -135,15 +136,15 @@ describe('reorderFilterParams', () => {
     expect(result.toString()).toBe('category=frontend-development&subCategory=testing');
   });
 
-  test('puts track ahead of view ahead of category and subCategory', () => {
+  test('puts track ahead of compareTrack ahead of view ahead of category and subCategory', () => {
     const params = new URLSearchParams(
-      'subCategory=testing&category=frontend-development&view=table&track=general'
+      'subCategory=testing&category=frontend-development&view=table&track=general&compareTrack=lead'
     );
 
     const result = reorderFilterParams(params);
 
     expect(result.toString()).toBe(
-      'track=general&view=table&category=frontend-development&subCategory=testing'
+      'track=general&compareTrack=lead&view=table&category=frontend-development&subCategory=testing'
     );
   });
 
@@ -199,6 +200,28 @@ describe('parseAsOfYear', () => {
 
   test('returns maxYear for a decimal value', () => {
     expect(parseAsOfYear('2020.9', 2015, 2026)).toBe(2026);
+  });
+});
+
+describe('parseCompareTrackId', () => {
+  test('returns null when the param is null', () => {
+    expect(parseCompareTrackId(null, 'general')).toBeNull();
+  });
+
+  test('returns null for an unrecognised track id', () => {
+    expect(parseCompareTrackId('bogus', 'general')).toBeNull();
+  });
+
+  test('returns null when the param equals the current track id', () => {
+    expect(parseCompareTrackId('general', 'general')).toBeNull();
+  });
+
+  test('returns a valid, different track id', () => {
+    expect(parseCompareTrackId('lead', 'general')).toBe('lead');
+  });
+
+  test('returns senior-engineer when it differs from the current track', () => {
+    expect(parseCompareTrackId('senior-engineer', 'general')).toBe('senior-engineer');
   });
 });
 

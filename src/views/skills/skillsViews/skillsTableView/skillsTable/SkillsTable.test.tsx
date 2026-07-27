@@ -237,6 +237,53 @@ describe('SkillsTable', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
+  test('renders "only here" label on a skill matching the diff side', () => {
+    const skills = [new SkillSummary().id('react').skill('React').mock()];
+    const diffStatusMap = new Map([['react', 'only-a' as const]]);
+
+    const screen = renderSkillsTable({
+      categoryGroups: buildCategoryGroups(skills),
+      diffStatusMap,
+      diffSide: 'a',
+    });
+
+    expect(screen.getByText('only here')).toBeVisible();
+  });
+
+  test('does not render "only here" when the skill is on the other side', () => {
+    const skills = [new SkillSummary().id('react').skill('React').mock()];
+    const diffStatusMap = new Map([['react', 'only-b' as const]]);
+
+    const screen = renderSkillsTable({
+      categoryGroups: buildCategoryGroups(skills),
+      diffStatusMap,
+      diffSide: 'a',
+    });
+
+    expect(screen.queryByText('only here')).not.toBeInTheDocument();
+  });
+
+  test('renders "moved" label on a skill with both-moved status', async () => {
+    const skills = [new SkillSummary().id('react').skill('React').mock()];
+    const diffStatusMap = new Map([['react', 'both-moved' as const]]);
+
+    const screen = renderSkillsTable({
+      categoryGroups: buildCategoryGroups(skills),
+      diffStatusMap,
+      diffSide: 'a',
+    });
+
+    expect(screen.getByText('moved')).toBeVisible();
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('renders no diff labels when diffStatusMap is absent', () => {
+    const screen = renderSkillsTable({ categoryGroups: buildCategoryGroups(SKILLS) });
+
+    expect(screen.queryByText('only here')).not.toBeInTheDocument();
+    expect(screen.queryByText('moved')).not.toBeInTheDocument();
+  });
+
   test('renders a plural label on the badge when a skill has multiple recommendations', () => {
     const rec1 = new Recommendation().id('rec-1').mock();
     const rec2 = new Recommendation().id('rec-2').mock();

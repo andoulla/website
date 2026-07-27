@@ -1,9 +1,11 @@
 import { TRACK_PARAM } from '@/context/track';
-import type { TimelineEventWithRecommendations, Track } from '@/types';
+import { isTrackId } from '@/data/tracks';
+import type { TimelineEventWithRecommendations, Track, TrackId } from '@/types';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import {
   AS_OF_PARAM,
   CATEGORY_PARAM,
+  COMPARE_TRACK_PARAM,
   SUBCATEGORY_PARAM,
   VIEW_MODES,
   VIEW_PARAM,
@@ -69,7 +71,26 @@ export const scopeRecommendationsAsOf = (
   }));
 };
 
-const PREFIX_PARAMS = [TRACK_PARAM, VIEW_PARAM, CATEGORY_PARAM, SUBCATEGORY_PARAM, AS_OF_PARAM];
+// Parses the compareTrack URL param, returning null when absent, invalid, or equal to currentTrackId.
+export const parseCompareTrackId = (
+  raw: string | null,
+  currentTrackId: TrackId
+): TrackId | null => {
+  if (raw === null) return null;
+
+  if (!isTrackId(raw) || raw === currentTrackId) return null;
+
+  return raw;
+};
+
+const PREFIX_PARAMS = [
+  TRACK_PARAM,
+  COMPARE_TRACK_PARAM,
+  VIEW_PARAM,
+  CATEGORY_PARAM,
+  SUBCATEGORY_PARAM,
+  AS_OF_PARAM,
+];
 
 // Keeps `track` ahead of `view` ahead of `category` ahead of `subCategory` in the URL,
 // regardless of set order.

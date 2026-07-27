@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
 import type { SkillSummary } from '@/utils/calculateSkillYears';
+import type { TrackDiffStatus } from '@/utils/deriveTrackDiff';
 import { formatYears } from '@/utils/formatYears';
 import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
@@ -24,15 +25,23 @@ import { RowActionsMenu } from './rowActionsMenu';
 export interface SkillsTableProps {
   categoryGroups: CategoryGroup[];
   highlightedSkills?: string[];
+  diffStatusMap?: Map<string, TrackDiffStatus>;
+  diffSide?: 'a' | 'b';
 }
 
 interface SkillRowProps {
   skill: SkillSummary;
   isHighlighted: boolean;
+  diffStatus?: TrackDiffStatus;
+  diffSide?: 'a' | 'b';
 }
 
-const SkillRow = ({ skill, isHighlighted }: SkillRowProps) => {
+const SkillRow = ({ skill, isHighlighted, diffStatus, diffSide }: SkillRowProps) => {
   const theme = useTheme();
+
+  const isMoved = diffStatus === 'both-moved';
+  const isUniqueHere =
+    (diffStatus === 'only-a' && diffSide === 'a') || (diffStatus === 'only-b' && diffSide === 'b');
 
   return (
     <TableRow
@@ -42,6 +51,12 @@ const SkillRow = ({ skill, isHighlighted }: SkillRowProps) => {
         ...(isHighlighted && {
           bgcolor: alpha(theme.palette.primary.main, 0.12),
         }),
+        ...(isMoved && {
+          borderLeft: `3px solid ${theme.palette.warning.main}`,
+        }),
+        ...(isUniqueHere && {
+          borderLeft: `3px dashed ${theme.palette.text.disabled}`,
+        }),
         transition: 'background-color 0.4s ease',
       }}
     >
@@ -49,6 +64,16 @@ const SkillRow = ({ skill, isHighlighted }: SkillRowProps) => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
           <CategoryColourDot colour={dotColour(skill, theme)} />
           {skill.skill}
+          {isMoved && (
+            <Typography variant="caption" color="warning.main">
+              moved
+            </Typography>
+          )}
+          {isUniqueHere && (
+            <Typography variant="caption" color="text.secondary">
+              only here
+            </Typography>
+          )}
           <Chip
             label={skill.type === 'tech' ? 'tech' : 'non-technical'}
             size="small"
@@ -122,7 +147,12 @@ const GroupHeaderRow = ({
   );
 };
 
-export const SkillsTable = ({ categoryGroups, highlightedSkills = [] }: SkillsTableProps) => {
+export const SkillsTable = ({
+  categoryGroups,
+  highlightedSkills = [],
+  diffStatusMap,
+  diffSide,
+}: SkillsTableProps) => {
   const rows = categoryGroups.flatMap(({ category, subGroups, skills }) => {
     const categoryRow = {
       type: 'category' as const,
@@ -130,12 +160,13 @@ export const SkillsTable = ({ categoryGroups, highlightedSkills = [] }: SkillsTa
       category,
     };
 
-    const skillRows = skills.flatMap((skill) => ({
+    const buildSkillRow = (skill: SkillSummary) => ({
       type: 'skill' as const,
       key: `skill-${skill.skill}`,
       skill,
       isHighlighted: highlightedSkills.includes(skill.skill),
-    }));
+      diffStatus: diffStatusMap?.get(skill.id),
+    });
 
     if (subGroups.length > 1) {
       const subCategoryRows = subGroups.flatMap((subGroup) => [
@@ -144,18 +175,13 @@ export const SkillsTable = ({ categoryGroups, highlightedSkills = [] }: SkillsTa
           key: `subcategory-${category.id}-${subGroup.subCategory.id}`,
           subCategory: subGroup.subCategory,
         },
-        ...subGroup.skills.map((skill) => ({
-          type: 'skill' as const,
-          key: `skill-${skill.skill}`,
-          skill,
-          isHighlighted: highlightedSkills.includes(skill.skill),
-        })),
+        ...subGroup.skills.map(buildSkillRow),
       ]);
 
       return [categoryRow, ...subCategoryRows];
     }
 
-    return [categoryRow, ...skillRows];
+    return [categoryRow, ...skills.map(buildSkillRow)];
   });
 
   return (
@@ -183,7 +209,15 @@ export const SkillsTable = ({ categoryGroups, highlightedSkills = [] }: SkillsTa
               );
             }
 
-            return <SkillRow key={row.key} skill={row.skill} isHighlighted={row.isHighlighted} />;
+            return (
+              <SkillRow
+                key={row.key}
+                skill={row.skill}
+                isHighlighted={row.isHighlighted}
+                diffStatus={row.diffStatus}
+                diffSide={diffSide}
+              />
+            );
           })}
         </TableBody>
       </Table>

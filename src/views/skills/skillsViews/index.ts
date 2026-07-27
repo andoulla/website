@@ -5,7 +5,8 @@ export type {
 } from './SkillsViewContext.types';
 export { SkillsCareerContextProvider, useSkillsCareerContext } from './SkillsCareerContext';
 export { SkillsGraphView } from './skillsGraphView';
-export { SkillsTableView } from './skillsTableView';
+export { SkillsTableView, SkillsTable, groupSkillsByTrack } from './skillsTableView';
+export type { CategoryGroup, SkillsTableProps } from './skillsTableView';
 export { SkillsRadarView } from './skillsRadarView';
 export { SkillsTreemapView } from './skillsTreemapView';
 export { SkillsGrowthView } from './skillsGrowthView';

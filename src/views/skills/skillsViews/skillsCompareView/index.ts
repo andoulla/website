@@ -1,0 +1,1 @@
+export { SkillsCompareView } from './SkillsCompareView';
