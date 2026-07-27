@@ -93,7 +93,6 @@ const SkillsContent = () => {
   );
 
   const [searchParams] = useSearchParams();
-  const highlightedSkillsKey = JSON.stringify(searchParams.getAll(SKILL_PARAM));
   // Params resolve through matchSkill: synonyms map to canonical names.
   const highlightedSkills = useMemo(
     () =>
@@ -101,8 +100,7 @@ const SkillsContent = () => {
         .getAll(SKILL_PARAM)
         .map((term) => matchSkill(term)?.skill.name)
         .filter((name): name is string => name !== undefined),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on content, not the ref
-    [highlightedSkillsKey]
+    [searchParams]
   );
 
   // Parsers are track-bound; useSkillSearchUrl memoizes on parser identity, so they must be
