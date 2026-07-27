@@ -223,7 +223,7 @@ describe('SkillsTableView', () => {
   });
 
   describe('empty state', () => {
-    test('shows the empty message and a Clear filters button when a category/subcategory filter excludes every skill', async () => {
+    test('shows the empty message and a Reset button that calls onClearFilters', async () => {
       const user = userEvent.setup();
       const onClearFilters = jest.fn();
       const screen = renderTableView({
@@ -233,17 +233,17 @@ describe('SkillsTableView', () => {
 
       expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
 
-      await user.click(screen.getByRole('button', { name: 'Clear filters' }));
+      await user.click(screen.getByRole('button', { name: 'Reset' }));
 
       expect(onClearFilters).toHaveBeenCalledTimes(1);
       expect(await axe(screen.container)).toHaveNoViolations();
     });
 
-    test('hides the Clear filters button when the search term alone excludes every skill', () => {
+    test('shows the Reset button even when only a search term excludes every skill', () => {
       const screen = renderTableView({ searchTerm: 'nonexistent skill' });
 
       expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
-      expect(screen.queryByRole('button', { name: 'Clear filters' })).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Reset' })).toBeVisible();
     });
   });
 

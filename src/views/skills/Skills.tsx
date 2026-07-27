@@ -55,9 +55,7 @@ const deriveSearchHint = (
 ): string | undefined => {
   if (searchTerm.trim() === '') return undefined;
 
-  if (totalMatches === 0) return 'No skills match your search';
-
-  if (hiddenMatchCount === 0) return undefined;
+  if (totalMatches === 0 || hiddenMatchCount === 0) return undefined;
 
   return `${hiddenMatchCount} match${hiddenMatchCount === 1 ? '' : 'es'} hidden by filters`;
 };
@@ -151,9 +149,10 @@ const SkillsContent = () => {
   );
 
   const clearFilters = useCallback(() => {
+    setSearchTerm('');
     setSelectedCategories([]);
     setSelectedSubCategories([]);
-  }, [setSelectedCategories, setSelectedSubCategories]);
+  }, [setSearchTerm, setSelectedCategories, setSelectedSubCategories]);
 
   const { totalMatches, hiddenMatchCount } = useMemo(() => {
     if (searchTerm.trim() === '') return { totalMatches: 0, hiddenMatchCount: 0 };
