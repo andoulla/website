@@ -22,14 +22,14 @@ export const SkillTypeMeter = ({ split }: Props) => {
   const barHeight = BAR_HEIGHT_BY_DENSITY[theme.density ?? 'compact'];
 
   return (
-    <Tooltip title={`${techCount} technical, ${skillCount} non-technical`}>
+    <Tooltip title={`${techCount} tech, ${skillCount} soft`}>
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
         <Typography variant="body2" color="text.secondary">
-          Tech vs non-tech
+          Tech vs soft
         </Typography>
         <Box
           role="img"
-          aria-label={`${techPercent.toFixed(1)}% technical, ${softPercent.toFixed(1)}% non-technical`}
+          aria-label={`${techPercent.toFixed(1)}% tech, ${softPercent.toFixed(1)}% soft`}
           sx={{
             display: 'flex',
             height: barHeight,

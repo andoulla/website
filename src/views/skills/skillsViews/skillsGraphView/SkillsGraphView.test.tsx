@@ -98,7 +98,7 @@ describe('SkillsGraphView', () => {
     expect(within(rows[2]).getByText('React')).toBeVisible();
   });
 
-  test('shows the empty-filter message and a Clear filters button, not the no-data Alert, when filters exclude every skill', async () => {
+  test('shows the empty-filter message and a Reset button, not the no-data Alert, when filters exclude every skill', async () => {
     const user = userEvent.setup();
     const onClearFilters = jest.fn();
     const screen = renderGraphView({
@@ -110,7 +110,7 @@ describe('SkillsGraphView', () => {
     expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Clear filters' }));
+    await user.click(screen.getByRole('button', { name: 'Reset' }));
 
     expect(onClearFilters).toHaveBeenCalledTimes(1);
     expect(await axe(screen.container)).toHaveNoViolations();

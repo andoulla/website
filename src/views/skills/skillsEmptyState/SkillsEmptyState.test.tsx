@@ -5,24 +5,31 @@ import { axe } from 'jest-axe';
 import { SkillsEmptyState } from './SkillsEmptyState';
 
 describe('SkillsEmptyState', () => {
-  test('shows the message and a Clear filters button when filters are active', async () => {
+  test('shows the header, instruction, and a Reset button', async () => {
     const user = userEvent.setup();
     const onClearFilters = jest.fn();
-    const screen = render(<SkillsEmptyState hasActiveFilters onClearFilters={onClearFilters} />);
+    const screen = render(<SkillsEmptyState onClearFilters={onClearFilters} />);
 
     expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
+    expect(
+      screen.getByText('Try a different search term or remove the active filters.')
+    ).toBeVisible();
 
-    await user.click(screen.getByRole('button', { name: 'Clear filters' }));
+    await user.click(screen.getByRole('button', { name: 'Reset' }));
 
     expect(onClearFilters).toHaveBeenCalledTimes(1);
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('hides the Clear filters button when no filters are active', async () => {
-    const screen = render(<SkillsEmptyState hasActiveFilters={false} onClearFilters={jest.fn()} />);
+  test('overlays the message card on top of a skeleton child', () => {
+    const screen = render(
+      <SkillsEmptyState onClearFilters={jest.fn()}>
+        <div data-testid="skeleton">skeleton</div>
+      </SkillsEmptyState>
+    );
 
+    expect(screen.getByTestId('skeleton')).toBeVisible();
     expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
-    expect(screen.queryByRole('button', { name: 'Clear filters' })).not.toBeInTheDocument();
-    expect(await axe(screen.container)).toHaveNoViolations();
+    expect(screen.getByRole('button', { name: 'Reset' })).toBeVisible();
   });
 });

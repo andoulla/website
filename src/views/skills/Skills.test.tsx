@@ -440,7 +440,7 @@ describe('Skills', () => {
       expect(screen.queryByText('3 matches hidden by filters')).not.toBeInTheDocument();
     });
 
-    test('shows a no-match hint when the search matches no skill at all', async () => {
+    test('does not show a hint when the search matches no skill at all', async () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
@@ -449,7 +449,8 @@ describe('Skills', () => {
         'not-a-skill'
       );
 
-      expect(screen.getByText('No skills match your search')).toBeVisible();
+      expect(screen.queryByText('No skills match your search')).not.toBeInTheDocument();
+      expect(screen.queryByText('matches hidden by filters')).not.toBeInTheDocument();
     });
   });
 

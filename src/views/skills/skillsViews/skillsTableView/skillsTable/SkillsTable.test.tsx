@@ -85,7 +85,7 @@ describe('SkillsTable', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('renders company/year breakdown as chips', async () => {
+  test('renders company/year breakdown as pipe-separated plain text', async () => {
     const skills = [
       new SkillSummary()
         .skill('React')
@@ -100,8 +100,7 @@ describe('SkillsTable', () => {
       categoryGroups: buildCategoryGroups(skills),
     });
 
-    expect(screen.getByText('Acme Corp · 2 years')).toBeVisible();
-    expect(screen.getByText('Globex · 2 years')).toBeVisible();
+    expect(screen.getByText('Acme Corp · 2 years | Globex · 2 years')).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
@@ -188,7 +187,7 @@ describe('SkillsTable', () => {
     expect(screen.getByRole('menuitem', { name: 'View on Resume' })).toBeVisible();
   });
 
-  test('renders a tech chip on a skill with type tech', () => {
+  test('renders tech type label on a skill with type tech', () => {
     const skills = [new SkillSummary().skill('React').type('tech').mock()];
 
     const screen = renderSkillsTable({ categoryGroups: buildCategoryGroups(skills) });
@@ -196,12 +195,12 @@ describe('SkillsTable', () => {
     expect(screen.getByText('tech')).toBeVisible();
   });
 
-  test('renders a non-technical chip on a skill with type skill', () => {
+  test('renders soft type label on a skill with type skill', () => {
     const skills = [new SkillSummary().skill('Leadership').type('skill').mock()];
 
     const screen = renderSkillsTable({ categoryGroups: buildCategoryGroups(skills) });
 
-    expect(screen.getByText('non-technical')).toBeVisible();
+    expect(screen.getByText('soft')).toBeVisible();
   });
 
   test('renders no recommendation badge when the skill has no recommendation ids', () => {

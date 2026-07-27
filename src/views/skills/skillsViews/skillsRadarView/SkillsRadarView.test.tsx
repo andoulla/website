@@ -76,14 +76,14 @@ describe('SkillsRadarView', () => {
     expect(screen.getByText('No skill data available.')).toBeVisible();
   });
 
-  test('shows "no skills match" with a Clear filters button when a filter excludes every skill', async () => {
+  test('shows "no skills match" with a Reset button when a filter excludes every skill', async () => {
     const user = userEvent.setup();
     const onClearFilters = jest.fn();
     const screen = renderRadarView({ selectedSubCategories: ['testing'], onClearFilters });
 
     expect(screen.getByText('No skills match the selected filter.')).toBeVisible();
 
-    await user.click(screen.getByRole('button', { name: 'Clear filters' }));
+    await user.click(screen.getByRole('button', { name: 'Reset' }));
 
     expect(onClearFilters).toHaveBeenCalledTimes(1);
     expect(await axe(screen.container)).toHaveNoViolations();
