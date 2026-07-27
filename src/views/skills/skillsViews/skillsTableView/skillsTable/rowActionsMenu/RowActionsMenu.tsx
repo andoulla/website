@@ -43,20 +43,6 @@ export const RowActionsMenu = ({ skill }: RowActionsMenuProps) => {
         >
           View on Resume
         </MenuItem>
-        {skill.recommendationIds.map((recommendationId, index) => (
-          <MenuItem
-            key={recommendationId}
-            component={RouterLink}
-            to={`/?recommendation=${encodeURIComponent(recommendationId)}&${TRACK_PARAM}=${trackId}`}
-            onClick={() => {
-              setAnchorEl(null);
-            }}
-          >
-            {skill.recommendationIds.length === 1
-              ? 'Recommendation'
-              : `Recommendation ${index + 1}`}
-          </MenuItem>
-        ))}
       </Menu>
     </>
   );

@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -6,7 +7,6 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
@@ -18,6 +18,7 @@ import { skillElementId } from '../SkillsTableView.helpers';
 import type { CategoryGroup } from '../SkillsTableView.types';
 
 import { dotColour } from './SkillsTable.helpers';
+import { RecommendationBadge } from './recommendationBadge';
 import { RowActionsMenu } from './rowActionsMenu';
 
 export interface SkillsTableProps {
@@ -45,9 +46,15 @@ const SkillRow = ({ skill, isHighlighted }: SkillRowProps) => {
       }}
     >
       <TableCell sx={{ verticalAlign: 'top' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
           <CategoryColourDot colour={dotColour(skill, theme)} />
           {skill.skill}
+          <Chip
+            label={skill.type === 'tech' ? 'tech' : 'non-technical'}
+            size="small"
+            variant="outlined"
+          />
+          <RecommendationBadge recommendationIds={skill.recommendationIds} />
         </Box>
       </TableCell>
       <TableCell sx={{ verticalAlign: 'top' }}>

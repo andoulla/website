@@ -42,6 +42,7 @@ import type { ViewMode } from './Skills.types';
 import { CopyLinkButton } from './copyLinkButton';
 import { SkillFilterBar, type SkillFilterOption } from './skillFilterBar';
 import { SkillSearchBar } from './skillSearchBar';
+import { SkillsStatBar } from './skillsStatBar';
 import { TimeMachineSlider } from './timeMachineSlider';
 import { TrackFilter } from './trackFilter';
 import { SkillsCareerContextProvider, SkillsViewContextProvider } from './skillsViews';
@@ -251,7 +252,7 @@ const SkillsContent = () => {
           </ToggleButtonGroup>
         </Stack>
       </Stack>
-      <Stack direction="row" sx={{ alignItems: 'center', mb: { xs: 1.5, sm: 2 }, minHeight: 38 }}>
+      <Stack direction="row" sx={{ alignItems: 'center', mb: 0.5, minHeight: 38 }}>
         <Typography variant="h6" component="p" color="text.secondary" sx={{ flexGrow: 1 }}>
           {VIEW_OPTIONS[viewMode].caption}
         </Typography>
@@ -273,6 +274,7 @@ const SkillsContent = () => {
           </Tooltip>
         )}
       </Stack>
+      <SkillsStatBar filteredSkills={filteredSkills} />
       <SkillsCareerContextProvider careerHistory={careerHistory}>
         <SkillsViewContextProvider
           track={track}
