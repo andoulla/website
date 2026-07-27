@@ -276,7 +276,7 @@ const SkillsContent = () => {
           </Tooltip>
         )}
       </Stack>
-      <SkillsStatBar skills={skills} filteredSkills={filteredSkills} />
+      <SkillsStatBar filteredSkills={filteredSkills} />
       <SkillsCareerContextProvider careerHistory={careerHistory}>
         <SkillsViewContextProvider
           track={track}

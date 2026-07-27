@@ -7,19 +7,20 @@ import { RecommendationStat } from './recommendationStat';
 import { SkillTypeMeter } from './skillTypeMeter';
 
 export interface SkillsStatBarProps {
-  skills: SkillSummary[];
   filteredSkills: SkillSummary[];
 }
 
-export const SkillsStatBar = ({ skills, filteredSkills }: SkillsStatBarProps) => {
-  const recCount = skills.filter((skill) => skill.recommendationIds.length > 0).length;
+export const SkillsStatBar = ({ filteredSkills }: SkillsStatBarProps) => {
+  const recommendationCount = filteredSkills.filter(
+    (skill) => skill.recommendationIds.length > 0
+  ).length;
   const split = deriveSkillTypeSplit(filteredSkills);
 
-  if (recCount === 0 && split.techCount + split.skillCount === 0) return null;
+  if (recommendationCount === 0 && split.techCount + split.skillCount === 0) return null;
 
   return (
     <Stack direction="row" spacing={2} sx={{ mb: 1 }}>
-      <RecommendationStat count={recCount} />
+      <RecommendationStat count={recommendationCount} />
       <SkillTypeMeter split={split} />
     </Stack>
   );

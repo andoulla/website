@@ -5,7 +5,7 @@ import { SkillTypeMeter } from './SkillTypeMeter';
 
 describe('SkillTypeMeter', () => {
   test('renders the correct aria-label for a mixed split', async () => {
-    const split = { techCount: 2, skillCount: 1, techPct: 66.7 };
+    const split = { techCount: 2, skillCount: 1, techPercent: 66.7 };
 
     const screen = render(<SkillTypeMeter split={split} />);
 
@@ -14,7 +14,7 @@ describe('SkillTypeMeter', () => {
   });
 
   test('renders nothing when total skill count is zero', () => {
-    const split = { techCount: 0, skillCount: 0, techPct: 0 };
+    const split = { techCount: 0, skillCount: 0, techPercent: 0 };
 
     const screen = render(<SkillTypeMeter split={split} />);
 

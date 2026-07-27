@@ -30,9 +30,7 @@ const BAR_SIZE = 14;
 const CHART_PADDING = 64;
 const MIN_HEIGHT = 200;
 
-// Renders a small filled circle at the right end of a bar for recommendation-backed skills.
-// The content function receives the bar's bounding box via viewBox; CartesianViewBoxRequired
-// is identified by the presence of 'x', distinguishing it from PolarViewBoxRequired.
+// Dot at bar end for recommendation-backed skills; 'x' in viewBox narrows to CartesianViewBox.
 const renderRecommendationDot = (props: LabelProps) => {
   const { viewBox, value } = props;
 
@@ -219,7 +217,7 @@ export const SkillsBarChart = ({
             })}
             <LabelList
               valueAccessor={(entry) => (entry.payload as SkillSummary).recommendationIds.length}
-              content={(props: LabelProps) => renderRecommendationDot(props)}
+              content={renderRecommendationDot}
             />
           </Bar>
         </BarChart>

@@ -1,1 +1,1 @@
-export type SkillTypeSplit = { techCount: number; skillCount: number; techPct: number };
+export type SkillTypeSplit = { techCount: number; skillCount: number; techPercent: number };

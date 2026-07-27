@@ -8,17 +8,17 @@ interface Props {
 }
 
 export const SkillTypeMeter = ({ split }: Props) => {
-  const { techCount, skillCount, techPct } = split;
+  const { techCount, skillCount, techPercent } = split;
 
   if (techCount + skillCount === 0) return null;
 
-  const softPct = 100 - techPct;
+  const softPercent = 100 - techPercent;
 
   return (
     <Tooltip title={`${techCount} technical, ${skillCount} non-technical`}>
       <Box
         role="img"
-        aria-label={`${techPct.toFixed(1)}% technical, ${softPct.toFixed(1)}% non-technical`}
+        aria-label={`${techPercent.toFixed(1)}% technical, ${softPercent.toFixed(1)}% non-technical`}
         sx={{
           display: 'flex',
           height: 8,
@@ -27,8 +27,8 @@ export const SkillTypeMeter = ({ split }: Props) => {
           width: 120,
         }}
       >
-        <Box sx={{ width: `${techPct}%`, bgcolor: 'primary.main' }} />
-        <Box sx={{ width: `${softPct}%`, bgcolor: 'action.hover' }} />
+        <Box sx={{ width: `${techPercent}%`, bgcolor: 'primary.main' }} />
+        <Box sx={{ width: `${softPercent}%`, bgcolor: 'action.hover' }} />
       </Box>
     </Tooltip>
   );
