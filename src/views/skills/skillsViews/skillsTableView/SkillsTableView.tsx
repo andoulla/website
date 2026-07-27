@@ -11,15 +11,8 @@ import { SkillsTable } from './skillsTable';
 import type { CategoryGroup } from './SkillsTableView.types';
 
 export const SkillsTableView = () => {
-  const {
-    track,
-    filteredSkills,
-    highlightedSkills,
-    searchTerm,
-    selectedCategories,
-    selectedSubCategories,
-    onClearFilters,
-  } = useSkillsViewContext();
+  const { track, filteredSkills, highlightedSkills, searchTerm, hasActiveFilters, onClearFilters } =
+    useSkillsViewContext();
 
   useEffect(() => {
     if (highlightedSkills.length === 0) return;
@@ -53,12 +46,7 @@ export const SkillsTableView = () => {
     .filter((group) => group.skills.length > 0);
 
   if (categoryGroups.length === 0) {
-    return (
-      <SkillsEmptyState
-        hasActiveFilters={selectedCategories.length > 0 || selectedSubCategories.length > 0}
-        onClearFilters={onClearFilters}
-      />
-    );
+    return <SkillsEmptyState hasActiveFilters={hasActiveFilters} onClearFilters={onClearFilters} />;
   }
 
   return <SkillsTable categoryGroups={categoryGroups} highlightedSkills={highlightedSkills} />;
