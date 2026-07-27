@@ -9,13 +9,13 @@ import { ResponsiveContainer, Tooltip, Treemap } from 'recharts';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { resolveSkillColourMain } from '@/utils/skillColour';
-import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
 import {
   CategoryPatternDefinition,
   getCategoryPatternBackground,
   getCategoryPatternId,
 } from '../../categoryPattern';
+import { CategoryLegend } from '../../categoryLegend';
 
 const CHART_HEIGHT = 600;
 const LABEL_MIN_WIDTH = 48;
@@ -53,7 +53,7 @@ const TreemapTooltip = ({ active, payload }: TreemapTooltipProps) => {
         boxShadow: 2,
       }}
     >
-      <Typography variant="body2" fontWeight={600}>
+      <Typography variant="body2" sx={{ fontWeight: 600 }}>
         {data.name}
       </Typography>
       <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5, mt: 0.25 }}>
@@ -105,10 +105,10 @@ const makeCellRenderer = (
   patternIdByName: Map<string, string> | null,
   textColour: string
 ) =>
-  function CellRenderer(rawProps: unknown): React.ReactElement | null {
+  function CellRenderer(rawProps: unknown): React.ReactElement {
     const { x, y, width, height, name, value } = rawProps as CellRenderProps;
 
-    if (width <= 0 || height <= 0) return null;
+    if (width <= 0 || height <= 0) return <g />;
 
     const colour = colourByName.get(name) ?? '#9e9e9e';
     const patternId = patternIdByName?.get(name);
@@ -233,27 +233,16 @@ export const SkillsTreemapChart = ({ skills, showPatterns = false }: SkillsTreem
         </Treemap>
       </ResponsiveContainer>
 
-      <Box
-        aria-hidden="true"
-        sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 2 }}
-      >
-        {legendEntries.map(({ category, colour, markColour }) => (
-          <Box key={category.id} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-            <CategoryColourDot
-              shape="square"
-              colour={colour}
-              background={
-                showPatterns
-                  ? getCategoryPatternBackground(category.index, colour, markColour)
-                  : undefined
-              }
-            />
-            <Typography variant="caption" color="text.secondary">
-              {category.name}
-            </Typography>
-          </Box>
-        ))}
-      </Box>
+      <CategoryLegend
+        categories={legendEntries.map(({ category }) => category)}
+        shape="square"
+        getBackground={
+          showPatterns
+            ? (colour, index) =>
+                getCategoryPatternBackground(index, colour, theme.palette.getContrastText(colour))
+            : undefined
+        }
+      />
 
       <Box component="table" sx={visuallyHidden} aria-label="Skills by years of experience">
         <caption>Skills and years of experience</caption>
