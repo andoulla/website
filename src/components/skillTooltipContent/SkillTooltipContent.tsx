@@ -7,18 +7,17 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
-import { useTrackContext } from '@/context/track';
 import { buildSkillResumeLinks } from '@/utils/buildResumeLinks';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { formatYears } from '@/utils/formatYears';
 
 interface SkillTooltipContentProps {
   skill: SkillSummary;
+  trackId: string;
 }
 
-export const SkillTooltipContent = ({ skill }: SkillTooltipContentProps) => {
+export const SkillTooltipContent = ({ skill, trackId }: SkillTooltipContentProps) => {
   const theme = useTheme();
-  const { trackId } = useTrackContext();
   const { skillTo, recommendationLinks } = buildSkillResumeLinks(
     { name: skill.skill, recommendationIds: skill.recommendationIds },
     trackId

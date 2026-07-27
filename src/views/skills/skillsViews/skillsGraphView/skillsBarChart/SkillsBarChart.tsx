@@ -16,6 +16,7 @@ import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { resolveSkillColourMain } from '@/utils/skillColour';
 import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
+import { useSkillsViewContext } from '../../SkillsViewContext';
 import { CategoryPatternDefinition } from '../../categoryPattern';
 
 import {
@@ -62,6 +63,7 @@ export const SkillsBarChart = ({
   highlightedSkills = [],
 }: SkillsBarChartProps) => {
   const theme = useTheme();
+  const { track } = useSkillsViewContext();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   // Frozen at the point the pointer entered the bar — not tracked on every mousemove, so the
   // tooltip sits near the cursor without chasing it as the pointer moves toward its links.
@@ -232,7 +234,9 @@ export const SkillsBarChart = ({
       >
         <ClickAwayListener onClickAway={handleClickAway}>
           <Box onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
-            {hoverIndex !== null && <SkillTooltipContent skill={skills[hoverIndex]} />}
+            {hoverIndex !== null && (
+              <SkillTooltipContent skill={skills[hoverIndex]} trackId={track.id} />
+            )}
           </Box>
         </ClickAwayListener>
       </Popper>
