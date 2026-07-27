@@ -5,11 +5,18 @@ import { alpha, createTheme } from '@mui/material/styles';
 import { MemoryRouter } from 'react-router-dom';
 
 import { TrackContextProvider } from '@/context/track';
-import { SkillSummary, Track } from '@/testing';
+import { Recommendation, SkillSummary, Track } from '@/testing';
+import { getRecommendationsByIds } from '@/utils/getRecommendationsByIds';
 
 import type { CategoryGroup } from '../SkillsTableView.types';
 
 import { SkillsTable } from './SkillsTable';
+
+jest.mock('@/utils/getRecommendationsByIds', () => ({
+  getRecommendationsByIds: jest.fn(),
+}));
+
+const mockGetRecommendationsByIds = jest.mocked(getRecommendationsByIds);
 
 const SKILLS = [
   new SkillSummary().skill('React').years(4).mock(),
@@ -60,6 +67,10 @@ const renderSkillsTable = (props: Parameters<typeof SkillsTable>[0]) =>
       </TrackContextProvider>
     </MemoryRouter>
   );
+
+beforeEach(() => {
+  mockGetRecommendationsByIds.mockReturnValue([]);
+});
 
 describe('SkillsTable', () => {
   test('renders each skill with its estimated years', async () => {
@@ -175,5 +186,66 @@ describe('SkillsTable', () => {
 
     expect(screen.getByRole('menu')).toBeVisible();
     expect(screen.getByRole('menuitem', { name: 'View on Resume' })).toBeVisible();
+  });
+
+  test('renders a tech chip on a skill with type tech', () => {
+    const skills = [new SkillSummary().skill('React').type('tech').mock()];
+
+    const screen = renderSkillsTable({ categoryGroups: buildCategoryGroups(skills) });
+
+    expect(screen.getByText('tech')).toBeVisible();
+  });
+
+  test('renders a non-technical chip on a skill with type skill', () => {
+    const skills = [new SkillSummary().skill('Leadership').type('skill').mock()];
+
+    const screen = renderSkillsTable({ categoryGroups: buildCategoryGroups(skills) });
+
+    expect(screen.getByText('non-technical')).toBeVisible();
+  });
+
+  test('renders no recommendation badge when the skill has no recommendation ids', () => {
+    const skills = [new SkillSummary().skill('React').recommendationIds([]).mock()];
+
+    const screen = renderSkillsTable({ categoryGroups: buildCategoryGroups(skills) });
+
+    expect(screen.queryByRole('button', { name: /recommendation/ })).not.toBeInTheDocument();
+  });
+
+  test('renders a recommendation badge and opens a popover with author and excerpt on click', async () => {
+    const user = userEvent.setup();
+    const rec = new Recommendation()
+      .id('rec-1')
+      .authorInitials('J.D.')
+      .authorRole({ jobTitle: 'Staff Engineer' })
+      .text('A reliable collaborator across many projects.')
+      .mock();
+
+    mockGetRecommendationsByIds.mockReturnValue([rec]);
+
+    const skills = [new SkillSummary().skill('React').recommendationIds(['rec-1']).mock()];
+    const screen = renderSkillsTable({ categoryGroups: buildCategoryGroups(skills) });
+
+    const badge = screen.getByRole('button', { name: '1 recommendation' });
+
+    expect(badge).toBeVisible();
+
+    await user.click(badge);
+
+    expect(screen.getByText('J.D. — Staff Engineer')).toBeVisible();
+    expect(screen.getByText('A reliable collaborator across many projects.')).toBeVisible();
+    expect(await axe(screen.container)).toHaveNoViolations();
+  });
+
+  test('renders a plural label on the badge when a skill has multiple recommendations', () => {
+    const rec1 = new Recommendation().id('rec-1').mock();
+    const rec2 = new Recommendation().id('rec-2').mock();
+
+    mockGetRecommendationsByIds.mockReturnValue([rec1, rec2]);
+
+    const skills = [new SkillSummary().skill('React').recommendationIds(['rec-1', 'rec-2']).mock()];
+    const screen = renderSkillsTable({ categoryGroups: buildCategoryGroups(skills) });
+
+    expect(screen.getByRole('button', { name: '2 recommendations' })).toBeVisible();
   });
 });

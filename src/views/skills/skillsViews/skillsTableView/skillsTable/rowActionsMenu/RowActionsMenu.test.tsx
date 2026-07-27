@@ -8,14 +8,7 @@ import { SkillSummary } from '@/testing';
 
 import { RowActionsMenu } from './RowActionsMenu';
 
-const SKILL_NO_RECS = new SkillSummary().skill('React').recommendationIds([]).mock();
-
-const SKILL_ONE_REC = new SkillSummary().skill('TypeScript').recommendationIds(['rec-1']).mock();
-
-const SKILL_TWO_RECS = new SkillSummary()
-  .skill('Jest')
-  .recommendationIds(['rec-1', 'rec-2'])
-  .mock();
+const SKILL = new SkillSummary().skill('React').recommendationIds([]).mock();
 
 const renderMenu = (props: Parameters<typeof RowActionsMenu>[0]) =>
   render(
@@ -27,9 +20,9 @@ const renderMenu = (props: Parameters<typeof RowActionsMenu>[0]) =>
   );
 
 describe('RowActionsMenu', () => {
-  test('opens the menu on button click', async () => {
+  test('opens the menu on button click and shows View on Resume', async () => {
     const user = userEvent.setup();
-    const screen = renderMenu({ skill: SKILL_NO_RECS });
+    const screen = renderMenu({ skill: SKILL });
 
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
 
@@ -40,11 +33,11 @@ describe('RowActionsMenu', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('closes the menu on menu item click', async () => {
+  test('closes the menu when the View on Resume item is clicked', async () => {
     const user = userEvent.setup();
-    const screen = renderMenu({ skill: SKILL_ONE_REC });
+    const screen = renderMenu({ skill: SKILL });
 
-    await user.click(screen.getByRole('button', { name: 'TypeScript links' }));
+    await user.click(screen.getByRole('button', { name: 'React links' }));
     await user.click(screen.getByRole('menuitem', { name: 'View on Resume' }));
 
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
@@ -52,7 +45,7 @@ describe('RowActionsMenu', () => {
 
   test('closes the menu on Escape', async () => {
     const user = userEvent.setup();
-    const screen = renderMenu({ skill: SKILL_NO_RECS });
+    const screen = renderMenu({ skill: SKILL });
 
     await user.click(screen.getByRole('button', { name: 'React links' }));
     await user.keyboard('{Escape}');
@@ -60,54 +53,14 @@ describe('RowActionsMenu', () => {
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
-  test('closes the menu on recommendation item click', async () => {
+  test('renders the View on Resume menu item with the correct href', async () => {
     const user = userEvent.setup();
-    const screen = renderMenu({ skill: SKILL_ONE_REC });
-
-    await user.click(screen.getByRole('button', { name: 'TypeScript links' }));
-    await user.click(screen.getByRole('menuitem', { name: 'Recommendation' }));
-
-    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
-  });
-
-  test('renders "View on Resume" menu item with correct href', async () => {
-    const user = userEvent.setup();
-    const screen = renderMenu({ skill: SKILL_NO_RECS });
+    const screen = renderMenu({ skill: SKILL });
 
     await user.click(screen.getByRole('button', { name: 'React links' }));
 
     const link = screen.getByRole('menuitem', { name: 'View on Resume' });
 
     expect(link).toHaveAttribute('href', '/?skill=React&track=general');
-  });
-
-  test('renders singular "Recommendation" label when skill has exactly one recommendation', async () => {
-    const user = userEvent.setup();
-    const screen = renderMenu({ skill: SKILL_ONE_REC });
-
-    await user.click(screen.getByRole('button', { name: 'TypeScript links' }));
-
-    expect(screen.getByRole('menuitem', { name: 'Recommendation' })).toBeVisible();
-  });
-
-  test('renders plural "Recommendation N" labels when skill has multiple recommendations', async () => {
-    const user = userEvent.setup();
-    const screen = renderMenu({ skill: SKILL_TWO_RECS });
-
-    await user.click(screen.getByRole('button', { name: 'Jest links' }));
-
-    expect(screen.getByRole('menuitem', { name: 'Recommendation 1' })).toBeVisible();
-    expect(screen.getByRole('menuitem', { name: 'Recommendation 2' })).toBeVisible();
-  });
-
-  test('renders recommendation menu items with correct href', async () => {
-    const user = userEvent.setup();
-    const screen = renderMenu({ skill: SKILL_ONE_REC });
-
-    await user.click(screen.getByRole('button', { name: 'TypeScript links' }));
-
-    const link = screen.getByRole('menuitem', { name: 'Recommendation' });
-
-    expect(link).toHaveAttribute('href', '/?recommendation=rec-1&track=general');
   });
 });

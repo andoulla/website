@@ -19,10 +19,19 @@ export const SkillsGrowthView = () => {
     () => deriveCareerYearRange(careerHistory, track),
     [careerHistory, track]
   );
+  const domainMinYear = useMemo(
+    () =>
+      Math.min(
+        ...careerHistory
+          .filter((event) => event.type === 'work')
+          .map((event) => new Date(event.startDate).getUTCFullYear())
+      ),
+    [careerHistory]
+  );
 
   if (skills.length === 0 || growth.points.length === 0) {
     return <SkillsNoData />;
   }
 
-  return <SkillsGrowthChart growth={growth} maxYear={maxYear} />;
+  return <SkillsGrowthChart growth={growth} maxYear={maxYear} domainMinYear={domainMinYear} />;
 };
