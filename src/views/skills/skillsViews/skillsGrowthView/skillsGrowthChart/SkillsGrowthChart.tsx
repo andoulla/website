@@ -49,19 +49,19 @@ const MarkerLabel = ({ viewBox, value, fill }: MarkerLabelProps) => {
 interface SkillsGrowthChartProps {
   growth: SkillGrowth;
   maxYear: number;
+  domainMinYear: number;
 }
 
-export const SkillsGrowthChart = ({ growth, maxYear }: SkillsGrowthChartProps) => {
+export const SkillsGrowthChart = ({ growth, maxYear, domainMinYear }: SkillsGrowthChartProps) => {
   const theme = useTheme();
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const lineColour = theme.palette.primary.main;
 
-  const dataMinYear =
-    growth.points.length > 0 ? Math.floor(growth.points[0].year) : Math.floor(maxYear);
-  const domainMax = Math.max(maxYear, dataMinYear + 1);
+  const domainMin = domainMinYear;
+  const domainMax = Math.max(maxYear, domainMin + 1);
   // only show markers that fall within the chart domain
   const markers = growth.markers.filter(
-    (marker) => marker.year >= dataMinYear && marker.year <= domainMax
+    (marker) => marker.year >= domainMin && marker.year <= domainMax
   );
 
   // sentinel: extends plateau to today (stepAfter stops at last data point otherwise)
@@ -71,7 +71,7 @@ export const SkillsGrowthChart = ({ growth, maxYear }: SkillsGrowthChartProps) =
       ? [...growth.points, { year: domainMax, count: lastPoint.count }]
       : growth.points;
 
-  const yearTicks = Array.from({ length: domainMax - dataMinYear + 1 }, (_, i) => dataMinYear + i);
+  const yearTicks = Array.from({ length: domainMax - domainMin + 1 }, (_, i) => domainMin + i);
 
   // fractional year; day ≤ 10 → snapped to month start (matches startFraction in deriveSkillGrowth)
   const markerX = (startDate: string, year: number): number => {
@@ -98,7 +98,7 @@ export const SkillsGrowthChart = ({ growth, maxYear }: SkillsGrowthChartProps) =
           <XAxis
             type="number"
             dataKey="year"
-            domain={[dataMinYear, domainMax]}
+            domain={[domainMin, domainMax]}
             ticks={yearTicks}
             allowDecimals={false}
             tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
