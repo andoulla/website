@@ -9,8 +9,7 @@ import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 interface CategoryLegendProps {
   categories: PresentCategory[];
   shape?: 'circle' | 'square';
-  // Called with the resolved hex colour and the category's track index.
-  // Return a CSS background string (e.g. a pattern url()) to override the solid colour dot.
+  // Override the dot background — e.g. a pattern url(). Receives the hex colour and track index.
   getBackground?: (colour: string, categoryIndex: number) => string;
 }
 

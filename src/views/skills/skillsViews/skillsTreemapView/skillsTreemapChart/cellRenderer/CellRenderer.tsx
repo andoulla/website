@@ -18,8 +18,7 @@ type CellRenderProps = {
   value: number;
 };
 
-// Extracted outside the chart component to avoid react/prop-types false positives on render fn.
-// Uses a named function declaration so Recharts can read the display name via .name.
+// Module-level: avoids react/prop-types false positives; named fn so Recharts reads .name.
 export const makeCellRenderer = (
   colourByName: Map<string, string>,
   patternIdByName: Map<string, string> | null,
