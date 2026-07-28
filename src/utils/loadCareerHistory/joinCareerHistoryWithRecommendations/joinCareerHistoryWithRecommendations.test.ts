@@ -44,8 +44,11 @@ describe('joinCareerHistoryWithRecommendations', () => {
       .name('Team Leadership')
       .type('skill')
       .mock();
-    const jestSkill = new Skill().id('jest').name('Jest').type('tech').jobIds(['job-2']).mock();
-    const skills = [reactSkill, leadershipSkill, jestSkill];
+    const skills = [
+      reactSkill,
+      leadershipSkill,
+      new Skill().id('jest').name('Jest').type('tech').jobIds(['job-2']).mock(),
+    ];
 
     const [result] = joinCareerHistoryWithRecommendations(careerHistory, [], skills);
 

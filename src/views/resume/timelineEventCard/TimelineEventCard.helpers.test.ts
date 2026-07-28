@@ -88,9 +88,9 @@ describe('groupSkillsByCategory', () => {
   });
 
   test('skips skills the track does not include and returns an empty array for no skills', () => {
-    const offTrackSkill = new Skill().id('kubernetes').name('Kubernetes').mock();
-
-    expect(groupSkillsByCategory([offTrackSkill], track)).toEqual([]);
+    expect(
+      groupSkillsByCategory([new Skill().id('kubernetes').name('Kubernetes').mock()], track)
+    ).toEqual([]);
     expect(groupSkillsByCategory([], track)).toEqual([]);
   });
 });

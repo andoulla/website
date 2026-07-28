@@ -3,12 +3,15 @@ import { Skill, TimelineEvent } from '@/testing';
 import { findMostRecentSkillMatchIndex } from './Resume.helpers';
 
 const reactSkill = new Skill().id('react').name('React').mock();
-const otherSkill = new Skill().id('vue').name('Vue').mock();
 
 describe('findMostRecentSkillMatchIndex', () => {
   test('returns -1 when no event has the skill', () => {
     const events = [
-      new TimelineEvent().startDate('2020-01-01').endDate('2021-01-01').skills([otherSkill]).mock(),
+      new TimelineEvent()
+        .startDate('2020-01-01')
+        .endDate('2021-01-01')
+        .skills([new Skill().id('vue').name('Vue').mock()])
+        .mock(),
     ];
 
     expect(findMostRecentSkillMatchIndex(events, 'react')).toBe(-1);

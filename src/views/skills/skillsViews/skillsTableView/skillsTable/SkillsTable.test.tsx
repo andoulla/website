@@ -246,10 +246,10 @@ describe('SkillsTable', () => {
   });
 
   test('renders a plural label on the badge when a skill has multiple recommendations', () => {
-    const rec1 = new Recommendation().id('rec-1').mock();
-    const rec2 = new Recommendation().id('rec-2').mock();
-
-    mockGetRecommendationsByIds.mockReturnValue([rec1, rec2]);
+    mockGetRecommendationsByIds.mockReturnValue([
+      new Recommendation().id('rec-1').mock(),
+      new Recommendation().id('rec-2').mock(),
+    ]);
 
     const skills = [new SkillSummary().skill('React').recommendationIds(['rec-1', 'rec-2']).mock()];
     const screen = renderSkillsTable({ categoryGroups: buildCategoryGroups(skills) });

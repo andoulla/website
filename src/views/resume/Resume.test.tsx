@@ -203,7 +203,6 @@ describe('Resume', () => {
 
   test('scrolls to the job containing the highlighted recommendation, taking priority over a skill match', async () => {
     const scrollIntoViewSpy = jest.spyOn(HTMLElement.prototype, 'scrollIntoView');
-    const targetRecommendation = new Recommendation().id('rec-2').mock();
     const reactSkill = new Skill().id('react').name('React').mock();
     const careerHistoryWithRecommendation = [
       new TimelineEvent()
@@ -217,7 +216,7 @@ describe('Resume', () => {
         .companyName('Brightleaf Software')
         .startDate('2021-04-01')
         .skills([reactSkill])
-        .recommendations([targetRecommendation])
+        .recommendations([new Recommendation().id('rec-2').mock()])
         .mock(),
     ];
 

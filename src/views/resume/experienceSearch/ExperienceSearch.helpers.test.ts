@@ -107,8 +107,9 @@ describe('ExperienceSearch helpers', () => {
       .type('tech')
       .synonyms(['JavaScript', 'JS', 'ECMAScript'])
       .mock();
-    const jobWithJavaScript = new TimelineEvent().id('job-5').techStack([javaScriptTech]).mock();
-    const [skillRow] = buildSearchResults([jobWithJavaScript]);
+    const [skillRow] = buildSearchResults([
+      new TimelineEvent().id('job-5').techStack([javaScriptTech]).mock(),
+    ]);
 
     expect(matchesQuery(skillRow, 'jav')).toBe(true);
     expect(matchesQuery(skillRow, 'js')).toBe(true);

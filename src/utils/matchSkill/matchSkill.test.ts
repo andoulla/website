@@ -74,9 +74,12 @@ describe('matchSkill', () => {
   });
 
   test('prefers a canonical name match over a colliding synonym on another skill', () => {
-    const decoy = new Skill().name('Decoy').synonyms(['React']).jobIds(['job-1']).mock();
-
-    expect(matchSkill('React', [decoy, REACT])?.skill).toEqual(REACT);
+    expect(
+      matchSkill('React', [
+        new Skill().name('Decoy').synonyms(['React']).jobIds(['job-1']).mock(),
+        REACT,
+      ])?.skill
+    ).toEqual(REACT);
   });
 
   test('defaults to the real skills dataset when no skills list is provided', () => {

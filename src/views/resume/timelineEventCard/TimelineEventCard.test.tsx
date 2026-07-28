@@ -127,11 +127,17 @@ describe('TimelineEventCard', () => {
       .name('Team Leadership')
       .type('skill')
       .mock();
-    const offTrackSkill = new Skill().id('kubernetes').name('Kubernetes').type('skill').mock();
 
     const screen = render(
       <TimelineEventCard
-        event={{ ...event, skills: [reactSkill, leadershipSkill, offTrackSkill] }}
+        event={{
+          ...event,
+          skills: [
+            reactSkill,
+            leadershipSkill,
+            new Skill().id('kubernetes').name('Kubernetes').type('skill').mock(),
+          ],
+        }}
         track={testTrack}
       />,
       { wrapper: MemoryRouter }
@@ -184,13 +190,17 @@ describe('TimelineEventCard', () => {
 
   test('renders tech stack items as comma-separated text', async () => {
     const user = userEvent.setup();
-    const viteSkill = new Skill().id('vite').name('Vite').type('tech').mock();
-    const jestSkill = new Skill().id('jest').name('Jest').type('tech').mock();
-    const playwrightSkill = new Skill().id('playwright').name('Playwright').type('tech').mock();
 
     const screen = render(
       <TimelineEventCard
-        event={{ ...event, techStack: [viteSkill, jestSkill, playwrightSkill] }}
+        event={{
+          ...event,
+          techStack: [
+            new Skill().id('vite').name('Vite').type('tech').mock(),
+            new Skill().id('jest').name('Jest').type('tech').mock(),
+            new Skill().id('playwright').name('Playwright').type('tech').mock(),
+          ],
+        }}
         track={testTrack}
       />,
       { wrapper: MemoryRouter }

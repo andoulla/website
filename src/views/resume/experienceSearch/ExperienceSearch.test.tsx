@@ -42,7 +42,6 @@ async function renderSearch(
 }
 
 const reactSkill = new Skill().id('react').name('React').mock();
-const teamLeadershipSkill = new Skill().id('team-leadership').name('Team Leadership').mock();
 
 describe('ExperienceSearch', () => {
   test('surfaces skills from both the skills and tech-stack fields, one row per job', async () => {
@@ -111,7 +110,7 @@ describe('ExperienceSearch', () => {
         .companyName('Meridian Dynamics')
         .startDate('2022-04-01')
         .endDate(null)
-        .skills([teamLeadershipSkill])
+        .skills([new Skill().id('team-leadership').name('Team Leadership').mock()])
         .mock(),
     ];
     const user = userEvent.setup();
