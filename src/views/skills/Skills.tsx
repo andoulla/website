@@ -284,7 +284,7 @@ const SkillsContent = () => {
                 value={effectiveViewMode}
                 exclusive
                 onChange={(_e, next: ViewMode | null) => {
-                  if (next !== null && !isCompareMode) setViewMode(next);
+                  if (next !== null) setViewMode(next);
                 }}
                 size="small"
                 aria-label="View mode"
