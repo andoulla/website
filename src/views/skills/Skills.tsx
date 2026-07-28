@@ -375,7 +375,7 @@ const SkillsContent = () => {
           {minYear < maxYear && (
             <Stack sx={{ gap: 1, py: 1, px: 1 }}>
               <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
-                As of year
+                Time machine
               </Typography>
               <TimeMachineSlider
                 year={cutoffYear}
