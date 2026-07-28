@@ -236,51 +236,13 @@ describe('SkillsTable', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('renders "this track only" label on a skill matching the diff side', () => {
-    const skills = [new SkillSummary().id('react').skill('React').mock()];
-    const diffStatusMap = new Map([['react', 'only-a' as const]]);
-
+  test('hides the Type column when hideTypeColumn is true', () => {
     const screen = renderSkillsTable({
-      categoryGroups: buildCategoryGroups(skills),
-      diffStatusMap,
-      diffSide: 'a',
+      categoryGroups: buildCategoryGroups(SKILLS),
+      hideTypeColumn: true,
     });
 
-    expect(screen.getByText('this track only')).toBeVisible();
-  });
-
-  test('does not render "this track only" when the skill is on the other side', () => {
-    const skills = [new SkillSummary().id('react').skill('React').mock()];
-    const diffStatusMap = new Map([['react', 'only-b' as const]]);
-
-    const screen = renderSkillsTable({
-      categoryGroups: buildCategoryGroups(skills),
-      diffStatusMap,
-      diffSide: 'a',
-    });
-
-    expect(screen.queryByText('this track only')).not.toBeInTheDocument();
-  });
-
-  test('renders "different category" label on a skill with both-moved status', async () => {
-    const skills = [new SkillSummary().id('react').skill('React').mock()];
-    const diffStatusMap = new Map([['react', 'both-moved' as const]]);
-
-    const screen = renderSkillsTable({
-      categoryGroups: buildCategoryGroups(skills),
-      diffStatusMap,
-      diffSide: 'a',
-    });
-
-    expect(screen.getByText('different category')).toBeVisible();
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('renders no diff labels when diffStatusMap is absent', () => {
-    const screen = renderSkillsTable({ categoryGroups: buildCategoryGroups(SKILLS) });
-
-    expect(screen.queryByText('this track only')).not.toBeInTheDocument();
-    expect(screen.queryByText('different category')).not.toBeInTheDocument();
+    expect(screen.queryByRole('columnheader', { name: 'Type' })).not.toBeInTheDocument();
   });
 
   test('renders a plural label on the badge when a skill has multiple recommendations', () => {

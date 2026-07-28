@@ -121,55 +121,11 @@ describe('SkillsCompareView', () => {
     expect(screen.getByText('Python')).toBeVisible();
   });
 
-  test('shows "only here" label on the row for a skill unique to the primary track', () => {
+  test('renders a legend explaining diff markers', async () => {
     const screen = renderCompareView();
 
-    // Node.js is only-a: its row in the primary column should carry the "only here" label
-    const nodeRow = screen.getByText('Node.js').closest('tr');
-
-    expect(nodeRow?.textContent).toContain('this track only');
-  });
-
-  test('shows "only here" label on the row for a skill unique to the compare track', () => {
-    const screen = renderCompareView();
-
-    // Python is only-b: its row in the compare column should carry the "only here" label
-    const pythonRow = screen.getByText('Python').closest('tr');
-
-    expect(pythonRow?.textContent).toContain('this track only');
-  });
-
-  test('shows "moved" label when a skill sits in a different category across tracks', async () => {
-    // React is in 'frontend' in primary; in 'leadership' in movedCompareTrack → both-moved
-    const movedCompareTrack = new Track()
-      .id('lead')
-      .label('Lead')
-      .categories([
-        {
-          id: 'leadership',
-          name: 'Leadership',
-          subCategories: [{ id: 'management', name: 'Management', skillIds: ['react'] }],
-        },
-      ])
-      .mock();
-
-    const movedCompareSkills = [
-      new SkillSummary()
-        .id('react')
-        .skill('React')
-        .categoryId('leadership')
-        .subCategoryId('management')
-        .mock(),
-    ];
-    const screen = renderCompareView({
-      compareTrack: movedCompareTrack,
-      compareSkills: movedCompareSkills,
-    });
-
-    // React is both-moved: at least one "moved" label visible
-    const movedLabels = screen.getAllByText('different category');
-
-    expect(movedLabels.length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText('This track only')).toBeVisible();
+    expect(screen.getByText('In different categories')).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 });

@@ -12,6 +12,9 @@ import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 
 import { groupSkillsByTrack, SkillsTable, useSkillsViewContext } from '..';
 
+import { alignCompareGroups } from './SkillsCompareView.helpers';
+import { CompareLegend } from './compareLegend';
+
 interface SkillsCompareViewProps {
   compareTrack: Track;
   compareSkills: SkillSummary[];
@@ -49,48 +52,54 @@ export const SkillsCompareView = ({ compareTrack, compareSkills }: SkillsCompare
     return compareFiltered.filter((skill) => skillMatchesSearch(skill, searchTerm));
   }, [compareFiltered, searchTerm]);
 
-  const primaryGroups = useMemo(
-    () => groupSkillsByTrack(primaryTrack, primarySearched),
-    [primaryTrack, primarySearched]
-  );
+  const { primary: primaryGroups, compare: compareGroups } = useMemo(() => {
+    const rawPrimary = groupSkillsByTrack(primaryTrack, primarySearched);
+    const rawCompare = groupSkillsByTrack(compareTrack, compareSearched);
 
-  const compareGroups = useMemo(
-    () => groupSkillsByTrack(compareTrack, compareSearched),
-    [compareTrack, compareSearched]
-  );
+    return alignCompareGroups(rawPrimary, rawCompare);
+  }, [primaryTrack, primarySearched, compareTrack, compareSearched]);
 
   return (
-    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ alignItems: 'flex-start' }}>
-      <Box
-        sx={{ flex: 1, minWidth: 0 }}
-        aria-label={`${primaryTrack.label} skills`}
-        component="section"
+    <>
+      <CompareLegend />
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={3}
+        sx={{ alignItems: 'flex-start', mt: 1.5 }}
       >
-        <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
-          {primaryTrack.label}
-        </Typography>
-        <SkillsTable
-          categoryGroups={primaryGroups}
-          highlightedSkills={highlightedSkills}
-          diffStatusMap={diffStatusMap}
-          diffSide="a"
-        />
-      </Box>
-      <Box
-        sx={{ flex: 1, minWidth: 0 }}
-        aria-label={`${compareTrack.label} skills`}
-        component="section"
-      >
-        <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
-          {compareTrack.label}
-        </Typography>
-        <SkillsTable
-          categoryGroups={compareGroups}
-          highlightedSkills={highlightedSkills}
-          diffStatusMap={diffStatusMap}
-          diffSide="b"
-        />
-      </Box>
-    </Stack>
+        <Box
+          sx={{ flex: 1, minWidth: 0 }}
+          aria-label={`${primaryTrack.label} skills`}
+          component="section"
+        >
+          <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
+            {primaryTrack.label}
+          </Typography>
+          <SkillsTable
+            categoryGroups={primaryGroups}
+            highlightedSkills={highlightedSkills}
+            diffStatusMap={diffStatusMap}
+            diffSide="a"
+            hideTypeColumn
+          />
+        </Box>
+        <Box
+          sx={{ flex: 1, minWidth: 0 }}
+          aria-label={`${compareTrack.label} skills`}
+          component="section"
+        >
+          <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
+            {compareTrack.label}
+          </Typography>
+          <SkillsTable
+            categoryGroups={compareGroups}
+            highlightedSkills={highlightedSkills}
+            diffStatusMap={diffStatusMap}
+            diffSide="b"
+            hideTypeColumn
+          />
+        </Box>
+      </Stack>
+    </>
   );
 };

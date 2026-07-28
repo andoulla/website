@@ -197,7 +197,15 @@ const SkillsContent = () => {
       return (
         <Stack direction="row" sx={{ alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
           <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
-            Comparing {track.label} with
+            {'Comparing '}
+            <Typography
+              component="span"
+              variant="body2"
+              sx={{ fontWeight: 600, color: 'primary.main' }}
+            >
+              {track.label}
+            </Typography>
+            {' with'}
           </Typography>
           {tracks
             .filter((t) => t.id !== compareTrackId)
@@ -206,6 +214,8 @@ const SkillsContent = () => {
                 key={t.id}
                 label={t.label}
                 size="small"
+                variant="outlined"
+                color="primary"
                 onClick={() => setCompareTrackId(t.id)}
               />
             ))}
@@ -214,7 +224,7 @@ const SkillsContent = () => {
             variant="contained"
             startIcon={<CompareArrowsIcon />}
             onClick={handleDeactivateCompare}
-            sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
+            sx={{ textTransform: 'none', whiteSpace: 'nowrap', py: '2px' }}
           >
             Comparing
           </Button>
@@ -229,7 +239,7 @@ const SkillsContent = () => {
           variant="outlined"
           startIcon={<CompareArrowsIcon />}
           onClick={handleActivateCompare}
-          sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
+          sx={{ textTransform: 'none', whiteSpace: 'nowrap', py: '2px' }}
         >
           Compare
         </Button>

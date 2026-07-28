@@ -25,6 +25,7 @@ export interface SkillsTableProps {
   highlightedSkills?: string[];
   diffStatusMap?: Map<string, TrackDiffStatus>;
   diffSide?: 'a' | 'b';
+  hideTypeColumn?: boolean;
 }
 
 interface SkillRowProps {
@@ -32,9 +33,16 @@ interface SkillRowProps {
   isHighlighted: boolean;
   diffStatus?: TrackDiffStatus;
   diffSide?: 'a' | 'b';
+  hideTypeColumn?: boolean;
 }
 
-const SkillRow = ({ skill, isHighlighted, diffStatus, diffSide }: SkillRowProps) => {
+const SkillRow = ({
+  skill,
+  isHighlighted,
+  diffStatus,
+  diffSide,
+  hideTypeColumn,
+}: SkillRowProps) => {
   const theme = useTheme();
 
   const isMoved = diffStatus === 'both-moved';
@@ -62,24 +70,16 @@ const SkillRow = ({ skill, isHighlighted, diffStatus, diffSide }: SkillRowProps)
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
           <CategoryColourDot colour={dotColour(skill, theme)} />
           {skill.skill}
-          {isMoved && (
-            <Typography variant="caption" color="warning.main">
-              different category
-            </Typography>
-          )}
-          {isUniqueHere && (
-            <Typography variant="caption" color="text.secondary">
-              this track only
-            </Typography>
-          )}
           <RecommendationBadge recommendationIds={skill.recommendationIds} />
         </Box>
       </TableCell>
-      <TableCell sx={{ verticalAlign: 'top' }}>
-        <Typography variant="body2" color="text.secondary">
-          {skill.type === 'tech' ? 'tech' : 'soft'}
-        </Typography>
-      </TableCell>
+      {hideTypeColumn !== true && (
+        <TableCell sx={{ verticalAlign: 'top' }}>
+          <Typography variant="body2" color="text.secondary">
+            {skill.type === 'tech' ? 'tech' : 'soft'}
+          </Typography>
+        </TableCell>
+      )}
       <TableCell sx={{ verticalAlign: 'top' }}>
         {skill.companyYears.length > 0 ? (
           <Typography variant="body2" color="text.secondary">
@@ -145,7 +145,10 @@ export const SkillsTable = ({
   highlightedSkills = [],
   diffStatusMap,
   diffSide,
+  hideTypeColumn,
 }: SkillsTableProps) => {
+  const colSpan = hideTypeColumn === true ? 4 : 5;
+
   const rows = categoryGroups.flatMap(({ category, subGroups, skills }) => {
     const categoryRow = {
       type: 'category' as const,
@@ -183,7 +186,7 @@ export const SkillsTable = ({
         <TableHead>
           <TableRow>
             <TableCell>Skill</TableCell>
-            <TableCell>Type</TableCell>
+            {hideTypeColumn !== true && <TableCell>Type</TableCell>}
             <TableCell>Companies</TableCell>
             <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
               Years
@@ -194,12 +197,17 @@ export const SkillsTable = ({
         <TableBody>
           {rows.map((row) => {
             if (row.type === 'category') {
-              return <GroupHeaderRow key={row.key} label={row.category.name} />;
+              return <GroupHeaderRow key={row.key} label={row.category.name} colSpan={colSpan} />;
             }
 
             if (row.type === 'subcategory') {
               return (
-                <GroupHeaderRow key={row.key} label={row.subCategory.name} variant="subcategory" />
+                <GroupHeaderRow
+                  key={row.key}
+                  label={row.subCategory.name}
+                  variant="subcategory"
+                  colSpan={colSpan}
+                />
               );
             }
 
@@ -210,6 +218,7 @@ export const SkillsTable = ({
                 isHighlighted={row.isHighlighted}
                 diffStatus={row.diffStatus}
                 diffSide={diffSide}
+                hideTypeColumn={hideTypeColumn}
               />
             );
           })}
