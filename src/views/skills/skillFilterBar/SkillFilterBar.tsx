@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
@@ -86,7 +86,7 @@ export const SkillFilterBar = ({
     .filter((group) => group.subCategories.length > 0);
 
   const activeCount = selectedCategories.length + selectedSubCategories.length;
-  const label = activeCount === 0 ? 'All' : `Filters (${activeCount})`;
+  const label = activeCount === 0 ? 'All' : `${activeCount} selected`;
 
   return (
     <>
@@ -94,14 +94,18 @@ export const SkillFilterBar = ({
         variant="outlined"
         size="small"
         color="inherit"
-        // Match the 36px height and divider border of the other toolbar controls.
-        sx={{ height: 36, borderColor: 'divider' }}
-        startIcon={<FilterListIcon fontSize="small" />}
+        endIcon={<KeyboardArrowDownIcon fontSize="small" />}
         onClick={(e) => setAnchorEl(e.currentTarget)}
-        aria-haspopup="true"
+        aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
-        aria-label={`Filter skills by category and subcategory, currently: ${label}`}
+        aria-label={`Filter skills by category, currently: ${label}`}
+        sx={{
+          height: 36,
+          borderColor: 'divider',
+          typography: 'button',
+          fontSize: '0.8125rem',
+        }}
       >
         {label}
       </Button>

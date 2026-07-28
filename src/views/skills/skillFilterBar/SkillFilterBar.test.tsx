@@ -40,7 +40,7 @@ describe('SkillFilterBar', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       ).toBeVisible();
       expect(await axe(screen.container)).toHaveNoViolations();
@@ -54,7 +54,7 @@ describe('SkillFilterBar', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (2)',
+          name: 'Filter skills by category, currently: 2 selected',
         })
       ).toBeVisible();
     });
@@ -67,7 +67,7 @@ describe('SkillFilterBar', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
 
@@ -90,7 +90,7 @@ describe('SkillFilterBar', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Frontend Development' }));
@@ -107,7 +107,7 @@ describe('SkillFilterBar', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (2)',
+          name: 'Filter skills by category, currently: 2 selected',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Frontend Development' }));
@@ -125,7 +125,7 @@ describe('SkillFilterBar', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (2)',
+          name: 'Filter skills by category, currently: 2 selected',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Frontend Development' }));
@@ -142,7 +142,7 @@ describe('SkillFilterBar', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+          name: 'Filter skills by category, currently: 1 selected',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Frontend Development' }));
@@ -159,7 +159,7 @@ describe('SkillFilterBar', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+          name: 'Filter skills by category, currently: 1 selected',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Quality & Performance' }));
@@ -174,7 +174,7 @@ describe('SkillFilterBar', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
 
@@ -190,7 +190,7 @@ describe('SkillFilterBar', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+          name: 'Filter skills by category, currently: 1 selected',
         })
       );
 
@@ -208,7 +208,7 @@ describe('SkillFilterBar', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
@@ -226,7 +226,7 @@ describe('SkillFilterBar', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+          name: 'Filter skills by category, currently: 1 selected',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
