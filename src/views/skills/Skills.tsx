@@ -1,10 +1,9 @@
 import { Suspense, useCallback, useMemo, useState } from 'react';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
+import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -16,7 +15,6 @@ import { PageContainer } from '@/components/pageContainer';
 import { useCareerDataContext } from '@/context/careerData';
 import { useTrackContext } from '@/context/track';
 import { tracks } from '@/data/tracks';
-import type { TrackId } from '@/types';
 import { calculateSkillYears } from '@/utils/calculateSkillYears';
 import { deriveAllSkills } from '@/utils/deriveAllSkills';
 import { deriveCareerYearRange } from '@/utils/deriveCareerYearRange';
@@ -197,30 +195,20 @@ const SkillsContent = () => {
   const renderCompareControls = () => {
     if (isCompareMode) {
       return (
-        <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}>
-          <Select<TrackId>
-            size="small"
-            value={compareTrackId}
-            onChange={(event) => {
-              setCompareTrackId(event.target.value);
-            }}
-            inputProps={{ 'aria-label': 'Compare with track' }}
-            sx={{
-              color: 'inherit',
-              '& .MuiSelect-select': {
-                py: '4px',
-                typography: 'button',
-                fontSize: '0.8125rem',
-              },
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
-            }}
-          >
-            {tracks.map((t) => (
-              <MenuItem key={t.id} value={t.id}>
-                {t.label}
-              </MenuItem>
+        <Stack direction="row" sx={{ alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+          <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
+            Comparing {track.label} with
+          </Typography>
+          {tracks
+            .filter((t) => t.id !== compareTrackId)
+            .map((t) => (
+              <Chip
+                key={t.id}
+                label={t.label}
+                size="small"
+                onClick={() => setCompareTrackId(t.id)}
+              />
             ))}
-          </Select>
           <Button
             size="small"
             variant="contained"
