@@ -205,23 +205,23 @@ describe('parseAsOfYear', () => {
 
 describe('parseCompareTrackId', () => {
   test('returns null when the param is null', () => {
-    expect(parseCompareTrackId(null, 'general')).toBeNull();
+    expect(parseCompareTrackId(null)).toBeNull();
   });
 
   test('returns null for an unrecognised track id', () => {
-    expect(parseCompareTrackId('bogus', 'general')).toBeNull();
+    expect(parseCompareTrackId('bogus')).toBeNull();
   });
 
-  test('returns null when the param equals the current track id', () => {
-    expect(parseCompareTrackId('general', 'general')).toBeNull();
+  test('returns a valid track id including the same as the current primary', () => {
+    expect(parseCompareTrackId('general')).toBe('general');
   });
 
-  test('returns a valid, different track id', () => {
-    expect(parseCompareTrackId('lead', 'general')).toBe('lead');
+  test('returns lead', () => {
+    expect(parseCompareTrackId('lead')).toBe('lead');
   });
 
-  test('returns senior-engineer when it differs from the current track', () => {
-    expect(parseCompareTrackId('senior-engineer', 'general')).toBe('senior-engineer');
+  test('returns senior-engineer', () => {
+    expect(parseCompareTrackId('senior-engineer')).toBe('senior-engineer');
   });
 });
 

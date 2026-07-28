@@ -71,14 +71,11 @@ export const scopeRecommendationsAsOf = (
   }));
 };
 
-// Parses the compareTrack URL param, returning null when absent, invalid, or equal to currentTrackId.
-export const parseCompareTrackId = (
-  raw: string | null,
-  currentTrackId: TrackId
-): TrackId | null => {
+// Parses the compareTrack URL param, returning null when absent or unrecognised.
+export const parseCompareTrackId = (raw: string | null): TrackId | null => {
   if (raw === null) return null;
 
-  if (!isTrackId(raw) || raw === currentTrackId) return null;
+  if (!isTrackId(raw)) return null;
 
   return raw;
 };

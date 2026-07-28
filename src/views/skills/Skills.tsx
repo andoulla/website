@@ -152,7 +152,7 @@ const SkillsContent = () => {
 
   const [compareTrackId, setCompareTrackId] = useSkillSearchUrl(
     COMPARE_TRACK_PARAM,
-    useCallback((raw) => parseCompareTrackId(raw, trackId), [trackId]),
+    parseCompareTrackId,
     (next) => next ?? null
   );
 
@@ -182,15 +182,14 @@ const SkillsContent = () => {
 
   const categories = useMemo(() => derivePresentCategories(skills), [skills]);
 
-  const availableCompareTracks = tracks.filter((t) => t.id !== trackId);
-
   const handleActivateCompare = useCallback(() => {
-    const firstAvailable = availableCompareTracks[0];
+    const firstAvailable = tracks.find((t) => t.id !== trackId);
 
     if (firstAvailable !== undefined) {
       setCompareTrackId(firstAvailable.id);
+      setViewMode('table');
     }
-  }, [availableCompareTracks, setCompareTrackId]);
+  }, [trackId, setCompareTrackId, setViewMode]);
 
   const handleDeactivateCompare = useCallback(() => {
     setCompareTrackId(null);
@@ -217,7 +216,7 @@ const SkillsContent = () => {
               '& .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
             }}
           >
-            {availableCompareTracks.map((t) => (
+            {tracks.map((t) => (
               <MenuItem key={t.id} value={t.id}>
                 {t.label}
               </MenuItem>
@@ -288,32 +287,31 @@ const SkillsContent = () => {
         )}
         <Stack direction="row" sx={{ alignItems: 'center', ml: 'auto', gap: 1.5 }}>
           <CopyLinkButton />
-          <Tooltip title={isCompareMode ? 'View toggle is disabled in compare mode' : ''}>
-            <span>
-              <ToggleButtonGroup
-                value={effectiveViewMode}
-                exclusive
-                onChange={(_e, next: ViewMode | null) => {
-                  if (next !== null) setViewMode(next);
-                }}
-                size="small"
-                aria-label="View mode"
-                disabled={isCompareMode}
-                sx={{
-                  '& .MuiToggleButton-root': { px: { xs: 0.75, sm: 1.25 } },
-                  '& .MuiSvgIcon-root': { fontSize: { xs: '1.1rem', sm: '1.25rem' } },
-                }}
-              >
-                {VIEW_MODES.map((mode) => (
-                  <Tooltip key={mode} title={VIEW_OPTIONS[mode].label}>
-                    <ToggleButton value={mode} aria-label={VIEW_OPTIONS[mode].label}>
-                      {VIEW_OPTIONS[mode].icon}
-                    </ToggleButton>
-                  </Tooltip>
-                ))}
-              </ToggleButtonGroup>
-            </span>
-          </Tooltip>
+          <ToggleButtonGroup
+            value={effectiveViewMode}
+            exclusive
+            onChange={(_e, next: ViewMode | null) => {
+              if (next === null) return;
+
+              if (isCompareMode) handleDeactivateCompare();
+
+              setViewMode(next);
+            }}
+            size="small"
+            aria-label="View mode"
+            sx={{
+              '& .MuiToggleButton-root': { px: { xs: 0.75, sm: 1.25 } },
+              '& .MuiSvgIcon-root': { fontSize: { xs: '1.1rem', sm: '1.25rem' } },
+            }}
+          >
+            {VIEW_MODES.map((mode) => (
+              <Tooltip key={mode} title={VIEW_OPTIONS[mode].label}>
+                <ToggleButton value={mode} aria-label={VIEW_OPTIONS[mode].label}>
+                  {VIEW_OPTIONS[mode].icon}
+                </ToggleButton>
+              </Tooltip>
+            ))}
+          </ToggleButtonGroup>
         </Stack>
       </Stack>
       <Stack direction="row" sx={{ alignItems: 'center', mb: 0.5, minHeight: 38 }}>
