@@ -347,19 +347,19 @@ const SkillsContent = () => {
           {/* Filters row — equal-width controls with labels above */}
           <Stack direction="row" sx={{ flexWrap: 'wrap', alignItems: 'flex-start', gap: 3 }}>
             <Stack sx={{ flex: 1, minWidth: 180, gap: 0.5 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
                 Search
               </Typography>
               <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
             </Stack>
             <Stack sx={{ flex: 1, minWidth: 180, gap: 0.5 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
                 Track
               </Typography>
               <TrackFilter />
             </Stack>
             <Stack sx={{ flex: 1, minWidth: 180, gap: 0.5 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
                 Category
               </Typography>
               <SkillFilterBar
@@ -374,8 +374,8 @@ const SkillsContent = () => {
           </Stack>
           {minYear < maxYear && (
             <Stack sx={{ gap: 1, py: 1, px: 1 }}>
-              <Typography variant="body2" color="text.secondary">
-                Timeframe
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                As of year
               </Typography>
               <TimeMachineSlider
                 year={cutoffYear}
