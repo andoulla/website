@@ -196,6 +196,63 @@ const SkillsContent = () => {
     setCompareTrackId(null);
   }, [setCompareTrackId]);
 
+  const renderCompareControls = () => {
+    if (isCompareMode) {
+      return (
+        <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}>
+          <Select<TrackId>
+            size="small"
+            value={compareTrackId}
+            onChange={(event) => {
+              setCompareTrackId(event.target.value);
+            }}
+            inputProps={{ 'aria-label': 'Compare with track' }}
+            sx={{
+              color: 'inherit',
+              '& .MuiSelect-select': {
+                py: '4px',
+                typography: 'button',
+                fontSize: '0.8125rem',
+              },
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
+            }}
+          >
+            {availableCompareTracks.map((t) => (
+              <MenuItem key={t.id} value={t.id}>
+                {t.label}
+              </MenuItem>
+            ))}
+          </Select>
+          <Button
+            size="small"
+            variant="contained"
+            startIcon={<CompareArrowsIcon />}
+            onClick={handleDeactivateCompare}
+            sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
+          >
+            Comparing
+          </Button>
+        </Stack>
+      );
+    }
+
+    if (viewMode === 'table') {
+      return (
+        <Button
+          size="small"
+          variant="outlined"
+          startIcon={<CompareArrowsIcon />}
+          onClick={handleActivateCompare}
+          sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
+        >
+          Compare
+        </Button>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <>
       <Stack
@@ -212,53 +269,6 @@ const SkillsContent = () => {
       >
         <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
         <TrackFilter />
-        {isCompareMode ? (
-          <>
-            <Select<TrackId>
-              size="small"
-              value={compareTrackId}
-              onChange={(event) => {
-                setCompareTrackId(event.target.value);
-              }}
-              inputProps={{ 'aria-label': 'Compare with track' }}
-              sx={{
-                height: 36,
-                color: 'inherit',
-                '& .MuiSelect-select': {
-                  py: '6px',
-                  typography: 'button',
-                  fontSize: '0.8125rem',
-                },
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
-              }}
-            >
-              {availableCompareTracks.map((t) => (
-                <MenuItem key={t.id} value={t.id}>
-                  {t.label}
-                </MenuItem>
-              ))}
-            </Select>
-            <Button
-              size="small"
-              variant="contained"
-              startIcon={<CompareArrowsIcon />}
-              onClick={handleDeactivateCompare}
-              sx={{ height: 36, textTransform: 'none', whiteSpace: 'nowrap' }}
-            >
-              Comparing
-            </Button>
-          </>
-        ) : (
-          <Button
-            size="small"
-            variant="outlined"
-            startIcon={<CompareArrowsIcon />}
-            onClick={handleActivateCompare}
-            sx={{ height: 36, textTransform: 'none', whiteSpace: 'nowrap' }}
-          >
-            Compare
-          </Button>
-        )}
         <SkillFilterBar
           categories={categories}
           subCategoriesByCategory={subCategoriesByCategory}
@@ -329,6 +339,7 @@ const SkillsContent = () => {
             />
           </Tooltip>
         )}
+        {renderCompareControls()}
       </Stack>
       <SkillsStatBar filteredSkills={filteredSkills} />
       <SkillsCareerContextProvider careerHistory={careerHistory}>
