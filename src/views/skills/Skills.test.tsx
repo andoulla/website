@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import { MemoryRouter, useSearchParams } from 'react-router-dom';
@@ -104,7 +104,7 @@ describe('Skills', () => {
       const screen = await renderAndFlush();
 
       await user.click(screen.getByRole('button', { name: 'Table view' }));
-      await user.click(screen.getByRole('button', { name: 'General' }));
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
 
       expect(
         screen.getByRole('button', {
@@ -135,7 +135,7 @@ describe('Skills', () => {
         ['/skills?track=lead']
       );
 
-      await user.click(screen.getByRole('button', { name: 'Lead / Engineering Manager' }));
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
       await user.click(
         screen.getByRole('button', {
           name: 'Filter skills by category, currently: All',
@@ -155,12 +155,14 @@ describe('Skills', () => {
         ['/skills?track=general&category=frontend-development']
       );
 
-      await user.click(screen.getByRole('button', { name: 'General · 1 filter' }));
       await user.click(screen.getByRole('combobox', { name: 'Track' }));
       await user.click(screen.getByRole('option', { name: 'Lead / Engineering Manager' }));
 
       // frontend-development is not a lead category, so the parsed filters self-clean.
       expect(screen.getByText('search:track=lead&category=frontend-development')).toBeVisible();
+
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
+
       expect(
         screen.getByRole('button', {
           name: 'Filter skills by category, currently: All',
@@ -175,7 +177,7 @@ describe('Skills', () => {
         ['/skills?track=lead&category=frontend-development']
       );
 
-      await user.click(screen.getByRole('button', { name: 'Lead / Engineering Manager' }));
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
 
       expect(
         screen.getByRole('button', {
@@ -247,10 +249,13 @@ describe('Skills', () => {
 
   describe('category filter URL sync', () => {
     test('initializes the category filter from the URL query param', async () => {
+      const user = userEvent.setup();
       const screen = await renderAndFlush(
         () => Promise.resolve(CAREER_HISTORY),
         ['/skills?category=leadership-delivery']
       );
+
+      await user.click(screen.getByRole('button', { name: 'Filters · 1' }));
 
       expect(
         screen.getByRole('button', {
@@ -263,7 +268,7 @@ describe('Skills', () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
-      await user.click(screen.getByRole('button', { name: 'General' }));
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
       await user.click(
         screen.getByRole('button', {
           name: 'Filter skills by category, currently: All',
@@ -283,7 +288,7 @@ describe('Skills', () => {
         ['/skills?category=leadership-delivery']
       );
 
-      await user.click(screen.getByRole('button', { name: 'General · 1 filter' }));
+      await user.click(screen.getByRole('button', { name: 'Filters · 1' }));
       await user.click(
         screen.getByRole('button', {
           name: 'Filter skills by category, currently: 1 selected',
@@ -303,7 +308,7 @@ describe('Skills', () => {
         ['/skills?subCategory=testing']
       );
 
-      await user.click(screen.getByRole('button', { name: 'General · 1 filter' }));
+      await user.click(screen.getByRole('button', { name: 'Filters · 1' }));
 
       expect(
         screen.getByRole('button', {
@@ -316,7 +321,7 @@ describe('Skills', () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
-      await user.click(screen.getByRole('button', { name: 'General' }));
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
       await user.click(
         screen.getByRole('button', {
           name: 'Filter skills by category, currently: All',
@@ -334,7 +339,7 @@ describe('Skills', () => {
         ['/skills?subCategory=testing']
       );
 
-      await user.click(screen.getByRole('button', { name: 'General · 1 filter' }));
+      await user.click(screen.getByRole('button', { name: 'Filters · 1' }));
       await user.click(
         screen.getByRole('button', {
           name: 'Filter skills by category, currently: 1 selected',
@@ -419,7 +424,7 @@ describe('Skills', () => {
       const screen = await renderAndFlush();
 
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
-      await user.click(screen.getByRole('button', { name: 'General' }));
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
       await user.click(
         screen.getByRole('button', {
           name: 'Filter skills by category, currently: All',
@@ -435,7 +440,7 @@ describe('Skills', () => {
       const screen = await renderAndFlush();
 
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'typescript');
-      await user.click(screen.getByRole('button', { name: 'General' }));
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
       await user.click(
         screen.getByRole('button', {
           name: 'Filter skills by category, currently: All',
@@ -477,11 +482,12 @@ describe('Skills', () => {
         ['/skills?category=frontend-development&subCategory=testing']
       );
 
-      await user.click(screen.getByRole('button', { name: 'General · 2 filters' }));
-
       expect(
         screen.getByText('search:category=frontend-development&subCategory=testing&track=general')
       ).toBeVisible();
+
+      await user.click(screen.getByRole('button', { name: 'Filters · 2' }));
+
       expect(
         screen.getByRole('button', {
           name: 'Filter skills by category, currently: 2 selected',
@@ -495,7 +501,7 @@ describe('Skills', () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
-      await user.click(screen.getByRole('button', { name: 'General' }));
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
 
       expect(screen.getByRole('slider', { name: 'Career year' })).toHaveAttribute(
         'aria-valuemin',
@@ -511,7 +517,7 @@ describe('Skills', () => {
         ['/skills?asOf=2025']
       );
 
-      await user.click(screen.getByRole('button', { name: 'General · 1 filter' }));
+      await user.click(screen.getByRole('button', { name: 'Filters · 1' }));
 
       expect(screen.getByRole('slider', { name: 'Career year' })).toHaveAttribute(
         'aria-valuenow',
@@ -527,7 +533,8 @@ describe('Skills', () => {
         ['/skills?asOf=2024']
       );
 
-      await user.click(screen.getByRole('button', { name: 'General · 1 filter' }));
+      await user.click(screen.getByRole('button', { name: 'Filters · 1' }));
+
       const slider = screen.getByRole('slider', { name: 'Career year' });
 
       // Focus via act — a raw slider.focus() updates MUI's internal state outside React's batching.
@@ -551,8 +558,7 @@ describe('Skills', () => {
     test('opens and closes the filter panel when the trigger is clicked', async () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
-
-      const trigger = screen.getByRole('button', { name: 'General' });
+      const trigger = screen.getByRole('button', { name: 'Filters' });
 
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
 
@@ -565,25 +571,27 @@ describe('Skills', () => {
       await user.click(trigger);
 
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      expect(screen.queryByRole('group', { name: 'Skill filters' })).not.toBeInTheDocument();
+      // unmountOnExit removes panel contents once the collapse transition finishes.
+      await waitFor(() =>
+        expect(screen.queryByRole('group', { name: 'Skill filters' })).not.toBeInTheDocument()
+      );
     });
 
-    test('filter button label includes track name and filter count when filters are active', async () => {
+    test('trigger label shows the active filter count when a filter is applied', async () => {
       const user = userEvent.setup();
-      const screen = await renderAndFlush(
-        () => Promise.resolve(CAREER_HISTORY),
-        ['/skills?track=lead']
-      );
+      const screen = await renderAndFlush();
 
-      await user.click(screen.getByRole('button', { name: 'Lead / Engineering Manager' }));
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
       await user.click(
-        screen.getByRole('button', { name: 'Filter skills by category, currently: All' })
+        screen.getByRole('button', {
+          name: 'Filter skills by category, currently: All',
+        })
       );
-      await user.click(screen.getByRole('menuitemcheckbox', { name: 'JavaScript Stack' }));
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
+      // Close the menu — an open MUI menu marks the rest of the page aria-hidden.
+      await user.keyboard('{Escape}');
 
-      expect(
-        screen.getByRole('button', { name: 'Lead / Engineering Manager · 1 filter' })
-      ).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Filters · 1' })).toBeVisible();
     });
   });
 });

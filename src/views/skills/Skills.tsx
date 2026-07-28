@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
+import Collapse from '@mui/material/Collapse';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -10,7 +11,6 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import Collapse from '@mui/material/Collapse';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { PageContainer } from '@/components/pageContainer';
@@ -183,10 +183,7 @@ const SkillsContent = () => {
 
   const filterCount =
     selectedCategories.length + selectedSubCategories.length + (cutoffYear < maxYear ? 1 : 0);
-  const filterButtonLabel =
-    filterCount > 0
-      ? `${track.label} · ${filterCount} filter${filterCount === 1 ? '' : 's'}`
-      : track.label;
+  const filterButtonLabel = filterCount > 0 ? `Filters · ${filterCount}` : 'Filters';
 
   const ActiveView = VIEW_OPTIONS[effectiveViewMode].Component;
 
@@ -296,16 +293,17 @@ const SkillsContent = () => {
         </ToggleButtonGroup>
       </Stack>
 
-      {/* Heading row: view name (h2) + compare controls + search + filter trigger */}
-      <Stack
-        direction="row"
-        sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1.5, mb: 0.5 }}
-      >
+      {/* Heading row: view name (h2) + compare controls + track + search + filter trigger */}
+      <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1.5, mb: 0.5 }}>
         <Typography variant="h5" component="h2" sx={{ fontWeight: 600, letterSpacing: '-0.02em' }}>
           {VIEW_OPTIONS[effectiveViewMode].label}
         </Typography>
         {renderCompareControls()}
-        <Stack direction="row" sx={{ alignItems: 'center', gap: 1.5, ml: 'auto' }}>
+        <Stack
+          direction="row"
+          sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1.5, ml: 'auto' }}
+        >
+          <TrackFilter />
           <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
           <Button
             variant="outlined"
@@ -321,7 +319,7 @@ const SkillsContent = () => {
             }
             onClick={() => setFilterPanelOpen((prev) => !prev)}
             aria-expanded={filterPanelOpen}
-            aria-controls="skill-filter-panel"
+            aria-controls={filterPanelOpen ? 'skill-filter-panel' : undefined}
             sx={{ height: 36, borderColor: 'divider', typography: 'button', fontSize: '0.8125rem' }}
           >
             {filterButtonLabel}
@@ -329,7 +327,7 @@ const SkillsContent = () => {
         </Stack>
       </Stack>
 
-      {/* unmountOnExit prevents hidden controls from receiving keyboard focus */}
+      {/* Expandable filter panel — unmountOnExit prevents hidden controls from receiving keyboard focus */}
       <Collapse in={filterPanelOpen} unmountOnExit>
         <Stack
           id="skill-filter-panel"
@@ -346,12 +344,6 @@ const SkillsContent = () => {
             borderColor: 'divider',
           }}
         >
-          <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" color="text.secondary">
-              Track
-            </Typography>
-            <TrackFilter />
-          </Stack>
           <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}>
             <Typography variant="body2" color="text.secondary">
               Category
