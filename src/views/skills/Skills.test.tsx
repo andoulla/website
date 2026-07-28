@@ -352,10 +352,13 @@ describe('Skills', () => {
 
   describe('search filter URL sync', () => {
     test('initializes the search term from the URL query param', async () => {
+      const user = userEvent.setup();
       const screen = await renderAndFlush(
         () => Promise.resolve(CAREER_HISTORY),
         ['/skills?search=react']
       );
+
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
 
       expect(screen.getByRole('textbox', { name: 'Search skills by name' })).toHaveValue('react');
     });
@@ -364,6 +367,7 @@ describe('Skills', () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
 
       expect(screen.getByText('search:track=general&search=react')).toBeVisible();
@@ -376,6 +380,7 @@ describe('Skills', () => {
         ['/skills?search=react']
       );
 
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
       await user.click(screen.getByRole('button', { name: 'Clear search' }));
 
       expect(screen.getByText('search:track=general')).toBeVisible();
@@ -422,8 +427,8 @@ describe('Skills', () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
-      await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
       await user.click(screen.getByRole('button', { name: 'Filters' }));
+      await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
       await user.click(
         screen.getByRole('button', {
           name: 'Filter skills by category, currently: All',
@@ -438,8 +443,8 @@ describe('Skills', () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
-      await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'typescript');
       await user.click(screen.getByRole('button', { name: 'Filters' }));
+      await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'typescript');
       await user.click(
         screen.getByRole('button', {
           name: 'Filter skills by category, currently: All',
@@ -454,6 +459,7 @@ describe('Skills', () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
 
       expect(screen.queryByText('3 matches hidden by filters')).not.toBeInTheDocument();
@@ -463,6 +469,7 @@ describe('Skills', () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
+      await user.click(screen.getByRole('button', { name: 'Filters' }));
       await user.type(
         screen.getByRole('textbox', { name: 'Search skills by name' }),
         'not-a-skill'

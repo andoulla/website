@@ -17,7 +17,7 @@ export const RecommendationStat = ({ count }: Props) => {
   return (
     <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
       <FormatQuoteIcon fontSize="small" color="action" />
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body1" color="text.secondary">
         {label}
       </Typography>
     </Stack>

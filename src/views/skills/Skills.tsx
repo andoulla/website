@@ -293,36 +293,36 @@ const SkillsContent = () => {
         </ToggleButtonGroup>
       </Stack>
 
-      {/* Heading row: view name (h2) + compare controls + track + search + filter trigger */}
+      {/* Heading row: view name (h2) + filter trigger */}
       <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1.5, mb: 0.5 }}>
         <Typography variant="h5" component="h2" sx={{ fontWeight: 600, letterSpacing: '-0.02em' }}>
           {VIEW_OPTIONS[effectiveViewMode].label}
         </Typography>
-        <Stack
-          direction="row"
-          sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1.5, ml: 'auto' }}
+        <Button
+          variant="outlined"
+          size="small"
+          color="inherit"
+          endIcon={
+            <KeyboardArrowDownIcon
+              sx={{
+                transform: filterPanelOpen ? 'rotate(180deg)' : 'none',
+                transition: 'transform 0.2s',
+              }}
+            />
+          }
+          onClick={() => setFilterPanelOpen((prev) => !prev)}
+          aria-expanded={filterPanelOpen}
+          aria-controls={filterPanelOpen ? 'skill-filter-panel' : undefined}
+          sx={{
+            ml: 'auto',
+            height: 36,
+            borderColor: 'divider',
+            typography: 'button',
+            fontSize: '0.8125rem',
+          }}
         >
-          <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
-          <Button
-            variant="outlined"
-            size="small"
-            color="inherit"
-            endIcon={
-              <KeyboardArrowDownIcon
-                sx={{
-                  transform: filterPanelOpen ? 'rotate(180deg)' : 'none',
-                  transition: 'transform 0.2s',
-                }}
-              />
-            }
-            onClick={() => setFilterPanelOpen((prev) => !prev)}
-            aria-expanded={filterPanelOpen}
-            aria-controls={filterPanelOpen ? 'skill-filter-panel' : undefined}
-            sx={{ height: 36, borderColor: 'divider', typography: 'button', fontSize: '0.8125rem' }}
-          >
-            {filterButtonLabel}
-          </Button>
-        </Stack>
+          {filterButtonLabel}
+        </Button>
       </Stack>
 
       {/* Expandable filter panel — a recessed tray; unmountOnExit keeps hidden controls out of the tab order */}
@@ -334,7 +334,7 @@ const SkillsContent = () => {
           direction="row"
           sx={{
             flexWrap: 'wrap',
-            alignItems: 'center',
+            alignItems: 'flex-end',
             gap: 2,
             p: 2,
             mt: 1,
@@ -347,13 +347,14 @@ const SkillsContent = () => {
             borderRadius: 1,
           }}
         >
-          <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}>
+          <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
+          <Stack sx={{ gap: 0.5 }}>
             <Typography variant="body2" color="text.secondary">
               Track
             </Typography>
             <TrackFilter />
           </Stack>
-          <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}>
+          <Stack sx={{ gap: 0.5 }}>
             <Typography variant="body2" color="text.secondary">
               Category
             </Typography>
@@ -366,18 +367,23 @@ const SkillsContent = () => {
               onSubCategoriesChange={setSelectedSubCategories}
             />
           </Stack>
-          {renderCompareControls()}
           {minYear < maxYear && (
             <TimeMachineSlider
               year={cutoffYear}
               minYear={minYear}
               maxYear={maxYear}
               onCommit={setCutoffYear}
-              sx={{ flexGrow: 1, flexBasis: { xs: '100%', md: 220 }, minWidth: { md: 200 } }}
+              sx={{ flexBasis: '100%', px: 1 }}
             />
           )}
-          <Stack sx={{ ml: { md: 'auto' } }}>
-            <CopyLinkButton />
+          <Stack
+            direction="row"
+            sx={{ flexBasis: '100%', alignItems: 'center', flexWrap: 'wrap', gap: 1.5 }}
+          >
+            {renderCompareControls()}
+            <Stack sx={{ ml: 'auto' }}>
+              <CopyLinkButton />
+            </Stack>
           </Stack>
         </Stack>
       </Collapse>
@@ -435,11 +441,7 @@ export const Skills = () => {
   return (
     <PageContainer>
       <title>Skills — Mariandi Stylianou</title>
-      <Typography
-        variant="h3"
-        component="h1"
-        sx={{ p: 0, textAlign: 'left', mb: { xs: 1.5, sm: 3 } }}
-      >
+      <Typography variant="h3" component="h1" sx={{ mb: { xs: 1.5, sm: 3 } }}>
         Skills
       </Typography>
       <Suspense
