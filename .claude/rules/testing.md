@@ -5,6 +5,8 @@ paths:
 
 # Testing conventions
 
+_Implementing a feature/bugfix? Start with the `test-driven-development` skill (write the failing test first); the conventions below govern how those tests are written._
+
 - Tests follow **React Testing Library guiding principles**: query the DOM the way a user would (`getByRole`, `getByText`, `getByLabelText`, etc.) instead of `container.querySelector`/test IDs, and assert on rendered output/behavior rather than implementation details. Where this file doesn't call out a specific pattern, default to RTL's own recommended practices (e.g. [testing-library.com/docs](https://testing-library.com/docs/)) rather than deciding ad hoc.
 - Use `const screen = render(<Component />)` — alias the render result as `screen` and use its bound query methods. Do not import the global `screen` from `@testing-library/react`.
 - For a component that suspends via `use()` (e.g. anything reading `useCareerDataContext()`), `findBy*`/`waitFor` do not reliably observe the resulting re-render in this project's React 19 + jsdom setup — confirmed by test runs where converting these to `findBy*` left them timing out stuck on the Suspense fallback. Render first, then flush explicitly, then query normally: `const screen = render(...); await act(async () => { await Promise.resolve(); }); expect(screen.getByText('...')).toBeVisible();`. Don't reach for `findBy*` here even though it's the general RTL recommendation — it doesn't hold for `use()`-driven Suspense in this codebase.

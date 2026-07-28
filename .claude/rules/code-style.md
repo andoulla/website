@@ -10,6 +10,7 @@
 - Utility helper implementations use the suffix `x.helpers.ts` (e.g. `skillColor.helpers.ts`). Co-located tests follow the same stem: `x.helpers.test.ts`. Once a helper is needed by more than one folder, move it out of `x.helpers.ts` and into `src/utils/` instead of importing it across folders, dropping the `.helpers` suffix on the move (e.g. `Tag.helpers.ts` → `src/utils/tag/tag.ts`).
 - Local-only constants live in a co-located `x.constants.ts` file, following the same stem convention.
 - Notable ESLint rules to respect: no `any` (`@typescript-eslint/no-explicit-any`), no floating/misused promises, `consistent-type-imports`, `strict-boolean-expressions`, and grouped/ordered imports (builtin → external → internal → parent → sibling → index, with blank lines between groups).
+- Building complex type logic (generics, conditional/mapped/template-literal types, reusable type utilities)? Use the `typescript-advanced-types` skill; the co-located `x.types.ts` placement rule above still applies.
 - Prettier: single quotes, semicolons, trailing commas (ES5), 100 char width ([.prettierrc](../../.prettierrc)).
 - Prefer `const` arrow functions over `function` declarations (`export const Foo = () => { ... }`). If a `function` declaration is required (e.g. generators, hoisting), add a comment above it explaining why.
 - In loops and array methods (`map`, `filter`, `reduce`, `forEach`, `for...of`, etc.), name the callback parameter with the singular of the collection, not its first initial: `skills.filter(skill => ...)`, not `skills.filter(s => ...)`.

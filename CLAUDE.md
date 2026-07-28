@@ -2,6 +2,21 @@
 
 A minimal React + TypeScript web app run in strict mode across the whole toolchain (TS, ESLint, tests). Personal project also used as a testbed for exploring Claude's models/features.
 
+## Task → skill
+
+Recurring tasks have a dedicated skill — prefer it (they also self-trigger from their own description; listed here as a reminder of what applies in this repo):
+
+- Committing → `git-commit` (conventional commits are commit-msg-hook-enforced here)
+- Reviewing a branch / PR / work-in-progress diff → `code-review`
+- Resolving a merge/rebase conflict → `resolving-merge-conflicts`
+- Designing a new feature or a module's interface (seams, deep modules) → `codebase-design`; pressure-test the resulting plan/design with `grill-me`
+- Implementing a feature/bugfix → `test-driven-development` (write the failing test first; conventions in [.claude/rules/testing.md](.claude/rules/testing.md))
+- Refactoring — find what to refactor (architecture scan for deepening opportunities) → `improve-codebase-architecture`; turn a chosen one into a tiny-commit plan / GitHub issue → `request-refactor-plan`
+- Accessibility / WCAG audit → `accessibility`
+- New or reshaped UI / visual design → `frontend-design`, `web-design-guidelines`, `high-end-visual-design`
+- CSS animations → `css-animations`
+- Complex TypeScript type logic (generics, conditional/mapped/template-literal types) → `typescript-advanced-types`
+
 ## Tech stack
 
 - **React 19** + **TypeScript** (`strict: true` in [tsconfig.json](tsconfig.json))
