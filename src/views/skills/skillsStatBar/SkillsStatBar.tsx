@@ -21,7 +21,7 @@ export const SkillsStatBar = ({ filteredSkills }: SkillsStatBarProps) => {
 
   return (
     <Stack direction="row" spacing={2} sx={{ mt: 0, mb: { xs: 1.5, sm: 2 }, alignItems: 'center' }}>
-      <Typography variant="body1" color="text.secondary">
+      <Typography variant="body2" color="text.secondary">
         At a glance
       </Typography>
       <RecommendationStat count={recommendationCount} />

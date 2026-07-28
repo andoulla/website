@@ -24,7 +24,7 @@ export const SkillTypeMeter = ({ split }: Props) => {
   return (
     <Tooltip title={`${techCount} tech, ${skillCount} soft`}>
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant="body2" color="text.secondary">
           Tech vs soft
         </Typography>
         <Box

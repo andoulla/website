@@ -325,6 +325,32 @@ const SkillsContent = () => {
         </Button>
       </Stack>
 
+      {/* Caption + optional Texture fills — sits directly under the view heading */}
+      <Stack direction="row" sx={{ alignItems: 'center', mb: 0.5, minHeight: 38 }}>
+        <Typography variant="body1" color="text.secondary" sx={{ flexGrow: 1 }}>
+          {isCompareMode
+            ? 'Skills side by side across two tracks'
+            : VIEW_OPTIONS[effectiveViewMode].caption}
+        </Typography>
+        {!isCompareMode && (viewMode === 'barchart' || viewMode === 'treemap') && (
+          // describeChild — keep "Texture fills" as the accessible name
+          <Tooltip title="Distinguish categories by texture as well as colour" describeChild>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={showPatterns}
+                  onChange={(_e, checked) => {
+                    setShowPatterns(checked);
+                  }}
+                  size="small"
+                />
+              }
+              label="Texture fills"
+            />
+          </Tooltip>
+        )}
+      </Stack>
+
       {/* Expandable filter panel — a recessed tray; unmountOnExit keeps hidden controls out of the tab order */}
       <Collapse in={filterPanelOpen} unmountOnExit>
         <Stack
@@ -394,31 +420,6 @@ const SkillsContent = () => {
         </Stack>
       </Collapse>
 
-      {/* Caption + optional Texture fills */}
-      <Stack direction="row" sx={{ alignItems: 'center', mb: 0.5, minHeight: 38 }}>
-        <Typography variant="body1" color="text.secondary" sx={{ flexGrow: 1 }}>
-          {isCompareMode
-            ? 'Skills side by side across two tracks'
-            : VIEW_OPTIONS[effectiveViewMode].caption}
-        </Typography>
-        {!isCompareMode && (viewMode === 'barchart' || viewMode === 'treemap') && (
-          // describeChild — keep "Texture fills" as the accessible name
-          <Tooltip title="Distinguish categories by texture as well as colour" describeChild>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showPatterns}
-                  onChange={(_e, checked) => {
-                    setShowPatterns(checked);
-                  }}
-                  size="small"
-                />
-              }
-              label="Texture fills"
-            />
-          </Tooltip>
-        )}
-      </Stack>
       <SkillsStatBar filteredSkills={filteredSkills} />
       <SkillsCareerContextProvider careerHistory={careerHistory}>
         <SkillsViewContextProvider
