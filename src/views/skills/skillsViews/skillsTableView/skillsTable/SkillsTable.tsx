@@ -64,12 +64,12 @@ const SkillRow = ({ skill, isHighlighted, diffStatus, diffSide }: SkillRowProps)
           {skill.skill}
           {isMoved && (
             <Typography variant="caption" color="warning.main">
-              moved
+              different category
             </Typography>
           )}
           {isUniqueHere && (
             <Typography variant="caption" color="text.secondary">
-              only here
+              this track only
             </Typography>
           )}
           <RecommendationBadge recommendationIds={skill.recommendationIds} />

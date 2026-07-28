@@ -127,7 +127,7 @@ describe('SkillsCompareView', () => {
     // Node.js is only-a: its row in the primary column should carry the "only here" label
     const nodeRow = screen.getByText('Node.js').closest('tr');
 
-    expect(nodeRow?.textContent).toContain('only here');
+    expect(nodeRow?.textContent).toContain('this track only');
   });
 
   test('shows "only here" label on the row for a skill unique to the compare track', () => {
@@ -136,7 +136,7 @@ describe('SkillsCompareView', () => {
     // Python is only-b: its row in the compare column should carry the "only here" label
     const pythonRow = screen.getByText('Python').closest('tr');
 
-    expect(pythonRow?.textContent).toContain('only here');
+    expect(pythonRow?.textContent).toContain('this track only');
   });
 
   test('shows "moved" label when a skill sits in a different category across tracks', async () => {
@@ -167,7 +167,7 @@ describe('SkillsCompareView', () => {
     });
 
     // React is both-moved: at least one "moved" label visible
-    const movedLabels = screen.getAllByText('moved');
+    const movedLabels = screen.getAllByText('different category');
 
     expect(movedLabels.length).toBeGreaterThanOrEqual(1);
     expect(await axe(screen.container)).toHaveNoViolations();

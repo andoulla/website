@@ -236,7 +236,7 @@ describe('SkillsTable', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('renders "only here" label on a skill matching the diff side', () => {
+  test('renders "this track only" label on a skill matching the diff side', () => {
     const skills = [new SkillSummary().id('react').skill('React').mock()];
     const diffStatusMap = new Map([['react', 'only-a' as const]]);
 
@@ -246,10 +246,10 @@ describe('SkillsTable', () => {
       diffSide: 'a',
     });
 
-    expect(screen.getByText('only here')).toBeVisible();
+    expect(screen.getByText('this track only')).toBeVisible();
   });
 
-  test('does not render "only here" when the skill is on the other side', () => {
+  test('does not render "this track only" when the skill is on the other side', () => {
     const skills = [new SkillSummary().id('react').skill('React').mock()];
     const diffStatusMap = new Map([['react', 'only-b' as const]]);
 
@@ -259,10 +259,10 @@ describe('SkillsTable', () => {
       diffSide: 'a',
     });
 
-    expect(screen.queryByText('only here')).not.toBeInTheDocument();
+    expect(screen.queryByText('this track only')).not.toBeInTheDocument();
   });
 
-  test('renders "moved" label on a skill with both-moved status', async () => {
+  test('renders "different category" label on a skill with both-moved status', async () => {
     const skills = [new SkillSummary().id('react').skill('React').mock()];
     const diffStatusMap = new Map([['react', 'both-moved' as const]]);
 
@@ -272,15 +272,15 @@ describe('SkillsTable', () => {
       diffSide: 'a',
     });
 
-    expect(screen.getByText('moved')).toBeVisible();
+    expect(screen.getByText('different category')).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('renders no diff labels when diffStatusMap is absent', () => {
     const screen = renderSkillsTable({ categoryGroups: buildCategoryGroups(SKILLS) });
 
-    expect(screen.queryByText('only here')).not.toBeInTheDocument();
-    expect(screen.queryByText('moved')).not.toBeInTheDocument();
+    expect(screen.queryByText('this track only')).not.toBeInTheDocument();
+    expect(screen.queryByText('different category')).not.toBeInTheDocument();
   });
 
   test('renders a plural label on the badge when a skill has multiple recommendations', () => {
