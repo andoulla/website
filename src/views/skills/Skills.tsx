@@ -169,7 +169,8 @@ const SkillsContent = () => {
     );
   }, [compareTrack, careerHistory, allSkills, asOfDate]);
 
-  const isCompareMode = compareTrackId !== null && compareTrack !== undefined;
+  const isCompareMode =
+    compareTrackId !== null && compareTrack !== undefined && compareTrackId !== trackId;
 
   // Compare forces table view; the URL view param is preserved so it restores when compare exits.
   const effectiveViewMode: ViewMode = isCompareMode ? 'table' : viewMode;
@@ -208,7 +209,7 @@ const SkillsContent = () => {
             {' with'}
           </Typography>
           {tracks
-            .filter((t) => t.id !== compareTrackId)
+            .filter((t) => t.id !== compareTrackId && t.id !== trackId)
             .map((t) => (
               <Chip
                 key={t.id}
