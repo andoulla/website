@@ -260,12 +260,11 @@ const SkillsContent = () => {
 
   return (
     <>
-      {/* Slim top bar: share + view toggles */}
+      {/* Slim top bar: view toggles */}
       <Stack
         direction="row"
         sx={{ justifyContent: 'flex-end', mb: 1.5, alignItems: 'center', gap: 1.5 }}
       >
-        <CopyLinkButton />
         <ToggleButtonGroup
           value={effectiveViewMode}
           exclusive
@@ -303,7 +302,6 @@ const SkillsContent = () => {
           direction="row"
           sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1.5, ml: 'auto' }}
         >
-          <TrackFilter />
           <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
           <Button
             variant="outlined"
@@ -346,6 +344,12 @@ const SkillsContent = () => {
         >
           <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}>
             <Typography variant="body2" color="text.secondary">
+              Track
+            </Typography>
+            <TrackFilter />
+          </Stack>
+          <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" color="text.secondary">
               Category
             </Typography>
             <SkillFilterBar
@@ -366,6 +370,9 @@ const SkillsContent = () => {
               sx={{ flexGrow: 1, flexBasis: { xs: '100%', md: 220 }, minWidth: { md: 200 } }}
             />
           )}
+          <Stack sx={{ ml: { md: 'auto' } }}>
+            <CopyLinkButton />
+          </Stack>
         </Stack>
       </Collapse>
 
@@ -422,7 +429,7 @@ export const Skills = () => {
   return (
     <PageContainer>
       <title>Skills — Mariandi Stylianou</title>
-      <Typography variant="h3" component="h1" sx={{ mb: { xs: 1.5, sm: 3 } }}>
+      <Typography variant="h3" component="h1" sx={{ p: 0, mb: { xs: 1.5, sm: 3 } }}>
         Skills
       </Typography>
       <Suspense

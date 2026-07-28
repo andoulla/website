@@ -155,14 +155,13 @@ describe('Skills', () => {
         ['/skills?track=general&category=frontend-development']
       );
 
+      // Track lives in the filter panel — open it first (frontend-development counts as 1 filter).
+      await user.click(screen.getByRole('button', { name: 'Filters · 1' }));
       await user.click(screen.getByRole('combobox', { name: 'Track' }));
       await user.click(screen.getByRole('option', { name: 'Lead / Engineering Manager' }));
 
       // frontend-development is not a lead category, so the parsed filters self-clean.
       expect(screen.getByText('search:track=lead&category=frontend-development')).toBeVisible();
-
-      await user.click(screen.getByRole('button', { name: 'Filters' }));
-
       expect(
         screen.getByRole('button', {
           name: 'Filter skills by category, currently: All',
