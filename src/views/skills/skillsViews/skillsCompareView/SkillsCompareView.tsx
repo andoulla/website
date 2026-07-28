@@ -61,7 +61,11 @@ export const SkillsCompareView = ({ compareTrack, compareSkills }: SkillsCompare
 
   return (
     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ alignItems: 'flex-start' }}>
-      <Box flex={1} minWidth={0} aria-label={`${primaryTrack.label} skills`} component="section">
+      <Box
+        sx={{ flex: 1, minWidth: 0 }}
+        aria-label={`${primaryTrack.label} skills`}
+        component="section"
+      >
         <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
           {primaryTrack.label}
         </Typography>
@@ -72,7 +76,11 @@ export const SkillsCompareView = ({ compareTrack, compareSkills }: SkillsCompare
           diffSide="a"
         />
       </Box>
-      <Box flex={1} minWidth={0} aria-label={`${compareTrack.label} skills`} component="section">
+      <Box
+        sx={{ flex: 1, minWidth: 0 }}
+        aria-label={`${compareTrack.label} skills`}
+        component="section"
+      >
         <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
           {compareTrack.label}
         </Typography>
