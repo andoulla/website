@@ -107,7 +107,7 @@ describe('Skills', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       ).toBeVisible();
       expect(await axe(screen.container)).toHaveNoViolations();
@@ -136,7 +136,7 @@ describe('Skills', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
 
@@ -160,7 +160,7 @@ describe('Skills', () => {
       expect(screen.getByText('search:track=lead&category=frontend-development')).toBeVisible();
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       ).toBeVisible();
     });
@@ -173,7 +173,7 @@ describe('Skills', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       ).toBeVisible();
     });
@@ -248,7 +248,7 @@ describe('Skills', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+          name: 'Filter skills by category, currently: 1 selected',
         })
       ).toBeVisible();
     });
@@ -259,7 +259,7 @@ describe('Skills', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
       expect(await axe(screen.container)).toHaveNoViolations();
@@ -278,7 +278,7 @@ describe('Skills', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+          name: 'Filter skills by category, currently: 1 selected',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
@@ -296,7 +296,7 @@ describe('Skills', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+          name: 'Filter skills by category, currently: 1 selected',
         })
       ).toBeVisible();
     });
@@ -307,7 +307,7 @@ describe('Skills', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
@@ -324,7 +324,7 @@ describe('Skills', () => {
 
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+          name: 'Filter skills by category, currently: 1 selected',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
@@ -408,7 +408,7 @@ describe('Skills', () => {
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
@@ -423,7 +423,7 @@ describe('Skills', () => {
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'typescript');
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
@@ -466,7 +466,7 @@ describe('Skills', () => {
       ).toBeVisible();
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (2)',
+          name: 'Filter skills by category, currently: 2 selected',
         })
       ).toBeVisible();
     });
