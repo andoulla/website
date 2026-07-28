@@ -236,6 +236,15 @@ describe('SkillsTable', () => {
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
+  test('hides the Type column when hideTypeColumn is true', () => {
+    const screen = renderSkillsTable({
+      categoryGroups: buildCategoryGroups(SKILLS),
+      hideTypeColumn: true,
+    });
+
+    expect(screen.queryByRole('columnheader', { name: 'Type' })).not.toBeInTheDocument();
+  });
+
   test('renders a plural label on the badge when a skill has multiple recommendations', () => {
     const rec1 = new Recommendation().id('rec-1').mock();
     const rec2 = new Recommendation().id('rec-2').mock();

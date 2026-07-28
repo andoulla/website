@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
 import type { SkillSummary } from '@/utils/calculateSkillYears';
+import type { TrackDiffStatus } from '@/utils/deriveTrackDiff';
 import { formatYears } from '@/utils/formatYears';
 import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
@@ -22,15 +23,31 @@ import { RowActionsMenu } from './rowActionsMenu';
 export interface SkillsTableProps {
   categoryGroups: CategoryGroup[];
   highlightedSkills?: string[];
+  diffStatusMap?: Map<string, TrackDiffStatus>;
+  diffSide?: 'a' | 'b';
+  hideTypeColumn?: boolean;
 }
 
 interface SkillRowProps {
   skill: SkillSummary;
   isHighlighted: boolean;
+  diffStatus?: TrackDiffStatus;
+  diffSide?: 'a' | 'b';
+  hideTypeColumn?: boolean;
 }
 
-const SkillRow = ({ skill, isHighlighted }: SkillRowProps) => {
+const SkillRow = ({
+  skill,
+  isHighlighted,
+  diffStatus,
+  diffSide,
+  hideTypeColumn,
+}: SkillRowProps) => {
   const theme = useTheme();
+
+  const isMoved = diffStatus === 'both-moved';
+  const isUniqueHere =
+    (diffStatus === 'only-a' && diffSide === 'a') || (diffStatus === 'only-b' && diffSide === 'b');
 
   return (
     <TableRow
@@ -39,6 +56,12 @@ const SkillRow = ({ skill, isHighlighted }: SkillRowProps) => {
       sx={{
         ...(isHighlighted && {
           bgcolor: alpha(theme.palette.primary.main, 0.12),
+        }),
+        ...(isMoved && {
+          borderLeft: `3px solid ${theme.palette.warning.main}`,
+        }),
+        ...(isUniqueHere && {
+          borderLeft: `3px dashed ${theme.palette.text.disabled}`,
         }),
         transition: 'background-color 0.4s ease',
       }}
@@ -50,11 +73,13 @@ const SkillRow = ({ skill, isHighlighted }: SkillRowProps) => {
           <RecommendationBadge recommendationIds={skill.recommendationIds} />
         </Box>
       </TableCell>
-      <TableCell sx={{ verticalAlign: 'top' }}>
-        <Typography variant="body2" color="text.secondary">
-          {skill.type === 'tech' ? 'tech' : 'soft'}
-        </Typography>
-      </TableCell>
+      {hideTypeColumn !== true && (
+        <TableCell sx={{ verticalAlign: 'top' }}>
+          <Typography variant="body2" color="text.secondary">
+            {skill.type === 'tech' ? 'tech' : 'soft'}
+          </Typography>
+        </TableCell>
+      )}
       <TableCell sx={{ verticalAlign: 'top' }}>
         {skill.companyYears.length > 0 ? (
           <Typography variant="body2" color="text.secondary">
@@ -115,13 +140,29 @@ const GroupHeaderRow = ({
   );
 };
 
-export const SkillsTable = ({ categoryGroups, highlightedSkills = [] }: SkillsTableProps) => {
+export const SkillsTable = ({
+  categoryGroups,
+  highlightedSkills = [],
+  diffStatusMap,
+  diffSide,
+  hideTypeColumn,
+}: SkillsTableProps) => {
+  const colSpan = hideTypeColumn === true ? 4 : 5;
+
   const rows = categoryGroups.flatMap(({ category, subGroups, skills }) => {
     const categoryRow = {
       type: 'category' as const,
       key: `category-${category.id}`,
       category,
     };
+
+    const buildSkillRow = (skill: SkillSummary) => ({
+      type: 'skill' as const,
+      key: `skill-${skill.skill}`,
+      skill,
+      isHighlighted: highlightedSkills.includes(skill.skill),
+      diffStatus: diffStatusMap?.get(skill.id),
+    });
 
     if (subGroups.length > 1) {
       const subCategoryRows = subGroups.flatMap((subGroup) => [
@@ -130,25 +171,13 @@ export const SkillsTable = ({ categoryGroups, highlightedSkills = [] }: SkillsTa
           key: `subcategory-${category.id}-${subGroup.subCategory.id}`,
           subCategory: subGroup.subCategory,
         },
-        ...subGroup.skills.map((skill) => ({
-          type: 'skill' as const,
-          key: `skill-${skill.skill}`,
-          skill,
-          isHighlighted: highlightedSkills.includes(skill.skill),
-        })),
+        ...subGroup.skills.map(buildSkillRow),
       ]);
 
       return [categoryRow, ...subCategoryRows];
     }
 
-    const skillRows = skills.flatMap((skill) => ({
-      type: 'skill' as const,
-      key: `skill-${skill.skill}`,
-      skill,
-      isHighlighted: highlightedSkills.includes(skill.skill),
-    }));
-
-    return [categoryRow, ...skillRows];
+    return [categoryRow, ...skills.map(buildSkillRow)];
   });
 
   return (
@@ -157,7 +186,7 @@ export const SkillsTable = ({ categoryGroups, highlightedSkills = [] }: SkillsTa
         <TableHead>
           <TableRow>
             <TableCell>Skill</TableCell>
-            <TableCell>Type</TableCell>
+            {hideTypeColumn !== true && <TableCell>Type</TableCell>}
             <TableCell>Companies</TableCell>
             <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
               Years
@@ -168,16 +197,30 @@ export const SkillsTable = ({ categoryGroups, highlightedSkills = [] }: SkillsTa
         <TableBody>
           {rows.map((row) => {
             if (row.type === 'category') {
-              return <GroupHeaderRow key={row.key} label={row.category.name} />;
+              return <GroupHeaderRow key={row.key} label={row.category.name} colSpan={colSpan} />;
             }
 
             if (row.type === 'subcategory') {
               return (
-                <GroupHeaderRow key={row.key} label={row.subCategory.name} variant="subcategory" />
+                <GroupHeaderRow
+                  key={row.key}
+                  label={row.subCategory.name}
+                  variant="subcategory"
+                  colSpan={colSpan}
+                />
               );
             }
 
-            return <SkillRow key={row.key} skill={row.skill} isHighlighted={row.isHighlighted} />;
+            return (
+              <SkillRow
+                key={row.key}
+                skill={row.skill}
+                isHighlighted={row.isHighlighted}
+                diffStatus={row.diffStatus}
+                diffSide={diffSide}
+                hideTypeColumn={hideTypeColumn}
+              />
+            );
           })}
         </TableBody>
       </Table>

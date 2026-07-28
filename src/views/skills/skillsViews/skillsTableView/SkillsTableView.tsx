@@ -9,9 +9,8 @@ import { SkillsEmptyState } from '@/views/skills/skillsEmptyState';
 
 import { useSkillsViewContext } from '../SkillsViewContext';
 
-import { skillElementId } from './SkillsTableView.helpers';
+import { groupSkillsByTrack, skillElementId } from './SkillsTableView.helpers';
 import { SkillsTable } from './skillsTable';
-import type { CategoryGroup } from './SkillsTableView.types';
 
 const TABLE_SKELETON_GROUPS: number[] = [3, 2, 3];
 
@@ -67,23 +66,7 @@ export const SkillsTableView = () => {
     ? filteredSkills
     : filteredSkills.filter((skill) => skillMatchesSearch(skill, searchTerm));
 
-  // Group by the active track's taxonomy; summaries keep their years-descending order.
-  const categoryGroups: CategoryGroup[] = track.categories
-    .map((category) => {
-      const subGroups = category.subCategories
-        .map((subCategory) => ({
-          subCategory,
-          skills: searchedSkills.filter((skill) => skill.subCategoryId === subCategory.id),
-        }))
-        .filter((group) => group.skills.length > 0);
-
-      return {
-        category,
-        subGroups,
-        skills: subGroups.flatMap((group) => group.skills),
-      };
-    })
-    .filter((group) => group.skills.length > 0);
+  const categoryGroups = groupSkillsByTrack(track, searchedSkills);
 
   if (categoryGroups.length === 0) {
     return (

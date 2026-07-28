@@ -1,0 +1,1 @@
+export { CompareLegend } from './CompareLegend';
