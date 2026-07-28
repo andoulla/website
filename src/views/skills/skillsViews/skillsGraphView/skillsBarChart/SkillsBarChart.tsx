@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Popper from '@mui/material/Popper';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
@@ -15,8 +14,9 @@ import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { hasSearchTerm } from '@/utils/hasSearchTerm';
 import { resolveSkillColourMain } from '@/utils/skillColour';
-import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
+import { useSkillsViewContext } from '../../SkillsViewContext';
+import { CategoryLegend } from '../../categoryLegend';
 import { CategoryPatternDefinition } from '../../categoryPattern';
 
 import { getCategoryPatternBackground, getCategoryPatternId } from './SkillsBarChart.helpers';
@@ -59,6 +59,7 @@ export const SkillsBarChart = ({
   highlightedSkills = [],
 }: SkillsBarChartProps) => {
   const theme = useTheme();
+  const { track } = useSkillsViewContext();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   // Frozen at the point the pointer entered the bar — not tracked on every mousemove, so the
   // tooltip sits near the cursor without chasing it as the pointer moves toward its links.
@@ -230,40 +231,24 @@ export const SkillsBarChart = ({
       >
         <ClickAwayListener onClickAway={handleClickAway}>
           <Box onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
-            {hoverIndex !== null && <SkillTooltipContent skill={skills[hoverIndex]} />}
+            {hoverIndex !== null && (
+              <SkillTooltipContent skill={skills[hoverIndex]} trackId={track.id} />
+            )}
           </Box>
         </ClickAwayListener>
       </Popper>
 
-      {/* Legend — styled like a figure caption: muted text, pattern swatches vertically centred with labels */}
-      <Box
-        aria-hidden="true"
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          rowGap: 1.5,
-          columnGap: 3,
-          pt: 1,
-        }}
-      >
-        {legendEntries.map(({ category, colour, markColour }) => (
-          <Box key={category.id} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <CategoryColourDot
-              shape="square"
-              colour={colour}
-              background={
-                showPatterns
-                  ? getCategoryPatternBackground(category.index, colour, markColour)
-                  : undefined
-              }
-            />
-            <Typography variant="caption" color="text.secondary">
-              {category.name}
-            </Typography>
-          </Box>
-        ))}
-      </Box>
+      {/* Legend — pattern swatches vertically centred with muted category labels */}
+      <CategoryLegend
+        categories={legendEntries.map(({ category }) => category)}
+        shape="square"
+        getBackground={
+          showPatterns
+            ? (colour, index) =>
+                getCategoryPatternBackground(index, colour, theme.palette.getContrastText(colour))
+            : undefined
+        }
+      />
 
       {/* Visually hidden table — accessible text alternative for screen readers */}
       <Box component="table" sx={visuallyHidden} aria-label="Skills data table">

@@ -123,13 +123,6 @@ export const SkillsTable = ({ categoryGroups, highlightedSkills = [] }: SkillsTa
       category,
     };
 
-    const skillRows = skills.flatMap((skill) => ({
-      type: 'skill' as const,
-      key: `skill-${skill.skill}`,
-      skill,
-      isHighlighted: highlightedSkills.includes(skill.skill),
-    }));
-
     if (subGroups.length > 1) {
       const subCategoryRows = subGroups.flatMap((subGroup) => [
         {
@@ -147,6 +140,13 @@ export const SkillsTable = ({ categoryGroups, highlightedSkills = [] }: SkillsTa
 
       return [categoryRow, ...subCategoryRows];
     }
+
+    const skillRows = skills.flatMap((skill) => ({
+      type: 'skill' as const,
+      key: `skill-${skill.skill}`,
+      skill,
+      isHighlighted: highlightedSkills.includes(skill.skill),
+    }));
 
     return [categoryRow, ...skillRows];
   });

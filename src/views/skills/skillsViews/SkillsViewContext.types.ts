@@ -9,6 +9,8 @@ export interface SkillsViewContextValue {
   filteredSkills: SkillSummary[];
   selectedCategories: string[];
   selectedSubCategories: string[];
+  // Derived from selectedCategories/selectedSubCategories — centralised to avoid duplication.
+  hasActiveFilters: boolean;
   highlightedSkills: string[];
   searchTerm: string;
   // Barchart texture toggle, lifted so views stay zero-prop.
@@ -18,7 +20,7 @@ export interface SkillsViewContextValue {
 
 export interface SkillsViewContextProviderProps extends Omit<
   SkillsViewContextValue,
-  'highlightedSkills' | 'showPatterns'
+  'highlightedSkills' | 'showPatterns' | 'hasActiveFilters'
 > {
   highlightedSkills?: string[];
   showPatterns?: boolean;

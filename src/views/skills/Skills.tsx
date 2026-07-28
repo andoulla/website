@@ -1,5 +1,4 @@
 import { Suspense, useCallback, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
 import CircularProgress from '@mui/material/CircularProgress';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -17,36 +16,26 @@ import { deriveAllSkills } from '@/utils/deriveAllSkills';
 import { deriveCareerYearRange } from '@/utils/deriveCareerYearRange';
 import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
-import { matchSkill } from '@/utils/matchSkill';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
-import {
-  AS_OF_PARAM,
-  CATEGORY_PARAM,
-  SEARCH_PARAM,
-  SKILL_PARAM,
-  SUBCATEGORY_PARAM,
-  VIEW_MODES,
-  VIEW_PARAM,
-} from '@/utils/skillsUrlParams';
+import { AS_OF_PARAM, SEARCH_PARAM, VIEW_MODES, VIEW_PARAM } from '@/utils/skillsUrlParams';
 
 import { VIEW_OPTIONS } from './Skills.constants';
 import {
   parseAsOfYear,
-  parseCategoryIds,
   parseSearch,
-  parseSubCategoryIds,
   parseViewMode,
   scopeRecommendationsAsOf,
 } from './Skills.helpers';
 import type { ViewMode } from './Skills.types';
 import { CopyLinkButton } from './copyLinkButton';
-import { SkillFilterBar, type SkillFilterOption } from './skillFilterBar';
+import { SkillFilterBar } from './skillFilterBar';
 import { SkillSearchBar } from './skillSearchBar';
 import { SkillsStatBar } from './skillsStatBar';
 import { TimeMachineSlider } from './timeMachineSlider';
 import { TrackFilter } from './trackFilter';
 import { SkillsCareerContextProvider, SkillsViewContextProvider } from './skillsViews';
 import { useSkillSearchUrl } from './useSkillSearchUrl';
+import { useSkillsPageState } from './useSkillsPageState';
 
 const deriveSearchHint = (
   searchTerm: string,
@@ -91,41 +80,14 @@ const SkillsContent = () => {
     [careerHistory, track, allSkills, asOfDate]
   );
 
-  const [searchParams] = useSearchParams();
-  const highlightedSkillsKey = JSON.stringify(searchParams.getAll(SKILL_PARAM));
-  // Params resolve through matchSkill: synonyms map to canonical names.
-  const highlightedSkills = useMemo(
-    () =>
-      searchParams
-        .getAll(SKILL_PARAM)
-        .map((term) => matchSkill(term)?.skill.name)
-        .filter((name): name is string => name !== undefined),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on content, not the ref
-    [highlightedSkillsKey]
-  );
-
-  // Parsers are track-bound; useSkillSearchUrl memoizes on parser identity, so they must be
-  // stable per track or the parsed state goes stale.
-  const parseCategories = useCallback(
-    (raw: string | null) => parseCategoryIds(raw, track),
-    [track]
-  );
-  const parseSubCategories = useCallback(
-    (raw: string | null) => parseSubCategoryIds(raw, track),
-    [track]
-  );
-
-  const [selectedCategories, setSelectedCategories] = useSkillSearchUrl(
-    CATEGORY_PARAM,
-    parseCategories,
-    (next) => (next.length > 0 ? next.join(',') : null)
-  );
-
-  const [selectedSubCategories, setSelectedSubCategories] = useSkillSearchUrl(
-    SUBCATEGORY_PARAM,
-    parseSubCategories,
-    (next) => (next.length > 0 ? next.join(',') : null)
-  );
+  const {
+    highlightedSkills,
+    selectedCategories,
+    setSelectedCategories,
+    selectedSubCategories,
+    setSelectedSubCategories,
+    subCategoriesByCategory,
+  } = useSkillsPageState(track, skills);
 
   // Local state drives live typing (URL round-trip is too slow); URL is a write-only mirror.
   const [initialSearchTerm, setSearchTermUrl] = useSkillSearchUrl(
@@ -179,21 +141,6 @@ const SkillsContent = () => {
   const ActiveView = VIEW_OPTIONS[viewMode].Component;
 
   const categories = useMemo(() => derivePresentCategories(skills), [skills]);
-
-  // Active track's subcategories, narrowed to those with at least one present summary.
-  const subCategoriesByCategory = useMemo(
-    () =>
-      track.categories.reduce<Record<string, SkillFilterOption[]>>((acc, category) => {
-        const presentSubCategories = category.subCategories
-          .filter((subCategory) => skills.some((skill) => skill.subCategoryId === subCategory.id))
-          .map(({ id, name }) => ({ id, name }));
-
-        if (presentSubCategories.length > 0) acc[category.id] = presentSubCategories;
-
-        return acc;
-      }, {}),
-    [track, skills]
-  );
 
   return (
     <>

@@ -8,9 +8,16 @@ import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
 interface CategoryLegendProps {
   categories: PresentCategory[];
+  shape?: 'circle' | 'square';
+  // Override the dot background — e.g. a pattern url(). Receives the hex colour and track index.
+  getBackground?: (colour: string, categoryIndex: number) => string;
 }
 
-export const CategoryLegend = ({ categories }: CategoryLegendProps) => {
+export const CategoryLegend = ({
+  categories,
+  shape = 'circle',
+  getBackground,
+}: CategoryLegendProps) => {
   const theme = useTheme();
 
   if (categories.length === 0) return null;
@@ -36,17 +43,23 @@ export const CategoryLegend = ({ categories }: CategoryLegendProps) => {
         }),
       }}
     >
-      {categories.map((category) => (
-        <Box key={category.id} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <CategoryColourDot
-            colour={resolveSkillColourMain(category.colour, theme)}
-            sx={{ opacity: 0.7 }}
-          />
-          <Typography variant="caption" color="text.secondary">
-            {category.name}
-          </Typography>
-        </Box>
-      ))}
+      {categories.map((category) => {
+        const colour = resolveSkillColourMain(category.colour, theme);
+
+        return (
+          <Box key={category.id} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <CategoryColourDot
+              shape={shape}
+              colour={colour}
+              background={getBackground?.(colour, category.index)}
+              sx={shape === 'circle' ? { opacity: 0.7 } : undefined}
+            />
+            <Typography variant="caption" color="text.secondary">
+              {category.name}
+            </Typography>
+          </Box>
+        );
+      })}
     </Box>
   );
 };

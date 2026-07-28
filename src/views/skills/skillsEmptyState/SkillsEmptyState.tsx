@@ -23,7 +23,7 @@ const MessageCard = ({ onClearFilters }: { onClearFilters: () => void }) => (
       maxWidth: 320,
     }}
   >
-    <Typography variant="body1" color="text.secondary" fontWeight={500}>
+    <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
       No skills match the selected filter.
     </Typography>
     <Typography variant="body2" color="text.disabled">

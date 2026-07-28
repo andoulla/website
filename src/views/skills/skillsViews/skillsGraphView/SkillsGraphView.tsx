@@ -9,6 +9,10 @@ import { sortMatchesFirst } from '@/utils/sortMatchesFirst';
 import { SkillsEmptyState } from '@/views/skills/skillsEmptyState';
 import { SkillsNoData } from '@/views/skills/skillsNoData';
 
+import { useSkillsViewContext } from '../SkillsViewContext';
+
+import { SkillsBarChart } from './skillsBarChart';
+
 const BAR_SKELETON_WIDTHS = ['75%', '60%', '90%', '45%', '80%', '55%', '70%', '50%'] as const;
 
 const BarChartSkeleton = () => (
@@ -23,10 +27,6 @@ const BarChartSkeleton = () => (
     ))}
   </Stack>
 );
-
-import { useSkillsViewContext } from '../SkillsViewContext';
-
-import { SkillsBarChart } from './skillsBarChart';
 
 export const SkillsGraphView = () => {
   const { skills, filteredSkills, searchTerm, highlightedSkills, showPatterns, onClearFilters } =

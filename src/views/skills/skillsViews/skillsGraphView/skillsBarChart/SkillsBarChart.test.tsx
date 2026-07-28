@@ -3,8 +3,9 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
-import { TrackContextProvider } from '@/context/track';
-import { SkillSummary } from '@/testing';
+import { SkillSummary, Track } from '@/testing';
+
+import { SkillsViewContextProvider } from '../../SkillsViewContext';
 
 import { SkillsBarChart } from './SkillsBarChart';
 
@@ -22,13 +23,21 @@ const SKILLS = [
     .mock(),
 ];
 
-// TrackContextProvider backs the track-carrying links inside the skill tooltip.
+// SkillsViewContextProvider supplies the track (for tooltip links) and other view state.
 const renderBarChart = (props: Parameters<typeof SkillsBarChart>[0]) =>
   render(
     <MemoryRouter>
-      <TrackContextProvider>
+      <SkillsViewContextProvider
+        track={new Track().mock()}
+        skills={props.skills}
+        filteredSkills={props.skills}
+        selectedCategories={[]}
+        selectedSubCategories={[]}
+        searchTerm=""
+        onClearFilters={jest.fn()}
+      >
         <SkillsBarChart {...props} />
-      </TrackContextProvider>
+      </SkillsViewContextProvider>
     </MemoryRouter>
   );
 
