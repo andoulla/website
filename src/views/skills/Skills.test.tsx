@@ -86,7 +86,7 @@ describe('Skills', () => {
         'aria-pressed',
         'true'
       );
-      expect(screen.getByText('Where my experience is concentrated across areas')).toBeVisible();
+      expect(screen.getByText('Where experience is concentrated across areas')).toBeVisible();
       expect(await axe(screen.container)).toHaveNoViolations();
     });
 
@@ -96,7 +96,7 @@ describe('Skills', () => {
 
       await user.click(screen.getByRole('button', { name: 'Growth view' }));
 
-      expect(screen.getByText('How my skill set has grown across my career')).toBeVisible();
+      expect(screen.getByText('How skills have grown over time')).toBeVisible();
     });
 
     test('shows the filter bar in table view as well as graph view', async () => {
@@ -104,10 +104,11 @@ describe('Skills', () => {
       const screen = await renderAndFlush();
 
       await user.click(screen.getByRole('button', { name: 'Table view' }));
+      await user.click(screen.getByRole('button', { name: 'General' }));
 
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       ).toBeVisible();
       expect(await axe(screen.container)).toHaveNoViolations();
@@ -134,9 +135,10 @@ describe('Skills', () => {
         ['/skills?track=lead']
       );
 
+      await user.click(screen.getByRole('button', { name: 'Lead / Engineering Manager' }));
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
 
@@ -153,6 +155,7 @@ describe('Skills', () => {
         ['/skills?track=general&category=frontend-development']
       );
 
+      await user.click(screen.getByRole('button', { name: 'General · 1 filter' }));
       await user.click(screen.getByRole('combobox', { name: 'Track' }));
       await user.click(screen.getByRole('option', { name: 'Lead / Engineering Manager' }));
 
@@ -160,20 +163,23 @@ describe('Skills', () => {
       expect(screen.getByText('search:track=lead&category=frontend-development')).toBeVisible();
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       ).toBeVisible();
     });
 
     test('drops a category param that is not part of the active track', async () => {
+      const user = userEvent.setup();
       const screen = await renderAndFlush(
         () => Promise.resolve(CAREER_HISTORY),
         ['/skills?track=lead&category=frontend-development']
       );
 
+      await user.click(screen.getByRole('button', { name: 'Lead / Engineering Manager' }));
+
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       ).toBeVisible();
     });
@@ -248,7 +254,7 @@ describe('Skills', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+          name: 'Filter skills by category, currently: 1 selected',
         })
       ).toBeVisible();
     });
@@ -257,9 +263,10 @@ describe('Skills', () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
+      await user.click(screen.getByRole('button', { name: 'General' }));
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
       expect(await axe(screen.container)).toHaveNoViolations();
@@ -276,9 +283,10 @@ describe('Skills', () => {
         ['/skills?category=leadership-delivery']
       );
 
+      await user.click(screen.getByRole('button', { name: 'General · 1 filter' }));
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+          name: 'Filter skills by category, currently: 1 selected',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
@@ -289,14 +297,17 @@ describe('Skills', () => {
 
   describe('subcategory filter URL sync', () => {
     test('initializes the subcategory filter from the URL query param', async () => {
+      const user = userEvent.setup();
       const screen = await renderAndFlush(
         () => Promise.resolve(CAREER_HISTORY),
         ['/skills?subCategory=testing']
       );
 
+      await user.click(screen.getByRole('button', { name: 'General · 1 filter' }));
+
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+          name: 'Filter skills by category, currently: 1 selected',
         })
       ).toBeVisible();
     });
@@ -305,9 +316,10 @@ describe('Skills', () => {
       const user = userEvent.setup();
       const screen = await renderAndFlush();
 
+      await user.click(screen.getByRole('button', { name: 'General' }));
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
@@ -322,9 +334,10 @@ describe('Skills', () => {
         ['/skills?subCategory=testing']
       );
 
+      await user.click(screen.getByRole('button', { name: 'General · 1 filter' }));
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (1)',
+          name: 'Filter skills by category, currently: 1 selected',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Testing' }));
@@ -406,9 +419,10 @@ describe('Skills', () => {
       const screen = await renderAndFlush();
 
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'react');
+      await user.click(screen.getByRole('button', { name: 'General' }));
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
@@ -421,9 +435,10 @@ describe('Skills', () => {
       const screen = await renderAndFlush();
 
       await user.type(screen.getByRole('textbox', { name: 'Search skills by name' }), 'typescript');
+      await user.click(screen.getByRole('button', { name: 'General' }));
       await user.click(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: All',
+          name: 'Filter skills by category, currently: All',
         })
       );
       await user.click(screen.getByRole('menuitemcheckbox', { name: 'Leadership & Delivery' }));
@@ -456,17 +471,20 @@ describe('Skills', () => {
 
   describe('combined filters', () => {
     test('keeps category and subcategory query params independent of each other', async () => {
+      const user = userEvent.setup();
       const screen = await renderAndFlush(
         () => Promise.resolve(CAREER_HISTORY),
         ['/skills?category=frontend-development&subCategory=testing']
       );
+
+      await user.click(screen.getByRole('button', { name: 'General · 2 filters' }));
 
       expect(
         screen.getByText('search:category=frontend-development&subCategory=testing&track=general')
       ).toBeVisible();
       expect(
         screen.getByRole('button', {
-          name: 'Filter skills by category and subcategory, currently: Filters (2)',
+          name: 'Filter skills by category, currently: 2 selected',
         })
       ).toBeVisible();
     });
@@ -474,7 +492,10 @@ describe('Skills', () => {
 
   describe('time slider URL sync', () => {
     test('shows the time slider and omits the asOf param at the latest year by default', async () => {
+      const user = userEvent.setup();
       const screen = await renderAndFlush();
+
+      await user.click(screen.getByRole('button', { name: 'General' }));
 
       expect(screen.getByRole('slider', { name: 'Career year' })).toHaveAttribute(
         'aria-valuemin',
@@ -484,10 +505,13 @@ describe('Skills', () => {
     });
 
     test('initializes the time slider from the ?asOf= param and keeps it in the URL', async () => {
+      const user = userEvent.setup();
       const screen = await renderAndFlush(
         () => Promise.resolve(CAREER_HISTORY),
         ['/skills?asOf=2025']
       );
+
+      await user.click(screen.getByRole('button', { name: 'General · 1 filter' }));
 
       expect(screen.getByRole('slider', { name: 'Career year' })).toHaveAttribute(
         'aria-valuenow',
@@ -502,6 +526,8 @@ describe('Skills', () => {
         () => Promise.resolve(CAREER_HISTORY),
         ['/skills?asOf=2024']
       );
+
+      await user.click(screen.getByRole('button', { name: 'General · 1 filter' }));
       const slider = screen.getByRole('slider', { name: 'Career year' });
 
       // Focus via act — a raw slider.focus() updates MUI's internal state outside React's batching.
@@ -512,6 +538,52 @@ describe('Skills', () => {
 
       expect(screen.getByText('search:track=general&asOf=2025')).toBeVisible();
       expect(slider).toHaveAttribute('aria-valuenow', '2025');
+    });
+  });
+
+  describe('filter panel', () => {
+    test('shows the active view name as an h2 heading', async () => {
+      const screen = await renderAndFlush();
+
+      expect(screen.getByRole('heading', { level: 2, name: 'Radar view' })).toBeVisible();
+    });
+
+    test('opens and closes the filter panel when the trigger is clicked', async () => {
+      const user = userEvent.setup();
+      const screen = await renderAndFlush();
+
+      const trigger = screen.getByRole('button', { name: 'General' });
+
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+      await user.click(trigger);
+
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      expect(screen.getByRole('group', { name: 'Skill filters' })).toBeVisible();
+      expect(await axe(screen.container)).toHaveNoViolations();
+
+      await user.click(trigger);
+
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      expect(screen.queryByRole('group', { name: 'Skill filters' })).not.toBeInTheDocument();
+    });
+
+    test('filter button label includes track name and filter count when filters are active', async () => {
+      const user = userEvent.setup();
+      const screen = await renderAndFlush(
+        () => Promise.resolve(CAREER_HISTORY),
+        ['/skills?track=lead']
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Lead / Engineering Manager' }));
+      await user.click(
+        screen.getByRole('button', { name: 'Filter skills by category, currently: All' })
+      );
+      await user.click(screen.getByRole('menuitemcheckbox', { name: 'JavaScript Stack' }));
+
+      expect(
+        screen.getByRole('button', { name: 'Lead / Engineering Manager · 1 filter' })
+      ).toBeVisible();
     });
   });
 });

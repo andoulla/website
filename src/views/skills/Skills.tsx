@@ -10,6 +10,8 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
+import Collapse from '@mui/material/Collapse';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { PageContainer } from '@/components/pageContainer';
 import { useCareerDataContext } from '@/context/careerData';
@@ -177,6 +179,15 @@ const SkillsContent = () => {
 
   const [showPatterns, setShowPatterns] = useState(false);
 
+  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
+
+  const filterCount =
+    selectedCategories.length + selectedSubCategories.length + (cutoffYear < maxYear ? 1 : 0);
+  const filterButtonLabel =
+    filterCount > 0
+      ? `${track.label} · ${filterCount} filter${filterCount === 1 ? '' : 's'}`
+      : track.label;
+
   const ActiveView = VIEW_OPTIONS[effectiveViewMode].Component;
 
   const categories = useMemo(() => derivePresentCategories(skills), [skills]);
@@ -252,68 +263,123 @@ const SkillsContent = () => {
 
   return (
     <>
+      {/* Slim top bar: share + view toggles */}
       <Stack
         direction="row"
-        sx={{
-          mb: { xs: 2.5, sm: 4 },
-          pb: { xs: 1.5, sm: 2 },
-          borderBottom: 1,
-          borderColor: 'divider',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          gap: { xs: 1.5, sm: 2 },
-        }}
+        sx={{ justifyContent: 'flex-end', mb: 1.5, alignItems: 'center', gap: 1.5 }}
       >
-        <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
-        <TrackFilter />
-        <SkillFilterBar
-          categories={categories}
-          subCategoriesByCategory={subCategoriesByCategory}
-          selectedCategories={selectedCategories}
-          selectedSubCategories={selectedSubCategories}
-          onCategoriesChange={setSelectedCategories}
-          onSubCategoriesChange={setSelectedSubCategories}
-        />
-        {minYear < maxYear && (
-          <TimeMachineSlider
-            year={cutoffYear}
-            minYear={minYear}
-            maxYear={maxYear}
-            onCommit={setCutoffYear}
-            sx={{ flexGrow: 1, flexBasis: { xs: '100%', md: 220 }, minWidth: { md: 200 } }}
-          />
-        )}
-        <Stack direction="row" sx={{ alignItems: 'center', ml: 'auto', gap: 1.5 }}>
-          <CopyLinkButton />
-          <ToggleButtonGroup
-            value={effectiveViewMode}
-            exclusive
-            onChange={(_e, next: ViewMode | null) => {
-              if (next === null) return;
+        <CopyLinkButton />
+        <ToggleButtonGroup
+          value={effectiveViewMode}
+          exclusive
+          onChange={(_e, next: ViewMode | null) => {
+            if (next === null) return;
 
-              if (isCompareMode) handleDeactivateCompare();
+            if (isCompareMode) handleDeactivateCompare();
 
-              setViewMode(next);
-            }}
+            setViewMode(next);
+          }}
+          size="small"
+          aria-label="View mode"
+          sx={{
+            '& .MuiToggleButton-root': { px: { xs: 0.75, sm: 1.25 } },
+            '& .MuiSvgIcon-root': { fontSize: { xs: '1.1rem', sm: '1.25rem' } },
+          }}
+        >
+          {VIEW_MODES.map((mode) => (
+            <Tooltip key={mode} title={VIEW_OPTIONS[mode].label}>
+              <ToggleButton value={mode} aria-label={VIEW_OPTIONS[mode].label}>
+                {VIEW_OPTIONS[mode].icon}
+              </ToggleButton>
+            </Tooltip>
+          ))}
+        </ToggleButtonGroup>
+      </Stack>
+
+      {/* Heading row: view name (h2) + compare controls + search + filter trigger */}
+      <Stack
+        direction="row"
+        sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1.5, mb: 0.5 }}
+      >
+        <Typography variant="h5" component="h2" sx={{ fontWeight: 600, letterSpacing: '-0.02em' }}>
+          {VIEW_OPTIONS[effectiveViewMode].label}
+        </Typography>
+        {renderCompareControls()}
+        <Stack direction="row" sx={{ alignItems: 'center', gap: 1.5, ml: 'auto' }}>
+          <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
+          <Button
+            variant="outlined"
             size="small"
-            aria-label="View mode"
-            sx={{
-              '& .MuiToggleButton-root': { px: { xs: 0.75, sm: 1.25 } },
-              '& .MuiSvgIcon-root': { fontSize: { xs: '1.1rem', sm: '1.25rem' } },
-            }}
+            color="inherit"
+            endIcon={
+              <KeyboardArrowDownIcon
+                sx={{
+                  transform: filterPanelOpen ? 'rotate(180deg)' : 'none',
+                  transition: 'transform 0.2s',
+                }}
+              />
+            }
+            onClick={() => setFilterPanelOpen((prev) => !prev)}
+            aria-expanded={filterPanelOpen}
+            aria-controls="skill-filter-panel"
+            sx={{ height: 36, borderColor: 'divider', typography: 'button', fontSize: '0.8125rem' }}
           >
-            {VIEW_MODES.map((mode) => (
-              <Tooltip key={mode} title={VIEW_OPTIONS[mode].label}>
-                <ToggleButton value={mode} aria-label={VIEW_OPTIONS[mode].label}>
-                  {VIEW_OPTIONS[mode].icon}
-                </ToggleButton>
-              </Tooltip>
-            ))}
-          </ToggleButtonGroup>
+            {filterButtonLabel}
+          </Button>
         </Stack>
       </Stack>
+
+      {/* unmountOnExit prevents hidden controls from receiving keyboard focus */}
+      <Collapse in={filterPanelOpen} unmountOnExit>
+        <Stack
+          id="skill-filter-panel"
+          role="group"
+          aria-label="Skill filters"
+          direction="row"
+          sx={{
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: 2,
+            py: 1.5,
+            mb: 1,
+            borderBottom: 1,
+            borderColor: 'divider',
+          }}
+        >
+          <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              Track
+            </Typography>
+            <TrackFilter />
+          </Stack>
+          <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              Category
+            </Typography>
+            <SkillFilterBar
+              categories={categories}
+              subCategoriesByCategory={subCategoriesByCategory}
+              selectedCategories={selectedCategories}
+              selectedSubCategories={selectedSubCategories}
+              onCategoriesChange={setSelectedCategories}
+              onSubCategoriesChange={setSelectedSubCategories}
+            />
+          </Stack>
+          {minYear < maxYear && (
+            <TimeMachineSlider
+              year={cutoffYear}
+              minYear={minYear}
+              maxYear={maxYear}
+              onCommit={setCutoffYear}
+              sx={{ flexGrow: 1, flexBasis: { xs: '100%', md: 220 }, minWidth: { md: 200 } }}
+            />
+          )}
+        </Stack>
+      </Collapse>
+
+      {/* Caption + optional Texture fills */}
       <Stack direction="row" sx={{ alignItems: 'center', mb: 0.5, minHeight: 38 }}>
-        <Typography variant="h6" component="p" color="text.secondary" sx={{ flexGrow: 1 }}>
+        <Typography variant="body1" color="text.secondary" sx={{ flexGrow: 1 }}>
           {isCompareMode
             ? 'Skills side by side across two tracks'
             : VIEW_OPTIONS[effectiveViewMode].caption}
@@ -335,7 +401,6 @@ const SkillsContent = () => {
             />
           </Tooltip>
         )}
-        {renderCompareControls()}
       </Stack>
       <SkillsStatBar filteredSkills={filteredSkills} />
       <SkillsCareerContextProvider careerHistory={careerHistory}>
