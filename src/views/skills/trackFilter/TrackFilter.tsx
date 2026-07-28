@@ -8,11 +8,10 @@ import type { TrackId } from '@/types';
 export const TrackFilter = () => {
   const { trackId, setTrackId } = useTrackContext();
 
-  // Visible "Track:" prefix — the bare value ("General") gives sighted users no cue.
   const renderTrackValue = (id: TrackId) => {
     const track = tracks.find((candidate) => candidate.id === id);
 
-    return `Track: ${track?.label ?? id}`;
+    return track?.label ?? id;
   };
 
   return (
