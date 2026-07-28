@@ -187,9 +187,8 @@ const SkillsContent = () => {
 
     if (firstAvailable !== undefined) {
       setCompareTrackId(firstAvailable.id);
-      setViewMode('table');
     }
-  }, [trackId, setCompareTrackId, setViewMode]);
+  }, [trackId, setCompareTrackId]);
 
   const handleDeactivateCompare = useCallback(() => {
     setCompareTrackId(null);
