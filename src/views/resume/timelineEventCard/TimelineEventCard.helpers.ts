@@ -2,8 +2,21 @@ import type { Theme } from '@mui/material/styles';
 
 import type { Skill, Track } from '@/types';
 import { deriveSkillCategoryMap, type TrackCategoryRef } from '@/utils/deriveSkillCategoryMap';
+import { MONTH_NAMES } from '@/utils/formatDate';
 
 import { CARD_FADE_DURATION_MS, CARD_FADE_TRANSLATE_Y } from './TimelineEventCard.constants';
+
+export const formatMonthYear = (isoDate: string): string => {
+  const [year, month] = isoDate.split('-');
+
+  return `${MONTH_NAMES[Number(month) - 1]} ${year}`;
+};
+
+export const formatDuration = (startDate: string, endDate: string | null): string => {
+  const end = endDate === null ? 'Present' : formatMonthYear(endDate);
+
+  return `${formatMonthYear(startDate)} – ${end}`;
+};
 
 export const recommendationElementId = (id: string): string =>
   `recommendation-${encodeURIComponent(id)}`;

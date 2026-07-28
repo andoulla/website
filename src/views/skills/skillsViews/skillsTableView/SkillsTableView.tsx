@@ -1,4 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Box from '@mui/material/Box';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
 
 import { hasSearchTerm } from '@/utils/hasSearchTerm';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
@@ -9,16 +12,46 @@ import { useSkillsViewContext } from '../SkillsViewContext';
 import { groupSkillsByTrack, skillElementId } from './SkillsTableView.helpers';
 import { SkillsTable } from './skillsTable';
 
+const TABLE_SKELETON_GROUPS: number[] = [3, 2, 3];
+
+const TableSkeleton = () => (
+  <Stack>
+    {TABLE_SKELETON_GROUPS.map((rowCount, gi) => (
+      <Box key={gi}>
+        <Skeleton variant="rectangular" height={28} sx={{ mb: 0.5, borderRadius: 0 }} />
+        {Array.from({ length: rowCount }).map((_, ri) => (
+          <Stack key={ri} direction="row" spacing={2} sx={{ py: 0.75, px: 1 }}>
+            <Skeleton variant="text" width="25%" />
+            <Skeleton variant="text" width="8%" />
+            <Skeleton variant="text" width="40%" />
+            <Skeleton variant="text" width="6%" />
+          </Stack>
+        ))}
+      </Box>
+    ))}
+  </Stack>
+);
+
 export const SkillsTableView = () => {
-  const {
-    track,
-    filteredSkills,
-    highlightedSkills,
-    searchTerm,
-    selectedCategories,
-    selectedSubCategories,
-    onClearFilters,
-  } = useSkillsViewContext();
+  const { track, filteredSkills, highlightedSkills, searchTerm, onClearFilters } =
+    useSkillsViewContext();
+
+  const innerRef = useRef<HTMLDivElement>(null);
+  const [tableHeight, setTableHeight] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    const el = innerRef.current;
+
+    if (!el) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry !== undefined) setTableHeight(entry.contentRect.height);
+    });
+
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (highlightedSkills.length === 0) return;
@@ -37,12 +70,23 @@ export const SkillsTableView = () => {
 
   if (categoryGroups.length === 0) {
     return (
-      <SkillsEmptyState
-        hasActiveFilters={selectedCategories.length > 0 || selectedSubCategories.length > 0}
-        onClearFilters={onClearFilters}
-      />
+      <SkillsEmptyState onClearFilters={onClearFilters}>
+        <TableSkeleton />
+      </SkillsEmptyState>
     );
   }
 
-  return <SkillsTable categoryGroups={categoryGroups} highlightedSkills={highlightedSkills} />;
+  return (
+    <Box
+      sx={{
+        height: tableHeight,
+        transition: tableHeight !== undefined ? 'height 250ms ease-out' : 'none',
+        overflow: 'hidden',
+      }}
+    >
+      <div ref={innerRef}>
+        <SkillsTable categoryGroups={categoryGroups} highlightedSkills={highlightedSkills} />
+      </div>
+    </Box>
+  );
 };

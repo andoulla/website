@@ -27,7 +27,7 @@ describe('deriveSkillTypeSplit', () => {
     expect(result.techPercent).toBe(100);
   });
 
-  test('returns techPercent of 0 when all skills are non-technical', () => {
+  test('returns techPercent of 0 when all skills are soft', () => {
     const skills = [
       new SkillSummary().type('skill').mock(),
       new SkillSummary().type('skill').mock(),

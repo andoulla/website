@@ -23,10 +23,11 @@ import type { TrackId } from '@/types';
 import { deriveOverlapCaption } from '@/utils/deriveOverlapCaption';
 import { filterEventsByTrack } from '@/utils/filterEventsByTrack';
 import { matchSkill } from '@/utils/matchSkill';
+import { SKILL_PARAM } from '@/utils/skillsUrlParams';
 
 import { ContactDetails } from './contactDetails';
 import { ExperienceSearch } from './experienceSearch';
-import { FOCUS_PARAM, RECOMMENDATION_PARAM, SKILL_PARAM } from './Resume.constants';
+import { FOCUS_PARAM, RECOMMENDATION_PARAM } from './Resume.constants';
 import { findMostRecentSkillMatchIndex } from './Resume.helpers';
 import { TimelineEventCard } from './timelineEventCard';
 import { TimelineEventSkeleton } from './timelineEventSkeleton';

@@ -1,5 +1,4 @@
 import { Suspense, useCallback, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -23,15 +22,11 @@ import { deriveAllSkills } from '@/utils/deriveAllSkills';
 import { deriveCareerYearRange } from '@/utils/deriveCareerYearRange';
 import { derivePresentCategories } from '@/utils/derivePresentCategories';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
-import { matchSkill } from '@/utils/matchSkill';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 import {
   AS_OF_PARAM,
-  CATEGORY_PARAM,
   COMPARE_TRACK_PARAM,
   SEARCH_PARAM,
-  SKILL_PARAM,
-  SUBCATEGORY_PARAM,
   VIEW_MODES,
   VIEW_PARAM,
 } from '@/utils/skillsUrlParams';
@@ -39,16 +34,14 @@ import {
 import { VIEW_OPTIONS } from './Skills.constants';
 import {
   parseAsOfYear,
-  parseCategoryIds,
   parseCompareTrackId,
   parseSearch,
-  parseSubCategoryIds,
   parseViewMode,
   scopeRecommendationsAsOf,
 } from './Skills.helpers';
 import type { ViewMode } from './Skills.types';
 import { CopyLinkButton } from './copyLinkButton';
-import { SkillFilterBar, type SkillFilterOption } from './skillFilterBar';
+import { SkillFilterBar } from './skillFilterBar';
 import { SkillSearchBar } from './skillSearchBar';
 import { SkillsStatBar } from './skillsStatBar';
 import { TimeMachineSlider } from './timeMachineSlider';
@@ -56,6 +49,7 @@ import { TrackFilter } from './trackFilter';
 import { SkillsCareerContextProvider, SkillsViewContextProvider } from './skillsViews';
 import { SkillsCompareView } from './skillsViews/skillsCompareView';
 import { useSkillSearchUrl } from './useSkillSearchUrl';
+import { useSkillsPageState } from './useSkillsPageState';
 
 const deriveSearchHint = (
   searchTerm: string,
@@ -64,9 +58,7 @@ const deriveSearchHint = (
 ): string | undefined => {
   if (searchTerm.trim() === '') return undefined;
 
-  if (totalMatches === 0) return 'No skills match your search';
-
-  if (hiddenMatchCount === 0) return undefined;
+  if (totalMatches === 0 || hiddenMatchCount === 0) return undefined;
 
   return `${hiddenMatchCount} match${hiddenMatchCount === 1 ? '' : 'es'} hidden by filters`;
 };
@@ -102,41 +94,14 @@ const SkillsContent = () => {
     [careerHistory, track, allSkills, asOfDate]
   );
 
-  const [searchParams] = useSearchParams();
-  const highlightedSkillsKey = JSON.stringify(searchParams.getAll(SKILL_PARAM));
-  // Params resolve through matchSkill: synonyms map to canonical names.
-  const highlightedSkills = useMemo(
-    () =>
-      searchParams
-        .getAll(SKILL_PARAM)
-        .map((term) => matchSkill(term)?.skill.name)
-        .filter((name): name is string => name !== undefined),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on content, not the ref
-    [highlightedSkillsKey]
-  );
-
-  // Parsers are track-bound; useSkillSearchUrl memoizes on parser identity, so they must be
-  // stable per track or the parsed state goes stale.
-  const parseCategories = useCallback(
-    (raw: string | null) => parseCategoryIds(raw, track),
-    [track]
-  );
-  const parseSubCategories = useCallback(
-    (raw: string | null) => parseSubCategoryIds(raw, track),
-    [track]
-  );
-
-  const [selectedCategories, setSelectedCategories] = useSkillSearchUrl(
-    CATEGORY_PARAM,
-    parseCategories,
-    (next) => (next.length > 0 ? next.join(',') : null)
-  );
-
-  const [selectedSubCategories, setSelectedSubCategories] = useSkillSearchUrl(
-    SUBCATEGORY_PARAM,
-    parseSubCategories,
-    (next) => (next.length > 0 ? next.join(',') : null)
-  );
+  const {
+    highlightedSkills,
+    selectedCategories,
+    setSelectedCategories,
+    selectedSubCategories,
+    setSelectedSubCategories,
+    subCategoriesByCategory,
+  } = useSkillsPageState(track, skills);
 
   // Local state drives live typing (URL round-trip is too slow); URL is a write-only mirror.
   const [initialSearchTerm, setSearchTermUrl] = useSkillSearchUrl(
@@ -160,9 +125,10 @@ const SkillsContent = () => {
   );
 
   const clearFilters = useCallback(() => {
+    setSearchTerm('');
     setSelectedCategories([]);
     setSelectedSubCategories([]);
-  }, [setSelectedCategories, setSelectedSubCategories]);
+  }, [setSearchTerm, setSelectedCategories, setSelectedSubCategories]);
 
   const { totalMatches, hiddenMatchCount } = useMemo(() => {
     if (searchTerm.trim() === '') return { totalMatches: 0, hiddenMatchCount: 0 };
@@ -215,21 +181,6 @@ const SkillsContent = () => {
   const ActiveView = VIEW_OPTIONS[effectiveViewMode].Component;
 
   const categories = useMemo(() => derivePresentCategories(skills), [skills]);
-
-  // Active track's subcategories, narrowed to those with at least one present summary.
-  const subCategoriesByCategory = useMemo(
-    () =>
-      track.categories.reduce<Record<string, SkillFilterOption[]>>((acc, category) => {
-        const presentSubCategories = category.subCategories
-          .filter((subCategory) => skills.some((skill) => skill.subCategoryId === subCategory.id))
-          .map(({ id, name }) => ({ id, name }));
-
-        if (presentSubCategories.length > 0) acc[category.id] = presentSubCategories;
-
-        return acc;
-      }, {}),
-    [track, skills]
-  );
 
   const availableCompareTracks = tracks.filter((t) => t.id !== trackId);
 

@@ -2,19 +2,15 @@ import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
-import { TrackContextProvider } from '@/context/track';
 import { SkillSummary } from '@/testing';
 import type { SkillSummary as SkillSummaryData } from '@/utils/calculateSkillYears';
 
 import { SkillTooltipContent } from './SkillTooltipContent';
 
-// The provider normalises the missing ?track= param to the default 'general'.
-const renderTooltip = (skill: SkillSummaryData) =>
+const renderTooltip = (skill: SkillSummaryData, trackId = 'general') =>
   render(
     <MemoryRouter>
-      <TrackContextProvider>
-        <SkillTooltipContent skill={skill} />
-      </TrackContextProvider>
+      <SkillTooltipContent skill={skill} trackId={trackId} />
     </MemoryRouter>
   );
 

@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -18,17 +18,18 @@ import { BulletList } from '@/components/bulletList';
 import { Section } from '@/components/section';
 import { TRACK_PARAM } from '@/context/track';
 import type { TimelineEventWithRecommendations, Track } from '@/types';
-import { MONTH_NAMES } from '@/utils/formatDate';
 import { categoryColourFromIndex, resolveSkillColourMain } from '@/utils/skillColour';
 import { CATEGORY_PARAM, SKILL_PARAM, VIEW_PARAM } from '@/utils/skillsUrlParams';
 
 import { RESPONSIBILITIES_LABEL_BY_TYPE } from './TimelineEventCard.constants';
 import {
+  formatDuration,
   getCardMotionSx,
   groupSkillsByCategory,
   recommendationElementId,
 } from './TimelineEventCard.helpers';
 import { RecommendationText } from './recommendationText';
+import { useCardExpand } from './useCardExpand';
 import { useInView } from './useInView';
 
 export interface TimelineEventCardProps {
@@ -48,18 +49,6 @@ export interface TimelineEventCardProps {
   // the first card starts expanded on load
   startExpanded?: boolean;
 }
-
-const formatMonthYear = (isoDate: string): string => {
-  const [year, month] = isoDate.split('-');
-
-  return `${MONTH_NAMES[Number(month) - 1]} ${year}`;
-};
-
-const formatDuration = (startDate: string, endDate: string | null): string => {
-  const end = endDate === null ? 'Present' : formatMonthYear(endDate);
-
-  return `${formatMonthYear(startDate)} – ${end}`;
-};
 
 export const TimelineEventCard = ({
   event,
@@ -96,12 +85,9 @@ export const TimelineEventCard = ({
   const isMatch = hasHighlightedSkill || hasHighlightedRecommendation || isFocusMatch;
 
   // user toggle wins; otherwise deep-link matches and the first card render expanded
-  const [userExpanded, setUserExpanded] = useState<boolean | null>(null);
-  const isExpanded = userExpanded ?? (isMatch || startExpanded);
-
+  const [isExpanded, setIsExpanded] = useCardExpand(isMatch || startExpanded);
   // key skills sit behind a second expander; a skill deep link opens it
-  const [userSkillsExpanded, setUserSkillsExpanded] = useState<boolean | null>(null);
-  const areSkillsExpanded = userSkillsExpanded ?? hasHighlightedSkill;
+  const [areSkillsExpanded, setAreSkillsExpanded] = useCardExpand(hasHighlightedSkill);
 
   const cardNodeRef = useRef<HTMLDivElement | null>(null);
   const setCardNode = useCallback(
@@ -255,7 +241,7 @@ export const TimelineEventCard = ({
                 size="small"
                 aria-expanded={areSkillsExpanded}
                 startIcon={areSkillsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                onClick={() => setUserSkillsExpanded(!areSkillsExpanded)}
+                onClick={() => setAreSkillsExpanded(!areSkillsExpanded)}
               >
                 {areSkillsExpanded ? 'Hide key skills' : 'Show key skills'}
               </Button>
@@ -345,7 +331,7 @@ export const TimelineEventCard = ({
           size="small"
           aria-expanded={isExpanded}
           startIcon={isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          onClick={() => setUserExpanded(!isExpanded)}
+          onClick={() => setIsExpanded(!isExpanded)}
           sx={{ mt: 1 }}
         >
           {isExpanded ? 'Hide details' : 'Show details'}

@@ -1,6 +1,4 @@
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -74,26 +72,21 @@ const SkillRow = ({ skill, isHighlighted, diffStatus, diffSide }: SkillRowProps)
               only here
             </Typography>
           )}
-          <Chip
-            label={skill.type === 'tech' ? 'tech' : 'non-technical'}
-            size="small"
-            variant="outlined"
-          />
           <RecommendationBadge recommendationIds={skill.recommendationIds} />
         </Box>
       </TableCell>
       <TableCell sx={{ verticalAlign: 'top' }}>
+        <Typography variant="body2" color="text.secondary">
+          {skill.type === 'tech' ? 'tech' : 'soft'}
+        </Typography>
+      </TableCell>
+      <TableCell sx={{ verticalAlign: 'top' }}>
         {skill.companyYears.length > 0 ? (
-          <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap' }}>
-            {skill.companyYears.map(({ name, years }) => (
-              <Chip
-                key={name}
-                label={`${name} · ${formatYears(years)}`}
-                size="small"
-                variant="outlined"
-              />
-            ))}
-          </Stack>
+          <Typography variant="body2" color="text.secondary">
+            {skill.companyYears
+              .map(({ name, years }) => `${name} · ${formatYears(years)}`)
+              .join(' | ')}
+          </Typography>
         ) : (
           <Typography variant="body2" color="text.secondary">
             —
@@ -112,7 +105,7 @@ const SkillRow = ({ skill, isHighlighted, diffStatus, diffSide }: SkillRowProps)
 
 const GroupHeaderRow = ({
   label,
-  colSpan = 4,
+  colSpan = 5,
   variant = 'category',
 }: {
   label: string;
@@ -190,6 +183,7 @@ export const SkillsTable = ({
         <TableHead>
           <TableRow>
             <TableCell>Skill</TableCell>
+            <TableCell>Type</TableCell>
             <TableCell>Companies</TableCell>
             <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
               Years

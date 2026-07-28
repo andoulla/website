@@ -17,13 +17,14 @@ import { visuallyHidden } from '@mui/utils';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import type { PresentCategory } from '@/utils/derivePresentCategories';
 
+import { CategoryLegend } from '../../categoryLegend';
+
 import {
   aggregateSkillsByCategory,
   formatAxisTick,
   resolveDotColour,
 } from './SkillsRadarChart.helpers';
 import type { CategoryRadarPoint } from './SkillsRadarChart.types';
-import { CategoryLegend } from './categoryLegend';
 import { CategoryTooltip } from './categoryTooltip';
 
 const CHART_HEIGHT = 440;

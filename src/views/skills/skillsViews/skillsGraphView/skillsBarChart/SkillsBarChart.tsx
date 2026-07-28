@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Popper from '@mui/material/Popper';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
@@ -13,16 +12,14 @@ import { visuallyHidden } from '@mui/utils';
 import { SkillTooltipContent } from '@/components/skillTooltipContent';
 import type { SkillSummary } from '@/utils/calculateSkillYears';
 import { derivePresentCategories } from '@/utils/derivePresentCategories';
+import { hasSearchTerm } from '@/utils/hasSearchTerm';
 import { resolveSkillColourMain } from '@/utils/skillColour';
-import { CategoryColourDot } from '@/views/skills/categoryColourDot';
 
+import { useSkillsViewContext } from '../../SkillsViewContext';
+import { CategoryLegend } from '../../categoryLegend';
 import { CategoryPatternDefinition } from '../../categoryPattern';
 
-import {
-  getCategoryPatternBackground,
-  getCategoryPatternId,
-  isBarMatch,
-} from './SkillsBarChart.helpers';
+import { getCategoryPatternBackground, getCategoryPatternId } from './SkillsBarChart.helpers';
 
 // compact rows pack the chart tighter
 const BAR_HEIGHT_BY_DENSITY = { comfortable: 36, compact: 30 } as const;
@@ -62,6 +59,7 @@ export const SkillsBarChart = ({
   highlightedSkills = [],
 }: SkillsBarChartProps) => {
   const theme = useTheme();
+  const { track } = useSkillsViewContext();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   // Frozen at the point the pointer entered the bar — not tracked on every mousemove, so the
   // tooltip sits near the cursor without chasing it as the pointer moves toward its links.
@@ -143,85 +141,86 @@ export const SkillsBarChart = ({
   return (
     <Stack spacing={1}>
       {/* Horizontal bar chart — layout="vertical" = bars grow left-to-right in Recharts */}
-      <ResponsiveContainer width="100%" height={chartHeight}>
-        <BarChart
-          layout="vertical"
-          data={skills}
-          margin={{ top: 8, right: 32, left: 0, bottom: 8 }}
-        >
-          <XAxis
-            type="number"
-            tickFormatter={(v: number) => `${v}y`}
-            domain={[0, 'auto']}
-            tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
-            axisLine={{ stroke: theme.palette.divider }}
-            tickLine={{ stroke: theme.palette.divider }}
-          />
-          <YAxis
-            type="category"
-            dataKey="skill"
-            width={yAxisWidth}
-            tick={{ fontSize: 12, fill: theme.palette.text.primary }}
-            tickLine={false}
-            axisLine={false}
-          />
-          {showPatterns && (
-            <defs>
-              {legendEntries.map(({ category, colour, markColour }) => (
-                <CategoryPatternDefinition
-                  key={category.id}
-                  category={category}
-                  colour={colour}
-                  markColour={markColour}
-                />
-              ))}
-            </defs>
-          )}
-          <Bar
-            dataKey="years"
-            radius={[0, 4, 4, 0]}
-            barSize={BAR_SIZE}
-            isAnimationActive={!prefersReducedMotion}
-            animationDuration={400}
-            animationEasing="ease-out"
-            onMouseEnter={(_data, index, event) => {
-              openAt(index, event);
-            }}
-            onMouseLeave={scheduleClose}
-            // Tap support: touch fires an emulated mouseenter then click on the same bar, so
-            // click always opens (never toggles) — dismissal is the click-away listener's job.
-            onClick={(_data, index, event) => {
-              openAt(index, event);
-            }}
+      {/* Height transition smooths the layout shift as bars appear/disappear during search */}
+      <Box sx={{ height: chartHeight, transition: 'height 250ms ease-out', overflow: 'hidden' }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            layout="vertical"
+            data={skills}
+            margin={{ top: 8, right: 32, left: 0, bottom: 8 }}
           >
-            {skills.map((skill, i) => {
-              const isMatch = isBarMatch(skill, searchTerm);
-              const isHovered = i === hoverIndex && isMatch;
-              const isHighlighted = highlightedSkills.includes(skill.skill);
-              const colour = resolveSkillColourMain(skill.colour, theme);
-
-              return (
-                <Cell
-                  key={skill.id}
-                  fill={showPatterns ? `url(#${getCategoryPatternId(skill.categoryId)})` : colour}
-                  stroke={isHighlighted ? theme.palette.primary.main : 'none'}
-                  strokeWidth={isHighlighted ? 2 : 0}
-                  style={{
-                    opacity: isMatch || isHighlighted ? 1 : 0.35,
-                    filter: isHovered ? 'brightness(1.25)' : 'none',
-                    transition: 'filter 0.15s ease, opacity 0.2s ease',
-                    cursor: 'pointer',
-                  }}
-                />
-              );
-            })}
-            <LabelList
-              valueAccessor={(entry) => (entry.payload as SkillSummary).recommendationIds.length}
-              content={renderRecommendationDot}
+            <XAxis
+              type="number"
+              tickFormatter={(v: number) => `${v}y`}
+              domain={[0, 'auto']}
+              tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
+              axisLine={{ stroke: theme.palette.divider }}
+              tickLine={{ stroke: theme.palette.divider }}
             />
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+            <YAxis
+              type="category"
+              dataKey="skill"
+              width={yAxisWidth}
+              tick={{ fontSize: 12, fill: theme.palette.text.primary }}
+              tickLine={false}
+              axisLine={false}
+            />
+            {showPatterns && (
+              <defs>
+                {legendEntries.map(({ category, colour, markColour }) => (
+                  <CategoryPatternDefinition
+                    key={category.id}
+                    category={category}
+                    colour={colour}
+                    markColour={markColour}
+                  />
+                ))}
+              </defs>
+            )}
+            <Bar
+              dataKey="years"
+              radius={[0, 4, 4, 0]}
+              barSize={BAR_SIZE}
+              isAnimationActive={!prefersReducedMotion}
+              animationDuration={hasSearchTerm(searchTerm) ? 150 : 400}
+              animationEasing="ease-out"
+              onMouseEnter={(_data, index, event) => {
+                openAt(index, event);
+              }}
+              onMouseLeave={scheduleClose}
+              // Tap support: touch fires an emulated mouseenter then click on the same bar, so
+              // click always opens (never toggles) — dismissal is the click-away listener's job.
+              onClick={(_data, index, event) => {
+                openAt(index, event);
+              }}
+            >
+              {skills.map((skill, i) => {
+                const isHovered = i === hoverIndex;
+                const isHighlighted = highlightedSkills.includes(skill.skill);
+                const colour = resolveSkillColourMain(skill.colour, theme);
+
+                return (
+                  <Cell
+                    key={skill.id}
+                    fill={showPatterns ? `url(#${getCategoryPatternId(skill.categoryId)})` : colour}
+                    stroke={isHighlighted ? theme.palette.primary.main : 'none'}
+                    strokeWidth={isHighlighted ? 2 : 0}
+                    style={{
+                      filter: isHovered ? 'brightness(1.25)' : 'none',
+                      transition: 'filter 0.15s ease',
+                      cursor: 'pointer',
+                    }}
+                  />
+                );
+              })}
+              <LabelList
+                valueAccessor={(entry) => (entry.payload as SkillSummary).recommendationIds.length}
+                content={renderRecommendationDot}
+              />
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </Box>
 
       <Popper
         open={hoverIndex !== null}
@@ -232,40 +231,24 @@ export const SkillsBarChart = ({
       >
         <ClickAwayListener onClickAway={handleClickAway}>
           <Box onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
-            {hoverIndex !== null && <SkillTooltipContent skill={skills[hoverIndex]} />}
+            {hoverIndex !== null && (
+              <SkillTooltipContent skill={skills[hoverIndex]} trackId={track.id} />
+            )}
           </Box>
         </ClickAwayListener>
       </Popper>
 
-      {/* Legend — styled like a figure caption: muted text, pattern swatches vertically centred with labels */}
-      <Box
-        aria-hidden="true"
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          rowGap: 1.5,
-          columnGap: 3,
-          pt: 1,
-        }}
-      >
-        {legendEntries.map(({ category, colour, markColour }) => (
-          <Box key={category.id} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <CategoryColourDot
-              shape="square"
-              colour={colour}
-              background={
-                showPatterns
-                  ? getCategoryPatternBackground(category.index, colour, markColour)
-                  : undefined
-              }
-            />
-            <Typography variant="caption" color="text.secondary">
-              {category.name}
-            </Typography>
-          </Box>
-        ))}
-      </Box>
+      {/* Legend — pattern swatches vertically centred with muted category labels */}
+      <CategoryLegend
+        categories={legendEntries.map(({ category }) => category)}
+        shape="square"
+        getBackground={
+          showPatterns
+            ? (colour, index) =>
+                getCategoryPatternBackground(index, colour, theme.palette.getContrastText(colour))
+            : undefined
+        }
+      />
 
       {/* Visually hidden table — accessible text alternative for screen readers */}
       <Box component="table" sx={visuallyHidden} aria-label="Skills data table">

@@ -9,7 +9,7 @@ describe('SkillTypeMeter', () => {
 
     const screen = render(<SkillTypeMeter split={split} />);
 
-    expect(screen.getByRole('img', { name: '66.7% technical, 33.3% non-technical' })).toBeVisible();
+    expect(screen.getByRole('img', { name: '66.7% tech, 33.3% soft' })).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
