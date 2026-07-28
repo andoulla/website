@@ -206,6 +206,15 @@ const SkillsContent = () => {
     if (isCompareMode) {
       return (
         <Stack direction="row" sx={{ alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+          <Button
+            size="small"
+            variant="contained"
+            startIcon={<CompareArrowsIcon />}
+            onClick={handleDeactivateCompare}
+            sx={{ textTransform: 'none', whiteSpace: 'nowrap', py: '2px' }}
+          >
+            Comparing
+          </Button>
           <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
             {'Comparing '}
             <Typography
@@ -229,15 +238,6 @@ const SkillsContent = () => {
                 onClick={() => setCompareTrackId(t.id)}
               />
             ))}
-          <Button
-            size="small"
-            variant="contained"
-            startIcon={<CompareArrowsIcon />}
-            onClick={handleDeactivateCompare}
-            sx={{ textTransform: 'none', whiteSpace: 'nowrap', py: '2px' }}
-          >
-            Comparing
-          </Button>
         </Stack>
       );
     }
@@ -331,12 +331,9 @@ const SkillsContent = () => {
           id="skill-filter-panel"
           role="group"
           aria-label="Skill filters"
-          direction="row"
           sx={{
-            flexWrap: 'wrap',
-            alignItems: 'flex-end',
-            gap: 2,
-            p: 2,
+            gap: 2.5,
+            p: 3,
             mt: 1,
             mb: 2,
             bgcolor: 'action.hover',
@@ -347,39 +344,48 @@ const SkillsContent = () => {
             borderRadius: 1,
           }}
         >
-          <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
-          <Stack sx={{ gap: 0.5 }}>
-            <Typography variant="body2" color="text.secondary">
-              Track
-            </Typography>
-            <TrackFilter />
-          </Stack>
-          <Stack sx={{ gap: 0.5 }}>
-            <Typography variant="body2" color="text.secondary">
-              Category
-            </Typography>
-            <SkillFilterBar
-              categories={categories}
-              subCategoriesByCategory={subCategoriesByCategory}
-              selectedCategories={selectedCategories}
-              selectedSubCategories={selectedSubCategories}
-              onCategoriesChange={setSelectedCategories}
-              onSubCategoriesChange={setSelectedSubCategories}
-            />
+          {/* Filters row — equal-width controls with labels above */}
+          <Stack direction="row" sx={{ flexWrap: 'wrap', alignItems: 'flex-start', gap: 3 }}>
+            <Stack sx={{ flex: 1, minWidth: 180, gap: 0.5 }}>
+              <Typography variant="body2" color="text.secondary">
+                Search
+              </Typography>
+              <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
+            </Stack>
+            <Stack sx={{ flex: 1, minWidth: 180, gap: 0.5 }}>
+              <Typography variant="body2" color="text.secondary">
+                Track
+              </Typography>
+              <TrackFilter />
+            </Stack>
+            <Stack sx={{ flex: 1, minWidth: 180, gap: 0.5 }}>
+              <Typography variant="body2" color="text.secondary">
+                Category
+              </Typography>
+              <SkillFilterBar
+                categories={categories}
+                subCategoriesByCategory={subCategoriesByCategory}
+                selectedCategories={selectedCategories}
+                selectedSubCategories={selectedSubCategories}
+                onCategoriesChange={setSelectedCategories}
+                onSubCategoriesChange={setSelectedSubCategories}
+              />
+            </Stack>
           </Stack>
           {minYear < maxYear && (
-            <TimeMachineSlider
-              year={cutoffYear}
-              minYear={minYear}
-              maxYear={maxYear}
-              onCommit={setCutoffYear}
-              sx={{ flexBasis: '100%', px: 1 }}
-            />
+            <Stack sx={{ gap: 1, py: 1, px: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                Timeframe
+              </Typography>
+              <TimeMachineSlider
+                year={cutoffYear}
+                minYear={minYear}
+                maxYear={maxYear}
+                onCommit={setCutoffYear}
+              />
+            </Stack>
           )}
-          <Stack
-            direction="row"
-            sx={{ flexBasis: '100%', alignItems: 'center', flexWrap: 'wrap', gap: 1.5 }}
-          >
+          <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1.5 }}>
             {renderCompareControls()}
             <Stack sx={{ ml: 'auto' }}>
               <CopyLinkButton />

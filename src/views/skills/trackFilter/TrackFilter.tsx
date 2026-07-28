@@ -17,6 +17,7 @@ export const TrackFilter = () => {
   return (
     <Select<TrackId>
       size="small"
+      fullWidth
       value={trackId}
       onChange={(event) => {
         setTrackId(event.target.value);

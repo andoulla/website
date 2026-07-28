@@ -94,6 +94,7 @@ export const SkillFilterBar = ({
         variant="outlined"
         size="small"
         color="inherit"
+        fullWidth
         endIcon={<KeyboardArrowDownIcon fontSize="small" />}
         onClick={(e) => setAnchorEl(e.currentTarget)}
         aria-haspopup="menu"
@@ -105,6 +106,7 @@ export const SkillFilterBar = ({
           borderColor: 'divider',
           typography: 'button',
           fontSize: '0.8125rem',
+          justifyContent: 'space-between',
         }}
       >
         {label}
