@@ -201,6 +201,7 @@ const SkillsContent = () => {
     setCompareTrackId(null);
   }, [setCompareTrackId]);
 
+  // Compare controls live in the filter panel; only shown on table view (or while comparing).
   const renderCompareControls = () => {
     if (isCompareMode) {
       return (
@@ -297,7 +298,6 @@ const SkillsContent = () => {
         <Typography variant="h5" component="h2" sx={{ fontWeight: 600, letterSpacing: '-0.02em' }}>
           {VIEW_OPTIONS[effectiveViewMode].label}
         </Typography>
-        {renderCompareControls()}
         <Stack
           direction="row"
           sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1.5, ml: 'auto' }}
@@ -325,7 +325,7 @@ const SkillsContent = () => {
         </Stack>
       </Stack>
 
-      {/* Expandable filter panel — unmountOnExit prevents hidden controls from receiving keyboard focus */}
+      {/* Expandable filter panel — a recessed tray; unmountOnExit keeps hidden controls out of the tab order */}
       <Collapse in={filterPanelOpen} unmountOnExit>
         <Stack
           id="skill-filter-panel"
@@ -336,10 +336,15 @@ const SkillsContent = () => {
             flexWrap: 'wrap',
             alignItems: 'center',
             gap: 2,
-            py: 1.5,
-            mb: 1,
-            borderBottom: 1,
+            p: 2,
+            mt: 1,
+            mb: 2,
+            bgcolor: 'action.hover',
+            border: 1,
             borderColor: 'divider',
+            borderLeft: 3,
+            borderLeftColor: 'primary.main',
+            borderRadius: 1,
           }}
         >
           <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}>
@@ -361,6 +366,7 @@ const SkillsContent = () => {
               onSubCategoriesChange={setSelectedSubCategories}
             />
           </Stack>
+          {renderCompareControls()}
           {minYear < maxYear && (
             <TimeMachineSlider
               year={cutoffYear}
@@ -429,7 +435,11 @@ export const Skills = () => {
   return (
     <PageContainer>
       <title>Skills — Mariandi Stylianou</title>
-      <Typography variant="h3" component="h1" sx={{ p: 0, mb: { xs: 1.5, sm: 3 } }}>
+      <Typography
+        variant="h3"
+        component="h1"
+        sx={{ p: 0, textAlign: 'left', mb: { xs: 1.5, sm: 3 } }}
+      >
         Skills
       </Typography>
       <Suspense
