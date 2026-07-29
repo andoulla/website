@@ -144,24 +144,26 @@ On the mobile screenshots the "Recommendations (4)" quotes are still laid out tw
 ### 5.1 ✅ Category label reads as just another skill
 
 Both the category label ("Leadership & Delivery:") and the individual skills after it are clickable, and both are styled as the same purple text-button — so there's no visual cue that one is a group heading and the rest are its members. The eye has nothing to anchor on when scanning categories.
-**Fix:** Keep both interactive, but give the category label a distinct (bolder/larger, or differently-colored) treatment from the skills it groups — the click affordance stays on both, only the visual hierarchy changes.
 
-**Status:** ✅ Done — underlined category labels to differentiate from individual skills; restructured with CSS Grid for proper alignment when skills wrap.
+**Status:** ✅ Done — category label now `variant="body2"` (larger, more prominent) vs skills `variant="caption"`. Both remain clickable.
 
-### 5.2 🟡 Collapsed state shows nothing at all
+### 5.2 ✅ Collapsed state shows nothing at all
 
 When "Key Skills" is collapsed (its default), there's zero preview of what's inside — just a button. Given skills are genuinely useful content, a fully blank collapsed state undersells them.
-**Fix:** Show a short taster even when collapsed — e.g. just the category labels, or the top 4–5 skill words — so people get a sense of what expanding will reveal instead of a leap of faith.
 
-### 5.3 🟡 Skill links are too tight for touch on mobile
+**Status:** ✅ Done — taster preview shows skill count when collapsed (e.g., "20+ skills across 4 categories"). Heading moved outside collapse (always visible). Taster hidden when expanded.
+
+### 5.3 ✅ Skill links are too tight for touch on mobile
 
 Individual skills are inline text separated by commas, with no padding — fine as mouse targets, but each word is a tap target well under the 44px touch guideline, and on mobile adjacent skills sit close enough together (e.g. "Clean Code, Refactoring, Coding Standards...") that mis-taps are likely.
-**Fix:** Add a bit of padding/line-height around each skill link on touch devices so tap targets clear a comfortable minimum, even without changing the visual comma-separated style.
 
-### 5.4 🟡 Running comma-list is dense to read on a narrow column
+**Status:** ✅ Done — mobile (xs/sm): skills stack vertically with `minHeight: 44px`, no commas. Desktop (md+): unchanged comma-separated inline.
+
+### 5.4 ✅ Running comma-list is dense to read on a narrow column
 
 On mobile, each category's skills wrap as one dense paragraph of comma-separated links — at phone width that means many short line-wraps with little visual separation between items, harder to scan than the same list on a wide desktop line.
-**Fix:** Stay with plain text-links (no chips), but improve the wrap itself: put every skill on its own line on mobile instead of running them together with commas (drop the comma separators there, one skill per line, still grouped under its category label). That alone gives each item breathing room and a clear scan path without changing the visual language or introducing pill/chip shapes.
+
+**Status:** ✅ Done — same as 5.3 (single implementation handles both). Mobile: one skill per line, full-width tap targets. Desktop: comma-separated inline.
 
 ---
 

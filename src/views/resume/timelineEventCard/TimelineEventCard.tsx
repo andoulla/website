@@ -64,9 +64,8 @@ export const TimelineEventCard = ({
   const navigate = useNavigate();
   const duration = formatDuration(event.startDate, event.endDate);
   const theme = useTheme();
-  // Mobile cards run nearly the full viewport height, so the default threshold would need a
-  // long scroll before triggering; a lower threshold starts the fade as soon as the card peeks in.
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobileSkillsLayout = useMediaQuery(theme.breakpoints.down('md'));
   const { ref, isInView } = useInView<HTMLDivElement>({
     threshold: isMobile ? 0.05 : 0.15,
     initialInView: startInView,
@@ -84,9 +83,7 @@ export const TimelineEventCard = ({
   const isFocusMatch = highlightedEventId !== undefined && event.id === highlightedEventId;
   const isMatch = hasHighlightedSkill || hasHighlightedRecommendation || isFocusMatch;
 
-  // user toggle wins; otherwise deep-link matches and the first card render expanded
   const [isExpanded, setIsExpanded] = useCardExpand(isMatch || startExpanded);
-  // key skills sit behind a second expander; a skill deep link opens it; starts collapsed
   const [areSkillsExpanded, setAreSkillsExpanded] = useCardExpand(hasHighlightedSkill);
 
   const cardNodeRef = useRef<HTMLDivElement | null>(null);
@@ -156,6 +153,13 @@ export const TimelineEventCard = ({
   const hasRecommendations = event.recommendations.length > 0;
   // Nothing relevant to the active track — collapse to primary info only.
   const isBare = !hasResponsibilities && !hasTechStack && !hasSkills;
+
+  // Collapsed preview: skill/category count (e.g., "20+ skills across 4 categories")
+  const skillCount = event.skills.length;
+  const categoryCount = skillGroups.length;
+  const skillsTaster = `${skillCount}+ ${skillCount === 1 ? 'skill' : 'skills'} across ${categoryCount} ${
+    categoryCount === 1 ? 'category' : 'categories'
+  }`;
 
   const cardHeader = (
     <Box sx={{ px: 2, pt: 2, pb: 1 }}>
@@ -249,17 +253,26 @@ export const TimelineEventCard = ({
                 ...(hasTechStack && { mt: 3 }),
               }}
             >
-              <Button
-                variant="text"
-                size="small"
-                aria-expanded={areSkillsExpanded}
-                startIcon={areSkillsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                onClick={() => setAreSkillsExpanded(!areSkillsExpanded)}
-              >
-                {areSkillsExpanded ? 'Hide key skills' : 'Show key skills'}
-              </Button>
-              <Collapse in={areSkillsExpanded} unmountOnExit>
-                <Section title="Key Skills" titleLevel={4}>
+              <Section title="Key Skills" titleLevel={4}>
+                <Button
+                  variant="text"
+                  size="small"
+                  aria-expanded={areSkillsExpanded}
+                  startIcon={areSkillsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  onClick={() => setAreSkillsExpanded(!areSkillsExpanded)}
+                >
+                  {areSkillsExpanded ? 'Hide key skills' : 'Show key skills'}
+                </Button>
+                {!areSkillsExpanded && (
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ display: 'block', mt: 0.5 }}
+                  >
+                    {skillsTaster}
+                  </Typography>
+                )}
+                <Collapse in={areSkillsExpanded} unmountOnExit>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                     {skillGroups.map((group) => {
                       const captionColour = resolveSkillColourMain(
@@ -280,7 +293,7 @@ export const TimelineEventCard = ({
                           <Link
                             component="button"
                             type="button"
-                            variant="caption"
+                            variant="body2"
                             underline="always"
                             onClick={() => handleCategoryClick(group.category.id)}
                             sx={{
@@ -294,14 +307,23 @@ export const TimelineEventCard = ({
                           <Typography variant="caption" sx={{ lineHeight: 1.7 }}>
                             {group.skills.map((skill, index) => (
                               <Fragment key={skill.id}>
-                                {index > 0 && ', '}
+                                {/* Comma separator only on desktop (md+) */}
+                                {!isMobileSkillsLayout && index > 0 && ', '}
                                 <Link
                                   component="button"
                                   type="button"
                                   variant="caption"
                                   underline="hover"
                                   onClick={() => handleSkillClick(skill.name)}
-                                  sx={{ color: captionColour }}
+                                  sx={{
+                                    color: captionColour,
+                                    // Mobile: stack vertically, 44px tap target
+                                    ...(isMobileSkillsLayout && {
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      minHeight: '44px',
+                                    }),
+                                  }}
                                 >
                                   {skill.name}
                                 </Link>
@@ -320,8 +342,8 @@ export const TimelineEventCard = ({
                   >
                     {"View this role's skills on the graph"}
                   </Button>
-                </Section>
-              </Collapse>
+                </Collapse>
+              </Section>
             </Box>
           )}
           {hasRecommendations && (

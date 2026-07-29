@@ -1,3 +1,4 @@
+import { createTheme } from '@mui/material/styles';
 import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
@@ -582,6 +583,155 @@ describe('TimelineEventCard', () => {
     expect(items).toHaveLength(2);
     expect(items[0]).toHaveTextContent('Lead frontend architecture');
     expect(items[1]).toHaveTextContent('Mentor engineers');
+  });
+
+  describe('Key Skills visual hierarchy', () => {
+    test('category labels and skill links are both rendered and clickable with distinct hierarchy', async () => {
+      const user = userEvent.setup();
+      const leadershipSkill = new Skill()
+        .id('team-leadership')
+        .name('Team Leadership')
+        .type('skill')
+        .mock();
+
+      const screen = render(
+        <MemoryRouter>
+          <TimelineEventCard
+            event={{
+              ...event,
+              skills: [reactSkill, typeScriptSkill, leadershipSkill],
+            }}
+            track={testTrack}
+          />
+          <LocationDisplay />
+        </MemoryRouter>
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+      await user.click(screen.getByRole('button', { name: 'Show key skills' }));
+
+      // Category labels are visible and clickable
+      const engineeringLabel = screen.getByRole('button', { name: 'Engineering:' });
+      const leadershipLabel = screen.getByRole('button', { name: 'Leadership & Delivery:' });
+
+      expect(engineeringLabel).toBeVisible();
+      expect(leadershipLabel).toBeVisible();
+
+      // Skill links are visible and clickable
+      expect(screen.getByRole('button', { name: 'React' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'TypeScript' })).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Team Leadership' })).toBeVisible();
+
+      // Verify category label is clickable and navigates
+      await user.click(engineeringLabel);
+
+      expect(
+        screen.getByText('location:/skills?category=engineering&view=barchart&track=general')
+      ).toBeVisible();
+    });
+  });
+
+  describe('Key Skills collapsed taster', () => {
+    test('always shows the "Key Skills" heading, with a skill/category count taster while collapsed, replaced by the full skill list on expand', async () => {
+      const user = userEvent.setup();
+      const leadershipSkill = new Skill()
+        .id('team-leadership')
+        .name('Team Leadership')
+        .type('skill')
+        .mock();
+
+      const screen = render(
+        <TimelineEventCard
+          event={{ ...event, skills: [reactSkill, leadershipSkill] }}
+          track={testTrack}
+        />,
+        { wrapper: MemoryRouter }
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+      expect(screen.getByRole('heading', { level: 4, name: 'Key Skills' })).toBeVisible();
+      expect(screen.getByText('2+ skills across 2 categories')).toBeVisible();
+      expect(screen.queryByText('React')).not.toBeInTheDocument();
+      expect(screen.queryByText('Team Leadership')).not.toBeInTheDocument();
+
+      await user.click(screen.getByRole('button', { name: 'Show key skills' }));
+
+      expect(screen.getByRole('heading', { level: 4, name: 'Key Skills' })).toBeVisible();
+      expect(screen.queryByText('2+ skills across 2 categories')).not.toBeInTheDocument();
+      expect(screen.getByText('React')).toBeVisible();
+      expect(screen.getByText('Team Leadership')).toBeVisible();
+    });
+  });
+
+  describe('key skills mobile layout', () => {
+    const originalMatchMedia = window.matchMedia;
+    // useMediaQuery strips the leading "@media " prefix before calling matchMedia(query).
+    const mobileSkillsQuery = createTheme()
+      .breakpoints.down('md')
+      .replace(/^@media ?/, '');
+
+    const mockViewport = (isMobile: boolean) => {
+      window.matchMedia = jest.fn().mockImplementation((query: string) => ({
+        matches: query === mobileSkillsQuery ? isMobile : false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      }));
+    };
+
+    afterEach(() => {
+      window.matchMedia = originalMatchMedia;
+    });
+
+    test('below md, stacks each key skill on its own tappable line with no comma separators, and each link comfortably clears a 44px tap target', async () => {
+      mockViewport(true);
+
+      const user = userEvent.setup();
+      const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+        wrapper: MemoryRouter,
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+      await user.click(screen.getByRole('button', { name: 'Show key skills' }));
+
+      const reactSkillLink = screen.getByRole('button', { name: 'React' });
+      const typeScriptSkillLink = screen.getByRole('button', { name: 'TypeScript' });
+      // Tech Stack renders the same two skill names as plain comma-joined text, so scope the
+      // separator check to the Key Skills section specifically.
+      const keySkillsSection = screen
+        .getByRole('heading', { level: 4, name: 'Key Skills' })
+        .closest('section')!;
+
+      expect(reactSkillLink).toBeVisible();
+      expect(typeScriptSkillLink).toBeVisible();
+      expect(keySkillsSection.textContent).not.toContain(',');
+      expect(reactSkillLink).toHaveStyle({ minHeight: '44px' });
+      expect(typeScriptSkillLink).toHaveStyle({ minHeight: '44px' });
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('at md and up, keeps the existing inline comma-separated key skills layout', async () => {
+      mockViewport(false);
+
+      const user = userEvent.setup();
+      const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+        wrapper: MemoryRouter,
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+      await user.click(screen.getByRole('button', { name: 'Show key skills' }));
+
+      const keySkillsSection = screen
+        .getByRole('heading', { level: 4, name: 'Key Skills' })
+        .closest('section')!;
+
+      expect(keySkillsSection.textContent).toContain('React, TypeScript');
+    });
   });
 
   describe('collapse trigger styling', () => {
