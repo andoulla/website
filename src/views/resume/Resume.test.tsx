@@ -82,12 +82,10 @@ describe('Resume', () => {
     expect(screen.getByText('location:/?track=general')).toBeVisible();
   });
 
-  test('displays a caption under the track tabs explaining the track selection', async () => {
+  test('displays a "View for:" label next to the track tabs', async () => {
     const screen = await renderResume(() => Promise.resolve(testCareerHistory));
 
-    expect(
-      screen.getByText("Same experience, different angle — pick whichever role you're looking at.")
-    ).toBeVisible();
+    expect(screen.getByText('View for:')).toBeVisible();
   });
 
   test('switching tabs hides content outside the track, updates the url, and stays axe-clean', async () => {

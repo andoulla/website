@@ -223,7 +223,7 @@ export const TimelineEventCard = ({
           {hasTechStack && (
             <Box
               sx={{
-                maxWidth: '750px',
+                maxWidth: { xs: '750px', sm: '750px', md: 'none' },
                 ...(hasResponsibilities && { mt: 3 }),
               }}
             >
@@ -244,7 +244,7 @@ export const TimelineEventCard = ({
           {hasSkills && (
             <Box
               sx={{
-                maxWidth: '750px',
+                maxWidth: { xs: '750px', sm: '750px', md: 'none' },
                 ...(hasResponsibilities && !hasTechStack && { mt: 3 }),
                 ...(hasTechStack && { mt: 3 }),
               }}
@@ -276,7 +276,7 @@ export const TimelineEventCard = ({
                             component="button"
                             type="button"
                             variant="caption"
-                            underline="hover"
+                            underline="always"
                             onClick={() => handleCategoryClick(group.category.id)}
                             sx={{
                               fontWeight: 'medium',
