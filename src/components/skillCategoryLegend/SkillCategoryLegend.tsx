@@ -10,7 +10,14 @@ export const SkillCategoryLegend = () => {
 
   return (
     <Box sx={{ mb: 2 }}>
-      <Stack direction="row" spacing={3} sx={{ flexWrap: 'wrap', gap: 2 }}>
+      <Stack
+        direction="row"
+        sx={{
+          flexWrap: 'wrap',
+          gap: { xs: 1.5, sm: 2, md: 3 },
+          justifyContent: 'flex-start',
+        }}
+      >
         {LEGEND_ITEMS.map((item) => {
           const colorMapping = CATEGORY_TO_COLOR_MAPPING[item.categoryId];
 

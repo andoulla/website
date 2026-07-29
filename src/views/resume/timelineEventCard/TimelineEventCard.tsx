@@ -185,7 +185,7 @@ export const TimelineEventCard = ({
   }
 
   const responsibilitiesSection = hasResponsibilities && (
-    <Box sx={{ maxWidth: '750px' }}>
+    <Box sx={{ maxWidth: { xs: '750px', sm: '750px', md: 'none' } }}>
       <Section title={RESPONSIBILITIES_LABEL_BY_TYPE[event.type]} titleLevel={4}>
         {event.responsibilities.length === 1 ? (
           <Typography
@@ -217,7 +217,7 @@ export const TimelineEventCard = ({
       ]}
     >
       {cardHeader}
-      <CardContent>
+      <CardContent sx={{ px: { xs: 1.5, sm: 2, md: 3 } }}>
         <Collapse in={isExpanded} unmountOnExit>
           {responsibilitiesSection}
           {hasTechStack && (
@@ -322,7 +322,7 @@ export const TimelineEventCard = ({
           {hasRecommendations && (
             <>
               <Divider sx={{ my: 2 }} />
-              <Box sx={{ maxWidth: '750px' }}>
+              <Box sx={{ maxWidth: { xs: '750px', sm: '750px', md: 'none' } }}>
                 <Section title={`Recommendations (${event.recommendations.length})`} titleLevel={4}>
                   <Box
                     sx={{
