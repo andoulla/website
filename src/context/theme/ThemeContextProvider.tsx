@@ -50,6 +50,11 @@ export const ThemeContextProvider = ({
 
   useEffect(() => {
     storeThemeName(themeName);
+    const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+
+    if (favicon) {
+      favicon.href = `/favicon-${themeName}.svg`;
+    }
   }, [themeName]);
   useEffect(() => {
     storeDarkMode(isDarkMode);
