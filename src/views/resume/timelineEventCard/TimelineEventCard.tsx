@@ -232,16 +232,73 @@ export const TimelineEventCard = ({
               }}
             >
               <Section title="Tech Stack" titleLevel={4}>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{
-                    lineHeight: 1.7,
-                    letterSpacing: '0.3px',
-                  }}
-                >
-                  {event.techStack.map((skill) => skill.name).join(', ')}
-                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                  {track.categories.map((category) => {
+                    const categorySkills = event.techStack.filter((skill) =>
+                      category.subCategories.some((sub) => sub.skillIds.includes(skill.id))
+                    );
+
+                    if (categorySkills.length === 0) return null;
+
+                    const captionColour = resolveSkillColourMain(
+                      categoryColourFromIndex(
+                        track.categories.findIndex((c) => c.id === category.id)
+                      ),
+                      theme
+                    );
+
+                    return (
+                      <Box
+                        key={category.id}
+                        sx={{
+                          display: 'grid',
+                          gridTemplateColumns: 'auto 1fr',
+                          gap: 1,
+                          alignItems: 'baseline',
+                        }}
+                      >
+                        <Link
+                          component="button"
+                          type="button"
+                          variant="body2"
+                          underline="always"
+                          onClick={() => handleCategoryClick(category.id)}
+                          sx={{
+                            fontWeight: 'medium',
+                            whiteSpace: 'nowrap',
+                            color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
+                          }}
+                        >
+                          {`${category.name}:`}
+                        </Link>
+                        <Typography variant="caption" sx={{ lineHeight: 1.7 }}>
+                          {categorySkills.map((skill, index) => (
+                            <Fragment key={skill.id}>
+                              {!isMobileSkillsLayout && index > 0 && ', '}
+                              <Link
+                                component="button"
+                                type="button"
+                                variant="caption"
+                                underline="hover"
+                                onClick={() => handleSkillClick(skill.name)}
+                                sx={{
+                                  color: captionColour,
+                                  ...(isMobileSkillsLayout && {
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    minHeight: '44px',
+                                  }),
+                                }}
+                              >
+                                {skill.name}
+                              </Link>
+                            </Fragment>
+                          ))}
+                        </Typography>
+                      </Box>
+                    );
+                  })}
+                </Box>
               </Section>
             </Box>
           )}

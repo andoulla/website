@@ -95,7 +95,16 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.getByText('Lead frontend architecture')).toBeVisible();
-    expect(screen.getByText('React, TypeScript')).toBeVisible();
+
+    // Tech Stack shows React and TypeScript as clickable links
+    const techStackHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Tech Stack',
+    });
+    const techStackSection = techStackHeading.closest('section')!;
+    expect(within(techStackSection).getByRole('button', { name: 'React' })).toBeVisible();
+    expect(within(techStackSection).getByRole('button', { name: 'TypeScript' })).toBeVisible();
+
     expect(screen.queryByText('Engineering:')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Show key skills' })).toHaveAttribute(
       'aria-expanded',
@@ -104,8 +113,14 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
-    expect(screen.getByText('React')).toBeVisible();
-    expect(screen.getByText('TypeScript')).toBeVisible();
+    // Key Skills section also has React and TypeScript
+    const keySkillsHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSection = keySkillsHeading.closest('section')!;
+    expect(within(keySkillsSection).getByRole('button', { name: 'React' })).toBeVisible();
+    expect(within(keySkillsSection).getByRole('button', { name: 'TypeScript' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Hide key skills' })).toHaveAttribute(
       'aria-expanded',
       'true'
@@ -145,10 +160,16 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
-    expect(screen.getByText('Engineering:')).toBeVisible();
-    expect(screen.getByText('React')).toBeVisible();
-    expect(screen.getByText('Leadership & Delivery:')).toBeVisible();
-    expect(screen.getByText('Team Leadership')).toBeVisible();
+    const keySkillsHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSection = keySkillsHeading.closest('section')!;
+
+    expect(within(keySkillsSection).getByText('Engineering:')).toBeVisible();
+    expect(within(keySkillsSection).getByText('React')).toBeVisible();
+    expect(within(keySkillsSection).getByText('Leadership & Delivery:')).toBeVisible();
+    expect(within(keySkillsSection).getByText('Team Leadership')).toBeVisible();
     expect(screen.queryByText('Kubernetes')).not.toBeInTheDocument();
   });
 
@@ -161,8 +182,14 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
-    expect(screen.getByRole('button', { name: 'React' })).toBeVisible();
-    expect(screen.getByRole('button', { name: 'TypeScript' })).toBeVisible();
+    const keySkillsHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSection = keySkillsHeading.closest('section')!;
+
+    expect(within(keySkillsSection).getByRole('button', { name: 'React' })).toBeVisible();
+    expect(within(keySkillsSection).getByRole('button', { name: 'TypeScript' })).toBeVisible();
     // TagList would render a ul
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
   });
@@ -189,7 +216,7 @@ describe('TimelineEventCard', () => {
     ]);
   });
 
-  test('renders tech stack items as comma-separated text', async () => {
+  test('renders tech stack items as clickable links grouped by category', async () => {
     const user = userEvent.setup();
 
     const screen = render(
@@ -209,8 +236,16 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
 
-    expect(screen.getByRole('heading', { level: 4, name: 'Tech Stack' })).toBeVisible();
-    expect(screen.getByText('Vite, Jest, Playwright')).toBeVisible();
+    const techStackHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Tech Stack',
+    });
+    const techStackSection = techStackHeading.closest('section')!;
+
+    expect(techStackHeading).toBeVisible();
+    expect(within(techStackSection).getByRole('button', { name: 'Vite' })).toBeVisible();
+    expect(within(techStackSection).getByRole('button', { name: 'Jest' })).toBeVisible();
+    expect(within(techStackSection).getByRole('button', { name: 'Playwright' })).toBeVisible();
   });
 
   test('renders the end month for a past role instead of "Present"', () => {
@@ -363,6 +398,27 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.queryByRole('heading', { level: 4, name: 'Tech Stack' })).not.toBeInTheDocument();
+  });
+
+  test('Tech Stack skills are clickable and grouped by category', async () => {
+    const user = userEvent.setup();
+    const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+      wrapper: MemoryRouter,
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+    const techStackHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Tech Stack',
+    });
+    const techStackSection = techStackHeading.closest('section')!;
+
+    // Category label should be visible
+    expect(within(techStackSection).getByRole('button', { name: 'Engineering:' })).toBeVisible();
+    // Skills should be clickable buttons
+    expect(within(techStackSection).getByRole('button', { name: 'React' })).toBeVisible();
+    expect(within(techStackSection).getByRole('button', { name: 'TypeScript' })).toBeVisible();
   });
 
   test('shows a "Description" heading instead of "Responsibilities" for an education entry', async () => {
@@ -699,13 +755,15 @@ describe('TimelineEventCard', () => {
       await user.click(screen.getByRole('button', { name: 'Show details' }));
       await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
-      const reactSkillLink = screen.getByRole('button', { name: 'React' });
-      const typeScriptSkillLink = screen.getByRole('button', { name: 'TypeScript' });
-      // Tech Stack renders the same two skill names as plain comma-joined text, so scope the
-      // separator check to the Key Skills section specifically.
+      // Scope to Key Skills section to avoid ambiguity with Tech Stack
       const keySkillsSection = screen
         .getByRole('heading', { level: 4, name: 'Key Skills' })
         .closest('section')!;
+
+      const reactSkillLink = within(keySkillsSection).getByRole('button', { name: 'React' });
+      const typeScriptSkillLink = within(keySkillsSection).getByRole('button', {
+        name: 'TypeScript',
+      });
 
       expect(reactSkillLink).toBeVisible();
       expect(typeScriptSkillLink).toBeVisible();
