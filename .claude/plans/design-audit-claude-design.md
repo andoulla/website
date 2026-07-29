@@ -28,15 +28,19 @@ Three different disclosure triggers exist on one card — "Show/Hide details" (w
 
 **Status:** ✅ Done — card-level toggle uses outlined variant, section-level and recommendation toggles use text variant. Key Skills now collapsed by default.
 
-### 1.3 🟡 "Track" tabs (General / Lead / Senior Engineer) aren't explained
+### 1.3 ✅ "Track" tabs (General / Lead / Senior Engineer) aren't explained
 
 Switching tabs reshapes the entire resume content, but nothing hints at that — it reads like a normal, low-stakes filter tab.
 **Fix:** Add a one-line caption under the tabs, something like _"Same experience, different angle — pick whichever role you're looking at."_
 
-### 1.4 🟡 "View this role's skills on the graph" — unclear destination
+**Status:** ✅ Done — added "View for:" label next to tabs, removed border divider, added subtle background hue to tab content area.
+
+### 1.4 ✅ "View this role's skills on the graph" — unclear destination
 
 A plain text link with no icon or description of what "the graph" is (external tool? in-page visualization?).
 **Fix:** Add an MUI `InsightsOutlined` icon next to the text (the same icon used for "Skills" in the AppBar nav, per 2.7 — reusing it here ties the link visually to that graph/skills concept) and/or a tooltip; if it navigates away, mark it clearly (`target="_blank"`).
+
+**Status:** ✅ Done — added InsightsOutlined icon as endIcon on "View this role's skills on the graph" button.
 
 ---
 
@@ -112,29 +116,37 @@ The `Autocomplete` input relies on placeholder text ("Ask about my experience…
 
 ## 4. Recommendations Section
 
-### 4.1 🟡 Truncation cuts mid-sentence and cards end up uneven heights
+### 4.1 ✅ Truncation cuts mid-sentence and cards end up uneven heights
 
 The 2-column quote grid truncates at a fixed character count regardless of where a sentence ends (e.g. "...helping people reach their full po..."), and because quotes vary in length, some cards end up much taller than their neighbor — the grid looks unbalanced.
 **Fix:** Truncate on a sentence or clause boundary instead of a raw character count, and let the grid use equal-height rows (`Grid` with `alignItems: stretch` / matching card min-height) so the "More" toggle doesn't leave lopsided gaps.
 
-### 4.2 🟡 Quote and attribution have similar visual weight
+**Status:** ✅ Done — created `truncateAtSentenceBoundary` utility, updated grid with `alignItems: stretch` for equal card heights.
+
+### 4.2 ✅ Quote and attribution have similar visual weight
 
 The quote (body2) and the reviewer's attribution line (caption, same purple links) sit close in size and color — nothing pulls your eye to the source, which matters for a testimonial's credibility. Names are already abbreviated to initials (A.V., L.S...) for privacy, so making the _name_ heavier won't help much — the credibility signal here is really the **job title** (e.g. "Staff Software Engineer") and the verified-LinkedIn badge next to it.
 **Fix:** Give the attribution row more visual presence overall (slightly larger avatar, a bit more space between it and the quote above), but put the emphasis on the job title rather than the initials — that's the part that actually tells a reader who's vouching and why it carries weight.
 
-### 4.3 🟢 Two-column recommendation grid doesn't stack on mobile
+**Status:** ✅ Done — job title now body2 variant (bolder), initials/date caption variant; LinkedIn icon visible; added top margin for separation.
+
+### 4.3 ✅ Two-column recommendation grid doesn't stack on mobile
 
 On the mobile screenshots the "Recommendations (4)" quotes are still laid out two-per-row — at phone width that squeezes each quote into a very narrow column, making the already-long testimonials harder to read than on desktop.
 **Fix:** Stack the grid to a single column below the `sm` breakpoint so each quote gets the full content width.
+
+**Status:** ✅ Done — single column on xs/sm, two columns on md+.
 
 ---
 
 ## 5. Key Skills Section
 
-### 5.1 🟡 Category label reads as just another skill
+### 5.1 ✅ Category label reads as just another skill
 
 Both the category label ("Leadership & Delivery:") and the individual skills after it are clickable, and both are styled as the same purple text-button — so there's no visual cue that one is a group heading and the rest are its members. The eye has nothing to anchor on when scanning categories.
 **Fix:** Keep both interactive, but give the category label a distinct (bolder/larger, or differently-colored) treatment from the skills it groups — the click affordance stays on both, only the visual hierarchy changes.
+
+**Status:** ✅ Done — underlined category labels to differentiate from individual skills; restructured with CSS Grid for proper alignment when skills wrap.
 
 ### 5.2 🟡 Collapsed state shows nothing at all
 

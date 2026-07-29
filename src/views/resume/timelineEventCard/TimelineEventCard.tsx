@@ -334,7 +334,7 @@ export const TimelineEventCard = ({
                       display: 'grid',
                       gridTemplateColumns:
                         event.recommendations.length > 1
-                          ? { xs: '1fr', sm: 'repeat(2, 1fr)' }
+                          ? { xs: '1fr', sm: '1fr', md: 'repeat(2, 1fr)' }
                           : '1fr',
                       gap: 1,
                     }}

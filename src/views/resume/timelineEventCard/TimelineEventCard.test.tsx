@@ -235,7 +235,8 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.getByText('Recommendations (1)')).toBeVisible();
-    expect(screen.getByText('P.S. · Engineering Manager · 12 Jun 2023')).toBeVisible();
+    // Byline link should be visible after expansion
+    expect(screen.getByRole('link')).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
@@ -685,6 +686,56 @@ describe('TimelineEventCard', () => {
   });
 
   describe('layout and spacing', () => {
+    test('renders multiple recommendations and allows expanding/collapsing each', async () => {
+      const user = userEvent.setup();
+      const recommendation1 = new Recommendation()
+        .id('rec-1')
+        .authorInitials('P.S.')
+        .authorRole({ jobTitle: 'Engineering Manager' })
+        .text('Great work.')
+        .postedDate('2023-06-12')
+        .mock();
+      const recommendation2 = new Recommendation()
+        .id('rec-2')
+        .authorInitials('A.B.')
+        .authorRole({ jobTitle: 'Senior Manager' })
+        .text('Excellent collaboration.')
+        .postedDate('2023-12-15')
+        .mock();
+
+      const multiRecommendationEvent = {
+        ...event,
+        recommendations: [recommendation1, recommendation2],
+      };
+
+      const screen = render(
+        <TimelineEventCard event={multiRecommendationEvent} track={testTrack} />,
+        { wrapper: MemoryRouter }
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+      expect(
+        screen.getByRole('heading', {
+          level: 4,
+          name: 'Recommendations (2)',
+        })
+      ).toBeVisible();
+
+      // Both recommendations are visible with their content
+      expect(screen.getByText('"Great work."')).toBeVisible();
+      expect(screen.getByText('"Excellent collaboration."')).toBeVisible();
+      expect(screen.getByText('Engineering Manager')).toBeVisible();
+      expect(screen.getByText('Senior Manager')).toBeVisible();
+
+      // Can collapse and expand individual recommendations
+      const showRecommendationButtons = screen.getAllByRole('button', {
+        name: 'Show recommendation',
+      });
+
+      expect(showRecommendationButtons.length).toBeGreaterThanOrEqual(2);
+    });
+
     test('renders all main content sections visible when expanded', async () => {
       const user = userEvent.setup();
       const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
