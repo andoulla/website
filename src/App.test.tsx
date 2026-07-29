@@ -45,7 +45,7 @@ describe('App', () => {
     expect(articlesLink).toHaveAttribute('href', '/articles');
 
     expect(screen.getByRole('heading', { name: 'Mariandi Stylianou' })).toBeVisible();
-    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
 
     // Floating density toggle renders above every routed page (its input is visually hidden).
     expect(screen.getByRole('switch', { name: 'Compact' })).toBeChecked();

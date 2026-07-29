@@ -60,9 +60,9 @@ describe('Resume', () => {
 
     expect(document.title).toBe('Mariandi Stylianou — Resume');
     expect(screen.getByRole('heading', { level: 1, name: 'Mariandi Stylianou' })).toBeVisible();
-    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
-    expect(screen.getByText('Brightleaf Software')).toBeVisible();
-    expect(screen.getByText('Harborview Digital')).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
+    expect(screen.getByText('Brightleaf Software · Apr 2022 – Present')).toBeVisible();
+    expect(screen.getByText('Harborview Digital · Apr 2022 – Present')).toBeVisible();
 
     // each timeline dot's tooltip explains its icon by event type
     expect(screen.getAllByLabelText('Job')).toHaveLength(3);
@@ -126,7 +126,7 @@ describe('Resume', () => {
 
     // team-leadership is not in the senior-engineer track either — the card collapses bare.
     expect(screen.queryByText('Team Leadership')).not.toBeInTheDocument();
-    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
     expect(screen.getByText('location:/?track=senior-engineer')).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
@@ -173,7 +173,7 @@ describe('Resume', () => {
 
     expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
     expect(scrollIntoViewSpy.mock.instances[0]).toBe(
-      screen.getByText('Brightleaf Software').closest('.MuiCard-root')
+      screen.getByText('Brightleaf Software · Apr 2023 – Present').closest('.MuiCard-root')
     );
 
     scrollIntoViewSpy.mockRestore();
@@ -261,7 +261,7 @@ describe('Resume', () => {
 
     expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
     expect(scrollIntoViewSpy.mock.instances[0]).toBe(
-      screen.getByText('Meridian Dynamics').closest('.MuiCard-root')
+      screen.getByText('Meridian Dynamics · Apr 2021 – Apr 2022').closest('.MuiCard-root')
     );
 
     scrollIntoViewSpy.mockRestore();
@@ -291,7 +291,9 @@ describe('Resume', () => {
       [{ pathname: '/', search: '?focus=job-2' }]
     );
 
-    expect(screen.getByText('Brightleaf Software').closest('.MuiCard-root')).toHaveStyle({
+    expect(
+      screen.getByText('Brightleaf Software · Apr 2023 – Present').closest('.MuiCard-root')
+    ).toHaveStyle({
       outlineOffset: '2px',
     });
     expect(screen.getByText('Shipped the checkout flow')).toBeVisible();

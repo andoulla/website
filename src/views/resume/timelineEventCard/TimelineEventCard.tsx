@@ -6,7 +6,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
@@ -86,7 +85,7 @@ export const TimelineEventCard = ({
 
   // user toggle wins; otherwise deep-link matches and the first card render expanded
   const [isExpanded, setIsExpanded] = useCardExpand(isMatch || startExpanded);
-  // key skills sit behind a second expander; a skill deep link opens it
+  // key skills sit behind a second expander; a skill deep link opens it; starts collapsed
   const [areSkillsExpanded, setAreSkillsExpanded] = useCardExpand(hasHighlightedSkill);
 
   const cardNodeRef = useRef<HTMLDivElement | null>(null);
@@ -158,17 +157,18 @@ export const TimelineEventCard = ({
   const isBare = !hasResponsibilities && !hasTechStack && !hasSkills;
 
   const cardHeader = (
-    <CardHeader
-      title={event.companyName}
-      // Real h3 (visually h6) — keeps the hierarchy under the h2 "Work Experience".
-      slotProps={{
-        title: { variant: 'h6', component: 'h3' },
-        subheader: { variant: 'body2' },
-      }}
-      subheader={`${event.title} · ${event.location} · ${duration}${
-        overlapCaption !== undefined ? ` · ${overlapCaption}` : ''
-      }`}
-    />
+    <Box sx={{ px: 2, pt: 2, pb: 1 }}>
+      {/* Top row: company name + date range */}
+      <Typography variant="h6" component="h3" sx={{ mb: 0.5 }}>
+        {`${event.companyName} · ${duration}${
+          overlapCaption !== undefined ? ` · ${overlapCaption}` : ''
+        }`}
+      </Typography>
+      {/* Bottom row: role title + location */}
+      <Typography variant="body2" color="text.secondary">
+        {`${event.title} · ${event.location}`}
+      </Typography>
+    </Box>
   );
 
   if (isBare) {
@@ -238,6 +238,7 @@ export const TimelineEventCard = ({
             <>
               {(hasResponsibilities || hasTechStack) && <Divider sx={{ my: 2 }} />}
               <Button
+                variant="text"
                 size="small"
                 aria-expanded={areSkillsExpanded}
                 startIcon={areSkillsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -328,6 +329,7 @@ export const TimelineEventCard = ({
           )}
         </Collapse>
         <Button
+          variant="outlined"
           size="small"
           aria-expanded={isExpanded}
           startIcon={isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}

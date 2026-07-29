@@ -62,10 +62,8 @@ describe('TimelineEventCard', () => {
       wrapper: MemoryRouter,
     });
 
-    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
-    expect(
-      screen.getByText('Staff Frontend Engineer · London, UK · Apr 2022 – Present')
-    ).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
+    expect(screen.getByText('Staff Frontend Engineer · London, UK')).toBeVisible();
     expect(screen.queryByText('Lead frontend architecture')).not.toBeInTheDocument();
     expect(screen.queryByText('React')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Show details' })).toHaveAttribute(
@@ -177,7 +175,9 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
-    expect(screen.getByRole('heading', { level: 3, name: 'Meridian Dynamics' })).toBeVisible();
+    expect(
+      screen.getByRole('heading', { level: 3, name: 'Meridian Dynamics · Apr 2022 – Present' })
+    ).toBeVisible();
 
     const sectionHeadings = screen.getAllByRole('heading', { level: 4 });
 
@@ -218,9 +218,8 @@ describe('TimelineEventCard', () => {
       { wrapper: MemoryRouter }
     );
 
-    expect(
-      screen.getByText('Staff Frontend Engineer · London, UK · Apr 2022 – Sep 2023')
-    ).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Sep 2023')).toBeVisible();
+    expect(screen.getByText('Staff Frontend Engineer · London, UK')).toBeVisible();
   });
 
   test('renders recommendations when present', async () => {
@@ -267,10 +266,8 @@ describe('TimelineEventCard', () => {
       { wrapper: MemoryRouter }
     );
 
-    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
-    expect(
-      screen.getByText('Staff Frontend Engineer · London, UK · Apr 2022 – Present')
-    ).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
+    expect(screen.getByText('Staff Frontend Engineer · London, UK')).toBeVisible();
     expect(screen.queryByRole('heading', { level: 4 })).not.toBeInTheDocument();
     expect(screen.queryByText('Recommendations (1)')).not.toBeInTheDocument();
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
@@ -381,7 +378,11 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
+      expect(
+        screen
+          .getByRole('heading', { level: 3, name: /Meridian Dynamics/ })
+          .closest('.MuiCard-root')
+      ).toHaveStyle({
         outlineOffset: '2px',
       });
     });
@@ -392,7 +393,11 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).not.toHaveStyle({
+      expect(
+        screen
+          .getByRole('heading', { level: 3, name: /Meridian Dynamics/ })
+          .closest('.MuiCard-root')
+      ).not.toHaveStyle({
         outlineOffset: '2px',
       });
     });
@@ -414,7 +419,11 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
+      expect(
+        screen
+          .getByRole('heading', { level: 3, name: /Meridian Dynamics/ })
+          .closest('.MuiCard-root')
+      ).toHaveStyle({
         outlineOffset: '2px',
       });
       expect(screen.getByRole('button', { name: 'Hide details' })).toBeVisible();
@@ -426,7 +435,11 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).not.toHaveStyle({
+      expect(
+        screen
+          .getByRole('heading', { level: 3, name: /Meridian Dynamics/ })
+          .closest('.MuiCard-root')
+      ).not.toHaveStyle({
         outlineOffset: '2px',
       });
     });
@@ -481,7 +494,11 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
+      expect(
+        screen
+          .getByRole('heading', { level: 3, name: /Meridian Dynamics/ })
+          .closest('.MuiCard-root')
+      ).toHaveStyle({
         outlineOffset: '2px',
       });
     });
@@ -559,6 +576,59 @@ describe('TimelineEventCard', () => {
     expect(items[1]).toHaveTextContent('Mentor engineers');
   });
 
+  describe('collapse trigger styling', () => {
+    test('card-level "Show details" button uses outlined variant', () => {
+      const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+        wrapper: MemoryRouter,
+      });
+
+      const showDetailsButton = screen.getByRole('button', { name: 'Show details' });
+
+      expect(showDetailsButton).toHaveClass('MuiButton-outlined');
+    });
+
+    test('section-level "Show key skills" button uses text variant', async () => {
+      const user = userEvent.setup();
+      const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+        wrapper: MemoryRouter,
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+      const showSkillsButton = screen.getByRole('button', { name: 'Show key skills' });
+
+      expect(showSkillsButton).toHaveClass('MuiButton-text');
+    });
+
+    test('key skills section starts collapsed by default', async () => {
+      const user = userEvent.setup();
+      const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+        wrapper: MemoryRouter,
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+      expect(screen.queryByText('Engineering:')).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Show key skills' })).toHaveAttribute(
+        'aria-expanded',
+        'false'
+      );
+    });
+
+    test('key skills section expands when there is a highlighted skill', () => {
+      const screen = render(
+        <TimelineEventCard event={event} track={testTrack} highlightedSkillId="react" />,
+        { wrapper: MemoryRouter }
+      );
+
+      expect(screen.getByText('Engineering:')).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Hide key skills' })).toHaveAttribute(
+        'aria-expanded',
+        'true'
+      );
+    });
+  });
+
   describe('scroll-fade animation', () => {
     // Global mock auto-fires isIntersecting: true; silent one reproduces "not yet reported".
     class SilentIntersectionObserver {
@@ -587,7 +657,9 @@ describe('TimelineEventCard', () => {
         wrapper: MemoryRouter,
       });
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
+      expect(
+        screen.getByText('Meridian Dynamics · Apr 2022 – Present').closest('.MuiCard-root')
+      ).toHaveStyle({
         opacity: 1,
       });
     });
@@ -597,7 +669,9 @@ describe('TimelineEventCard', () => {
         wrapper: MemoryRouter,
       });
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
+      expect(
+        screen.getByText('Meridian Dynamics · Apr 2022 – Present').closest('.MuiCard-root')
+      ).toHaveStyle({
         opacity: 0,
       });
     });

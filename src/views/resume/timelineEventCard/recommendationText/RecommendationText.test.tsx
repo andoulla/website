@@ -64,4 +64,12 @@ describe('RecommendationText', () => {
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
+
+  test('More/Less button uses text variant for minimal prominence', () => {
+    const screen = render(<RecommendationText recommendation={recommendation} />);
+
+    const toggleButton = screen.getByRole('button', { name: 'More' });
+
+    expect(toggleButton).toHaveClass('MuiButton-text');
+  });
 });

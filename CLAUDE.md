@@ -30,8 +30,9 @@ Recurring tasks have a dedicated skill — prefer it (they also self-trigger fro
 
 ## Verifying changes
 
-- Never run typecheck, lint, tests, the dev server, or a browser/screenshot yourself — the user
+- Run `tsc`, `yarn lint`, and `yarn test` **only when explicitly given permission in the prompt**. Otherwise the user
   runs all verification.
+- Never run the dev server or take browser/screenshots yourself — the user handles those.
 - After changes, walk the user through them one at a time: ask them to check a single change,
   wait for confirmation or feedback, then move to the next — don't dump the full list at once.
 

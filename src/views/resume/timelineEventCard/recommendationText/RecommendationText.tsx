@@ -61,6 +61,7 @@ export const RecommendationText = ({
         {`"${recommendation.text}"`}
       </Typography>
       <Button
+        variant="text"
         size="small"
         aria-expanded={!isClamped}
         startIcon={isClamped ? <ExpandMoreIcon /> : <ExpandLessIcon />}
