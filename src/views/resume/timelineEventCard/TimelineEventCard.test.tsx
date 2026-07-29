@@ -303,7 +303,14 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
-    await user.click(screen.getByRole('button', { name: "View this role's skills on the graph" }));
+
+    const viewGraphButton = screen.getByRole('button', {
+      name: "View this role's skills on the graph",
+    });
+
+    expect(within(viewGraphButton).getByTestId('InsightsOutlinedIcon')).toBeVisible();
+
+    await user.click(viewGraphButton);
 
     expect(
       screen.getByText('location:/skills?skill=React&skill=TypeScript&view=barchart&track=general')

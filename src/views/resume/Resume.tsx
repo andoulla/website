@@ -164,7 +164,7 @@ export const Resume = () => {
         allowScrollButtonsMobile
         // Full-width divider under the tab bar separates it from the panel content.
         sx={{
-          mb: 3,
+          mb: 1,
           borderBottom: 1,
           borderColor: 'divider',
           '& .MuiTabs-flexContainer': { justifyContent: { sm: 'center' } },
@@ -180,6 +180,16 @@ export const Resume = () => {
           />
         ))}
       </Tabs>
+      <Typography
+        variant="body2"
+        sx={{
+          textAlign: 'center',
+          mb: 3,
+          color: 'text.secondary',
+        }}
+      >
+        Same experience, different angle — pick whichever role you&apos;re looking at.
+      </Typography>
       <Box role="tabpanel" id={`track-panel-${trackId}`} aria-labelledby={`track-tab-${trackId}`}>
         <Section title="Work Experience">
           <Suspense fallback={<TimelineEventSkeleton />}>

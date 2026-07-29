@@ -2,6 +2,7 @@ import { Fragment, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import InsightsOutlinedIcon from '@mui/icons-material/InsightsOutlined';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -295,7 +296,12 @@ export const TimelineEventCard = ({
                       );
                     })}
                   </Box>
-                  <Button size="small" onClick={handleViewAllSkillsClick} sx={{ mt: 1.5 }}>
+                  <Button
+                    size="small"
+                    onClick={handleViewAllSkillsClick}
+                    endIcon={<InsightsOutlinedIcon />}
+                    sx={{ mt: 1.5 }}
+                  >
                     {"View this role's skills on the graph"}
                   </Button>
                 </Section>

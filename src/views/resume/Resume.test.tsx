@@ -79,6 +79,14 @@ describe('Resume', () => {
     expect(screen.getByText('location:/?track=general')).toBeVisible();
   });
 
+  test('displays a caption under the track tabs explaining the track selection', async () => {
+    const screen = await renderResume(() => Promise.resolve(testCareerHistory));
+
+    expect(
+      screen.getByText("Same experience, different angle — pick whichever role you're looking at.")
+    ).toBeVisible();
+  });
+
   test('switching tabs hides content outside the track, updates the url, and stays axe-clean', async () => {
     const user = userEvent.setup();
     const eventWithMixedSkills = new TimelineEvent()

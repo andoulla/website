@@ -7,10 +7,12 @@ Priority = Value vs Effort. 🟢 Quick win (do first) · 🟡 Worth it (medium e
 
 ## 1. Information Hierarchy & Structure
 
-### 1.1 🟢 Dates/company buried in a run-on subheader
+### 1.1 ✅ Dates/company buried in a run-on subheader
 
 `Senior Lead Engineer · Remote · Jan 2021 – Present` is one grey sentence. If you're trying to quickly check how recent or how long a role was, you have to read the whole line every time.
 **Fix:** Split into two visual tiers — role title bold/dark, then a lighter meta row. Bump the date range up visually (bold, or its own spot) so it's readable at a glance without reading company/location first.
+
+**Status:** ✅ Done — restructured headers into two tiers (company/date bold on top, role/location lighter below).
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -19,10 +21,12 @@ Priority = Value vs Effort. 🟢 Quick win (do first) · 🟡 Worth it (medium e
 └─────────────────────────────────────────────┘
 ```
 
-### 1.2 🟡 Inconsistent, unlabelled collapse pattern
+### 1.2 ✅ Inconsistent, unlabelled collapse pattern
 
 Three different disclosure triggers exist on one card — "Show/Hide details" (whole card), "Show/Hide key skills" (one section), "More/Less" (each testimonial) — all styled identically (same chevron, same purple text button). Nothing tells the user which one collapses how much content.
 **Fix:** Differentiate by placement/weight (e.g., card-level toggle as a bordered button, section-level as plain text link). Leave Key Skills collapsed by default — the list is long enough that expanding it by default would push everything else down the page.
+
+**Status:** ✅ Done — card-level toggle uses outlined variant, section-level and recommendation toggles use text variant. Key Skills now collapsed by default.
 
 ### 1.3 🟡 "Track" tabs (General / Lead / Senior Engineer) aren't explained
 
