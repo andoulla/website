@@ -57,6 +57,26 @@ describe('NavBar', () => {
       expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
       expect(screen.getByRole('link', { name: 'Skills' })).toHaveAttribute('href', '/skills');
     });
+
+    test('renders icons next to Home, Skills, and Articles links', () => {
+      const screen = renderNavBar();
+
+      const homeLink = screen.getByRole('link', { name: 'Home' });
+      const skillsLink = screen.getByRole('link', { name: 'Skills' });
+      const articlesLink = screen.getByRole('link', { name: 'Articles' });
+
+      expect(homeLink.querySelector('svg')).toBeInTheDocument();
+      expect(skillsLink.querySelector('svg')).toBeInTheDocument();
+      expect(articlesLink.querySelector('svg')).toBeInTheDocument();
+    });
+  });
+
+  describe('monogram', () => {
+    test('renders a monogram logo in the left side of the navbar', () => {
+      const screen = renderNavBar();
+
+      expect(screen.getByText('MS')).toBeVisible();
+    });
   });
 
   describe('theme toggle', () => {

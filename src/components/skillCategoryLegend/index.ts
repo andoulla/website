@@ -1,0 +1,1 @@
+export { SkillCategoryLegend } from './SkillCategoryLegend';

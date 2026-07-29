@@ -4,6 +4,7 @@ import { axe } from 'jest-axe';
 import { MemoryRouter, useSearchParams } from 'react-router-dom';
 
 import { CareerDataContextProvider } from '@/context/careerData';
+import { ThemeContextProvider } from '@/context/theme';
 import { TrackContextProvider } from '@/context/track';
 import { Skill, TimelineEvent } from '@/testing';
 
@@ -46,14 +47,16 @@ function renderWithProvider(
   initialEntries = ['/skills']
 ) {
   return render(
-    <MemoryRouter initialEntries={initialEntries}>
-      <TrackContextProvider>
-        <CareerDataContextProvider loader={loader}>
-          <Skills />
-          <SearchParamsDisplay />
-        </CareerDataContextProvider>
-      </TrackContextProvider>
-    </MemoryRouter>
+    <ThemeContextProvider>
+      <MemoryRouter initialEntries={initialEntries}>
+        <TrackContextProvider>
+          <CareerDataContextProvider loader={loader}>
+            <Skills />
+            <SearchParamsDisplay />
+          </CareerDataContextProvider>
+        </TrackContextProvider>
+      </MemoryRouter>
+    </ThemeContextProvider>
   );
 }
 

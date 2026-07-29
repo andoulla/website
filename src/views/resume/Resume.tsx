@@ -16,6 +16,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { PageContainer } from '@/components/pageContainer';
 import { Section } from '@/components/section';
+import { SkillCategoryLegend } from '@/components/skillCategoryLegend';
 import { useCareerDataContext } from '@/context/careerData';
 import { useTrackContext } from '@/context/track';
 import { tracks } from '@/data/tracks';
@@ -192,6 +193,7 @@ export const Resume = () => {
       </Typography>
       <Box role="tabpanel" id={`track-panel-${trackId}`} aria-labelledby={`track-tab-${trackId}`}>
         <Section title="Work Experience">
+          <SkillCategoryLegend />
           <Suspense fallback={<TimelineEventSkeleton />}>
             <CareerTimeline />
           </Suspense>

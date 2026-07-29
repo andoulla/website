@@ -683,4 +683,113 @@ describe('TimelineEventCard', () => {
       });
     });
   });
+
+  describe('layout and spacing', () => {
+    test('renders all main content sections visible when expanded', async () => {
+      const user = userEvent.setup();
+      const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+        wrapper: MemoryRouter,
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+      await user.click(screen.getByRole('button', { name: 'Show key skills' }));
+
+      // All major sections should be visible (they are wrapped in max-width containers)
+      expect(screen.getByRole('heading', { level: 4, name: 'Responsibilities' })).toBeVisible();
+      expect(screen.getByRole('heading', { level: 4, name: 'Tech Stack' })).toBeVisible();
+      expect(screen.getByRole('heading', { level: 4, name: 'Key Skills' })).toBeVisible();
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('renders recommendations section with proper structure', async () => {
+      const user = userEvent.setup();
+      const secondRecommendation = new Recommendation()
+        .id('rec-2')
+        .authorInitials('A.B.')
+        .authorRole({ jobTitle: 'Senior Manager' })
+        .text('Excellent collaboration.')
+        .postedDate('2023-12-15')
+        .mock();
+
+      const multiRecommendationEvent = {
+        ...event,
+        recommendations: [recommendationItem, secondRecommendation],
+      };
+
+      const screen = render(
+        <TimelineEventCard event={multiRecommendationEvent} track={testTrack} />,
+        { wrapper: MemoryRouter }
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+      // Verify recommendations section exists and is visible
+      const recommendationsHeading = screen.getByRole('heading', {
+        level: 4,
+        name: 'Recommendations (2)',
+      });
+
+      expect(recommendationsHeading).toBeVisible();
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('reduces divider usage: no divider between responsibilities and tech stack', async () => {
+      const user = userEvent.setup();
+      const eventWithTechStack = {
+        ...event,
+        responsibilities: [
+          new Responsibility().id('job-1-r01').text('Lead frontend architecture').mock(),
+        ],
+      };
+
+      const screen = render(<TimelineEventCard event={eventWithTechStack} track={testTrack} />, {
+        wrapper: MemoryRouter,
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+      // Get all dividers in the CardContent
+      const allDividers = screen.container.querySelectorAll('.MuiDivider-root');
+
+      // There should be no dividers before the recommendations section in this card
+      // (this event has no recommendations, so no dividers at all)
+      expect(allDividers.length).toBe(0);
+    });
+
+    test('keeps divider only before recommendations section', async () => {
+      const user = userEvent.setup();
+      const eventWithRecommendations = {
+        ...event,
+        recommendations: [
+          new Recommendation()
+            .id('rec-1')
+            .authorInitials('P.S.')
+            .authorRole({ jobTitle: 'Engineering Manager' })
+            .text('Great work.')
+            .postedDate('2023-06-12')
+            .mock(),
+        ],
+      };
+
+      const screen = render(
+        <TimelineEventCard event={eventWithRecommendations} track={testTrack} />,
+        { wrapper: MemoryRouter }
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+      // There should be exactly one divider (before Recommendations)
+      const allDividers = screen.container.querySelectorAll('.MuiDivider-root');
+
+      expect(allDividers.length).toBe(1);
+
+      // The divider should be before the Recommendations section
+      const recommendationsHeading = screen.getByRole('heading', {
+        level: 4,
+        name: 'Recommendations (1)',
+      });
+
+      expect(recommendationsHeading).toBeVisible();
+    });
+  });
 });

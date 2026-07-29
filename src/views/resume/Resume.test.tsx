@@ -4,6 +4,7 @@ import { axe } from 'jest-axe';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { CareerDataContextProvider } from '@/context/careerData';
+import { ThemeContextProvider } from '@/context/theme';
 import { TrackContextProvider } from '@/context/track';
 import { Recommendation, Responsibility, Skill, TimelineEvent } from '@/testing';
 import type { TimelineEventWithRecommendations } from '@/types';
@@ -30,14 +31,16 @@ async function renderResume(
 
   await act(async () => {
     result = render(
-      <MemoryRouter initialEntries={initialEntries}>
-        <TrackContextProvider>
-          <CareerDataContextProvider loader={loader}>
-            <Resume />
-            <LocationDisplay />
-          </CareerDataContextProvider>
-        </TrackContextProvider>
-      </MemoryRouter>
+      <ThemeContextProvider>
+        <MemoryRouter initialEntries={initialEntries}>
+          <TrackContextProvider>
+            <CareerDataContextProvider loader={loader}>
+              <Resume />
+              <LocationDisplay />
+            </CareerDataContextProvider>
+          </TrackContextProvider>
+        </MemoryRouter>
+      </ThemeContextProvider>
     );
     await Promise.resolve();
   });

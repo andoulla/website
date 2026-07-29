@@ -185,21 +185,23 @@ export const TimelineEventCard = ({
   }
 
   const responsibilitiesSection = hasResponsibilities && (
-    <Section title={RESPONSIBILITIES_LABEL_BY_TYPE[event.type]} titleLevel={4}>
-      {event.responsibilities.length === 1 ? (
-        <Typography
-          variant="body2"
-          sx={{
-            lineHeight: 1.7,
-            letterSpacing: '0.3px',
-          }}
-        >
-          {event.responsibilities[0].text}
-        </Typography>
-      ) : (
-        <BulletList items={event.responsibilities.map((responsibility) => responsibility.text)} />
-      )}
-    </Section>
+    <Box sx={{ maxWidth: '750px' }}>
+      <Section title={RESPONSIBILITIES_LABEL_BY_TYPE[event.type]} titleLevel={4}>
+        {event.responsibilities.length === 1 ? (
+          <Typography
+            variant="body2"
+            sx={{
+              lineHeight: 1.7,
+              letterSpacing: '0.3px',
+            }}
+          >
+            {event.responsibilities[0].text}
+          </Typography>
+        ) : (
+          <BulletList items={event.responsibilities.map((responsibility) => responsibility.text)} />
+        )}
+      </Section>
+    </Box>
   );
 
   return (
@@ -219,8 +221,12 @@ export const TimelineEventCard = ({
         <Collapse in={isExpanded} unmountOnExit>
           {responsibilitiesSection}
           {hasTechStack && (
-            <>
-              {hasResponsibilities && <Divider sx={{ my: 2 }} />}
+            <Box
+              sx={{
+                maxWidth: '750px',
+                ...(hasResponsibilities && { mt: 3 }),
+              }}
+            >
               <Section title="Tech Stack" titleLevel={4}>
                 <Typography
                   variant="body2"
@@ -233,11 +239,16 @@ export const TimelineEventCard = ({
                   {event.techStack.map((skill) => skill.name).join(', ')}
                 </Typography>
               </Section>
-            </>
+            </Box>
           )}
           {hasSkills && (
-            <>
-              {(hasResponsibilities || hasTechStack) && <Divider sx={{ my: 2 }} />}
+            <Box
+              sx={{
+                maxWidth: '750px',
+                ...(hasResponsibilities && !hasTechStack && { mt: 3 }),
+                ...(hasTechStack && { mt: 3 }),
+              }}
+            >
               <Button
                 variant="text"
                 size="small"
@@ -306,31 +317,33 @@ export const TimelineEventCard = ({
                   </Button>
                 </Section>
               </Collapse>
-            </>
+            </Box>
           )}
           {hasRecommendations && (
             <>
               <Divider sx={{ my: 2 }} />
-              <Section title={`Recommendations (${event.recommendations.length})`} titleLevel={4}>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns:
-                      event.recommendations.length > 1
-                        ? { xs: '1fr', sm: 'repeat(2, 1fr)' }
-                        : '1fr',
-                    gap: 1,
-                  }}
-                >
-                  {event.recommendations.map((recommendation) => (
-                    <RecommendationText
-                      key={recommendation.id}
-                      recommendation={recommendation}
-                      isHighlighted={recommendation.id === highlightedRecommendationId}
-                    />
-                  ))}
-                </Box>
-              </Section>
+              <Box sx={{ maxWidth: '750px' }}>
+                <Section title={`Recommendations (${event.recommendations.length})`} titleLevel={4}>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns:
+                        event.recommendations.length > 1
+                          ? { xs: '1fr', sm: 'repeat(2, 1fr)' }
+                          : '1fr',
+                      gap: 1,
+                    }}
+                  >
+                    {event.recommendations.map((recommendation) => (
+                      <RecommendationText
+                        key={recommendation.id}
+                        recommendation={recommendation}
+                        isHighlighted={recommendation.id === highlightedRecommendationId}
+                      />
+                    ))}
+                  </Box>
+                </Section>
+              </Box>
             </>
           )}
         </Collapse>

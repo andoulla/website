@@ -4,8 +4,6 @@ import Tooltip from '@mui/material/Tooltip';
 
 import { useThemeContext } from '@/context/theme';
 
-// Floats below the nav bar (absolute within App's relative wrapper) so it never
-// pushes a page header down.
 export const DensityToggle = () => {
   const { density, toggleDensity } = useThemeContext();
 
@@ -17,10 +15,6 @@ export const DensityToggle = () => {
         label="Compact"
         slotProps={{ typography: { variant: 'body2' } }}
         sx={{
-          position: 'absolute',
-          top: 8,
-          right: { xs: 16, sm: 24 },
-          zIndex: 1,
           m: 0,
           color: 'text.secondary',
         }}

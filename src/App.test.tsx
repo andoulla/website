@@ -47,8 +47,15 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'Mariandi Stylianou' })).toBeVisible();
     expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
 
-    // Floating density toggle renders above every routed page (its input is visually hidden).
-    expect(screen.getByRole('switch', { name: 'Compact' })).toBeChecked();
+    const compactSwitch = screen.getByRole('switch', { name: 'Compact' });
+
+    expect(compactSwitch).toBeChecked();
+
+    // Check that the toggle's wrapper has right alignment
+    const formLabel = compactSwitch.closest('label');
+    const toggleWrapper = formLabel?.parentElement;
+
+    expect(toggleWrapper).toHaveStyle({ textAlign: 'right' });
 
     expect(await axe(screen.container)).toHaveNoViolations();
   });
