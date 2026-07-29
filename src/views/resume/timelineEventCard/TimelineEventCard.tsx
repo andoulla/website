@@ -270,7 +270,12 @@ export const TimelineEventCard = ({
                       return (
                         <Box
                           key={group.category.id}
-                          sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
+                          sx={{
+                            display: 'grid',
+                            gridTemplateColumns: 'auto 1fr',
+                            gap: 1,
+                            alignItems: 'baseline',
+                          }}
                         >
                           <Link
                             component="button"
@@ -280,7 +285,7 @@ export const TimelineEventCard = ({
                             onClick={() => handleCategoryClick(group.category.id)}
                             sx={{
                               fontWeight: 'medium',
-                              flexShrink: 0,
+                              whiteSpace: 'nowrap',
                               color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
                             }}
                           >
