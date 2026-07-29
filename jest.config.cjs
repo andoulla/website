@@ -16,4 +16,5 @@ module.exports = {
     '^@vercel/speed-insights/react$': '<rootDir>/jest/vercelSpeedInsightsMock.cjs',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  verbose: true,
 };
