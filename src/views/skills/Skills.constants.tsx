@@ -18,13 +18,13 @@ export const VIEW_OPTIONS: Record<ViewMode, ViewOption> = {
   barchart: {
     icon: <BarChartIcon fontSize="small" />,
     label: 'Graph view',
-    caption: "How many years I've spent on each skill",
+    caption: 'Years spent on each skill',
     Component: SkillsGraphView,
   },
   radar: {
     icon: <RadarIcon fontSize="small" />,
     label: 'Radar view',
-    caption: 'Where my experience is concentrated across areas',
+    caption: 'Where experience is concentrated across areas',
     Component: SkillsRadarView,
   },
   table: {
@@ -36,13 +36,13 @@ export const VIEW_OPTIONS: Record<ViewMode, ViewOption> = {
   treemap: {
     icon: <GridViewIcon fontSize="small" />,
     label: 'Treemap view',
-    caption: "Where I've spent the most time, by skill area",
+    caption: 'Time spent by skill area',
     Component: SkillsTreemapView,
   },
   growth: {
     icon: <TrendingUpIcon fontSize="small" />,
     label: 'Growth view',
-    caption: 'How my skill set has grown across my career',
+    caption: 'How skills have grown over time',
     Component: SkillsGrowthView,
   },
 };

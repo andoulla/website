@@ -29,14 +29,14 @@ export const SkillSearchBar = ({ value, onChange, hint }: SkillSearchBarProps) =
   return (
     <TextField
       size="small"
-      placeholder="Search skills"
+      placeholder="e.g. React"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       onKeyDown={(e) => {
         if (e.key === 'Escape' && value !== '') onChange('');
       }}
       helperText={hint !== undefined ? <span aria-live="polite">{hint}</span> : undefined}
-      sx={{ width: { xs: '100%', sm: 220 } }}
+      sx={{ width: '100%' }}
       slotProps={{
         htmlInput: { 'aria-label': 'Search skills by name', sx: { py: '6px' } },
         // MUI calls the icon/button placed inside the input's edges "adornments"

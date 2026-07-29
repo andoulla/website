@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
+import Collapse from '@mui/material/Collapse';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -10,6 +11,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { PageContainer } from '@/components/pageContainer';
 import { useCareerDataContext } from '@/context/careerData';
@@ -177,6 +179,12 @@ const SkillsContent = () => {
 
   const [showPatterns, setShowPatterns] = useState(false);
 
+  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
+
+  const filterCount =
+    selectedCategories.length + selectedSubCategories.length + (cutoffYear < maxYear ? 1 : 0);
+  const filterButtonLabel = filterCount > 0 ? `Filters · ${filterCount}` : 'Filters';
+
   const ActiveView = VIEW_OPTIONS[effectiveViewMode].Component;
 
   const categories = useMemo(() => derivePresentCategories(skills), [skills]);
@@ -193,10 +201,20 @@ const SkillsContent = () => {
     setCompareTrackId(null);
   }, [setCompareTrackId]);
 
+  // Compare controls live in the filter panel; only shown on table view (or while comparing).
   const renderCompareControls = () => {
     if (isCompareMode) {
       return (
         <Stack direction="row" sx={{ alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+          <Button
+            size="small"
+            variant="contained"
+            startIcon={<CompareArrowsIcon />}
+            onClick={handleDeactivateCompare}
+            sx={{ textTransform: 'none', whiteSpace: 'nowrap', py: '2px' }}
+          >
+            Comparing
+          </Button>
           <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
             {'Comparing '}
             <Typography
@@ -220,15 +238,6 @@ const SkillsContent = () => {
                 onClick={() => setCompareTrackId(t.id)}
               />
             ))}
-          <Button
-            size="small"
-            variant="contained"
-            startIcon={<CompareArrowsIcon />}
-            onClick={handleDeactivateCompare}
-            sx={{ textTransform: 'none', whiteSpace: 'nowrap', py: '2px' }}
-          >
-            Comparing
-          </Button>
         </Stack>
       );
     }
@@ -252,68 +261,73 @@ const SkillsContent = () => {
 
   return (
     <>
+      {/* Slim top bar: view toggles */}
       <Stack
         direction="row"
-        sx={{
-          mb: { xs: 2.5, sm: 4 },
-          pb: { xs: 1.5, sm: 2 },
-          borderBottom: 1,
-          borderColor: 'divider',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          gap: { xs: 1.5, sm: 2 },
-        }}
+        sx={{ justifyContent: 'flex-end', mb: 1.5, alignItems: 'center', gap: 1.5 }}
       >
-        <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
-        <TrackFilter />
-        <SkillFilterBar
-          categories={categories}
-          subCategoriesByCategory={subCategoriesByCategory}
-          selectedCategories={selectedCategories}
-          selectedSubCategories={selectedSubCategories}
-          onCategoriesChange={setSelectedCategories}
-          onSubCategoriesChange={setSelectedSubCategories}
-        />
-        {minYear < maxYear && (
-          <TimeMachineSlider
-            year={cutoffYear}
-            minYear={minYear}
-            maxYear={maxYear}
-            onCommit={setCutoffYear}
-            sx={{ flexGrow: 1, flexBasis: { xs: '100%', md: 220 }, minWidth: { md: 200 } }}
-          />
-        )}
-        <Stack direction="row" sx={{ alignItems: 'center', ml: 'auto', gap: 1.5 }}>
-          <CopyLinkButton />
-          <ToggleButtonGroup
-            value={effectiveViewMode}
-            exclusive
-            onChange={(_e, next: ViewMode | null) => {
-              if (next === null) return;
+        <ToggleButtonGroup
+          value={effectiveViewMode}
+          exclusive
+          onChange={(_e, next: ViewMode | null) => {
+            if (next === null) return;
 
-              if (isCompareMode) handleDeactivateCompare();
+            if (isCompareMode) handleDeactivateCompare();
 
-              setViewMode(next);
-            }}
-            size="small"
-            aria-label="View mode"
-            sx={{
-              '& .MuiToggleButton-root': { px: { xs: 0.75, sm: 1.25 } },
-              '& .MuiSvgIcon-root': { fontSize: { xs: '1.1rem', sm: '1.25rem' } },
-            }}
-          >
-            {VIEW_MODES.map((mode) => (
-              <Tooltip key={mode} title={VIEW_OPTIONS[mode].label}>
-                <ToggleButton value={mode} aria-label={VIEW_OPTIONS[mode].label}>
-                  {VIEW_OPTIONS[mode].icon}
-                </ToggleButton>
-              </Tooltip>
-            ))}
-          </ToggleButtonGroup>
-        </Stack>
+            setViewMode(next);
+          }}
+          size="small"
+          aria-label="View mode"
+          sx={{
+            '& .MuiToggleButton-root': { px: { xs: 0.75, sm: 1.25 } },
+            '& .MuiSvgIcon-root': { fontSize: { xs: '1.1rem', sm: '1.25rem' } },
+          }}
+        >
+          {VIEW_MODES.map((mode) => (
+            <Tooltip key={mode} title={VIEW_OPTIONS[mode].label}>
+              <ToggleButton value={mode} aria-label={VIEW_OPTIONS[mode].label}>
+                {VIEW_OPTIONS[mode].icon}
+              </ToggleButton>
+            </Tooltip>
+          ))}
+        </ToggleButtonGroup>
       </Stack>
+
+      {/* Heading row: view name (h2) + filter trigger */}
+      <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1.5, mb: 0.5 }}>
+        <Typography variant="h5" component="h2" sx={{ fontWeight: 600, letterSpacing: '-0.02em' }}>
+          {VIEW_OPTIONS[effectiveViewMode].label}
+        </Typography>
+        <Button
+          variant="outlined"
+          size="small"
+          color="inherit"
+          endIcon={
+            <KeyboardArrowDownIcon
+              sx={{
+                transform: filterPanelOpen ? 'rotate(180deg)' : 'none',
+                transition: 'transform 0.2s',
+              }}
+            />
+          }
+          onClick={() => setFilterPanelOpen((prev) => !prev)}
+          aria-expanded={filterPanelOpen}
+          aria-controls={filterPanelOpen ? 'skill-filter-panel' : undefined}
+          sx={{
+            ml: 'auto',
+            height: 36,
+            borderColor: 'divider',
+            typography: 'button',
+            fontSize: '0.8125rem',
+          }}
+        >
+          {filterButtonLabel}
+        </Button>
+      </Stack>
+
+      {/* Caption + optional Texture fills — sits directly under the view heading */}
       <Stack direction="row" sx={{ alignItems: 'center', mb: 0.5, minHeight: 38 }}>
-        <Typography variant="h6" component="p" color="text.secondary" sx={{ flexGrow: 1 }}>
+        <Typography variant="body1" color="text.secondary" sx={{ flexGrow: 1 }}>
           {isCompareMode
             ? 'Skills side by side across two tracks'
             : VIEW_OPTIONS[effectiveViewMode].caption}
@@ -335,8 +349,77 @@ const SkillsContent = () => {
             />
           </Tooltip>
         )}
-        {renderCompareControls()}
       </Stack>
+
+      {/* Expandable filter panel — a recessed tray; unmountOnExit keeps hidden controls out of the tab order */}
+      <Collapse in={filterPanelOpen} unmountOnExit>
+        <Stack
+          id="skill-filter-panel"
+          role="group"
+          aria-label="Skill filters"
+          sx={{
+            gap: 2.5,
+            p: 3,
+            mt: 1,
+            mb: 2,
+            bgcolor: 'action.hover',
+            border: 1,
+            borderColor: 'divider',
+            borderLeft: 3,
+            borderLeftColor: 'primary.main',
+            borderRadius: 1,
+          }}
+        >
+          {/* Filters row — equal-width controls with labels above */}
+          <Stack direction="row" sx={{ flexWrap: 'wrap', alignItems: 'flex-start', gap: 3 }}>
+            <Stack sx={{ flex: 1, minWidth: 180, gap: 0.5 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                Search
+              </Typography>
+              <SkillSearchBar value={searchTerm} onChange={setSearchTerm} hint={searchHint} />
+            </Stack>
+            <Stack sx={{ flex: 1, minWidth: 180, gap: 0.5 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                Track
+              </Typography>
+              <TrackFilter />
+            </Stack>
+            <Stack sx={{ flex: 1, minWidth: 180, gap: 0.5 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                Category
+              </Typography>
+              <SkillFilterBar
+                categories={categories}
+                subCategoriesByCategory={subCategoriesByCategory}
+                selectedCategories={selectedCategories}
+                selectedSubCategories={selectedSubCategories}
+                onCategoriesChange={setSelectedCategories}
+                onSubCategoriesChange={setSelectedSubCategories}
+              />
+            </Stack>
+          </Stack>
+          {minYear < maxYear && (
+            <Stack sx={{ gap: 1, py: 1, px: 1 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                Time machine
+              </Typography>
+              <TimeMachineSlider
+                year={cutoffYear}
+                minYear={minYear}
+                maxYear={maxYear}
+                onCommit={setCutoffYear}
+              />
+            </Stack>
+          )}
+          <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1.5 }}>
+            {renderCompareControls()}
+            <Stack sx={{ ml: 'auto' }}>
+              <CopyLinkButton />
+            </Stack>
+          </Stack>
+        </Stack>
+      </Collapse>
+
       <SkillsStatBar filteredSkills={filteredSkills} />
       <SkillsCareerContextProvider careerHistory={careerHistory}>
         <SkillsViewContextProvider
