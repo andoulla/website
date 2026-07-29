@@ -102,10 +102,18 @@ describe('TimelineEventCard', () => {
       name: 'Tech Stack',
     });
     const techStackSection = techStackHeading.closest('section')!;
+
     expect(within(techStackSection).getByRole('button', { name: 'React' })).toBeVisible();
     expect(within(techStackSection).getByRole('button', { name: 'TypeScript' })).toBeVisible();
 
-    expect(screen.queryByText('Engineering:')).not.toBeInTheDocument();
+    // Engineering: appears in Tech Stack, but not in Key Skills when collapsed
+    const keySkillsHeadingCheck = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSectionCheck = keySkillsHeadingCheck.closest('section')!;
+
+    expect(within(keySkillsSectionCheck).queryByText('Engineering:')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Show key skills' })).toHaveAttribute(
       'aria-expanded',
       'false'
@@ -119,6 +127,7 @@ describe('TimelineEventCard', () => {
       name: 'Key Skills',
     });
     const keySkillsSection = keySkillsHeading.closest('section')!;
+
     expect(within(keySkillsSection).getByRole('button', { name: 'React' })).toBeVisible();
     expect(within(keySkillsSection).getByRole('button', { name: 'TypeScript' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Hide key skills' })).toHaveAttribute(
@@ -322,7 +331,14 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
-    await user.click(screen.getByText('React'));
+
+    const keySkillsHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSection = keySkillsHeading.closest('section')!;
+
+    await user.click(within(keySkillsSection).getByRole('button', { name: 'React' }));
 
     expect(
       screen.getByText('location:/skills?skill=React&view=barchart&track=general')
@@ -365,7 +381,14 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
-    await user.click(screen.getByRole('button', { name: 'Engineering:' }));
+
+    const keySkillsHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSection = keySkillsHeading.closest('section')!;
+
+    await user.click(within(keySkillsSection).getByRole('button', { name: 'Engineering:' }));
 
     expect(
       screen.getByText('location:/skills?category=engineering&view=barchart&track=general')
@@ -473,7 +496,13 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('React')).toBeVisible();
+      const keySkillsHeading = screen.getByRole('heading', {
+        level: 4,
+        name: 'Key Skills',
+      });
+      const keySkillsSection = keySkillsHeading.closest('section')!;
+
+      expect(within(keySkillsSection).getByText('React')).toBeVisible();
       expect(screen.getByRole('button', { name: 'Hide details' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Hide key skills' })).toBeVisible();
     });
@@ -666,17 +695,29 @@ describe('TimelineEventCard', () => {
       await user.click(screen.getByRole('button', { name: 'Show details' }));
       await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
+      const keySkillsHeading = screen.getByRole('heading', {
+        level: 4,
+        name: 'Key Skills',
+      });
+      const keySkillsSection = keySkillsHeading.closest('section')!;
+
       // Category labels are visible and clickable
-      const engineeringLabel = screen.getByRole('button', { name: 'Engineering:' });
-      const leadershipLabel = screen.getByRole('button', { name: 'Leadership & Delivery:' });
+      const engineeringLabel = within(keySkillsSection).getByRole('button', {
+        name: 'Engineering:',
+      });
+      const leadershipLabel = within(keySkillsSection).getByRole('button', {
+        name: 'Leadership & Delivery:',
+      });
 
       expect(engineeringLabel).toBeVisible();
       expect(leadershipLabel).toBeVisible();
 
       // Skill links are visible and clickable
-      expect(screen.getByRole('button', { name: 'React' })).toBeVisible();
-      expect(screen.getByRole('button', { name: 'TypeScript' })).toBeVisible();
-      expect(screen.getByRole('button', { name: 'Team Leadership' })).toBeVisible();
+      expect(within(keySkillsSection).getByRole('button', { name: 'React' })).toBeVisible();
+      expect(within(keySkillsSection).getByRole('button', { name: 'TypeScript' })).toBeVisible();
+      expect(
+        within(keySkillsSection).getByRole('button', { name: 'Team Leadership' })
+      ).toBeVisible();
 
       // Verify category label is clickable and navigates
       await user.click(engineeringLabel);
@@ -706,17 +747,23 @@ describe('TimelineEventCard', () => {
 
       await user.click(screen.getByRole('button', { name: 'Show details' }));
 
-      expect(screen.getByRole('heading', { level: 4, name: 'Key Skills' })).toBeVisible();
+      const keySkillsHeading = screen.getByRole('heading', {
+        level: 4,
+        name: 'Key Skills',
+      });
+      const keySkillsSection = keySkillsHeading.closest('section')!;
+
+      expect(keySkillsHeading).toBeVisible();
       expect(screen.getByText('2+ skills across 2 categories')).toBeVisible();
-      expect(screen.queryByText('React')).not.toBeInTheDocument();
-      expect(screen.queryByText('Team Leadership')).not.toBeInTheDocument();
+      expect(within(keySkillsSection).queryByText('React')).not.toBeInTheDocument();
+      expect(within(keySkillsSection).queryByText('Team Leadership')).not.toBeInTheDocument();
 
       await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
       expect(screen.getByRole('heading', { level: 4, name: 'Key Skills' })).toBeVisible();
       expect(screen.queryByText('2+ skills across 2 categories')).not.toBeInTheDocument();
-      expect(screen.getByText('React')).toBeVisible();
-      expect(screen.getByText('Team Leadership')).toBeVisible();
+      expect(within(keySkillsSection).getByText('React')).toBeVisible();
+      expect(within(keySkillsSection).getByText('Team Leadership')).toBeVisible();
     });
   });
 
@@ -824,7 +871,14 @@ describe('TimelineEventCard', () => {
 
       await user.click(screen.getByRole('button', { name: 'Show details' }));
 
-      expect(screen.queryByText('Engineering:')).not.toBeInTheDocument();
+      const keySkillsHeading = screen.getByRole('heading', {
+        level: 4,
+        name: 'Key Skills',
+      });
+      const keySkillsSection = keySkillsHeading.closest('section')!;
+
+      // Engineering: should not be in the collapsed Key Skills section (but is in Tech Stack)
+      expect(within(keySkillsSection).queryByText('Engineering:')).not.toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Show key skills' })).toHaveAttribute(
         'aria-expanded',
         'false'
@@ -837,7 +891,13 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('Engineering:')).toBeVisible();
+      const keySkillsHeading = screen.getByRole('heading', {
+        level: 4,
+        name: 'Key Skills',
+      });
+      const keySkillsSection = keySkillsHeading.closest('section')!;
+
+      expect(within(keySkillsSection).getByText('Engineering:')).toBeVisible();
       expect(screen.getByRole('button', { name: 'Hide key skills' })).toHaveAttribute(
         'aria-expanded',
         'true'
