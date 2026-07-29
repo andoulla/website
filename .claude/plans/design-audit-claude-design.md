@@ -42,7 +42,7 @@ A plain text link with no icon or description of what "the graph" is (external t
 
 ## 2. Visual & MUI Design Standards
 
-### 2.1 🟢 Skill-category colors have no legend on this page
+### 2.1 ✅ Skill-category colors have no legend on this page
 
 Skill text-links are tinted per category (green / blue / purple / orange / pink) with no key explaining what the colors mean here — reads as decorative noise rather than encoded information. The Skills page apparently already defines this category-color legend; it just isn't present or referenced on the homepage, so the encoding is invisible to anyone landing here first.
 **Fix:** Keep the current text-link style (no chips — tried before and got busy) but surface the same legend used on the Skills page, placed once near the top of the Key Skills section (e.g. a small inline key: `● Leadership & Delivery  ● Engineering Practices  ●…`) so the colors carry meaning instead of just looking varied.
@@ -54,32 +54,32 @@ For the palette itself, pull from the green theme rather than inventing new hues
 
 Map categories to steps along these two families (e.g. dark green / main green / light green / dark neutral / main neutral / light neutral) instead of unrelated rainbow hues — stays on-brand and keeps the palette small. Since the theme supports dark mode too (with its own flipped light-toned-accent scale), define the legend colors as theme-aware tokens, not fixed hex values, so category colors keep their ≥4.5:1 contrast in both modes rather than just checking light mode and hoping dark mode holds up.
 
-### 2.2 🟡 Line length unconstrained inside cards
+### 2.2 ✅ Line length unconstrained inside cards
 
 Body copy (bullets, tech stack, testimonials) stretches edge-to-edge inside the `Container maxWidth="lg"`, well past ~75–90 characters per line on a wide desktop viewport — long lines are just tiring to read, full stop.
 **Fix:** Cap text-bearing columns at `max-width: 720–800px` inside the card content, independent of the outer container width.
 
-### 2.3 🟡 Compact-mode switch floats outside the content grid
+### 2.3 ✅ Compact-mode switch floats outside the content grid
 
 The "Compact" switch sits at the top-right of the viewport, not aligned to the `Container`'s padding/margins used everywhere else — breaks the implicit grid.
 **Fix:** Move it inside the same `Container`, right-aligned to match card edges, or place it in the AppBar.
 
-### 2.4 🟡 Divider overuse inside cards
+### 2.4 ✅ Divider overuse inside cards
 
 Every card stacks 3–4 full-width `<hr>` dividers (Responsibilities / Tech Stack / Key Skills / Recommendations). Repeated across ~7 timeline entries, this becomes a busy striping pattern.
-**Fix:** Replace some dividers with whitespace (`Stack spacing`) and reserve `Divider` for the one or two breaks that matter most (e.g., before Recommendations).
+**Status:** ✅ Done — replaced with spacing, divider only before Recommendations.
 
-### 2.5 🟢 Empty left slot in the AppBar
+### 2.5 ✅ Empty left slot in the AppBar
 
 The nav's leftmost `Box` is empty (no logo/wordmark/initials), pushing "Home / Skills / Articles" links off-center and leaving a dead zone.
-**Fix:** Add a small monogram or name mark, or center the nav links properly if no mark is wanted.
+**Status:** ✅ Done — added "MS" monogram on left, icons to nav links.
 
-### 2.6 🟡 Timeline icon style is inconsistent (icon vs. photo logo)
+### 2.6 ✅ Timeline icon style is inconsistent (icon vs. photo logo)
 
 Job/internship entries use a flat MUI SvgIcon in a solid circle; education entries swap in a rasterized company/university logo image of a different visual weight (drop shadow-less JPEG thumbnails) — breaks the otherwise consistent dot system.
-**Fix:** Mask all education logos into the same flat circular treatment (consistent crop/size, circular clip) as the icon dots, so every timeline marker reads as one system.
+**Status:** ✅ Done — education logos masked to circular shape (20px × 20px).
 
-### 2.7 🟢 Nav links have no icons
+### 2.7 ✅ Nav links have no icons
 
 "Home", "Skills", "Articles" in the AppBar are plain text with nothing to help quick recognition or add visual interest to an otherwise bare nav bar.
 **Fix:** Add a small leading MUI icon per link: `HomeOutlined` for Home, `InsightsOutlined` for Skills (a graph/trend glyph fits the "skills graph" concept used elsewhere on the page — reuse this exact icon in 1.4 for consistency), `ArticleOutlined` for Articles.
