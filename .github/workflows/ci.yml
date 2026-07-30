@@ -66,8 +66,8 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
-  ci:
-    name: Test, build
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -128,6 +128,22 @@ jobs:
             -H "Authorization: token $GIST_TOKEN" \
             -H "Content-Type: application/json" \
             --data-binary @-
+
+  ci:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Build
         run: yarn build
