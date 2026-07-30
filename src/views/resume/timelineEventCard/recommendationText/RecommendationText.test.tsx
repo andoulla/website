@@ -15,21 +15,23 @@ const recommendation = new Recommendation()
   .mock();
 
 describe('RecommendationText', () => {
-  test('renders the quote and byline in a blockquote with a deep-link id', () => {
+  test('renders quote, author details, and has deep-link id', async () => {
     const screen = render(<RecommendationText recommendation={recommendation} />);
 
     expect(screen.getByText('"Great work."')).toBeVisible();
-    expect(screen.getByText('P.S.')).toBeVisible();
-    expect(screen.getByText('P.S. · Engineering Manager · 15 Jan 2022')).toBeVisible();
+    expect(screen.getAllByText('P.S.')).toHaveLength(2);
+    expect(screen.getByText('Engineering Manager')).toBeVisible();
+    expect(screen.getByText('15 Jan 2022')).toBeVisible();
     expect(document.getElementById('recommendation-rec-1')).toBe(
       screen.getByText('"Great work."').closest('blockquote')
     );
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
-  test('links the byline to the recommendation on LinkedIn in a new tab', () => {
+  test('links to LinkedIn recommendation in new tab', () => {
     const screen = render(<RecommendationText recommendation={recommendation} />);
 
-    const link = screen.getByRole('link', { name: 'P.S. · Engineering Manager · 15 Jan 2022' });
+    const link = screen.getByRole('link');
 
     expect(link).toHaveAttribute(
       'href',
@@ -39,29 +41,60 @@ describe('RecommendationText', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  test('starts clamped and toggles between More and Less', async () => {
+  test('starts clamped and toggles Show/Hide with aria-expanded', async () => {
     const user = userEvent.setup();
     const screen = render(<RecommendationText recommendation={recommendation} />);
 
-    await user.click(screen.getByRole('button', { name: 'More' }));
+    expect(screen.getByRole('button', { name: 'Show recommendation' })).toHaveAttribute(
+      'aria-expanded',
+      'false'
+    );
 
-    expect(screen.getByRole('button', { name: 'Less' })).toHaveAttribute('aria-expanded', 'true');
+    await user.click(screen.getByRole('button', { name: 'Show recommendation' }));
+    expect(screen.getByRole('button', { name: 'Hide recommendation' })).toHaveAttribute(
+      'aria-expanded',
+      'true'
+    );
     expect(await axe(screen.container)).toHaveNoViolations();
 
-    await user.click(screen.getByRole('button', { name: 'Less' }));
-
-    expect(screen.getByRole('button', { name: 'More' })).toHaveAttribute('aria-expanded', 'false');
+    await user.click(screen.getByRole('button', { name: 'Hide recommendation' }));
+    expect(screen.getByRole('button', { name: 'Show recommendation' })).toHaveAttribute(
+      'aria-expanded',
+      'false'
+    );
   });
 
-  test('a highlighted recommendation starts unclamped', () => {
+  test('starts unclamped when highlighted', () => {
     const screen = render(<RecommendationText recommendation={recommendation} isHighlighted />);
 
-    expect(screen.getByRole('button', { name: 'Less' })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('button', { name: 'Hide recommendation' })).toHaveAttribute(
+      'aria-expanded',
+      'true'
+    );
   });
 
-  test('has no axe violations', async () => {
-    const screen = render(<RecommendationText recommendation={recommendation} />);
+  test('truncates long text when clamped and shows full text when expanded', async () => {
+    const user = userEvent.setup();
+    const longText =
+      'This is a very long recommendation that goes on and on with multiple sentences. This is the second sentence. This is the third sentence.';
+    const longRecommendation = new Recommendation()
+      .authorInitials('J.D.')
+      .authorRole({ jobTitle: 'Director' })
+      .text(longText)
+      .postedDate('2023-06-20')
+      .recommendationUrl('https://www.linkedin.com/in/example/details/recommendations/')
+      .mock();
 
-    expect(await axe(screen.container)).toHaveNoViolations();
+    const screen = render(<RecommendationText recommendation={longRecommendation} />);
+
+    expect(
+      screen.getByText('This is a very long recommendation that goes on and on with multiple sentences.')
+    ).toBeVisible();
+
+    await user.click(screen.getByRole('button', { name: 'Show recommendation' }));
+    expect(screen.getByRole('button', { name: 'Hide recommendation' })).toHaveAttribute(
+      'aria-expanded',
+      'true'
+    );
   });
 });

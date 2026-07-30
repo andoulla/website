@@ -16,6 +16,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { PageContainer } from '@/components/pageContainer';
 import { Section } from '@/components/section';
+import { SkillCategoryLegend } from '@/components/skillCategoryLegend';
 import { useCareerDataContext } from '@/context/careerData';
 import { useTrackContext } from '@/context/track';
 import { tracks } from '@/data/tracks';
@@ -154,34 +155,59 @@ export const Resume = () => {
       >
         <ExperienceSearch />
       </Suspense>
-      <Tabs
-        value={trackId}
-        onChange={(_event, next: TrackId) => {
-          setTrackId(next);
-        }}
-        aria-label="Resume track"
-        variant="scrollable"
-        allowScrollButtonsMobile
-        // Full-width divider under the tab bar separates it from the panel content.
+      <Box
         sx={{
-          mb: 3,
-          borderBottom: 1,
-          borderColor: 'divider',
-          '& .MuiTabs-flexContainer': { justifyContent: { sm: 'center' } },
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          mb: 2,
+          pb: 1,
         }}
       >
-        {tracks.map((track) => (
-          <Tab
-            key={track.id}
-            value={track.id}
-            label={track.label}
-            id={`track-tab-${track.id}`}
-            aria-controls={`track-panel-${track.id}`}
-          />
-        ))}
-      </Tabs>
-      <Box role="tabpanel" id={`track-panel-${trackId}`} aria-labelledby={`track-tab-${trackId}`}>
-        <Section title="Work Experience">
+        <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
+          View for:
+        </Typography>
+        <Tabs
+          value={trackId}
+          onChange={(_event, next: TrackId) => {
+            setTrackId(next);
+          }}
+          aria-label="Resume track"
+          variant="scrollable"
+          allowScrollButtonsMobile
+          sx={{
+            flex: 1,
+            '& .MuiTabs-flexContainer': { justifyContent: 'flex-start' },
+          }}
+        >
+          {tracks.map((track) => (
+            <Tab
+              key={track.id}
+              value={track.id}
+              label={track.label}
+              id={`track-tab-${track.id}`}
+              aria-controls={`track-panel-${track.id}`}
+            />
+          ))}
+        </Tabs>
+      </Box>
+      <Box
+        role="tabpanel"
+        id={`track-panel-${trackId}`}
+        aria-labelledby={`track-tab-${trackId}`}
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.02)' : 'rgba(0, 0, 0, 0.02)',
+          borderRadius: 1,
+          p: { xs: 2, md: 4 },
+        }}
+      >
+        <Section
+          title="Experience"
+          titleLevel={2}
+          titleSx={{ fontWeight: 'bold', textAlign: 'center' }}
+        >
+          <SkillCategoryLegend />
           <Suspense fallback={<TimelineEventSkeleton />}>
             <CareerTimeline />
           </Suspense>

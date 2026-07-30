@@ -27,11 +27,13 @@ Recurring tasks have a dedicated skill — prefer it (they also self-trigger fro
 - **ESLint** + **Prettier**, enforced on commit via plain Git hooks ([.githooks/pre-commit](.githooks/pre-commit)), which also runs the full test suite
 - **commitlint** (`@commitlint/config-conventional`) enforces [Conventional Commits](https://www.conventionalcommits.org/) messages via [.githooks/commit-msg](.githooks/commit-msg) — e.g. `fix: handle empty references list`, `feat: add resume print view`
 - Package manager: **yarn** (canonical — README and scripts assume yarn; ignore `package-lock.json` if present)
+  - **Agents: never switch to npm**, even in multi-agent tasks. Always `yarn install` / `yarn run` / etc.
 
 ## Verifying changes
 
-- Never run typecheck, lint, tests, the dev server, or a browser/screenshot yourself — the user
+- Run `tsc`, `yarn lint`, and `yarn test` **only when explicitly given permission in the prompt**. Otherwise the user
   runs all verification.
+- Never run the dev server or take browser/screenshots yourself — the user handles those.
 - After changes, walk the user through them one at a time: ask them to check a single change,
   wait for confirmation or feedback, then move to the next — don't dump the full list at once.
 
@@ -107,13 +109,15 @@ suggestions report to gitignored `scripts/output/` — it NEVER writes to `src/d
 
 ### Nesting convention
 
-- A child used only by one owner nests directly under that owner (no intermediate `components/`
-  wrapper), not beside it.
+- **Never create in `src/components/` for a single-owner child.** If a component is used by only one parent, nest it directly under that parent.
+  - ❌ Wrong: `src/components/SkillCategoryLegend/` (if only TimelineEventCard uses it)
+  - ✅ Right: `src/views/resume/timelineEventCard/SkillCategoryLegend/`
 - A child can always import from its parent; nothing outside the parent may reach into the child.
   Enforced by ESLint — see [code-style.md](.claude/rules/code-style.md) for the rule details and
   naming/file conventions.
 - Applies uniformly under `views/*`: `views/skills/skillFilterBar/`, not
   `views/skills/components/skillFilterBar/`.
+- Only lift to `src/components/` if a child is genuinely shared by 2+ unrelated owners (across different views/components).
 - Worked examples: [src/components/tagList/](src/components/tagList/) (component nesting),
   [src/utils/loadCareerHistory/joinCareerHistoryWithRecommendations/](src/utils/loadCareerHistory/joinCareerHistoryWithRecommendations/)
   (util nesting).

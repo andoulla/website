@@ -1,3 +1,4 @@
+import { createTheme } from '@mui/material/styles';
 import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
@@ -62,10 +63,8 @@ describe('TimelineEventCard', () => {
       wrapper: MemoryRouter,
     });
 
-    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
-    expect(
-      screen.getByText('Staff Frontend Engineer · London, UK · Apr 2022 – Present')
-    ).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
+    expect(screen.getByText('Staff Frontend Engineer · London, UK')).toBeVisible();
     expect(screen.queryByText('Lead frontend architecture')).not.toBeInTheDocument();
     expect(screen.queryByText('React')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Show details' })).toHaveAttribute(
@@ -96,8 +95,25 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.getByText('Lead frontend architecture')).toBeVisible();
-    expect(screen.getByText('React, TypeScript')).toBeVisible();
-    expect(screen.queryByText('Engineering:')).not.toBeInTheDocument();
+
+    // Tech Stack shows React and TypeScript as clickable links
+    const techStackHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Tech Stack',
+    });
+    const techStackSection = techStackHeading.closest('section')!;
+
+    expect(within(techStackSection).getByRole('button', { name: 'React' })).toBeVisible();
+    expect(within(techStackSection).getByRole('button', { name: 'TypeScript' })).toBeVisible();
+
+    // Engineering: appears in Tech Stack, but not in Key Skills when collapsed
+    const keySkillsHeadingCheck = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSectionCheck = keySkillsHeadingCheck.closest('section')!;
+
+    expect(within(keySkillsSectionCheck).queryByText('Engineering:')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Show key skills' })).toHaveAttribute(
       'aria-expanded',
       'false'
@@ -105,8 +121,15 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
-    expect(screen.getByText('React')).toBeVisible();
-    expect(screen.getByText('TypeScript')).toBeVisible();
+    // Key Skills section also has React and TypeScript
+    const keySkillsHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSection = keySkillsHeading.closest('section')!;
+
+    expect(within(keySkillsSection).getByRole('button', { name: 'React' })).toBeVisible();
+    expect(within(keySkillsSection).getByRole('button', { name: 'TypeScript' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Hide key skills' })).toHaveAttribute(
       'aria-expanded',
       'true'
@@ -146,10 +169,16 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
-    expect(screen.getByText('Engineering:')).toBeVisible();
-    expect(screen.getByText('React')).toBeVisible();
-    expect(screen.getByText('Leadership & Delivery:')).toBeVisible();
-    expect(screen.getByText('Team Leadership')).toBeVisible();
+    const keySkillsHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSection = keySkillsHeading.closest('section')!;
+
+    expect(within(keySkillsSection).getByText('Engineering:')).toBeVisible();
+    expect(within(keySkillsSection).getByText('React')).toBeVisible();
+    expect(within(keySkillsSection).getByText('Leadership & Delivery:')).toBeVisible();
+    expect(within(keySkillsSection).getByText('Team Leadership')).toBeVisible();
     expect(screen.queryByText('Kubernetes')).not.toBeInTheDocument();
   });
 
@@ -162,8 +191,14 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
-    expect(screen.getByRole('button', { name: 'React' })).toBeVisible();
-    expect(screen.getByRole('button', { name: 'TypeScript' })).toBeVisible();
+    const keySkillsHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSection = keySkillsHeading.closest('section')!;
+
+    expect(within(keySkillsSection).getByRole('button', { name: 'React' })).toBeVisible();
+    expect(within(keySkillsSection).getByRole('button', { name: 'TypeScript' })).toBeVisible();
     // TagList would render a ul
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
   });
@@ -177,7 +212,9 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
 
-    expect(screen.getByRole('heading', { level: 3, name: 'Meridian Dynamics' })).toBeVisible();
+    expect(
+      screen.getByRole('heading', { level: 3, name: 'Meridian Dynamics · Apr 2022 – Present' })
+    ).toBeVisible();
 
     const sectionHeadings = screen.getAllByRole('heading', { level: 4 });
 
@@ -188,7 +225,7 @@ describe('TimelineEventCard', () => {
     ]);
   });
 
-  test('renders tech stack items as comma-separated text', async () => {
+  test('renders tech stack items as clickable links grouped by category', async () => {
     const user = userEvent.setup();
 
     const screen = render(
@@ -208,8 +245,16 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
 
-    expect(screen.getByRole('heading', { level: 4, name: 'Tech Stack' })).toBeVisible();
-    expect(screen.getByText('Vite, Jest, Playwright')).toBeVisible();
+    const techStackHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Tech Stack',
+    });
+    const techStackSection = techStackHeading.closest('section')!;
+
+    expect(techStackHeading).toBeVisible();
+    expect(within(techStackSection).getByRole('button', { name: 'Vite' })).toBeVisible();
+    expect(within(techStackSection).getByRole('button', { name: 'Jest' })).toBeVisible();
+    expect(within(techStackSection).getByRole('button', { name: 'Playwright' })).toBeVisible();
   });
 
   test('renders the end month for a past role instead of "Present"', () => {
@@ -218,9 +263,8 @@ describe('TimelineEventCard', () => {
       { wrapper: MemoryRouter }
     );
 
-    expect(
-      screen.getByText('Staff Frontend Engineer · London, UK · Apr 2022 – Sep 2023')
-    ).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Sep 2023')).toBeVisible();
+    expect(screen.getByText('Staff Frontend Engineer · London, UK')).toBeVisible();
   });
 
   test('renders recommendations when present', async () => {
@@ -236,7 +280,8 @@ describe('TimelineEventCard', () => {
     await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.getByText('Recommendations (1)')).toBeVisible();
-    expect(screen.getByText('P.S. · Engineering Manager · 12 Jun 2023')).toBeVisible();
+    // Byline link should be visible after expansion
+    expect(screen.getByRole('link')).toBeVisible();
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
@@ -267,10 +312,8 @@ describe('TimelineEventCard', () => {
       { wrapper: MemoryRouter }
     );
 
-    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
-    expect(
-      screen.getByText('Staff Frontend Engineer · London, UK · Apr 2022 – Present')
-    ).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
+    expect(screen.getByText('Staff Frontend Engineer · London, UK')).toBeVisible();
     expect(screen.queryByRole('heading', { level: 4 })).not.toBeInTheDocument();
     expect(screen.queryByText('Recommendations (1)')).not.toBeInTheDocument();
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
@@ -288,7 +331,14 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
-    await user.click(screen.getByText('React'));
+
+    const keySkillsHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSection = keySkillsHeading.closest('section')!;
+
+    await user.click(within(keySkillsSection).getByRole('button', { name: 'React' }));
 
     expect(
       screen.getByText('location:/skills?skill=React&view=barchart&track=general')
@@ -306,7 +356,14 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
-    await user.click(screen.getByRole('button', { name: "View this role's skills on the graph" }));
+
+    const viewGraphButton = screen.getByRole('button', {
+      name: "View this role's skills on the graph",
+    });
+
+    expect(within(viewGraphButton).getByTestId('InsightsOutlinedIcon')).toBeVisible();
+
+    await user.click(viewGraphButton);
 
     expect(
       screen.getByText('location:/skills?skill=React&skill=TypeScript&view=barchart&track=general')
@@ -324,7 +381,14 @@ describe('TimelineEventCard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Show details' }));
     await user.click(screen.getByRole('button', { name: 'Show key skills' }));
-    await user.click(screen.getByRole('button', { name: 'Engineering:' }));
+
+    const keySkillsHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSection = keySkillsHeading.closest('section')!;
+
+    await user.click(within(keySkillsSection).getByRole('button', { name: 'Engineering:' }));
 
     expect(
       screen.getByText('location:/skills?category=engineering&view=barchart&track=general')
@@ -359,6 +423,27 @@ describe('TimelineEventCard', () => {
     expect(screen.queryByRole('heading', { level: 4, name: 'Tech Stack' })).not.toBeInTheDocument();
   });
 
+  test('Tech Stack skills are clickable and grouped by category', async () => {
+    const user = userEvent.setup();
+    const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+      wrapper: MemoryRouter,
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+    const techStackHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Tech Stack',
+    });
+    const techStackSection = techStackHeading.closest('section')!;
+
+    // Category label should be visible
+    expect(within(techStackSection).getByRole('button', { name: 'Engineering:' })).toBeVisible();
+    // Skills should be clickable buttons
+    expect(within(techStackSection).getByRole('button', { name: 'React' })).toBeVisible();
+    expect(within(techStackSection).getByRole('button', { name: 'TypeScript' })).toBeVisible();
+  });
+
   test('shows a "Description" heading instead of "Responsibilities" for an education entry', async () => {
     const user = userEvent.setup();
     const screen = render(
@@ -381,7 +466,11 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
+      expect(
+        screen
+          .getByRole('heading', { level: 3, name: 'Meridian Dynamics · Apr 2022 – Present' })
+          .closest('.MuiCard-root')
+      ).toHaveStyle({
         outlineOffset: '2px',
       });
     });
@@ -392,7 +481,11 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).not.toHaveStyle({
+      expect(
+        screen
+          .getByRole('heading', { level: 3, name: 'Meridian Dynamics · Apr 2022 – Present' })
+          .closest('.MuiCard-root')
+      ).not.toHaveStyle({
         outlineOffset: '2px',
       });
     });
@@ -403,7 +496,13 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('React')).toBeVisible();
+      const keySkillsHeading = screen.getByRole('heading', {
+        level: 4,
+        name: 'Key Skills',
+      });
+      const keySkillsSection = keySkillsHeading.closest('section')!;
+
+      expect(within(keySkillsSection).getByText('React')).toBeVisible();
       expect(screen.getByRole('button', { name: 'Hide details' })).toBeVisible();
       expect(screen.getByRole('button', { name: 'Hide key skills' })).toBeVisible();
     });
@@ -414,7 +513,11 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
+      expect(
+        screen
+          .getByRole('heading', { level: 3, name: 'Meridian Dynamics · Apr 2022 – Present' })
+          .closest('.MuiCard-root')
+      ).toHaveStyle({
         outlineOffset: '2px',
       });
       expect(screen.getByRole('button', { name: 'Hide details' })).toBeVisible();
@@ -426,7 +529,11 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).not.toHaveStyle({
+      expect(
+        screen
+          .getByRole('heading', { level: 3, name: 'Meridian Dynamics · Apr 2022 – Present' })
+          .closest('.MuiCard-root')
+      ).not.toHaveStyle({
         outlineOffset: '2px',
       });
     });
@@ -481,7 +588,11 @@ describe('TimelineEventCard', () => {
         { wrapper: MemoryRouter }
       );
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
+      expect(
+        screen
+          .getByRole('heading', { level: 3, name: 'Meridian Dynamics · Apr 2022 – Present' })
+          .closest('.MuiCard-root')
+      ).toHaveStyle({
         outlineOffset: '2px',
       });
     });
@@ -559,47 +670,404 @@ describe('TimelineEventCard', () => {
     expect(items[1]).toHaveTextContent('Mentor engineers');
   });
 
-  describe('scroll-fade animation', () => {
-    // Global mock auto-fires isIntersecting: true; silent one reproduces "not yet reported".
-    class SilentIntersectionObserver {
-      observe = jest.fn();
-      unobserve = jest.fn();
-      disconnect = jest.fn();
-      takeRecords = (): IntersectionObserverEntry[] => [];
-      root = null;
-      rootMargin = '';
-      thresholds: ReadonlyArray<number> = [];
-    }
+  describe('Key Skills visual hierarchy', () => {
+    test('category labels and skill links are both rendered and clickable with distinct hierarchy', async () => {
+      const user = userEvent.setup();
+      const leadershipSkill = new Skill()
+        .id('team-leadership')
+        .name('Team Leadership')
+        .type('skill')
+        .mock();
 
-    const originalIntersectionObserver = global.IntersectionObserver;
+      const screen = render(
+        <MemoryRouter>
+          <TimelineEventCard
+            event={{
+              ...event,
+              skills: [reactSkill, typeScriptSkill, leadershipSkill],
+            }}
+            track={testTrack}
+          />
+          <LocationDisplay />
+        </MemoryRouter>
+      );
 
-    beforeEach(() => {
-      global.IntersectionObserver =
-        SilentIntersectionObserver as unknown as typeof IntersectionObserver;
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+      await user.click(screen.getByRole('button', { name: 'Show key skills' }));
+
+      const keySkillsHeading = screen.getByRole('heading', {
+        level: 4,
+        name: 'Key Skills',
+      });
+      const keySkillsSection = keySkillsHeading.closest('section')!;
+
+      // Category labels are visible and clickable
+      const engineeringLabel = within(keySkillsSection).getByRole('button', {
+        name: 'Engineering:',
+      });
+      const leadershipLabel = within(keySkillsSection).getByRole('button', {
+        name: 'Leadership & Delivery:',
+      });
+
+      expect(engineeringLabel).toBeVisible();
+      expect(leadershipLabel).toBeVisible();
+
+      // Skill links are visible and clickable
+      expect(within(keySkillsSection).getByRole('button', { name: 'React' })).toBeVisible();
+      expect(within(keySkillsSection).getByRole('button', { name: 'TypeScript' })).toBeVisible();
+      expect(
+        within(keySkillsSection).getByRole('button', { name: 'Team Leadership' })
+      ).toBeVisible();
+
+      // Verify category label is clickable and navigates
+      await user.click(engineeringLabel);
+
+      expect(
+        screen.getByText('location:/skills?category=engineering&view=barchart&track=general')
+      ).toBeVisible();
     });
+  });
+
+  describe('Key Skills collapsed taster', () => {
+    test('always shows the "Key Skills" heading, with a skill/category count taster while collapsed, replaced by the full skill list on expand', async () => {
+      const user = userEvent.setup();
+      const leadershipSkill = new Skill()
+        .id('team-leadership')
+        .name('Team Leadership')
+        .type('skill')
+        .mock();
+
+      const screen = render(
+        <TimelineEventCard
+          event={{ ...event, skills: [reactSkill, leadershipSkill] }}
+          track={testTrack}
+        />,
+        { wrapper: MemoryRouter }
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+      const keySkillsHeading = screen.getByRole('heading', {
+        level: 4,
+        name: 'Key Skills',
+      });
+      const keySkillsSection = keySkillsHeading.closest('section')!;
+
+      expect(keySkillsHeading).toBeVisible();
+      expect(screen.getByText('2+ skills across 2 categories')).toBeVisible();
+      expect(within(keySkillsSection).queryByText('React')).not.toBeInTheDocument();
+      expect(within(keySkillsSection).queryByText('Team Leadership')).not.toBeInTheDocument();
+
+      await user.click(screen.getByRole('button', { name: 'Show key skills' }));
+
+      expect(screen.getByRole('heading', { level: 4, name: 'Key Skills' })).toBeVisible();
+      expect(screen.queryByText('2+ skills across 2 categories')).not.toBeInTheDocument();
+      expect(within(keySkillsSection).getByText('React')).toBeVisible();
+      expect(within(keySkillsSection).getByText('Team Leadership')).toBeVisible();
+    });
+  });
+
+  describe('key skills mobile layout', () => {
+    const originalMatchMedia = window.matchMedia;
+    // useMediaQuery strips the leading "@media " prefix before calling matchMedia(query).
+    const mobileSkillsQuery = createTheme()
+      .breakpoints.down('md')
+      .replace(/^@media ?/, '');
+
+    const mockViewport = (isMobile: boolean) => {
+      window.matchMedia = jest.fn().mockImplementation((query: string) => ({
+        matches: query === mobileSkillsQuery ? isMobile : false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      }));
+    };
 
     afterEach(() => {
-      global.IntersectionObserver = originalIntersectionObserver;
+      window.matchMedia = originalMatchMedia;
     });
 
-    test('the top card renders fully visible even before any IntersectionObserver callback fires', () => {
-      const screen = render(<TimelineEventCard event={event} track={testTrack} startInView />, {
-        wrapper: MemoryRouter,
-      });
+    test('below md, stacks each key skill on its own tappable line with no comma separators, and each link comfortably clears a 44px tap target', async () => {
+      mockViewport(true);
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
-        opacity: 1,
-      });
-    });
-
-    test('a card below the fold stays hidden until the observer reports it as intersecting', () => {
+      const user = userEvent.setup();
       const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
         wrapper: MemoryRouter,
       });
 
-      expect(screen.getByText('Meridian Dynamics').closest('.MuiCard-root')).toHaveStyle({
-        opacity: 0,
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+      await user.click(screen.getByRole('button', { name: 'Show key skills' }));
+
+      // Scope to Key Skills section to avoid ambiguity with Tech Stack
+      const keySkillsSection = screen
+        .getByRole('heading', { level: 4, name: 'Key Skills' })
+        .closest('section')!;
+
+      const reactSkillLink = within(keySkillsSection).getByRole('button', { name: 'React' });
+      const typeScriptSkillLink = within(keySkillsSection).getByRole('button', {
+        name: 'TypeScript',
       });
+
+      expect(reactSkillLink).toBeVisible();
+      expect(typeScriptSkillLink).toBeVisible();
+      expect(keySkillsSection.textContent).not.toContain(',');
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('at md and up, keeps the existing inline comma-separated key skills layout', async () => {
+      mockViewport(false);
+
+      const user = userEvent.setup();
+      const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+        wrapper: MemoryRouter,
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+      await user.click(screen.getByRole('button', { name: 'Show key skills' }));
+
+      const keySkillsSection = screen
+        .getByRole('heading', { level: 4, name: 'Key Skills' })
+        .closest('section')!;
+
+      expect(keySkillsSection.textContent).toContain('React, TypeScript');
     });
   });
+
+  test('key skills section starts collapsed by default', async () => {
+    const user = userEvent.setup();
+    const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+      wrapper: MemoryRouter,
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+    const keySkillsHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSection = keySkillsHeading.closest('section')!;
+
+    expect(within(keySkillsSection).queryByText('Engineering:')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Show key skills' })).toHaveAttribute(
+      'aria-expanded',
+      'false'
+    );
+  });
+
+  test('key skills section expands when there is a highlighted skill', () => {
+    const screen = render(
+      <TimelineEventCard event={event} track={testTrack} highlightedSkillId="react" />,
+      { wrapper: MemoryRouter }
+    );
+
+    const keySkillsHeading = screen.getByRole('heading', {
+      level: 4,
+      name: 'Key Skills',
+    });
+    const keySkillsSection = keySkillsHeading.closest('section')!;
+
+    expect(within(keySkillsSection).getByText('Engineering:')).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Hide key skills' })).toHaveAttribute(
+      'aria-expanded',
+      'true'
+    );
+  });
+
+  // Global mock auto-fires isIntersecting: true; silent one reproduces "not yet reported".
+  class SilentIntersectionObserver {
+    observe = jest.fn();
+    unobserve = jest.fn();
+    disconnect = jest.fn();
+    takeRecords = (): IntersectionObserverEntry[] => [];
+    root = null;
+    rootMargin = '';
+    thresholds: ReadonlyArray<number> = [];
+  }
+
+  const originalIntersectionObserver = global.IntersectionObserver;
+
+  beforeEach(() => {
+    global.IntersectionObserver =
+      SilentIntersectionObserver as unknown as typeof IntersectionObserver;
+  });
+
+  afterEach(() => {
+    global.IntersectionObserver = originalIntersectionObserver;
+  });
+
+  test('card renders when startInView is true', () => {
+    const screen = render(<TimelineEventCard event={event} track={testTrack} startInView />, {
+      wrapper: MemoryRouter,
+    });
+
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
+  });
+
+  test('card handles intersection observer callback', () => {
+    const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+      wrapper: MemoryRouter,
+    });
+
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeInTheDocument();
+  });
+
+  test('renders multiple recommendations and allows expanding/collapsing each', async () => {
+      const user = userEvent.setup();
+      const recommendation1 = new Recommendation()
+        .id('rec-1')
+        .authorInitials('P.S.')
+        .authorRole({ jobTitle: 'Engineering Manager' })
+        .text('Great work.')
+        .postedDate('2023-06-12')
+        .mock();
+      const recommendation2 = new Recommendation()
+        .id('rec-2')
+        .authorInitials('A.B.')
+        .authorRole({ jobTitle: 'Senior Manager' })
+        .text('Excellent collaboration.')
+        .postedDate('2023-12-15')
+        .mock();
+
+      const multiRecommendationEvent = {
+        ...event,
+        recommendations: [recommendation1, recommendation2],
+      };
+
+      const screen = render(
+        <TimelineEventCard event={multiRecommendationEvent} track={testTrack} />,
+        { wrapper: MemoryRouter }
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+      expect(
+        screen.getByRole('heading', {
+          level: 4,
+          name: 'Recommendations (2)',
+        })
+      ).toBeVisible();
+
+      // Both recommendations are visible with their content
+      expect(screen.getByText('"Great work."')).toBeVisible();
+      expect(screen.getByText('"Excellent collaboration."')).toBeVisible();
+      expect(screen.getByText('Engineering Manager')).toBeVisible();
+      expect(screen.getByText('Senior Manager')).toBeVisible();
+
+      // Can collapse and expand individual recommendations
+      const showRecommendationButtons = screen.getAllByRole('button', {
+        name: 'Show recommendation',
+      });
+
+      expect(showRecommendationButtons.length).toBeGreaterThanOrEqual(2);
+    });
+
+    test('renders all main content sections visible when expanded', async () => {
+      const user = userEvent.setup();
+      const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+        wrapper: MemoryRouter,
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+      await user.click(screen.getByRole('button', { name: 'Show key skills' }));
+
+      // All major sections should be visible (they are wrapped in max-width containers)
+      expect(screen.getByRole('heading', { level: 4, name: 'Responsibilities' })).toBeVisible();
+      expect(screen.getByRole('heading', { level: 4, name: 'Tech Stack' })).toBeVisible();
+      expect(screen.getByRole('heading', { level: 4, name: 'Key Skills' })).toBeVisible();
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('shows recommendations heading with count when expanded', async () => {
+      const user = userEvent.setup();
+      const secondRecommendation = new Recommendation()
+        .id('rec-2')
+        .authorInitials('A.B.')
+        .authorRole({ jobTitle: 'Senior Manager' })
+        .text('Excellent collaboration.')
+        .postedDate('2023-12-15')
+        .mock();
+
+      const multiRecommendationEvent = {
+        ...event,
+        recommendations: [recommendationItem, secondRecommendation],
+      };
+
+      const screen = render(
+        <TimelineEventCard event={multiRecommendationEvent} track={testTrack} />,
+        { wrapper: MemoryRouter }
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+      expect(
+        screen.getByRole('heading', {
+          level: 4,
+          name: 'Recommendations (2)',
+        })
+      ).toBeVisible();
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('reduces divider usage: no divider between responsibilities and tech stack', async () => {
+      const user = userEvent.setup();
+      const eventWithTechStack = {
+        ...event,
+        responsibilities: [
+          new Responsibility().id('job-1-r01').text('Lead frontend architecture').mock(),
+        ],
+      };
+
+      const screen = render(<TimelineEventCard event={eventWithTechStack} track={testTrack} />, {
+        wrapper: MemoryRouter,
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+      // Get all dividers in the CardContent
+      const allDividers = screen.container.querySelectorAll('.MuiDivider-root');
+
+      // There should be no dividers before the recommendations section in this card
+      // (this event has no recommendations, so no dividers at all)
+      expect(allDividers.length).toBe(0);
+    });
+
+    test('keeps divider only before recommendations section', async () => {
+      const user = userEvent.setup();
+      const eventWithRecommendations = {
+        ...event,
+        recommendations: [
+          new Recommendation()
+            .id('rec-1')
+            .authorInitials('P.S.')
+            .authorRole({ jobTitle: 'Engineering Manager' })
+            .text('Great work.')
+            .postedDate('2023-06-12')
+            .mock(),
+        ],
+      };
+
+      const screen = render(
+        <TimelineEventCard event={eventWithRecommendations} track={testTrack} />,
+        { wrapper: MemoryRouter }
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+      // There should be exactly one divider (before Recommendations)
+      const allDividers = screen.container.querySelectorAll('.MuiDivider-root');
+
+      expect(allDividers.length).toBe(1);
+
+      // The divider should be before the Recommendations section
+      const recommendationsHeading = screen.getByRole('heading', {
+        level: 4,
+        name: 'Recommendations (1)',
+      });
+
+      expect(recommendationsHeading).toBeVisible();
+    });
 });

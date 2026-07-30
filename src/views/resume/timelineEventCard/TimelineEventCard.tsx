@@ -2,11 +2,11 @@ import { Fragment, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import InsightsOutlinedIcon from '@mui/icons-material/InsightsOutlined';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
@@ -64,9 +64,8 @@ export const TimelineEventCard = ({
   const navigate = useNavigate();
   const duration = formatDuration(event.startDate, event.endDate);
   const theme = useTheme();
-  // Mobile cards run nearly the full viewport height, so the default threshold would need a
-  // long scroll before triggering; a lower threshold starts the fade as soon as the card peeks in.
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobileSkillsLayout = useMediaQuery(theme.breakpoints.down('md'));
   const { ref, isInView } = useInView<HTMLDivElement>({
     threshold: isMobile ? 0.05 : 0.15,
     initialInView: startInView,
@@ -84,9 +83,7 @@ export const TimelineEventCard = ({
   const isFocusMatch = highlightedEventId !== undefined && event.id === highlightedEventId;
   const isMatch = hasHighlightedSkill || hasHighlightedRecommendation || isFocusMatch;
 
-  // user toggle wins; otherwise deep-link matches and the first card render expanded
   const [isExpanded, setIsExpanded] = useCardExpand(isMatch || startExpanded);
-  // key skills sit behind a second expander; a skill deep link opens it
   const [areSkillsExpanded, setAreSkillsExpanded] = useCardExpand(hasHighlightedSkill);
 
   const cardNodeRef = useRef<HTMLDivElement | null>(null);
@@ -157,18 +154,26 @@ export const TimelineEventCard = ({
   // Nothing relevant to the active track — collapse to primary info only.
   const isBare = !hasResponsibilities && !hasTechStack && !hasSkills;
 
+  // Collapsed preview: skill/category count (e.g., "20+ skills across 4 categories")
+  const skillCount = event.skills.length;
+  const categoryCount = skillGroups.length;
+  const skillsTaster = `${skillCount}+ ${skillCount === 1 ? 'skill' : 'skills'} across ${categoryCount} ${
+    categoryCount === 1 ? 'category' : 'categories'
+  }`;
+
   const cardHeader = (
-    <CardHeader
-      title={event.companyName}
-      // Real h3 (visually h6) — keeps the hierarchy under the h2 "Work Experience".
-      slotProps={{
-        title: { variant: 'h6', component: 'h3' },
-        subheader: { variant: 'body2' },
-      }}
-      subheader={`${event.title} · ${event.location} · ${duration}${
-        overlapCaption !== undefined ? ` · ${overlapCaption}` : ''
-      }`}
-    />
+    <Box sx={{ px: 2, pt: 2, pb: 1 }}>
+      {/* Top row: company name + date range */}
+      <Typography variant="h6" component="h3" sx={{ mb: 0.5 }}>
+        {`${event.companyName} · ${duration}${
+          overlapCaption !== undefined ? ` · ${overlapCaption}` : ''
+        }`}
+      </Typography>
+      {/* Bottom row: role title + location */}
+      <Typography variant="body2" color="text.secondary">
+        {`${event.title} · ${event.location}`}
+      </Typography>
+    </Box>
   );
 
   if (isBare) {
@@ -184,21 +189,23 @@ export const TimelineEventCard = ({
   }
 
   const responsibilitiesSection = hasResponsibilities && (
-    <Section title={RESPONSIBILITIES_LABEL_BY_TYPE[event.type]} titleLevel={4}>
-      {event.responsibilities.length === 1 ? (
-        <Typography
-          variant="body2"
-          sx={{
-            lineHeight: 1.7,
-            letterSpacing: '0.3px',
-          }}
-        >
-          {event.responsibilities[0].text}
-        </Typography>
-      ) : (
-        <BulletList items={event.responsibilities.map((responsibility) => responsibility.text)} />
-      )}
-    </Section>
+    <Box sx={{ maxWidth: { xs: '750px', sm: '750px', md: 'none' } }}>
+      <Section title={RESPONSIBILITIES_LABEL_BY_TYPE[event.type]} titleLevel={4}>
+        {event.responsibilities.length === 1 ? (
+          <Typography
+            variant="body2"
+            sx={{
+              lineHeight: 1.7,
+              letterSpacing: '0.3px',
+            }}
+          >
+            {event.responsibilities[0].text}
+          </Typography>
+        ) : (
+          <BulletList items={event.responsibilities.map((responsibility) => responsibility.text)} />
+        )}
+      </Section>
+    </Box>
   );
 
   return (
@@ -214,39 +221,115 @@ export const TimelineEventCard = ({
       ]}
     >
       {cardHeader}
-      <CardContent>
+      <CardContent sx={{ px: { xs: 1.5, sm: 2, md: 3 } }}>
         <Collapse in={isExpanded} unmountOnExit>
           {responsibilitiesSection}
           {hasTechStack && (
-            <>
-              {hasResponsibilities && <Divider sx={{ my: 2 }} />}
+            <Box
+              sx={{
+                maxWidth: { xs: '750px', sm: '750px', md: 'none' },
+                ...(hasResponsibilities && { mt: 3 }),
+              }}
+            >
               <Section title="Tech Stack" titleLevel={4}>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{
-                    lineHeight: 1.7,
-                    letterSpacing: '0.3px',
-                  }}
-                >
-                  {event.techStack.map((skill) => skill.name).join(', ')}
-                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                  {track.categories.map((category) => {
+                    const categorySkills = event.techStack.filter((skill) =>
+                      category.subCategories.some((sub) => sub.skillIds.includes(skill.id))
+                    );
+
+                    if (categorySkills.length === 0) return null;
+
+                    const captionColour = resolveSkillColourMain(
+                      categoryColourFromIndex(
+                        track.categories.findIndex((c) => c.id === category.id)
+                      ),
+                      theme
+                    );
+
+                    return (
+                      <Box
+                        key={category.id}
+                        sx={{
+                          display: 'grid',
+                          gridTemplateColumns: 'auto 1fr',
+                          gap: 1,
+                          alignItems: 'baseline',
+                        }}
+                      >
+                        <Link
+                          component="button"
+                          type="button"
+                          variant="body2"
+                          underline="always"
+                          onClick={() => handleCategoryClick(category.id)}
+                          sx={{
+                            fontWeight: 'medium',
+                            whiteSpace: 'nowrap',
+                            color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
+                          }}
+                        >
+                          {`${category.name}:`}
+                        </Link>
+                        <Typography variant="caption" sx={{ lineHeight: 1.7 }}>
+                          {categorySkills.map((skill, index) => (
+                            <Fragment key={skill.id}>
+                              {!isMobileSkillsLayout && index > 0 && ', '}
+                              <Link
+                                component="button"
+                                type="button"
+                                variant="caption"
+                                underline="hover"
+                                onClick={() => handleSkillClick(skill.name)}
+                                sx={{
+                                  color: captionColour,
+                                  ...(isMobileSkillsLayout && {
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    minHeight: '44px',
+                                  }),
+                                }}
+                              >
+                                {skill.name}
+                              </Link>
+                            </Fragment>
+                          ))}
+                        </Typography>
+                      </Box>
+                    );
+                  })}
+                </Box>
               </Section>
-            </>
+            </Box>
           )}
           {hasSkills && (
-            <>
-              {(hasResponsibilities || hasTechStack) && <Divider sx={{ my: 2 }} />}
-              <Button
-                size="small"
-                aria-expanded={areSkillsExpanded}
-                startIcon={areSkillsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                onClick={() => setAreSkillsExpanded(!areSkillsExpanded)}
-              >
-                {areSkillsExpanded ? 'Hide key skills' : 'Show key skills'}
-              </Button>
-              <Collapse in={areSkillsExpanded} unmountOnExit>
-                <Section title="Key Skills" titleLevel={4}>
+            <Box
+              sx={{
+                maxWidth: { xs: '750px', sm: '750px', md: 'none' },
+                ...(hasResponsibilities && !hasTechStack && { mt: 3 }),
+                ...(hasTechStack && { mt: 3 }),
+              }}
+            >
+              <Section title="Key Skills" titleLevel={4}>
+                <Button
+                  variant="text"
+                  size="small"
+                  aria-expanded={areSkillsExpanded}
+                  startIcon={areSkillsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  onClick={() => setAreSkillsExpanded(!areSkillsExpanded)}
+                >
+                  {areSkillsExpanded ? 'Hide key skills' : 'Show key skills'}
+                </Button>
+                {!areSkillsExpanded && (
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ display: 'block', mt: 0.5 }}
+                  >
+                    {skillsTaster}
+                  </Typography>
+                )}
+                <Collapse in={areSkillsExpanded} unmountOnExit>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                     {skillGroups.map((group) => {
                       const captionColour = resolveSkillColourMain(
@@ -257,17 +340,22 @@ export const TimelineEventCard = ({
                       return (
                         <Box
                           key={group.category.id}
-                          sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}
+                          sx={{
+                            display: 'grid',
+                            gridTemplateColumns: 'auto 1fr',
+                            gap: 1,
+                            alignItems: 'baseline',
+                          }}
                         >
                           <Link
                             component="button"
                             type="button"
-                            variant="caption"
-                            underline="hover"
+                            variant="body2"
+                            underline="always"
                             onClick={() => handleCategoryClick(group.category.id)}
                             sx={{
                               fontWeight: 'medium',
-                              flexShrink: 0,
+                              whiteSpace: 'nowrap',
                               color: (cardTheme) => alpha(cardTheme.palette.text.secondary, 0.7),
                             }}
                           >
@@ -276,14 +364,23 @@ export const TimelineEventCard = ({
                           <Typography variant="caption" sx={{ lineHeight: 1.7 }}>
                             {group.skills.map((skill, index) => (
                               <Fragment key={skill.id}>
-                                {index > 0 && ', '}
+                                {/* Comma separator only on desktop (md+) */}
+                                {!isMobileSkillsLayout && index > 0 && ', '}
                                 <Link
                                   component="button"
                                   type="button"
                                   variant="caption"
                                   underline="hover"
                                   onClick={() => handleSkillClick(skill.name)}
-                                  sx={{ color: captionColour }}
+                                  sx={{
+                                    color: captionColour,
+                                    // Mobile: stack vertically, 44px tap target
+                                    ...(isMobileSkillsLayout && {
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      minHeight: '44px',
+                                    }),
+                                  }}
                                 >
                                   {skill.name}
                                 </Link>
@@ -294,40 +391,48 @@ export const TimelineEventCard = ({
                       );
                     })}
                   </Box>
-                  <Button size="small" onClick={handleViewAllSkillsClick} sx={{ mt: 1.5 }}>
+                  <Button
+                    size="small"
+                    onClick={handleViewAllSkillsClick}
+                    endIcon={<InsightsOutlinedIcon />}
+                    sx={{ mt: 1.5 }}
+                  >
                     {"View this role's skills on the graph"}
                   </Button>
-                </Section>
-              </Collapse>
-            </>
+                </Collapse>
+              </Section>
+            </Box>
           )}
           {hasRecommendations && (
             <>
               <Divider sx={{ my: 2 }} />
-              <Section title={`Recommendations (${event.recommendations.length})`} titleLevel={4}>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns:
-                      event.recommendations.length > 1
-                        ? { xs: '1fr', sm: 'repeat(2, 1fr)' }
-                        : '1fr',
-                    gap: 1,
-                  }}
-                >
-                  {event.recommendations.map((recommendation) => (
-                    <RecommendationText
-                      key={recommendation.id}
-                      recommendation={recommendation}
-                      isHighlighted={recommendation.id === highlightedRecommendationId}
-                    />
-                  ))}
-                </Box>
-              </Section>
+              <Box sx={{ maxWidth: { xs: '750px', sm: '750px', md: 'none' } }}>
+                <Section title={`Recommendations (${event.recommendations.length})`} titleLevel={4}>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns:
+                        event.recommendations.length > 1
+                          ? { xs: '1fr', sm: '1fr', md: 'repeat(2, 1fr)' }
+                          : '1fr',
+                      gap: 1,
+                    }}
+                  >
+                    {event.recommendations.map((recommendation) => (
+                      <RecommendationText
+                        key={recommendation.id}
+                        recommendation={recommendation}
+                        isHighlighted={recommendation.id === highlightedRecommendationId}
+                      />
+                    ))}
+                  </Box>
+                </Section>
+              </Box>
             </>
           )}
         </Collapse>
         <Button
+          variant="outlined"
           size="small"
           aria-expanded={isExpanded}
           startIcon={isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}

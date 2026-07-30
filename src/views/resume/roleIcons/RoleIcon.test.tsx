@@ -49,4 +49,22 @@ describe('RoleIcon', () => {
       screen.unmount();
     });
   });
+
+  test('applies circular mask styling and consistent sizing to education logos', () => {
+    const event = new TimelineEvent()
+      .id('city-st-georges-university-of-london-2011-09')
+      .type('education')
+      .companyName("City St George's, University of London")
+      .mock();
+
+    const screen = render(<RoleIcon event={event} />);
+
+    const logo = screen.getByRole('img', { name: "City St George's, University of London logo" });
+
+    expect(logo).toHaveStyle('border-radius: 50%');
+    expect(logo).toHaveStyle('object-fit: cover');
+    expect(logo).toHaveStyle('overflow: hidden');
+    expect(logo).toHaveStyle('width: 20px');
+    expect(logo).toHaveStyle('height: 20px');
+  });
 });

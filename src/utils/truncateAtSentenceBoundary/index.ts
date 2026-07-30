@@ -1,0 +1,1 @@
+export { truncateAtSentenceBoundary } from './truncateAtSentenceBoundary';

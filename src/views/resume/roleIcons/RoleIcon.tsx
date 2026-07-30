@@ -17,7 +17,14 @@ export const RoleIcon = ({ event }: RoleIconProps) => {
         component="img"
         src={logo}
         alt={`${event.companyName} logo`}
-        sx={{ width: 20, height: 20, display: 'block', objectFit: 'contain' }}
+        sx={{
+          width: 20,
+          height: 20,
+          display: 'block',
+          objectFit: 'cover',
+          borderRadius: '50%',
+          overflow: 'hidden',
+        }}
       />
     );
   }

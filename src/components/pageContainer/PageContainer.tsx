@@ -10,6 +10,7 @@ export const PageContainer = ({ children }: PageContainerProps) => {
     <Container
       maxWidth="lg"
       sx={(theme) => ({
+        position: 'relative',
         py: 4,
         [theme.breakpoints.up('xl')]: {
           maxWidth: theme.breakpoints.values.md,

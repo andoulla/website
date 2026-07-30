@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import CheckIcon from '@mui/icons-material/Check';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import InsightsOutlinedIcon from '@mui/icons-material/InsightsOutlined';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import PaletteIcon from '@mui/icons-material/Palette';
 import TuneIcon from '@mui/icons-material/Tune';
@@ -15,6 +18,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
 import { NavLink, useSearchParams } from 'react-router-dom';
 
@@ -53,18 +57,27 @@ export const NavBar = () => {
           columnGap: 1,
         }}
       >
-        {/* Empty spacer mirrors the controls column's grid track so the nav links land in the
-            true center of the toolbar, however wide the controls column ends up being. */}
-        <Box />
-        <Stack direction="row" spacing={3} sx={{ justifySelf: 'center' }}>
+        <Typography variant="body1" sx={{ fontWeight: 700 }}>
+          MS
+        </Typography>
+        <Stack direction="row" spacing={3} sx={{ justifySelf: 'center', alignItems: 'center' }}>
           <NavLink to={`/${trackSearch}`} end style={navLinkStyle}>
-            Home
+            <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
+              <HomeOutlinedIcon sx={{ fontSize: 20 }} />
+              Home
+            </Stack>
           </NavLink>
           <NavLink to={`/skills${trackSearch}`} style={navLinkStyle}>
-            Skills
+            <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
+              <InsightsOutlinedIcon sx={{ fontSize: 20 }} />
+              Skills
+            </Stack>
           </NavLink>
           <NavLink to="/articles" style={navLinkStyle}>
-            Articles
+            <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
+              <ArticleOutlinedIcon sx={{ fontSize: 20 }} />
+              Articles
+            </Stack>
           </NavLink>
         </Stack>
         <Box sx={{ justifySelf: 'end' }}>

@@ -4,6 +4,7 @@ import { axe } from 'jest-axe';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { CareerDataContextProvider } from '@/context/careerData';
+import { ThemeContextProvider } from '@/context/theme';
 import { TrackContextProvider } from '@/context/track';
 import { Recommendation, Responsibility, Skill, TimelineEvent } from '@/testing';
 import type { TimelineEventWithRecommendations } from '@/types';
@@ -30,14 +31,16 @@ async function renderResume(
 
   await act(async () => {
     result = render(
-      <MemoryRouter initialEntries={initialEntries}>
-        <TrackContextProvider>
-          <CareerDataContextProvider loader={loader}>
-            <Resume />
-            <LocationDisplay />
-          </CareerDataContextProvider>
-        </TrackContextProvider>
-      </MemoryRouter>
+      <ThemeContextProvider>
+        <MemoryRouter initialEntries={initialEntries}>
+          <TrackContextProvider>
+            <CareerDataContextProvider loader={loader}>
+              <Resume />
+              <LocationDisplay />
+            </CareerDataContextProvider>
+          </TrackContextProvider>
+        </MemoryRouter>
+      </ThemeContextProvider>
     );
     await Promise.resolve();
   });
@@ -47,12 +50,12 @@ async function renderResume(
 
 describe('Resume', () => {
   test('shows the loading state until the data resolves', async () => {
-    // A promise that never settles keeps the component suspended on the fallback.
     const screen = await renderResume(
       () => new Promise<TimelineEventWithRecommendations[]>(() => undefined)
     );
 
     expect(screen.getByRole('status', { name: 'Loading timeline' })).toBeVisible();
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('renders the name heading and every job once the data resolves', async () => {
@@ -60,12 +63,12 @@ describe('Resume', () => {
 
     expect(document.title).toBe('Mariandi Stylianou — Resume');
     expect(screen.getByRole('heading', { level: 1, name: 'Mariandi Stylianou' })).toBeVisible();
-    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
-    expect(screen.getByText('Brightleaf Software')).toBeVisible();
-    expect(screen.getByText('Harborview Digital')).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
+    expect(screen.getByText('Brightleaf Software · Apr 2022 – Present')).toBeVisible();
+    expect(screen.getByText('Harborview Digital · Apr 2022 – Present')).toBeVisible();
 
-    // each timeline dot's tooltip explains its icon by event type
     expect(screen.getAllByLabelText('Job')).toHaveLength(3);
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('renders a tab per track with General selected by default, normalising the url', async () => {
@@ -76,6 +79,7 @@ describe('Resume', () => {
       screen.getByRole('tab', { name: 'Lead / Engineering Manager', selected: false })
     ).toBeVisible();
     expect(screen.getByRole('tab', { name: 'Senior Engineer', selected: false })).toBeVisible();
+    expect(screen.getByText('View for:')).toBeVisible();
     expect(screen.getByText('location:/?track=general')).toBeVisible();
   });
 
@@ -126,22 +130,8 @@ describe('Resume', () => {
 
     // team-leadership is not in the senior-engineer track either — the card collapses bare.
     expect(screen.queryByText('Team Leadership')).not.toBeInTheDocument();
-    expect(screen.getByText('Meridian Dynamics')).toBeVisible();
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
     expect(screen.getByText('location:/?track=senior-engineer')).toBeVisible();
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations in the loading state', async () => {
-    const screen = await renderResume(
-      () => new Promise<TimelineEventWithRecommendations[]>(() => undefined)
-    );
-
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations in the loaded state', async () => {
-    const screen = await renderResume(() => Promise.resolve(testCareerHistory));
-
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
@@ -173,7 +163,7 @@ describe('Resume', () => {
 
     expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
     expect(scrollIntoViewSpy.mock.instances[0]).toBe(
-      screen.getByText('Brightleaf Software').closest('.MuiCard-root')
+      screen.getByText('Brightleaf Software · Apr 2023 – Present').closest('.MuiCard-root')
     );
 
     scrollIntoViewSpy.mockRestore();
@@ -261,7 +251,7 @@ describe('Resume', () => {
 
     expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
     expect(scrollIntoViewSpy.mock.instances[0]).toBe(
-      screen.getByText('Meridian Dynamics').closest('.MuiCard-root')
+      screen.getByText('Meridian Dynamics · Apr 2021 – Apr 2022').closest('.MuiCard-root')
     );
 
     scrollIntoViewSpy.mockRestore();
@@ -291,7 +281,9 @@ describe('Resume', () => {
       [{ pathname: '/', search: '?focus=job-2' }]
     );
 
-    expect(screen.getByText('Brightleaf Software').closest('.MuiCard-root')).toHaveStyle({
+    expect(
+      screen.getByText('Brightleaf Software · Apr 2023 – Present').closest('.MuiCard-root')
+    ).toHaveStyle({
       outlineOffset: '2px',
     });
     expect(screen.getByText('Shipped the checkout flow')).toBeVisible();

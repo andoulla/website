@@ -6,9 +6,10 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { alpha, lighten, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import type { Recommendation } from '@/types';
+import { truncateAtSentenceBoundary } from '@/utils/truncateAtSentenceBoundary';
 
 import { recommendationElementId } from '../TimelineEventCard.helpers';
 
@@ -19,6 +20,9 @@ export interface RecommendationTextProps {
   isHighlighted?: boolean;
 }
 
+// Maximum character length before truncation at sentence/clause boundary
+const MAX_PREVIEW_LENGTH = 300;
+
 export const RecommendationText = ({
   recommendation,
   isHighlighted = false,
@@ -28,6 +32,12 @@ export const RecommendationText = ({
   const [userExpanded, setUserExpanded] = useState<boolean | null>(null);
   const isClamped = !(userExpanded ?? isHighlighted);
   const clampLines = theme.density === 'comfortable' ? 4 : 3;
+
+  // Truncate text at sentence/clause boundary for preview
+  const previewText = useMemo(
+    () => truncateAtSentenceBoundary(recommendation.text, MAX_PREVIEW_LENGTH),
+    [recommendation.text]
+  );
 
   return (
     <Box
@@ -41,6 +51,9 @@ export const RecommendationText = ({
         pl: 1.5,
         py: 0.5,
         m: 0,
+        // Stretch to fill grid cell height
+        display: 'flex',
+        flexDirection: 'column',
         ...(isHighlighted && { backgroundColor: alpha(theme.palette.primary.main, 0.08) }),
       }}
     >
@@ -49,6 +62,7 @@ export const RecommendationText = ({
         sx={{
           lineHeight: 1.7,
           letterSpacing: '0.3px',
+          flex: 1,
           // clamp is visual only — screen readers always get the full quote
           ...(isClamped && {
             display: '-webkit-box',
@@ -58,18 +72,18 @@ export const RecommendationText = ({
           }),
         }}
       >
-        {`"${recommendation.text}"`}
+        {`"${isClamped ? previewText : recommendation.text}"`}
       </Typography>
       <Button
+        variant="text"
         size="small"
         aria-expanded={!isClamped}
         startIcon={isClamped ? <ExpandMoreIcon /> : <ExpandLessIcon />}
         onClick={() => setUserExpanded(isClamped)}
-        sx={{ minWidth: 0, px: 0.5, mb: 0.5 }}
       >
-        {isClamped ? 'More' : 'Less'}
+        {isClamped ? 'Show recommendation' : 'Hide recommendation'}
       </Button>
-      <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
+      <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', mt: 0.75 }}>
         <Avatar
           sx={{
             width: 18,
