@@ -19,7 +19,7 @@ describe('RecommendationText', () => {
     const screen = render(<RecommendationText recommendation={recommendation} />);
 
     expect(screen.getByText('"Great work."')).toBeVisible();
-    expect(screen.getByText('P.S.')).toBeVisible();
+    expect(screen.getAllByText('P.S.')).toHaveLength(2);
     expect(screen.getByText('Engineering Manager')).toBeVisible();
     expect(screen.getByText('15 Jan 2022')).toBeVisible();
     expect(document.getElementById('recommendation-rec-1')).toBe(

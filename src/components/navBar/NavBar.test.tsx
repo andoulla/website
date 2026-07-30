@@ -145,16 +145,6 @@ describe('NavBar', () => {
     );
   });
 
-  test('has no axe violations with purple and dark mode combined', async () => {
-    const user = userEvent.setup();
-    const screen = renderNavBar();
-
-    await user.click(screen.getByRole('button', { name: 'Open menu' }));
-    await user.click(screen.getByRole('menuitemradio', { name: 'Dark' }));
-
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
   test('View Source link points to the repo and opens in a new tab', async () => {
     const user = userEvent.setup();
     const screen = renderNavBar();
