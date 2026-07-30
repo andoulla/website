@@ -984,7 +984,7 @@ describe('TimelineEventCard', () => {
       expect(await axe(screen.container)).toHaveNoViolations();
     });
 
-    test('renders recommendations section with proper structure', async () => {
+    test('shows recommendations heading with count when expanded', async () => {
       const user = userEvent.setup();
       const secondRecommendation = new Recommendation()
         .id('rec-2')
@@ -1006,13 +1006,12 @@ describe('TimelineEventCard', () => {
 
       await user.click(screen.getByRole('button', { name: 'Show details' }));
 
-      // Verify recommendations section exists and is visible
-      const recommendationsHeading = screen.getByRole('heading', {
-        level: 4,
-        name: 'Recommendations (2)',
-      });
-
-      expect(recommendationsHeading).toBeVisible();
+      expect(
+        screen.getByRole('heading', {
+          level: 4,
+          name: 'Recommendations (2)',
+        })
+      ).toBeVisible();
       expect(await axe(screen.container)).toHaveNoViolations();
     });
 
