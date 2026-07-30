@@ -28,8 +28,8 @@ jobs:
       - name: Lint
         run: yarn lint
 
-  ci:
-    name: Format check, typecheck, test, build
+  format:
+    name: Format check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -46,6 +46,22 @@ jobs:
 
       - name: Format check
         run: yarn format:check
+
+  ci:
+    name: Typecheck, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Typecheck
         run: yarn typecheck
