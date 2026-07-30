@@ -11,7 +11,7 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   reporters: [
     'default',
-    '<rootDir>/jest/failedTestsReporter.cjs',
+    'summary-reporter',
   ],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',

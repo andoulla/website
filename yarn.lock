@@ -6054,6 +6054,11 @@ stylis@4.2.0:
   resolved "https://registry.yarnpkg.com/stylis/-/stylis-4.2.0.tgz#79daee0208964c8fe695a42fcffcac633a211a51"
   integrity sha512-Orov6g6BB1sDfYgzWfTHDOxamtX1bE/zo104Dh9e6fqJ3PooipYyfJ0pUmrZO2wAvO8YbEyeFrkV91XTsGMSrw==
 
+summary-reporter@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/summary-reporter/-/summary-reporter-1.0.1.tgz#f876aa6c75e3c152a238b141117c384fcc22b9ea"
+  integrity sha512-OSaNgeHHMMwd2e2oy4WzqN3hqCF18GfnTN+1SmwvhrLfyF7Whx8MsC8w1dpNFZBBULNGumHnNBO37/ZarV5r5w==
+
 supports-color@^7.1.0:
   version "7.2.0"
   resolved "https://registry.npmjs.org/supports-color/-/supports-color-7.2.0.tgz"
