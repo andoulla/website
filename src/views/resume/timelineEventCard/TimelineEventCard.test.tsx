@@ -877,48 +877,45 @@ describe('TimelineEventCard', () => {
     );
   });
 
-  describe('scroll-fade animation', () => {
-    // Global mock auto-fires isIntersecting: true; silent one reproduces "not yet reported".
-    class SilentIntersectionObserver {
-      observe = jest.fn();
-      unobserve = jest.fn();
-      disconnect = jest.fn();
-      takeRecords = (): IntersectionObserverEntry[] => [];
-      root = null;
-      rootMargin = '';
-      thresholds: ReadonlyArray<number> = [];
-    }
+  // Global mock auto-fires isIntersecting: true; silent one reproduces "not yet reported".
+  class SilentIntersectionObserver {
+    observe = jest.fn();
+    unobserve = jest.fn();
+    disconnect = jest.fn();
+    takeRecords = (): IntersectionObserverEntry[] => [];
+    root = null;
+    rootMargin = '';
+    thresholds: ReadonlyArray<number> = [];
+  }
 
-    const originalIntersectionObserver = global.IntersectionObserver;
+  const originalIntersectionObserver = global.IntersectionObserver;
 
-    beforeEach(() => {
-      global.IntersectionObserver =
-        SilentIntersectionObserver as unknown as typeof IntersectionObserver;
-    });
-
-    afterEach(() => {
-      global.IntersectionObserver = originalIntersectionObserver;
-    });
-
-    test('card renders when startInView is true', () => {
-      const screen = render(<TimelineEventCard event={event} track={testTrack} startInView />, {
-        wrapper: MemoryRouter,
-      });
-
-      expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
-    });
-
-    test('card handles intersection observer callback', () => {
-      const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
-        wrapper: MemoryRouter,
-      });
-
-      expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeInTheDocument();
-    });
+  beforeEach(() => {
+    global.IntersectionObserver =
+      SilentIntersectionObserver as unknown as typeof IntersectionObserver;
   });
 
-  describe('layout and spacing', () => {
-    test('renders multiple recommendations and allows expanding/collapsing each', async () => {
+  afterEach(() => {
+    global.IntersectionObserver = originalIntersectionObserver;
+  });
+
+  test('card renders when startInView is true', () => {
+    const screen = render(<TimelineEventCard event={event} track={testTrack} startInView />, {
+      wrapper: MemoryRouter,
+    });
+
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
+  });
+
+  test('card handles intersection observer callback', () => {
+    const screen = render(<TimelineEventCard event={event} track={testTrack} />, {
+      wrapper: MemoryRouter,
+    });
+
+    expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeInTheDocument();
+  });
+
+  test('renders multiple recommendations and allows expanding/collapsing each', async () => {
       const user = userEvent.setup();
       const recommendation1 = new Recommendation()
         .id('rec-1')
@@ -1073,5 +1070,4 @@ describe('TimelineEventCard', () => {
 
       expect(recommendationsHeading).toBeVisible();
     });
-  });
 });
