@@ -50,12 +50,12 @@ async function renderResume(
 
 describe('Resume', () => {
   test('shows the loading state until the data resolves', async () => {
-    // A promise that never settles keeps the component suspended on the fallback.
     const screen = await renderResume(
       () => new Promise<TimelineEventWithRecommendations[]>(() => undefined)
     );
 
     expect(screen.getByRole('status', { name: 'Loading timeline' })).toBeVisible();
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('renders the name heading and every job once the data resolves', async () => {
@@ -67,8 +67,8 @@ describe('Resume', () => {
     expect(screen.getByText('Brightleaf Software · Apr 2022 – Present')).toBeVisible();
     expect(screen.getByText('Harborview Digital · Apr 2022 – Present')).toBeVisible();
 
-    // each timeline dot's tooltip explains its icon by event type
     expect(screen.getAllByLabelText('Job')).toHaveLength(3);
+    expect(await axe(screen.container)).toHaveNoViolations();
   });
 
   test('renders a tab per track with General selected by default, normalising the url', async () => {
@@ -132,20 +132,6 @@ describe('Resume', () => {
     expect(screen.queryByText('Team Leadership')).not.toBeInTheDocument();
     expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
     expect(screen.getByText('location:/?track=senior-engineer')).toBeVisible();
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations in the loading state', async () => {
-    const screen = await renderResume(
-      () => new Promise<TimelineEventWithRecommendations[]>(() => undefined)
-    );
-
-    expect(await axe(screen.container)).toHaveNoViolations();
-  });
-
-  test('has no axe violations in the loaded state', async () => {
-    const screen = await renderResume(() => Promise.resolve(testCareerHistory));
-
     expect(await axe(screen.container)).toHaveNoViolations();
   });
 
