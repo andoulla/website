@@ -1,7 +1,6 @@
 # Code style
 
 - One component/util per folder: `ComponentName.tsx`, co-located `ComponentName.test.tsx`, and an `index.ts` barrel export. See [src/components/tagList/](../../src/components/tagList/) for the pattern.
-- **Never create new folders in `src/components/` for a single-owner child.** Always nest single-owner components under their parent (e.g. `TimelineEventCard/SkillCategoryLegend/`, never `src/components/SkillCategoryLegend/` if only TimelineEventCard uses it). Only lift to `src/components/` if genuinely shared by 2+ unrelated owners.
 - Never import across sibling or cousin folders (e.g. `../otherComponent`, or reaching from one view's sub-component into another's). See the nesting convention in [CLAUDE.md](../../CLAUDE.md) for where single-owner code should live instead.
 - If code is shared by multiple owners, lift it to a common ancestor — usually within the same top-level directory, not straight to `src/components/` (e.g. two `views/skills/*` sub-views sharing UI nest at `views/skills/<name>/`, not `src/components/<name>/`).
 - Enforced by the local ESLint rule [no-sibling-folder-imports](../../eslint-local-rules/no-sibling-folder-imports.cjs): same-subtree and into-ancestor imports are fine, and so is crossing between top-level `src/*` directories — but only in one direction.

@@ -11,11 +11,9 @@ export const truncateAtSentenceBoundary = (text: string, maxLength: number): str
     return text;
   }
 
-  // Search within the first maxLength characters for the nearest boundary
   const searchText = text.substring(0, maxLength);
 
-  // Look for sentence boundaries first (highest priority)
-  // These are complete thoughts, so no ellipsis needed
+  // Sentence boundaries (., ?, !) — complete, so no ellipsis
   const sentencePatterns = ['. ', '? ', '! '];
 
   for (const pattern of sentencePatterns) {
@@ -26,21 +24,20 @@ export const truncateAtSentenceBoundary = (text: string, maxLength: number): str
     }
   }
 
-  // If no sentence boundary found, look for comma boundaries (clause boundaries)
-  // These are incomplete, so add ellipsis
+  // Comma boundaries — incomplete, so add ellipsis
   const lastCommaIndex = searchText.lastIndexOf(',');
 
   if (lastCommaIndex !== -1) {
     return searchText.substring(0, lastCommaIndex + 1) + '…';
   }
 
-  // Fallback: truncate at word boundary
+  // Word boundary
   const lastSpaceIndex = searchText.lastIndexOf(' ');
 
   if (lastSpaceIndex !== -1) {
     return searchText.substring(0, lastSpaceIndex) + '…';
   }
 
-  // Last resort: hard truncate
+  // Hard truncate as last resort
   return searchText.substring(0, maxLength - 1) + '…';
 };
