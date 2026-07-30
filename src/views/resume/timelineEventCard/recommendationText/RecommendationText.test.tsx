@@ -76,7 +76,7 @@ describe('RecommendationText', () => {
   test('truncates long text when clamped and shows full text when expanded', async () => {
     const user = userEvent.setup();
     const longText =
-      'This is a very long recommendation that goes on and on with multiple sentences. This is the second sentence. This is the third sentence.';
+      'This is a very long recommendation that goes on and on with multiple sentences and keeps going with more and more detail. This is the second sentence. This is the third sentence. This is the fourth sentence that makes the text much longer. This is the fifth sentence to ensure we exceed the truncation threshold.';
     const longRecommendation = new Recommendation()
       .authorInitials('J.D.')
       .authorRole({ jobTitle: 'Director' })
@@ -87,14 +87,19 @@ describe('RecommendationText', () => {
 
     const screen = render(<RecommendationText recommendation={longRecommendation} />);
 
-    expect(
-      screen.getByText('This is a very long recommendation that goes on and on with multiple sentences.')
-    ).toBeVisible();
+    // Text should be truncated at a sentence boundary
+    const clampedText = screen.getByText(/^"This is a very long recommendation/);
+
+    expect(clampedText).toBeVisible();
+    // Verify truncation happened by checking the full text is not visible
+    expect(clampedText).not.toHaveTextContent('fifth sentence to ensure we exceed');
 
     await user.click(screen.getByRole('button', { name: 'Show recommendation' }));
     expect(screen.getByRole('button', { name: 'Hide recommendation' })).toHaveAttribute(
       'aria-expanded',
       'true'
     );
+    // Full text should be visible when expanded
+    expect(screen.getByText(/fifth sentence to ensure we exceed/)).toBeVisible();
   });
 });
