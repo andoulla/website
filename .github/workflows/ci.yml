@@ -129,8 +129,9 @@ jobs:
             -H "Content-Type: application/json" \
             --data-binary @-
 
-  ci:
+  build:
     name: Build
+    needs: [lint, format, typecheck, test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
