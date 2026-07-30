@@ -87,7 +87,9 @@ describe('RecommendationText', () => {
 
     const screen = render(<RecommendationText recommendation={longRecommendation} />);
 
-    expect(screen.getByText(/This is a very long recommendation/)).toBeVisible();
+    expect(
+      screen.getByText('This is a very long recommendation that goes on and on with multiple sentences.')
+    ).toBeVisible();
 
     await user.click(screen.getByRole('button', { name: 'Show recommendation' }));
     expect(screen.getByRole('button', { name: 'Hide recommendation' })).toHaveAttribute(

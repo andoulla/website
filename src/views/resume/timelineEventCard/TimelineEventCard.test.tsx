@@ -468,7 +468,7 @@ describe('TimelineEventCard', () => {
 
       expect(
         screen
-          .getByRole('heading', { level: 3, name: /Meridian Dynamics/ })
+          .getByRole('heading', { level: 3, name: 'Meridian Dynamics · Apr 2022 – Present' })
           .closest('.MuiCard-root')
       ).toHaveStyle({
         outlineOffset: '2px',
@@ -483,7 +483,7 @@ describe('TimelineEventCard', () => {
 
       expect(
         screen
-          .getByRole('heading', { level: 3, name: /Meridian Dynamics/ })
+          .getByRole('heading', { level: 3, name: 'Meridian Dynamics · Apr 2022 – Present' })
           .closest('.MuiCard-root')
       ).not.toHaveStyle({
         outlineOffset: '2px',
@@ -515,7 +515,7 @@ describe('TimelineEventCard', () => {
 
       expect(
         screen
-          .getByRole('heading', { level: 3, name: /Meridian Dynamics/ })
+          .getByRole('heading', { level: 3, name: 'Meridian Dynamics · Apr 2022 – Present' })
           .closest('.MuiCard-root')
       ).toHaveStyle({
         outlineOffset: '2px',
@@ -531,7 +531,7 @@ describe('TimelineEventCard', () => {
 
       expect(
         screen
-          .getByRole('heading', { level: 3, name: /Meridian Dynamics/ })
+          .getByRole('heading', { level: 3, name: 'Meridian Dynamics · Apr 2022 – Present' })
           .closest('.MuiCard-root')
       ).not.toHaveStyle({
         outlineOffset: '2px',
@@ -590,7 +590,7 @@ describe('TimelineEventCard', () => {
 
       expect(
         screen
-          .getByRole('heading', { level: 3, name: /Meridian Dynamics/ })
+          .getByRole('heading', { level: 3, name: 'Meridian Dynamics · Apr 2022 – Present' })
           .closest('.MuiCard-root')
       ).toHaveStyle({
         outlineOffset: '2px',
