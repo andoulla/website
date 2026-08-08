@@ -45,15 +45,25 @@ export const ArticleTile = memo(({ article }: ArticleTileProps) => {
           <Typography variant="h6" component="h2" sx={lineClampSx(2)}>
             {article.title}
           </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1, mb: 1 }}>
+            {formatDate(article.publishedDate)}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              mb: article.imageUrl !== undefined ? 1 : 0,
+              opacity: 0.8,
+              ...lineClampSx(2),
+            }}
+          >
+            {article.excerpt}
+          </Typography>
           {article.imageUrl !== undefined && (
             <Box
               sx={{
-                position: 'relative',
-                mt: 1,
-                mb: 1,
                 borderRadius: 1,
                 overflow: 'hidden',
-                backgroundColor: 'action.hover',
+                mb: 2,
               }}
             >
               <CardMedia
@@ -63,39 +73,8 @@ export const ArticleTile = memo(({ article }: ArticleTileProps) => {
                 alt=""
                 sx={{ height: 200, objectFit: 'cover', display: 'block' }}
               />
-              <Box
-                sx={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)',
-                  padding: '8px 12px',
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                }}
-              >
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: '#ffffff',
-                    fontWeight: 500,
-                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                  }}
-                >
-                  {formatDate(article.publishedDate)}
-                </Typography>
-              </Box>
             </Box>
           )}
-          {article.imageUrl === undefined && (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1, mb: 2 }}>
-              {formatDate(article.publishedDate)}
-            </Typography>
-          )}
-          <Typography variant="body2" sx={lineClampSx(3)}>
-            {article.excerpt}
-          </Typography>
           <Box sx={{ mt: 'auto', pt: 1.5 }}>
             <TagList items={article.tags} getColour={getTagColour} variant="outlined" />
           </Box>

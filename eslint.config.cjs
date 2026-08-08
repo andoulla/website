@@ -5,7 +5,7 @@ const reactHooksPlugin = require('eslint-plugin-react-hooks');
 const jsxA11yPlugin = require('eslint-plugin-jsx-a11y');
 const importPlugin = require('eslint-plugin-import');
 const prettierPlugin = require('eslint-plugin-prettier');
-const localPlugin = require('./eslint-local-rules/index.js');
+const localPlugin = require('./eslint-local-rules/index.cjs');
 
 module.exports = [
   {
