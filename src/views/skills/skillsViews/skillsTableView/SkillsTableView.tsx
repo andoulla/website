@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
+import { DensityToggle } from '@/components/densityToggle';
 import { hasSearchTerm } from '@/utils/hasSearchTerm';
 import { skillMatchesSearch } from '@/utils/skillMatchesSearch';
 import { SkillsEmptyState } from '@/views/skills/skillsEmptyState';
@@ -11,6 +14,7 @@ import { useSkillsViewContext } from '../SkillsViewContext';
 
 import { groupSkillsByTrack, skillElementId } from './SkillsTableView.helpers';
 import { SkillsTable } from './skillsTable';
+import { SkillsMobileCardView } from './skillsMobileCardView';
 
 const TABLE_SKELETON_GROUPS: number[] = [3, 2, 3];
 
@@ -36,13 +40,16 @@ export const SkillsTableView = () => {
   const { track, filteredSkills, highlightedSkills, searchTerm, onClearFilters } =
     useSkillsViewContext();
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // <600px
+
   const innerRef = useRef<HTMLDivElement>(null);
   const [tableHeight, setTableHeight] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     const el = innerRef.current;
 
-    if (!el) return;
+    if (!el || isMobile) return; // Skip height tracking on mobile
 
     const observer = new ResizeObserver(([entry]) => {
       if (entry !== undefined) setTableHeight(entry.contentRect.height);
@@ -51,7 +58,7 @@ export const SkillsTableView = () => {
     observer.observe(el);
 
     return () => observer.disconnect();
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
     if (highlightedSkills.length === 0) return;
@@ -76,17 +83,29 @@ export const SkillsTableView = () => {
     );
   }
 
+  // Render mobile card view on small screens
+  if (isMobile) {
+    return <SkillsMobileCardView categoryGroups={categoryGroups} highlightedSkills={highlightedSkills} />;
+  }
+
+  // Render desktop table view
   return (
-    <Box
-      sx={{
-        height: tableHeight,
-        transition: tableHeight !== undefined ? 'height 250ms ease-out' : 'none',
-        overflow: 'hidden',
-      }}
-    >
-      <div ref={innerRef}>
-        <SkillsTable categoryGroups={categoryGroups} highlightedSkills={highlightedSkills} />
-      </div>
-    </Box>
+    <>
+      {/* Sits directly above the table it controls — row density is its most visible effect. */}
+      <Stack direction="row" sx={{ justifyContent: 'flex-end', mb: 1 }}>
+        <DensityToggle />
+      </Stack>
+      <Box
+        sx={{
+          height: tableHeight,
+          transition: tableHeight !== undefined ? 'height 250ms ease-out' : 'none',
+          overflow: 'hidden',
+        }}
+      >
+        <div ref={innerRef}>
+          <SkillsTable categoryGroups={categoryGroups} highlightedSkills={highlightedSkills} />
+        </div>
+      </Box>
+    </>
   );
 };

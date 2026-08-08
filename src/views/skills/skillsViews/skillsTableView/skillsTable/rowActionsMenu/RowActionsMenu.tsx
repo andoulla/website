@@ -3,6 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Tooltip from '@mui/material/Tooltip';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { useTrackContext } from '@/context/track';
@@ -17,18 +18,23 @@ export const RowActionsMenu = ({ skill }: RowActionsMenuProps) => {
   const { trackId } = useTrackContext();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const skillLink = `/?${SKILL_PARAM}=${encodeURIComponent(skill.skill)}&track=${trackId}`;
+  const label = `${skill.skill} links`;
 
   return (
     <>
-      <IconButton
-        size="small"
-        aria-label={`${skill.skill} links`}
-        onClick={(event) => {
-          setAnchorEl(event.currentTarget);
-        }}
-      >
-        <MoreVertIcon fontSize="small" />
-      </IconButton>
+      {/* Padding widens the tap target to ≥44×44 without resizing the icon glyph. */}
+      <Tooltip title={label}>
+        <IconButton
+          size="small"
+          aria-label={label}
+          onClick={(event) => {
+            setAnchorEl(event.currentTarget);
+          }}
+          sx={{ p: 1.5 }}
+        >
+          <MoreVertIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
       <Menu
         anchorEl={anchorEl}
         open={anchorEl !== null}

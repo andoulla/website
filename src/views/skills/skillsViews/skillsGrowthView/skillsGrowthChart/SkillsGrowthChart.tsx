@@ -85,7 +85,7 @@ export const SkillsGrowthChart = ({ growth, maxYear, domainMinYear }: SkillsGrow
   };
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={2}>
       <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
         <AreaChart data={chartPoints} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
           <defs>

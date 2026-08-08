@@ -90,6 +90,20 @@ export const createDensityComponents = (density: Density) => {
   };
 };
 
+// WCAG 2.4.7 — action.focus is only a pale background tint, too low-contrast to read as "focused"
+// on its own. This adds a branded 2px outline to every native/MUI focusable element site-wide,
+// via a single global :focus-visible rule rather than per-component overrides.
+export const createFocusVisibleComponents = (primaryMain: string) => ({
+  MuiCssBaseline: {
+    styleOverrides: {
+      ':focus-visible': {
+        outline: `2px solid ${primaryMain}`,
+        outlineOffset: '2px',
+      },
+    },
+  },
+});
+
 export const lightTokens = {
   background: { default: '#f8fafc', paper: '#ffffff' },
   text: { primary: '#0f172a', disabled: '#AFA5AF' },

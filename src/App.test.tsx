@@ -47,7 +47,7 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'Mariandi Stylianou' })).toBeVisible();
     expect(screen.getByText('Meridian Dynamics · Apr 2022 – Present')).toBeVisible();
 
-    const compactSwitch = screen.getByRole('switch', { name: 'Compact' });
+    const compactSwitch = screen.getByRole('switch', { name: 'Compact view: on' });
 
     expect(compactSwitch).toBeChecked();
 

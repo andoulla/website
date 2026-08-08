@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import { MemoryRouter } from 'react-router-dom';
 
+import { ThemeContextProvider } from '@/context/theme';
 import { TrackContextProvider } from '@/context/track';
 import { SkillSummary, Track } from '@/testing';
 import { filterSkillsByCategory } from '@/utils/filterSkillsByCategory';
@@ -80,22 +81,28 @@ const renderTableView = (overrides: Partial<SkillsViewContextValue> = {}) => {
   const selectedSubCategories = overrides.selectedSubCategories ?? [];
 
   return render(
-    <MemoryRouter>
-      <TrackContextProvider>
-        <SkillsViewContextProvider
-          track={testTrack}
-          skills={skills}
-          filteredSkills={filterSkillsByCategory(skills, selectedCategories, selectedSubCategories)}
-          selectedCategories={selectedCategories}
-          selectedSubCategories={selectedSubCategories}
-          searchTerm=""
-          onClearFilters={jest.fn()}
-          {...overrides}
-        >
-          <SkillsTableView />
-        </SkillsViewContextProvider>
-      </TrackContextProvider>
-    </MemoryRouter>
+    <ThemeContextProvider>
+      <MemoryRouter>
+        <TrackContextProvider>
+          <SkillsViewContextProvider
+            track={testTrack}
+            skills={skills}
+            filteredSkills={filterSkillsByCategory(
+              skills,
+              selectedCategories,
+              selectedSubCategories
+            )}
+            selectedCategories={selectedCategories}
+            selectedSubCategories={selectedSubCategories}
+            searchTerm=""
+            onClearFilters={jest.fn()}
+            {...overrides}
+          >
+            <SkillsTableView />
+          </SkillsViewContextProvider>
+        </TrackContextProvider>
+      </MemoryRouter>
+    </ThemeContextProvider>
   );
 };
 

@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 
 import { CategoryLegend } from './CategoryLegend';
@@ -37,5 +38,37 @@ describe('CategoryLegend', () => {
   test('does not call getBackground when it is not provided', () => {
     // Renders without error and does not throw when getBackground is absent.
     expect(() => render(<CategoryLegend categories={CATEGORIES} />)).not.toThrow();
+  });
+
+  describe('when onSelectCategory is provided', () => {
+    test('renders entries as buttons and reports the tapped category', async () => {
+      const user = userEvent.setup();
+      const onSelectCategory = jest.fn();
+      const screen = render(
+        <CategoryLegend categories={CATEGORIES} onSelectCategory={onSelectCategory} />
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Highlight Leadership' }));
+
+      expect(onSelectCategory).toHaveBeenCalledWith('leadership');
+      expect(await axe(screen.container)).toHaveNoViolations();
+    });
+
+    test('marks the selected category as pressed and dims the others', () => {
+      const screen = render(
+        <CategoryLegend
+          categories={CATEGORIES}
+          selectedCategoryId="leadership"
+          onSelectCategory={jest.fn()}
+        />
+      );
+
+      const selected = screen.getByRole('button', { name: 'Highlight Leadership' });
+      const other = screen.getByRole('button', { name: 'Highlight Frontend Development' });
+
+      expect(selected).toHaveAttribute('aria-pressed', 'true');
+      expect(other).toHaveAttribute('aria-pressed', 'false');
+      expect(other).toHaveStyle({ opacity: '0.5' });
+    });
   });
 });

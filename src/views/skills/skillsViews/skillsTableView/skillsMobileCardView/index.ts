@@ -1,0 +1,1 @@
+export { SkillsMobileCardView } from './SkillsMobileCardView';

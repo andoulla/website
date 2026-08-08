@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Popover from '@mui/material/Popover';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 
@@ -24,19 +25,25 @@ export const RecommendationBadge = ({ recommendationIds }: Props) => {
 
   if (count === 0) return null;
 
+  const label = `${count} recommendation${count === 1 ? '' : 's'}`;
+
   return (
     <>
-      <IconButton
-        size="small"
-        aria-label={`${count} recommendation${count === 1 ? '' : 's'}`}
-        onClick={(event) => {
-          setAnchorEl(event.currentTarget);
-        }}
-      >
-        <Badge badgeContent={count} color="primary">
-          <FormatQuoteIcon fontSize="small" />
-        </Badge>
-      </IconButton>
+      {/* Padding widens the tap target to ≥44×44 without resizing the icon glyph. */}
+      <Tooltip title={label}>
+        <IconButton
+          size="small"
+          aria-label={label}
+          onClick={(event) => {
+            setAnchorEl(event.currentTarget);
+          }}
+          sx={{ p: 1.5 }}
+        >
+          <Badge badgeContent={count} color="primary">
+            <FormatQuoteIcon fontSize="small" />
+          </Badge>
+        </IconButton>
+      </Tooltip>
       <Popover
         open={anchorEl !== null}
         anchorEl={anchorEl}

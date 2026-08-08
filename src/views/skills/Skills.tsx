@@ -6,8 +6,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Collapse from '@mui/material/Collapse';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
@@ -27,7 +25,6 @@ import {
   AS_OF_PARAM,
   COMPARE_TRACK_PARAM,
   SEARCH_PARAM,
-  VIEW_MODES,
   VIEW_PARAM,
 } from '@/utils/skillsUrlParams';
 
@@ -48,8 +45,10 @@ import { TimeMachineSlider } from './timeMachineSlider';
 import { TrackFilter } from './trackFilter';
 import { SkillsCareerContextProvider, SkillsViewContextProvider } from './skillsViews';
 import { SkillsCompareView } from './skillsViews/skillsCompareView';
+import { SkillsViewSwitcher } from './skillsViewSwitcher';
 import { useSkillSearchUrl } from './useSkillSearchUrl';
 import { useSkillsPageState } from './useSkillsPageState';
+import { useDefaultViewMode } from './useDefaultViewMode';
 
 const deriveSearchHint = (
   searchTerm: string,
@@ -143,11 +142,13 @@ const SkillsContent = () => {
 
   const searchHint = deriveSearchHint(searchTerm, totalMatches, hiddenMatchCount);
 
+  const defaultViewMode = useDefaultViewMode();
+
   const [viewMode, setViewMode] = useSkillSearchUrl(
     VIEW_PARAM,
-    (raw) => parseViewMode(raw) ?? 'radar',
-    // 'radar' is the default, so it's omitted from the URL.
-    (next) => (next === 'radar' ? null : next)
+    (raw) => parseViewMode(raw) ?? defaultViewMode,
+    // Default is omitted from the URL (viewport-dependent).
+    (next) => (next === defaultViewMode ? null : next)
   );
 
   const [compareTrackId, setCompareTrackId] = useSkillSearchUrl(
@@ -266,31 +267,14 @@ const SkillsContent = () => {
         direction="row"
         sx={{ justifyContent: 'flex-end', mb: 1.5, alignItems: 'center', gap: 1.5 }}
       >
-        <ToggleButtonGroup
+        <SkillsViewSwitcher
           value={effectiveViewMode}
-          exclusive
-          onChange={(_e, next: ViewMode | null) => {
-            if (next === null) return;
-
+          onChange={(next) => {
             if (isCompareMode) handleDeactivateCompare();
-
             setViewMode(next);
           }}
-          size="small"
-          aria-label="View mode"
-          sx={{
-            '& .MuiToggleButton-root': { px: { xs: 0.75, sm: 1.25 } },
-            '& .MuiSvgIcon-root': { fontSize: { xs: '1.1rem', sm: '1.25rem' } },
-          }}
-        >
-          {VIEW_MODES.map((mode) => (
-            <Tooltip key={mode} title={VIEW_OPTIONS[mode].label}>
-              <ToggleButton value={mode} aria-label={VIEW_OPTIONS[mode].label}>
-                {VIEW_OPTIONS[mode].icon}
-              </ToggleButton>
-            </Tooltip>
-          ))}
-        </ToggleButtonGroup>
+          disabled={isCompareMode}
+        />
       </Stack>
 
       {/* Heading row: view name (h2) + filter trigger */}

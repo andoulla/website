@@ -17,6 +17,7 @@ import { skillElementId } from '../SkillsTableView.helpers';
 import type { CategoryGroup } from '../SkillsTableView.types';
 
 import { dotColour } from './SkillsTable.helpers';
+import { CompaniesCell } from './companiesCell';
 import { RecommendationBadge } from './recommendationBadge';
 import { RowActionsMenu } from './rowActionsMenu';
 
@@ -81,17 +82,7 @@ const SkillRow = ({
         </TableCell>
       )}
       <TableCell sx={{ verticalAlign: 'top' }}>
-        {skill.companyYears.length > 0 ? (
-          <Typography variant="body2" color="text.secondary">
-            {skill.companyYears
-              .map(({ name, years }) => `${name} · ${formatYears(years)}`)
-              .join(' | ')}
-          </Typography>
-        ) : (
-          <Typography variant="body2" color="text.secondary">
-            —
-          </Typography>
-        )}
+        <CompaniesCell skillName={skill.skill} companyYears={skill.companyYears} />
       </TableCell>
       <TableCell align="right" sx={{ verticalAlign: 'top', whiteSpace: 'nowrap' }}>
         {formatYears(skill.years)}

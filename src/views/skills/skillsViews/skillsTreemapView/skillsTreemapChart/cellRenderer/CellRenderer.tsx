@@ -22,7 +22,9 @@ type CellRenderProps = {
 export const makeCellRenderer = (
   colourByName: Map<string, string>,
   patternIdByName: Map<string, string> | null,
-  textColour: string
+  textColour: string,
+  categoryIdByName: Map<string, string>,
+  highlightedCategoryId: string | null
 ) =>
   function CellRenderer(rawProps: unknown): React.ReactElement {
     const { x, y, width, height, name, value } = rawProps as CellRenderProps;
@@ -32,6 +34,9 @@ export const makeCellRenderer = (
     const colour = colourByName.get(name) ?? '#9e9e9e';
     const patternId = patternIdByName?.get(name);
     const fill = patternId !== undefined ? `url(#${patternId})` : colour;
+    // Legend tap-to-highlight: dim every cell outside the selected category.
+    const isDimmed =
+      highlightedCategoryId !== null && categoryIdByName.get(name) !== highlightedCategoryId;
 
     const showName = width >= LABEL_MIN_WIDTH && height >= LABEL_MIN_HEIGHT;
     const lines = showName ? wrapText(name, width - CELL_PADDING_X * 2) : [];
@@ -43,7 +48,7 @@ export const makeCellRenderer = (
     const contentStartY = y + (height - totalContentHeight) / 2 + TEXT_LINE_HEIGHT;
 
     return (
-      <g>
+      <g opacity={isDimmed ? 0.25 : 1} style={{ transition: 'opacity 0.2s ease' }}>
         <rect x={x + 1} y={y + 1} width={width - 2} height={height - 2} fill={fill} rx={3} />
         {showName &&
           lines.map((line, lineIndex) => (

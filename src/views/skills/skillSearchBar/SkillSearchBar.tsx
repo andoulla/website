@@ -3,6 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
 
 interface SkillSearchBarProps {
   value: string;
@@ -20,9 +21,18 @@ export const SkillSearchBar = ({ value, onChange, hint }: SkillSearchBarProps) =
   const clearButton =
     value !== '' ? (
       <InputAdornment position="end">
-        <IconButton aria-label="Clear search" size="small" edge="end" onClick={() => onChange('')}>
-          <ClearIcon fontSize="small" />
-        </IconButton>
+        {/* Padding widens the tap target to ≥44×44 without resizing the icon glyph. */}
+        <Tooltip title="Clear search">
+          <IconButton
+            aria-label="Clear search"
+            size="small"
+            edge="end"
+            onClick={() => onChange('')}
+            sx={{ p: 1.5 }}
+          >
+            <ClearIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
       </InputAdornment>
     ) : undefined;
 

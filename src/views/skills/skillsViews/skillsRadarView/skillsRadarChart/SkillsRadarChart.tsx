@@ -15,6 +15,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
 
 import type { SkillSummary } from '@/utils/calculateSkillYears';
+import { formatYears } from '@/utils/formatYears';
 import type { PresentCategory } from '@/utils/derivePresentCategories';
 
 import { CategoryLegend } from '../../categoryLegend';
@@ -56,7 +57,7 @@ export const SkillsRadarChart = ({ skills, categories, searchTerm }: SkillsRadar
   };
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={2}>
       <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
         <RadarChart data={radarData} outerRadius="90%">
           <PolarGrid stroke={theme.palette.divider} />

@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { visuallyHidden } from '@mui/utils';
 import { ResponsiveContainer, Tooltip, Treemap } from 'recharts';
 
@@ -28,6 +29,10 @@ interface SkillsTreemapChartProps {
 
 export const SkillsTreemapChart = ({ skills, showPatterns = false }: SkillsTreemapChartProps) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [focusedSkillName, setFocusedSkillName] = useState<string | null>(null);
+  // Legend tap-to-highlight: which category's cells stay at full opacity (null = all of them).
+  const [highlightedCategoryId, setHighlightedCategoryId] = useState<string | null>(null);
 
   const colourByName = useMemo(
     () =>
@@ -63,9 +68,27 @@ export const SkillsTreemapChart = ({ skills, showPatterns = false }: SkillsTreem
     [skills, showPatterns]
   );
 
+  const categoryIdByName = useMemo(
+    () => new Map(skills.map((skill) => [skill.skill, skill.categoryId])),
+    [skills]
+  );
+
   const renderCell = useMemo(
-    () => makeCellRenderer(colourByName, patternIdByName, theme.palette.common.white),
-    [colourByName, patternIdByName, theme.palette.common.white]
+    () =>
+      makeCellRenderer(
+        colourByName,
+        patternIdByName,
+        theme.palette.common.white,
+        categoryIdByName,
+        highlightedCategoryId
+      ),
+    [
+      colourByName,
+      patternIdByName,
+      theme.palette.common.white,
+      categoryIdByName,
+      highlightedCategoryId,
+    ]
   );
 
   return (
@@ -106,6 +129,10 @@ export const SkillsTreemapChart = ({ skills, showPatterns = false }: SkillsTreem
             ? (colour, index) =>
                 getCategoryPatternBackground(index, colour, theme.palette.getContrastText(colour))
             : undefined
+        }
+        selectedCategoryId={highlightedCategoryId}
+        onSelectCategory={(categoryId) =>
+          setHighlightedCategoryId((current) => (current === categoryId ? null : categoryId))
         }
       />
 
